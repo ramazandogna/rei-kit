@@ -29,6 +29,7 @@ export const AllVariantsAndStyles = () => {
     "accent",
     "destructive",
     "muted",
+    "special",
   ];
   const styles: ButtonStyleType[] = ["filled", "stroke", "ghost"];
 
@@ -91,7 +92,7 @@ export const Loading = () => {
   return (
     <div className="flex gap-4">
       <Button loading>Default Loading</Button>
-      <Button loading loadingText="Yükleniyor...">
+      <Button loading loadingText="Loading Custom Text...">
         Custom Loading
       </Button>
     </div>

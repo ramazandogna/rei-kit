@@ -12,7 +12,7 @@ const Button: React.FC<ButtonProps> = ({
   rounded = "md",
   href,
   loading,
-  loadingText = "Loading...",
+  loadingText = "Yükleniyor...",
   className,
   disabled,
   ...rest
@@ -22,7 +22,8 @@ const Button: React.FC<ButtonProps> = ({
     SIZES[size],
     VARIANTS[variant][styleType],
     ROUNDED[rounded],
-    disabled && "opacity-50 cursor-not-allowed!",
+    disabled && "opacity-50 cursor-not-allowed! hover:opacity-50!",
+    loading && "opacity-50 cursor-not-allowed! hover:opacity-50!",
     className
   );
 

@@ -18,6 +18,7 @@ export type ButtonVariantType =
   | "secondary"
   | "accent"
   | "destructive"
-  | "muted";
+  | "muted"
+  | "special";
 export type ButtonSizeType = "xs" | "md" | "lg";
 export type ButtonRoundedType = "none" | "md" | "lg" | "full";

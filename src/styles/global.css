@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+/* Dark mod için variant tanımı */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Varsayılan renk paleti ve font ayarları */
+:root {
+  --background: #f5f5ff;
+  --foreground: #2a2a4a;
+  --card: #ffffff;
+  --primary: #6e56cf;
+  --secondary: #e4dfff;
+  --accent: #d8e6ff;
+  --muted: #f0f0fa;
+  --destructive: #ff5470;
+  --border: #e0e0f0;
+  --input: #e0e0f0;
+  --ring: #6e56cf;
+
+  --font-sans: Inter, sans-serif;
+  --font-mono: JetBrains Mono, monospace;
+  --font-serif: Georgia, serif;
+  --radius: 0.5rem;
+}
+
+/* Karanlık mod renkleri */
+.dark {
+  --background: #0f0f1a;
+  --foreground: #e2e2f5;
+  --card: #1a1a2e;
+  --primary: #a48fff;
+  --secondary: #2d2b55;
+  --accent: #303060;
+  --muted: #222244;
+  --destructive: #ff5470;
+  --border: #303052;
+  --input: #303052;
+  --ring: #a48fff;
+  --font-sans: Inter, sans-serif;
+  --font-mono: JetBrains Mono, monospace;
+  --font-serif: Georgia, serif;
+  --radius: 0.5rem;
+}
+
+@import "tailwindcss";
+
+/* Dark mod için variant tanımı */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Light (default) theme */
+:root {
+  --color-background: #f5f5ff;
+  --color-foreground: #2a2a4a;
+  --color-primary: #6e56cf;
+  --color-secondary: #e4dfff;
+  --color-accent: #d8e6ff;
+  --color-muted: #f0f0fa;
+  --color-destructive: #ff5470;
+  --color-border: #e0e0f0;
+  --color-input: #e0e0f0;
+  --color-ring: #6e56cf;
+
+  --font-sans: Inter, sans-serif;
+  --font-mono: JetBrains Mono, monospace;
+  --font-serif: Georgia, serif;
+  --radius-md: 0.5rem;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --color-background: #0f0f1a;
+  --color-foreground: #e2e2f5;
+  --color-primary: #a48fff;
+  --color-secondary: #2d2b55;
+  --color-accent: #303060;
+  --color-muted: #222244;
+  --color-destructive: #ff5470;
+  --color-border: #303052;
+  --color-input: #303052;
+  --color-ring: #a48fff;
+}
+
+/* 🌟 Global renk class'ları (Tailwind-like syntax) */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+.bg-accent {
+  background-color: var(--color-accent);
+}
+.bg-muted {
+  background-color: var(--color-muted);
+}
+.bg-destructive {
+  background-color: var(--color-destructive);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+.text-secondary {
+  color: var(--color-secondary);
+}
+.text-accent {
+  color: var(--color-accent);
+}
+.text-muted {
+  color: var(--color-muted);
+}
+.text-destructive {
+  color: var(--color-destructive);
+}
+.text-foreground {
+  color: var(--color-foreground);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+.border-secondary {
+  border-color: var(--color-secondary);
+}
+.border-accent {
+  border-color: var(--color-accent);
+}
+.border-muted {
+  border-color: var(--color-muted);
+}
+.border-destructive {
+  border-color: var(--color-destructive);
+}
+
+/* 🌟 Border radius class'ları */
+.rounded-md {
+  border-radius: var(--radius-md);
+}

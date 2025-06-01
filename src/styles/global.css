@@ -367,10 +367,10 @@ small {
   border-radius: calc(var(--radius) - 2px);
 }
 .rounded-lg {
-  border-radius: var(--radius);
+  border-radius: calc(var(--radius) + 2px);
 }
 .rounded-xl {
-  border-radius: calc(var(--radius) + 4px);
+  border-radius: calc(var(--radius) + 8px);
 }
 
 /* 🌟 Box Shadow Utility Class'ları */

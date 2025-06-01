@@ -18,11 +18,11 @@ const Button: React.FC<ButtonProps> = ({
   ...rest
 }) => {
   const CLASSNAME = cn(
-    "inline-flex items-center justify-center transition-colors duration-200 ease-in-out focus:outline-none gap-1.5",
+    "inline-flex cursor-pointer transition-all duration-500 items-center justify-center transition-colors ease-in-out focus:outline-none gap-1.5",
     SIZES[size],
     VARIANTS[variant][styleType],
     ROUNDED[rounded],
-    disabled && "opacity-50 cursor-not-allowed",
+    disabled && "opacity-50 cursor-not-allowed!",
     className
   );
 

@@ -12,37 +12,37 @@ export const VARIANTS: {
   };
 } = {
   primary: {
-    filled: "text-foreground bg-primary hover:opacity-90",
+    filled: "text-primary-foreground bg-primary hover:opacity-90",
     stroke:
-      "bg-transparent text-primary border border-primary hover:opacity-90 transition-colors duration-200",
+      "bg-transparent text-primary border border-primary hover:bg-primary/10 transition-colors duration-200",
     ghost:
       "bg-transparent text-primary hover:bg-primary/10 transition-colors duration-200",
   },
   secondary: {
-    filled: "text-foreground bg-secondary hover:opacity-90",
+    filled: "text-secondary-foreground bg-secondary hover:opacity-90",
     stroke:
-      "bg-transparent text-secondary border border-secondary hover:opacity-90 transition-colors duration-200",
+      "bg-transparent text-secondary border border-secondary hover:bg-secondary/10 transition-colors duration-200",
     ghost:
       "bg-transparent text-secondary hover:bg-secondary/10 transition-colors duration-200",
   },
   accent: {
-    filled: "text-foreground bg-accent hover:opacity-90",
+    filled: "text-accent-foreground bg-accent hover:opacity-90",
     stroke:
-      "bg-transparent text-accent border border-accent hover:opacity-90 transition-colors duration-200",
+      "bg-transparent text-accent border border-accent hover:bg-accent/10 transition-colors duration-200",
     ghost:
       "bg-transparent text-accent hover:bg-accent/10 transition-colors duration-200",
   },
   destructive: {
-    filled: "text-white bg-destructive hover:opacity-90",
+    filled: "text-destructive-foreground bg-destructive hover:opacity-90",
     stroke:
-      "bg-transparent text-destructive border border-destructive hover:opacity-90 transition-colors duration-200",
+      "bg-transparent text-destructive border border-destructive hover:bg-destructive/10 transition-colors duration-200",
     ghost:
       "bg-transparent text-destructive hover:bg-destructive/10 transition-colors duration-200",
   },
   muted: {
-    filled: "text-foreground bg-muted hover:opacity-90",
+    filled: "text-muted-foreground bg-muted hover:opacity-90",
     stroke:
-      "bg-transparent text-muted border border-muted hover:opacity-90 transition-colors duration-200",
+      "bg-transparent text-muted border border-muted hover:bg-muted/10 transition-colors duration-200",
     ghost:
       "bg-transparent text-muted hover:bg-muted/10 transition-colors duration-200",
   },

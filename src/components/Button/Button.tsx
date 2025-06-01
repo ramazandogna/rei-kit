@@ -18,7 +18,7 @@ const Button: React.FC<ButtonProps> = ({
   ...rest
 }) => {
   const CLASSNAME = cn(
-    "inline-flex items-center justify-center font-semibold transition-colors duration-200 ease-in-out focus:outline-none gap-1.5",
+    "inline-flex items-center justify-center transition-colors duration-200 ease-in-out focus:outline-none gap-1.5",
     SIZES[size],
     VARIANTS[variant][styleType],
     ROUNDED[rounded],

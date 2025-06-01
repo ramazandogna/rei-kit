@@ -413,20 +413,20 @@ small {
 .bg-special {
   background: linear-gradient(45deg, #b31312, #ea906c, #2b2a4c, #eee2de);
   background-size: 400% 400%;
-  animation: gradientAnimation 15s ease infinite;
+  animation: gradientAnimation 25s ease infinite;
 }
 .bg-special-button {
   background: linear-gradient(45deg, #b31312, #ea906c, #2b2a4c, #eee2de);
   background-size: 400% 400%;
-  animation: gradientAnimation 15s ease infinite;
+  animation: gradientAnimation 25s ease infinite;
 }
 
 .bg-special-button:hover {
-  background-size: 200% 200%;
+  background-size: 300% 300%;
 }
 
 .bg-special-button:active {
-  background-size: 100% 100%;
+  background-size: 360% 360%;
 }
 
 @keyframes gradientAnimation {

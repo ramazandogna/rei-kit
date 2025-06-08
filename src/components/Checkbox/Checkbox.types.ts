@@ -14,4 +14,5 @@ export interface CheckboxProps
   rounded?: CheckboxRounded;
   color?: CheckboxColor;
   className?: string;
+  errorMessage?: string;
 }

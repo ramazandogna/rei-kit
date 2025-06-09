@@ -1,13 +1,8 @@
-// Button.stories.tsx
+import type { Meta, StoryObj } from "@storybook/react";
 import Button from "./Button";
-import type {
-  ButtonRoundedType,
-  ButtonSizeType,
-  ButtonStyleType,
-  ButtonVariantType,
-} from "./Button.types";
+import type { ButtonProps } from "./Button.types";
 
-export default {
+const meta: Meta<typeof Button> = {
   title: "Components/Button",
   component: Button,
   parameters: {
@@ -15,15 +10,29 @@ export default {
     docs: {
       description: {
         component:
-          "Global theme değişkenlerini kullanan özelleştirilebilir Button bileşeni.",
+          "Tema değişkenleriyle stil alan, özelleştirilebilir Button bileşenidir.",
       },
     },
   },
   tags: ["autodocs"],
 };
 
+export default meta;
+
+export const Playground: StoryObj<typeof Button> = {
+  args: {
+    children: "Tey",
+    variant: "destructive",
+    styleType: "stroke",
+    size: "lg",
+    rounded: "md",
+    loading: false,
+    disabled: false,
+  },
+};
+
 export const AllVariantsAndStyles = () => {
-  const variants: ButtonVariantType[] = [
+  const variants: ButtonProps["variant"][] = [
     "primary",
     "secondary",
     "accent",
@@ -31,7 +40,7 @@ export const AllVariantsAndStyles = () => {
     "muted",
     "special",
   ];
-  const styles: ButtonStyleType[] = ["filled", "stroke", "ghost"];
+  const styles: ButtonProps["styleType"][] = ["filled", "stroke", "ghost"];
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -52,7 +61,7 @@ export const AllVariantsAndStyles = () => {
 };
 
 export const AllSizes = () => {
-  const sizes: { size: ButtonSizeType; label: string }[] = [
+  const sizes: { size: ButtonProps["size"]; label: string }[] = [
     { size: "xs", label: "XS Button" },
     { size: "md", label: "MD Button" },
     { size: "lg", label: "LG Button" },
@@ -70,7 +79,7 @@ export const AllSizes = () => {
 };
 
 export const AllRounded = () => {
-  const roundedOptions: { rounded: ButtonRoundedType; label: string }[] = [
+  const roundedOptions: { rounded: ButtonProps["rounded"]; label: string }[] = [
     { rounded: "none", label: "None" },
     { rounded: "md", label: "Medium" },
     { rounded: "lg", label: "Large" },
@@ -88,26 +97,23 @@ export const AllRounded = () => {
   );
 };
 
-export const Loading = () => {
-  return (
-    <div className="flex gap-4">
-      <Button loading>Default Loading</Button>
-      <Button loading loadingText="Loading Custom Text...">
-        Custom Loading
-      </Button>
-    </div>
-  );
+export const Loading = {
+  args: {
+    children: "Loading...",
+    loading: true,
+  },
 };
 
-export const RoutedButton = () => {
-  return (
-    <div className="flex gap-4">
-      <Button href="https://example.com" variant="primary">
-        Go to Example
-      </Button>
-      <Button href="#" variant="destructive">
-        Disabled Link
-      </Button>
-    </div>
-  );
+export const Disabled = {
+  args: {
+    children: "Disabled",
+    disabled: true,
+  },
+};
+
+export const RoutedButton = {
+  args: {
+    href: "https://example.com",
+    children: "Visit Example",
+  },
 };

@@ -1,80 +1,95 @@
-import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react";
 import Checkbox from "./Checkbox";
-import type {
-  CheckboxSize,
-  CheckboxRounded,
-  CheckboxColor,
-} from "./Checkbox.types";
+import type { CheckboxProps } from "./Checkbox.types";
 
-export default {
+const meta: Meta<typeof Checkbox> = {
   title: "Components/Checkbox",
   component: Checkbox,
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component: "Temaya uygun, özelleştirilebilir Checkbox bileşenidir.",
+      },
+    },
+  },
+  tags: ["autodocs"],
 };
 
-const colors: CheckboxColor[] = [
-  "primary",
-  "secondary",
-  "accent",
-  "destructive",
-  "muted",
-];
-const sizes: CheckboxSize[] = ["sm", "md", "lg"];
-const roundedOptions: CheckboxRounded[] = ["none", "md", "lg", "full"];
+export default meta;
+
+export const Playground: StoryObj<typeof Checkbox> = {
+  args: {
+    label: "Accept Terms",
+    size: "md",
+    color: "primary",
+    rounded: "md",
+    checked: false,
+    disabled: false,
+    errorMessage: "This is error",
+    className: ""
+  },
+};
 
 export const AllVariants = () => {
-  const [checkedState, setCheckedState] = useState<Record<string, boolean>>({});
-
-  const handleChange = (key: string) => () =>
-    setCheckedState((prev) => ({ ...prev, [key]: !prev[key] }));
+  const variants: CheckboxProps["color"][] = [
+    "primary",
+    "secondary",
+    "accent",
+    "destructive",
+    "muted",
+  ];
+  const sizes: CheckboxProps["size"][] = ["sm", "md", "lg"];
 
   return (
     <div className="space-y-4">
-      {colors.map((color) => (
-        <div key={color} className="space-x-4">
-          {sizes.map((size) => {
-            const key = `${color}-${size}`;
-            return (
-              <Checkbox
-                key={key}
-                label={key}
-                color={color}
-                size={size}
-                rounded="md"
-                checked={!!checkedState[key]}
-                onChange={handleChange(key)}
-              />
-            );
-          })}
+      {variants.map((color) => (
+        <div key={color} className="flex gap-4">
+          {sizes.map((size) => (
+            <Checkbox
+              key={`${color}-${size}`}
+              label={`${color}-${size}`}
+              color={color}
+              size={size}
+              rounded="md"
+              checked
+            />
+          ))}
         </div>
       ))}
-      <div className="flex gap-4 mt-4">
-        {roundedOptions.map((rounded) => (
-          <Checkbox
-            key={rounded}
-            label={rounded}
-            rounded={rounded}
-            checked={!!checkedState[rounded]}
-            onChange={handleChange(rounded)}
-          />
-        ))}
-      </div>
     </div>
   );
 };
 
-export const WithError = () => {
-  const [checked, setChecked] = useState(false);
+export const AllRounded = () => {
+  const roundedOptions: CheckboxProps["rounded"][] = [
+    "none",
+    "md",
+    "lg",
+    "full",
+  ];
 
   return (
-    <Checkbox
-      label="Accept Terms"
-      checked={checked}
-      onChange={() => setChecked((p) => !p)}
-      errorMessage={!checked ? "You must agree to continue." : undefined}
-    />
+    <div className="flex gap-4">
+      {roundedOptions.map((rounded) => (
+        <Checkbox key={rounded} label={rounded} rounded={rounded} checked />
+      ))}
+    </div>
   );
 };
 
-export const Disabled = () => (
-  <Checkbox label="Disabled Checkbox" disabled checked />
-);
+export const WithError = {
+  args: {
+    label: "Accept Terms",
+    checked: false,
+    errorMessage: "You must agree to continue.",
+  },
+};
+
+export const Disabled = {
+  args: {
+    label: "Disabled Checkbox",
+    disabled: true,
+    checked: true,
+  },
+};

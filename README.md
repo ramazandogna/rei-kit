@@ -14,9 +14,9 @@ layer, packaged so the next app installs it instead of copying it.
 
 ## Status
 
-**v0.0.0 — scaffold only.** The build, types, lint and test pipeline are set up
-and green; no components have moved yet. The migration is tracked in the plan
-that accompanies this repository.
+**v0.0.0 — in migration.** Twelve components, eight utilities and six
+composables have moved; the i18n runtime and the Supabase entry are next.
+Nothing consumes it yet.
 
 ## Install
 
@@ -37,8 +37,8 @@ import { VERSION } from 'rei-kit'
 ```css
 /* your app's main.css */
 @import 'tailwindcss';
-@import 'rei-kit/tokens.css';
-@import 'rei-kit/utilities.css';
+@import 'rei-kit/tokens.css'; /* Tailwind source: tokens and utilities */
+@import 'rei-kit/styles.css'; /* compiled component styles */
 
 /* the whole rebrand */
 @theme {

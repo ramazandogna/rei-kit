@@ -38,6 +38,9 @@ export default defineConfig({
         supabase: fileURLToPath(new URL('./src/supabase/index.ts', import.meta.url)),
       },
       formats: ['es'],
+      // Named so the import line reads as what it is — the compiled styles of
+      // the components — rather than after the package.
+      cssFileName: 'styles',
     },
     rollupOptions: {
       // Everything the consumer already has. Bundling Vue here would give an

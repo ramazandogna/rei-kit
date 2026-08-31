@@ -21,7 +21,7 @@
       "import": "./dist/index.js"
     },
     "./tokens.css": "./dist/tokens.css",
-    "./utilities.css": "./dist/utilities.css",
+    "./styles.css": "./dist/styles.css",
     "./supabase": {
       "types": "./dist/supabase/index.d.ts",
       "import": "./dist/supabase.js"

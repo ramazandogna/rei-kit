@@ -55,3 +55,85 @@
 @utility pb-safe {
   padding-bottom: calc(var(--pb-safe, 0px) + env(safe-area-inset-bottom, 0px));
 }
+
+/* ── The phone shell ────────────────────────────────────────────────────────
+   Geometry shared by the shell and by anything that has to line up with it —
+   a sheet teleported outside the app tree, for instance. Opt in by putting
+   .shell-frame on the container; nothing here applies on its own. */
+@layer components {
+  /* Geometry of the phone shell. Shared by the shell itself and by overlays
+   that must line up with it (BaseSheet teleports outside the app tree). */
+  .shell-frame {
+    height: 100dvh;
+    @apply w-full max-w-[430px] md:h-[880px] md:max-h-[92vh];
+  }
+
+  /* ---- Screen wrapper ----
+   Lands on every view's root element (see App.vue), so this is the one place
+   that owns the scroll box, the side gutter and the room the floating tab bar
+   needs at the bottom. Views only decide their own inner layout. */
+  /* Auth screens have no tab bar and no action button, so they get none of the
+   bottom clearance the app screens need. */
+  .page-auth {
+    @apply no-scrollbar h-full w-full overflow-y-auto px-4;
+  }
+
+  .page-slide {
+    /* pb clears the floating tab bar and the action button above it, so the
+     last row of any list stays reachable. */
+    @apply no-scrollbar h-full w-full overflow-y-auto px-4 pb-44;
+  }
+
+  .slide-forward-enter-active,
+  .slide-forward-leave-active,
+  .slide-backward-enter-active,
+  .slide-backward-leave-active {
+    position: absolute;
+    inset: 0;
+    will-change: transform, opacity;
+    /* iOS sheet curve: quick take-off, long soft landing. */
+    transition:
+      transform 340ms cubic-bezier(0.32, 0.72, 0, 1),
+      opacity 340ms cubic-bezier(0.32, 0.72, 0, 1),
+      filter 340ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  /* The incoming screen travels the full width; the outgoing one moves a
+   quarter of it and dims. The speed difference reads as depth. */
+  .slide-forward-enter-from {
+    transform: translate3d(100%, 0, 0);
+  }
+  .slide-forward-leave-to {
+    transform: translate3d(-25%, 0, 0) scale(0.96);
+    opacity: 0;
+    filter: brightness(0.92);
+  }
+
+  .slide-backward-enter-from {
+    transform: translate3d(-100%, 0, 0);
+  }
+  .slide-backward-leave-to {
+    transform: translate3d(25%, 0, 0) scale(0.96);
+    opacity: 0;
+    filter: brightness(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-forward-enter-active,
+  .slide-forward-leave-active,
+  .slide-backward-enter-active,
+  .slide-backward-leave-active {
+    /* Not 0ms: some browsers never fire transitionend at zero, which would
+       leave Vue waiting before removing the element. */
+    transition-duration: 1ms;
+  }
+
+  .slide-forward-enter-from,
+  .slide-backward-enter-from,
+  .slide-forward-leave-to,
+  .slide-backward-leave-to {
+    transform: none;
+    filter: none;
+  }
+}

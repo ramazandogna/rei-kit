@@ -14,9 +14,9 @@ layer, packaged so the next app installs it instead of copying it.
 
 ## Status
 
-**v0.0.0 — in migration.** Twelve components, eight utilities and six
-composables have moved; the i18n runtime and the Supabase entry are next.
-Nothing consumes it yet.
+**v0.0.0 — extraction complete, no consumer yet.** Thirteen components,
+eight utilities, six composables, a generic i18n runtime and an optional
+Supabase entry. Hibi moves onto it next.
 
 ## Install
 
@@ -30,8 +30,19 @@ supplies them, so there is never a second copy of the Vue runtime.
 
 ## Use
 
+```vue
+<script setup lang="ts">
+import { BaseButton, BaseSheet, useTheme } from 'rei-kit'
+
+const theme = useTheme()
+</script>
+```
+
+Supabase lives behind its own entry, so an app that does not use it never
+downloads it:
+
 ```ts
-import { VERSION } from 'rei-kit'
+import { createSupabaseClient } from 'rei-kit/supabase'
 ```
 
 ```css

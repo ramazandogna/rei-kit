@@ -11,3 +11,5 @@ coverage
 .idea
 
 *.log
+
+.npmrc

@@ -22,12 +22,18 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
+      # Trusted publishing is an npm CLI feature and needs a recent one; the
+      # version bundled with Node may predate OIDC support.
+      - name: Use an npm that speaks OIDC
+        run: npm install -g npm@latest
+
       - run: pnpm install --frozen-lockfile
 
       # The same gate as CI: a tag must not ship what a pull request would
       # have rejected.
       - run: pnpm check
 
-      - run: pnpm publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # npm, not pnpm: the OIDC exchange that trusted publishing depends on
+      # lives in the npm CLI. No token — id-token: write above is the whole
+      # credential, minted per run and useless anywhere else.
+      - run: npm publish --access public --provenance

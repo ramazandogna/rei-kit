@@ -168,6 +168,17 @@ starts returning `'conflict'` for 23505 and `'not-found'` for PGRST116.
 `setRememberMe(false)` moves the session to `sessionStorage` so it dies with
 the tab.
 
+## Changing this package without breaking an app
+
+Consumers pin `^0.x`, so a minor release upgrades nobody — apps opt in. Two
+tests back that up: `public-api.spec.ts` names every export, because the kit
+compiles fine without one nothing here calls; and `consumer.yml` packs the real
+tarball, installs it into Hibi and runs Hibi's whole gate, which is the only
+check that imports this package the way an app does.
+
+If you change a prop name or drop an export, expect the consumer check to fail.
+That is the point.
+
 ## Shell layout
 
 `tokens.css` ships opt-in classes for a phone-shaped app: `.shell-frame`

@@ -21,6 +21,9 @@ export default defineConfig({
         mkdirSync('dist', { recursive: true })
 
         for (const file of readdirSync('src/styles')) {
+          // Files starting with _ are build-time helpers, not part of the API.
+          if (file.startsWith('_')) continue
+
           copyFileSync(`src/styles/${file}`, `dist/${file}`)
         }
       },

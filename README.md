@@ -72,6 +72,27 @@ product changes values rather than renaming anything.
 | `pnpm test:unit` | Vitest, watch mode                                    |
 | `pnpm lint`      | oxlint + ESLint, with `--fix`                         |
 
+## Not breaking the apps that use it
+
+Three layers, cheapest first.
+
+**Pinned ranges.** A consumer depends on `^0.1.0`, which at 0.x means
+`>=0.1.0 <0.2.0` — publishing 0.2.0 upgrades nobody. Apps move on their own
+schedule, and a release can never reach an app that has not asked for it.
+
+**The public API test.** `src/__tests__/public-api.spec.ts` lists every export
+by name. The kit compiles perfectly well without an export nothing here calls,
+so removing one is invisible to every other test; this one fails loudly and
+asks whether the version should be a major.
+
+**The consumer check.** `.github/workflows/consumer.yml` packs the tarball npm
+would serve, installs it into Hibi, and runs Hibi's full gate — format, lint,
+types, 37 tests, production build. A renamed prop shows up as a red pull
+request here rather than as a broken app after release.
+
+That last one is the important one: the kit's own tests never import it the way
+an app does.
+
 ## Releasing
 
 Pushing a `v*` tag runs the full check and publishes to npm. Nothing publishes

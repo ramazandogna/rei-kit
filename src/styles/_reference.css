@@ -1,0 +1,8 @@
+/* Development only — never shipped (the copy step skips files starting with _).
+ *
+ * `@reference` in a component's scoped style needs a stylesheet that knows both
+ * Tailwind's variants and this package's tokens. tokens.css alone has the
+ * tokens but not `md:` or `hover:`, so referencing it directly fails on any
+ * variant. */
+@import 'tailwindcss';
+@import './tokens.css';

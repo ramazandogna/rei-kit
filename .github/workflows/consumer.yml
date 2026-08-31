@@ -1,0 +1,59 @@
+name: Consumer check
+
+# The guard that matters. The kit's own tests pass happily while a renamed prop
+# or a dropped export breaks every app using it — nothing here imports the way
+# a consumer does. This builds the package exactly as it would be published,
+# installs it into Hibi, and runs Hibi's full check against it.
+#
+# It runs before anything is published, so a break is a red pull request rather
+# than a broken release.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  hibi:
+    name: Hibi builds against this
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out rei-kit
+        uses: actions/checkout@v4
+        with:
+          path: kit
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Pack the kit
+        working-directory: kit
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
+          # A tarball, not a link: this is byte-for-byte what npm would serve,
+          # so the check also covers the files list and the exports map.
+          pnpm pack --pack-destination "$GITHUB_WORKSPACE"
+          echo "TARBALL=$(ls "$GITHUB_WORKSPACE"/rei-kit-*.tgz)" >> "$GITHUB_ENV"
+
+      - name: Check out Hibi
+        uses: actions/checkout@v4
+        with:
+          repository: ramazandogna/hibi
+          path: consumer
+
+      - name: Install Hibi against the packed kit
+        working-directory: consumer
+        run: |
+          pnpm install --no-frozen-lockfile
+          pnpm add "file:$TARBALL"
+
+      - name: Hibi's own gate
+        working-directory: consumer
+        run: pnpm check
+        env:
+          VITE_SUPABASE_URL: https://example.supabase.co
+          VITE_SUPABASE_ANON_KEY: ci-placeholder

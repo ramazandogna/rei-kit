@@ -69,6 +69,9 @@ export { default as StatCard } from './components/StatCard.vue'
 export { default as ToneDot } from './components/ToneDot.vue'
 export type { Tone } from './components/SectionHeading.vue'
 export { default as LocaleLinks } from './components/LocaleLinks.vue'
+export { default as GoogleButton } from './components/GoogleButton.vue'
+export { default as TabBar } from './components/TabBar.vue'
+export type { TabItem } from './components/TabBar.vue'
 
 // ── i18n ───────────────────────────────────────────────────────────────────
 export { createI18nRuntime } from './i18n/runtime'

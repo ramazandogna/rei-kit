@@ -24,9 +24,21 @@ Supabase entry. Hibi moves onto it next.
 pnpm add rei-kit
 ```
 
-`vue`, `tailwindcss` and `lucide-vue-next` are peer dependencies — the app
-supplies them, so there is never a second copy of the Vue runtime.
-`vue-i18n` is optional and only needed for the i18n runtime.
+Everything the kit expects from the app is a peer dependency, so the app's copy
+is the only copy:
+
+| peer                    | needed for                        |
+| ----------------------- | --------------------------------- |
+| `vue`                   | everything                        |
+| `tailwindcss`           | the tokens and utilities          |
+| `lucide-vue-next`       | component icons                   |
+| `vue-router`            | `TabBar`, `LocaleLinks`           |
+| `vue-i18n`              | the i18n runtime only             |
+| `@supabase/supabase-js` | the `rei-kit/supabase` entry only |
+
+This is not a formality. A second copy of a library that works through
+provide/inject is not a spare copy -- it is a different injection key, so the
+app's own provider becomes invisible and the component throws on mount.
 
 ## Use
 
@@ -45,17 +57,58 @@ downloads it:
 import { createSupabaseClient } from 'rei-kit/supabase'
 ```
 
+### Wiring the styles
+
+Three lines, and all three are load-bearing:
+
 ```css
 /* your app's main.css */
 @import 'tailwindcss';
-@import 'rei-kit/tokens.css'; /* Tailwind source: tokens and utilities */
+@import 'rei-kit/tokens.css'; /* colour roles, the dark variant, utilities */
 @import 'rei-kit/styles.css'; /* compiled component styles */
 
-/* the whole rebrand */
+/* Tailwind generates a utility only where it has seen the class, and it does
+   not walk node_modules on its own. Without this the kit's components render
+   with every class present in the markup and absent from the stylesheet. */
+@source '../../node_modules/rei-kit/dist';
+```
+
+The path is relative to the CSS file, so adjust the `../` depth to where your
+`main.css` sits.
+
+Leaving any of the three out fails quietly: the build succeeds, the components
+mount, and they come out unstyled. Nothing type-checks this, so it is worth a
+test -- see _Not breaking the apps that use it_.
+
+### Colours
+
+`tokens.css` defines all eleven roles, a `.dark` block for each surface, and the
+`dark` variant. A new app rebrands by overriding values, never by renaming:
+
+```css
 @theme {
-  --color-primary: #6b4de6;
+  --color-primary: #6b4de6; /* main action */
+  --color-accent: #3b2f8f;
   --color-positive: #2fa36b;
   --color-negative: #d1453b;
+  --color-warning: #d89a3e;
+  --color-muted: #efeaff; /* calm surface, empty cell */
+  --color-canvas: #faf9ff; /* behind the shell */
+  --color-surface: #ffffff; /* card */
+  --color-ink: #17132b; /* text */
+  --color-ink-soft: #6a6484; /* secondary text */
+  --color-hair: #e8e4f2; /* rule */
+}
+```
+
+An app that already has its own palette does not have to rename it. Alias the
+roles onto the names it already uses, and keep them as `var()` references so
+the app's own dark-mode overrides carry into the kit's components:
+
+```css
+@theme {
+  --color-primary: var(--color-sea);
+  --color-muted: var(--color-mist);
 }
 ```
 

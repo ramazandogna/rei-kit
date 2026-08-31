@@ -24,7 +24,12 @@ jobs:
         with:
           path: kit
 
+      # The repo is checked out into kit/, so the workspace root has no
+      # package.json for the action to read packageManager from.
       - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: kit/package.json
+
       - uses: actions/setup-node@v4
         with:
           node-version: 24

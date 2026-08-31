@@ -33,7 +33,11 @@ jobs:
       # have rejected.
       - run: pnpm check
 
-      # npm, not pnpm: the OIDC exchange that trusted publishing depends on
-      # lives in the npm CLI. No token — id-token: write above is the whole
-      # credential, minted per run and useless anywhere else.
+      # The one command in this project that is not pnpm.
+      #
+      # pnpm 10's publish has --otp and nothing else: no --provenance, no OIDC.
+      # Trusted publishing is an npm CLI feature, and it is what removes the
+      # token entirely — id-token: write above is the whole credential, minted
+      # per run and useless anywhere else. Everything up to here still runs on
+      # pnpm; only the upload speaks npm.
       - run: npm publish --access public --provenance

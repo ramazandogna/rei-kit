@@ -38,7 +38,13 @@ export { AppError, registerErrorMapper, toAppError } from './utils/app-error'
 export type { AppErrorKind, ErrorMapper } from './utils/app-error'
 
 // ── Composables ────────────────────────────────────────────────────────────
-export { applyTheme, readStoredTheme, setThemeStorageKey, useTheme } from './composables/use-theme'
+export {
+  applyTheme,
+  isThemePreference,
+  readStoredTheme,
+  setThemeStorageKey,
+  useTheme,
+} from './composables/use-theme'
 export type { ThemePreference } from './composables/use-theme'
 
 export { useToday } from './composables/use-today'

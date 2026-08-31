@@ -62,3 +62,8 @@ export { default as SkeletonList } from './components/SkeletonList.vue'
 export { default as StatCard } from './components/StatCard.vue'
 export { default as ToneDot } from './components/ToneDot.vue'
 export type { Tone } from './components/SectionHeading.vue'
+export { default as LocaleLinks } from './components/LocaleLinks.vue'
+
+// ── i18n ───────────────────────────────────────────────────────────────────
+export { createI18nRuntime } from './i18n/runtime'
+export type { I18nRuntimeOptions, LocalePreference } from './i18n/runtime'

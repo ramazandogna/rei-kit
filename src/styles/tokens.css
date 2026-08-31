@@ -1,0 +1,36 @@
+/* rei-kit design tokens.
+ *
+ * Semantic names on purpose. An app renames nothing to rebrand: it redefines
+ * these values, and every component follows. */
+@theme {
+  --color-primary: #26667f;
+  --color-accent: #124170;
+  --color-positive: #67c090;
+  --color-negative: #e05b4f;
+  --color-warning: #d89a3e;
+
+  --color-canvas: #f4faf8;
+  --color-surface: #ffffff;
+  --color-muted: #ddf4e7;
+  --color-ink: #0f2229;
+  --color-ink-soft: #5c7480;
+  --color-hair: #e1edea;
+
+  --radius-cell: 3px;
+  --radius-card: 16px;
+  --radius-shell: 30px;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Class-based rather than media-based: the app decides, and a user preference
+   has to be able to beat the operating system. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-canvas: #07141a;
+  --color-surface: #102630;
+  --color-muted: #12303a;
+  --color-ink: #e6f0ee;
+  --color-ink-soft: #8fa8b2;
+  --color-hair: #1c3945;
+}

@@ -36,3 +36,14 @@ export { isApplePortable, isInstalled, needsIosInstall } from './utils/platform'
 
 export { AppError, registerErrorMapper, toAppError } from './utils/app-error'
 export type { AppErrorKind, ErrorMapper } from './utils/app-error'
+
+// ── Composables ────────────────────────────────────────────────────────────
+export { applyTheme, readStoredTheme, setThemeStorageKey, useTheme } from './composables/use-theme'
+export type { ThemePreference } from './composables/use-theme'
+
+export { useToday } from './composables/use-today'
+export { useOnline } from './composables/use-online'
+export { useDebouncedCallback } from './composables/use-debounced-callback'
+export { useDragScroll } from './composables/use-drag-scroll'
+export { useVisualViewport } from './composables/use-visual-viewport'
+export type { VisualViewportRect } from './composables/use-visual-viewport'

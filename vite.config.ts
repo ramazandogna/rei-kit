@@ -1,9 +1,20 @@
-import { copyFileSync, mkdirSync, readdirSync } from 'node:fs'
+import { copyFileSync, mkdirSync, readdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import dts from 'vite-plugin-dts'
+
+/** Peers are the consumer's copies; the bundle must import them, never inline them. */
+const peers = Object.keys(
+  (
+    JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as {
+      peerDependencies?: Record<string, string>
+    }
+  ).peerDependencies ?? {},
+)
+
+const escapeRe = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 export default defineConfig({
   plugins: [
@@ -46,9 +57,15 @@ export default defineConfig({
       cssFileName: 'styles',
     },
     rollupOptions: {
-      // Everything the consumer already has. Bundling Vue here would give an
-      // app two copies of the runtime and break every composable.
-      external: ['vue', 'vue-i18n', 'lucide-vue-next', /^@supabase\//],
+      // Everything the consumer already has. Bundling any of it would give the
+      // app a second copy, and a second copy of a library that works through
+      // provide/inject is not a duplicate -- it is a different key. That is how
+      // vue-router once shipped inlined here and every RouterLink in the kit
+      // injected a router the app had never provided.
+      //
+      // Derived from peerDependencies rather than listed by hand, so declaring
+      // a peer is the only step required to externalise it.
+      external: [...peers, ...peers.map((name) => new RegExp(`^${escapeRe(name)}/`))],
       output: { assetFileNames: '[name][extname]' },
     },
     // A library ships readable code; the app that consumes it does the

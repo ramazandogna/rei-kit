@@ -20,17 +20,17 @@ jobs:
 
     steps:
       - name: Check out rei-kit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: kit
 
       # The repo is checked out into kit/, so the workspace root has no
       # package.json for the action to read packageManager from.
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           package_json_file: kit/package.json
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
 
@@ -45,7 +45,7 @@ jobs:
           echo "TARBALL=$(ls "$GITHUB_WORKSPACE"/rei-kit-*.tgz)" >> "$GITHUB_ENV"
 
       - name: Check out Hibi
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ramazandogna/hibi
           path: consumer

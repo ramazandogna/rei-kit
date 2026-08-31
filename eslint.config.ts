@@ -26,6 +26,19 @@ export default defineConfigWithVueTs(
     files: ['src/**/__tests__/*'],
   },
 
+  {
+    name: 'kit/typed-props',
+    files: ['**/*.vue'],
+    rules: {
+      // Off deliberately. The rule predates typed props: with
+      // `defineProps<{ x?: T }>()` the `?` already states that the prop is
+      // optional, and demanding a runtime default adds nothing a reader or the
+      // compiler did not already know — it only pushes `= undefined` into every
+      // destructure, which is noise.
+      'vue/require-default-prop': 'off',
+    },
+  },
+
   ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
 
   skipFormatting,

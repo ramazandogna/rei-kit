@@ -10,7 +10,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      # write, not read: the last step cuts the GitHub Release for this tag.
+      contents: write
       id-token: write
 
     steps:
@@ -41,3 +42,23 @@ jobs:
       # per run and useless anywhere else. Everything up to here still runs on
       # pnpm; only the upload speaks npm.
       - run: npm publish --access public --provenance
+
+      # A tag on its own leaves the Releases section empty, which is where anyone
+      # looking at the project goes to see what shipped. The notes are the
+      # matching CHANGELOG section, so they are written once and cannot drift.
+      - name: Cut the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          awk -v version="${TAG#v}" '
+            $0 ~ "^## " version " "  { inside = 1; next }
+            inside && /^## /         { exit }
+            inside                   { print }
+          ' CHANGELOG.md > notes.md
+
+          # A tag whose version has no CHANGELOG heading is a mistake, not a
+          # release with empty notes.
+          test -s notes.md || { echo "No CHANGELOG section for $TAG"; exit 1; }
+
+          gh release create "$TAG" --title "$TAG" --notes-file notes.md --verify-tag

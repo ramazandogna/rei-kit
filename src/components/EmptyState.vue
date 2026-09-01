@@ -7,7 +7,10 @@ const { title, description = '' } = defineProps<{
 
 <template>
   <div class="flex flex-col items-center gap-3 px-6 py-10 text-center">
-    <div v-if="$slots.icon" class="bg-muted text-primary rounded-card flex size-12 items-center">
+    <div
+      v-if="$slots.icon"
+      class="bg-muted text-primary rounded-card flex size-12 items-center justify-center"
+    >
       <slot name="icon" />
     </div>
 

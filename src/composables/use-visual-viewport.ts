@@ -15,7 +15,9 @@ export interface VisualViewportRect {
  * sized in `dvh` sitting partly underneath the keyboard.
  *
  * `null` means the API is unavailable, which callers should read as "trust the
- * layout viewport" rather than as zero.
+ * layout viewport" rather than as zero. A server has no viewport at all, so it
+ * gets that same `null` — this runs during `setup`, and a component using it
+ * has to survive being rendered there.
  *
  * @example
  * ```ts
@@ -26,7 +28,7 @@ export interface VisualViewportRect {
 export function useVisualViewport() {
   const rect = ref<VisualViewportRect | null>(null)
 
-  const viewport = window.visualViewport
+  const viewport = typeof window === 'undefined' ? undefined : window.visualViewport
   if (!viewport) return readonly(rect)
 
   function read() {

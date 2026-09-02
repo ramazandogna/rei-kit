@@ -66,6 +66,17 @@ export function createI18nRuntime<L extends string, Schema extends Record<string
    * match is the best one — not simply the first entry.
    */
   function detectSystemLocale(): L {
+    // No browser to ask. The fallback is the right answer on a server: it is
+    // the locale whose messages are bundled, so it is the only one that could
+    // render without a load.
+    //
+    // The test is `document`, not `navigator`. Node has shipped a global
+    // `navigator` since v21, so `typeof navigator === 'undefined'` is false on
+    // a server and this would read the *build machine's* language and bake it
+    // into every prerendered page. `document` is the only one of the two that
+    // still means "a browser".
+    if (typeof document === 'undefined') return fallback
+
     for (const tag of navigator.languages ?? [navigator.language]) {
       const base = tag.split('-')[0]?.toLowerCase()
       if (base && isSupported(base)) return base
@@ -153,7 +164,10 @@ export function createI18nRuntime<L extends string, Schema extends Record<string
   watchEffect(() => {
     core.locale.value = activeLocale.value
     setFormatLocale(intlLocale.value)
-    document.documentElement.lang = activeLocale.value
+
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = activeLocale.value
+    }
   })
 
   /** Read and write the language preference. */

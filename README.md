@@ -80,6 +80,19 @@ Leaving any of the three out fails quietly: the build succeeds, the components
 mount, and they come out unstyled. Nothing type-checks this, so it is worth a
 test -- see _Not breaking the apps that use it_.
 
+### Prerendering
+
+The kit imports and renders on a server, so an app can prerender with
+`vite-ssg` or any other SSR build. Two things stay the app's job, because only
+the app knows the answer:
+
+- **The theme.** `applyTheme` does nothing without a document, so prerendered
+  HTML carries no `.dark`. Set it before hydration with a small synchronous
+  script in `index.html`, or the first paint flashes light.
+- **Today's date.** `useToday()` on a server is the *server's* today, a
+  different day from the visitor's either side of midnight. Render anything
+  derived from it on the client.
+
 ### Colours
 
 `tokens.css` defines all eleven roles, a `.dark` block for each surface, and the

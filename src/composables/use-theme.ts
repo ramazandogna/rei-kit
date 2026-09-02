@@ -35,8 +35,16 @@ function storeTheme(preference: ThemePreference): void {
   }
 }
 
-/** Adds or removes `.dark` on `<html>`, resolving `system` against the OS. */
+/**
+ * Adds or removes `.dark` on `<html>`, resolving `system` against the OS.
+ *
+ * A no-op without a document. There is no OS preference to read on a server and
+ * no `<html>` to write to, so a prerender leaves the class off and the app
+ * decides the theme before hydration — see the note in the README.
+ */
 export function applyTheme(preference: ThemePreference): void {
+  if (typeof document === 'undefined') return
+
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
   const isDark = preference === 'dark' || (preference === 'system' && prefersDark)
 
@@ -67,9 +75,11 @@ function controller(): Ref<ThemePreference> {
   )
 
   // While on `system`, follow the OS if the user flips it at night.
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (preference?.value === 'system') applyTheme('system')
-  })
+  if (typeof window !== 'undefined') {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (preference?.value === 'system') applyTheme('system')
+    })
+  }
 
   return preference
 }

@@ -3,6 +3,37 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.2.2 — 2026-09-03
+
+### Fixed
+
+- **The kit can be imported on a server.** `use-today` armed its midnight timer
+  and added a `visibilitychange` listener at module scope, and `index.ts`
+  re-exports it, so a single `import { BaseButton } from 'rei-kit'` threw
+  `document is not defined` before any component rendered. The wiring now
+  happens on the first `useToday()`, which also means an app that never asks for
+  today never arms a timer.
+- `useVisualViewport` read `window.visualViewport` during `setup`, so `BaseSheet`
+  — its only caller — could not be server-rendered. Without a window it now
+  returns the same `null` it already returned where the API is missing.
+- `applyTheme` is a no-op without a document, and the `prefers-color-scheme`
+  listener is only attached in a browser. A prerender leaves `.dark` off; the app
+  settles the theme before hydration.
+- The i18n runtime no longer writes `document.documentElement.lang` or detects a
+  system locale where there is no browser to detect one. **The test is
+  `document`, not `navigator`:** Node has had a global `navigator` since v21, so
+  the obvious check would have passed on a server and baked the build machine's
+  language into every prerendered page.
+
+No public symbol was added, removed or renamed, and no prop changed. Every
+consuming app can take this without reading anything.
+
+### Added
+
+- `src/__tests__/ssr.spec.ts`, which renders the components in the **node**
+  environment. jsdom cannot prove this: it supplies the very `document` a server
+  lacks, so the suite passed all four of the bugs above.
+
 ## 0.2.1 — 2026-09-01
 
 ### Fixed

@@ -36,6 +36,21 @@ function storeTheme(preference: ThemePreference): void {
 }
 
 /**
+ * Does the environment prefer a dark scheme?
+ *
+ * `matchMedia` is checked for on its own rather than inferred from `document`.
+ * Having one does not imply having the other: jsdom supplies a document and no
+ * `matchMedia`, so a consumer's component test that so much as mounts something
+ * calling `useTheme` threw — and some embedded webviews are the same. Where
+ * there is nothing to ask, the answer is no rather than an exception.
+ */
+function prefersDarkScheme(): boolean {
+  return typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-color-scheme: dark)').matches
+    : false
+}
+
+/**
  * Adds or removes `.dark` on `<html>`, resolving `system` against the OS.
  *
  * A no-op without a document. There is no OS preference to read on a server and
@@ -45,8 +60,7 @@ function storeTheme(preference: ThemePreference): void {
 export function applyTheme(preference: ThemePreference): void {
   if (typeof document === 'undefined') return
 
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  const isDark = preference === 'dark' || (preference === 'system' && prefersDark)
+  const isDark = preference === 'dark' || (preference === 'system' && prefersDarkScheme())
 
   document.documentElement.classList.toggle('dark', isDark)
 }
@@ -74,8 +88,9 @@ function controller(): Ref<ThemePreference> {
     { immediate: true },
   )
 
-  // While on `system`, follow the OS if the user flips it at night.
-  if (typeof window !== 'undefined') {
+  // While on `system`, follow the OS if the user flips it at night. Only where
+  // there is something to listen to; see `prefersDarkScheme`.
+  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
       if (preference?.value === 'system') applyTheme('system')
     })

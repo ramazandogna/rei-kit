@@ -3,6 +3,22 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.2.3 — 2026-09-04
+
+### Fixed
+
+- **`applyTheme` no longer requires `matchMedia` to exist.** It guarded on
+  `document` and then reached for `window.matchMedia`, and having one does not
+  imply having the other: jsdom supplies a document and no `matchMedia`, so a
+  consuming app's component test that mounted anything calling `useTheme` threw
+  `window.matchMedia is not a function`. Some embedded webviews behave the same
+  way. Where there is nothing to ask, an unresolvable `system` now resolves to
+  light instead of raising; an explicit `light` or `dark` never needed to ask at
+  all and now says so. The `prefers-color-scheme` listener is registered under
+  the same check.
+
+No public symbol changed, so this is a patch.
+
 ## 0.2.2 — 2026-09-03
 
 ### Fixed

@@ -1,6 +1,6 @@
 {
   "name": "rei-kit",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Vue 3 and Tailwind 4 design system and shared runtime. Extracted from Hibi.",
   "license": "MIT",
   "author": "Ramazan Doğan",

@@ -52,6 +52,7 @@ const PUBLIC_API = [
   'GoogleButton',
   'LocaleLinks',
   'PageHeader',
+  'PriceCard',
   'SectionHeading',
   'SegmentedControl',
   'SettingsGroup',

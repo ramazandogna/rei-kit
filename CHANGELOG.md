@@ -3,6 +3,55 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.4.0 — 2026-09-06
+
+The kit was extracted from a phone app and had never grown the parts a desktop
+app needs. The gap was measurable: its newest consumer used **12** of its
+symbols and hand-wrote **737** class attributes, while the two apps it came
+from used ~32 each. Two causes, and this release addresses both.
+
+### Added
+
+- **`PageContainer`** — one measure, centred, with the page's gutters. `wide`
+  for a page, `reading` for a column of prose at ~68 characters. Every consumer
+  was writing `max-w-[…] mx-auto px-6` into each layout instead, which is
+  eleven chances for one page to be forty pixels narrower than the rest.
+- **`BaseCard`** — a bordered surface with optional head and foot slots.
+  `interactive` opts into the lift and press, because a card holding a form
+  should not move under the pointer.
+- **`BaseAlert`** — info / success / warning / danger, by role and never by colour.
+  `assertive` decides whether a screen reader interrupts: invisible on screen,
+  rude in a screen reader, so it is a prop rather than a guess.
+- **`BaseBadge`** — a small standing label. Deliberately never a control; the
+  moment one needs a click it is a chip, which is a different component.
+- **`ProgressBar`** — clamped rather than trusted. Progress is always a
+  computed number and computed numbers arrive as 101, as -3, and as NaN when
+  the denominator is zero, which is the ordinary state of a course nobody has
+  started.
+- **`ErrorBoundary`** — all three consuming apps had written this. What they
+  had in common was the mechanism (catch, report, reset on navigation); what
+  differed was the icon and the sentence, which should differ. So the fallback
+  is a slot and the kit stays out of the wording.
+- **`useMediaQuery`** — starts `false` and resolves on mount, so a prerendered
+  page is not built for a screen the server does not have.
+
+- **A showcase.** `pnpm showcase` runs it, `pnpm showcase:build` builds it.
+  This is the other half of the diagnosis: there was no way to see what the kit
+  contained short of reading `public-api.spec.ts`, and a component nobody can
+  see is a component nobody uses. It wires the kit exactly the way the README
+  tells a consumer to, so a broken install shows up there before it ships.
+
+### Fixed
+
+- **`VERSION` was the string `'0.0.0'`, always.** It was a literal in the
+  source and nothing ever rewrote it, so every consumer that imported it was
+  told the kit was at 0.0.0 whatever it actually was. It is now replaced at
+  build time from `package.json`. A public symbol that reports something false
+  is worse than a missing one — nobody re-checks a value that looks like it
+  works.
+
+Additive throughout: no existing export changed name, props or behaviour.
+
 ## 0.3.1 — 2026-09-05
 
 ### Fixed

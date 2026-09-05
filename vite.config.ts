@@ -16,7 +16,12 @@ const peers = Object.keys(
 
 const escapeRe = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+const { version } = JSON.parse(
+  readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
+) as { version: string }
+
 export default defineConfig({
+  define: { __REI_KIT_VERSION__: JSON.stringify(version) },
   plugins: [
     vue(),
     tailwindcss(),

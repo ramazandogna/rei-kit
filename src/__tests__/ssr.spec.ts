@@ -6,13 +6,19 @@ import { renderToString } from 'vue/server-renderer'
 import { describe, expect, it } from 'vitest'
 
 import {
+  BaseAlert,
+  BaseBadge,
   BaseButton,
   BaseInput,
   BaseSheet,
+  BaseCard,
   EmptyState,
+  ErrorBoundary,
   GoogleButton,
   LocaleLinks,
+  PageContainer,
   PageHeader,
+  ProgressBar,
   SectionHeading,
   SegmentedControl,
   SettingsGroup,
@@ -23,6 +29,7 @@ import {
   applyTheme,
   createI18nRuntime,
   readStoredTheme,
+  useMediaQuery,
   useToday,
 } from '../index'
 
@@ -50,13 +57,19 @@ describe('server rendering', () => {
     // `TabBar` is absent on purpose: it renders `RouterLink`, so it needs a
     // router provided, which is the app's job and not what this file proves.
     const cases: [string, Component, Record<string, unknown>][] = [
+      ['BaseAlert', BaseAlert, {}],
+      ['BaseBadge', BaseBadge, {}],
       ['BaseButton', BaseButton, {}],
       ['BaseInput', BaseInput, { label: 'E-posta' }],
       ['BaseSheet', BaseSheet, { title: 'Ayarlar' }],
+      ['BaseCard', BaseCard, {}],
       ['EmptyState', EmptyState, {}],
+      ['ErrorBoundary', ErrorBoundary, {}],
       ['GoogleButton', GoogleButton, { label: 'Google ile devam et' }],
       ['LocaleLinks', LocaleLinks, { locales: ['tr'], labels: { tr: 'Türkçe' } }],
+      ['PageContainer', PageContainer, {}],
       ['PageHeader', PageHeader, { title: 'Gramer' }],
+      ['ProgressBar', ProgressBar, { value: 7, max: 28 }],
       ['SectionHeading', SectionHeading, { tone: 'neutral', label: 'Bugün' }],
       ['SegmentedControl', SegmentedControl, { options: [{ value: 'a', label: 'A' }] }],
       ['SettingsGroup', SettingsGroup, { title: 'Genel' }],
@@ -82,6 +95,21 @@ describe('server rendering', () => {
     // Arming one would keep the node process alive past the last page, which
     // is how a prerender build hangs instead of finishing.
     expect(useToday().value).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  })
+
+  it('answers a media query without a window to ask', () => {
+    // Called during setup on a prerendered page. `matchMedia` does not exist
+    // in node, and the honest answer there is "not yet" rather than a throw —
+    // it resolves on mount, in the browser, where the question has an answer.
+    const app = createSSRApp({
+      setup() {
+        const wide = useMediaQuery('(min-width: 64rem)')
+
+        return () => h('i', String(wide.value))
+      },
+    })
+
+    return expect(renderToString(app)).resolves.toContain('false')
   })
 
   it('builds an i18n runtime without a browser to detect', () => {

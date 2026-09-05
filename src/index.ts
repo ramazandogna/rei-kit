@@ -9,7 +9,19 @@
  * @see https://github.com/ramazandogna/rei-kit
  */
 
-export const VERSION = '0.0.0'
+/**
+ * The published version, replaced at build time from `package.json`.
+ *
+ * It was a literal `'0.0.0'` and nothing ever rewrote it, so every consumer
+ * that imported this — and the showcase, which is how it was noticed — was
+ * told the kit was at 0.0.0 whatever it actually was. A symbol in a public API
+ * that reports something false is worse than one that is missing: nobody
+ * checks a value that looks like it works.
+ *
+ * The fallback keeps `vitest` and `vite dev` honest, where no define runs.
+ */
+export const VERSION: string =
+  typeof __REI_KIT_VERSION__ === 'string' ? __REI_KIT_VERSION__ : '0.0.0-dev'
 
 // ── Utilities ──────────────────────────────────────────────────────────────
 export {
@@ -51,15 +63,22 @@ export { useToday } from './composables/use-today'
 export { useOnline } from './composables/use-online'
 export { useDebouncedCallback } from './composables/use-debounced-callback'
 export { useDragScroll } from './composables/use-drag-scroll'
+export { useMediaQuery } from './composables/use-media-query'
 export { useVisualViewport } from './composables/use-visual-viewport'
 export type { VisualViewportRect } from './composables/use-visual-viewport'
 
 // ── Components ─────────────────────────────────────────────────────────────
+export { default as BaseAlert } from './components/BaseAlert.vue'
+export { default as BaseBadge } from './components/BaseBadge.vue'
 export { default as BaseButton } from './components/BaseButton.vue'
 export { default as BaseInput } from './components/BaseInput.vue'
 export { default as BaseSheet } from './components/BaseSheet.vue'
+export { default as BaseCard } from './components/BaseCard.vue'
 export { default as EmptyState } from './components/EmptyState.vue'
+export { default as ErrorBoundary } from './components/ErrorBoundary.vue'
+export { default as PageContainer } from './components/PageContainer.vue'
 export { default as PageHeader } from './components/PageHeader.vue'
+export { default as ProgressBar } from './components/ProgressBar.vue'
 export { default as PriceCard } from './components/PriceCard.vue'
 export { default as SectionHeading } from './components/SectionHeading.vue'
 export { default as SegmentedControl } from './components/SegmentedControl.vue'

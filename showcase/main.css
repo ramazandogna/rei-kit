@@ -1,0 +1,11 @@
+/*
+ * The consuming app's three lines, exactly as the README gives them.
+ *
+ * The showcase is a consumer like any other, and that is half its value: if
+ * the setup instructions are wrong, this page is the first thing to notice.
+ */
+@import 'tailwindcss';
+
+@import '../src/styles/tokens.css';
+
+@source '../src';

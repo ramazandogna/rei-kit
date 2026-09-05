@@ -1,5 +1,12 @@
-/** Error categories the UI can branch on, independent of Postgres or Supabase. */
-export type AppErrorKind = 'conflict' | 'not-found' | 'network' | 'unknown'
+/**
+ * Error categories the UI can branch on, independent of Postgres or Supabase.
+ *
+ * `denied` is the one that is not a fault: the request was understood, well
+ * formed and refused. A screen that treats it as a failure tells the reader
+ * something is broken and sends them to support, when what they need is to
+ * sign in again or to be told the thing is not theirs.
+ */
+export type AppErrorKind = 'conflict' | 'not-found' | 'network' | 'denied' | 'unknown'
 
 /**
  * A normalised error thrown by the data layer.

@@ -3,6 +3,49 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.3.1 — 2026-09-05
+
+### Fixed
+
+- **Supabase errors reached the screen as "Something went wrong."** The mapper
+  registered by `rei-kit/supabase` gated on `error instanceof PostgrestError`,
+  and supabase-js does not return an instance: the error in `{ data, error }`
+  is a plain object, and a project holding two copies of
+  `@supabase/postgrest-js` gets two classes and an `instanceof` that is false
+  against a genuine error either way. So the mapper declined every error it
+  existed for and each one fell into the generic branch. A message reading
+  `permission denied for table enrollments`, naming the table and the missing
+  grant, was replaced with a sentence that says nothing — the app showed one
+  thing, the console showed a 403, and the two could not be connected. The
+  mapper now recognises a PostgREST failure by its shape as well as its class.
+
+### Added
+
+- **`denied` joins `AppErrorKind`,** for 42501 (insufficient privilege) and
+  PGRST301/302 (missing or expired token). These are not faults: the request
+  was understood, well formed and refused, and a screen that reports a failure
+  sends the reader to support over something they can fix by signing in again.
+
+  Additive at runtime. A consumer with an exhaustive `switch` over
+  `AppErrorKind` and no `default` will need a branch; every other consumer is
+  unaffected.
+
+## 0.3.0 — 2026-09-05
+
+### Added
+
+- **`PriceCard`** — a pricing tier with every string handed in: name, price,
+  cadence, features, the call to action and whether it is the featured one.
+  Nothing about money, currency or plan names lives in the kit.
+
+## 0.2.4 — 2026-09-04
+
+### Fixed
+
+- **`SkeletonList` treated `rowHeight` as a class name** while every call site
+  passed a CSS length, so a loading state rendered at zero height and appeared
+  not to render at all. It now accepts either.
+
 ## 0.2.3 — 2026-09-04
 
 ### Fixed

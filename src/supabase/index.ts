@@ -107,8 +107,41 @@ export function createSupabaseClient<Database>(
  * Registered on import rather than exported as a step to remember: importing
  * this module is already the decision to use Supabase.
  */
+/**
+ * A PostgREST failure, however it reached us.
+ *
+ * `instanceof PostgrestError` is the obvious test and it is not enough. The
+ * error returned in `{ data, error }` is a plain object — supabase-js builds
+ * the class only on the paths that throw — and even where it does construct
+ * one, a project holding two copies of `@supabase/postgrest-js` gets two
+ * different classes and an `instanceof` that is false against a genuine error.
+ *
+ * The consequence was silent and total: every database failure fell past this
+ * mapper into the generic branch, so `permission denied for table enrollments`
+ * — a message naming the table and the missing grant — reached the screen as
+ * "Something went wrong." The information was there the whole time.
+ *
+ * So: the class where it holds, and the shape where it does not. `code` and
+ * `message` are what PostgREST always sends; `details` and `hint` are always
+ * present as keys, null when empty, which is what separates this from any
+ * other object carrying a `code`.
+ */
+function isPostgrestError(error: unknown): error is PostgrestError {
+  if (error instanceof PostgrestError) return true
+  if (typeof error !== 'object' || error === null) return false
+
+  const candidate = error as Record<string, unknown>
+
+  return (
+    typeof candidate['message'] === 'string' &&
+    typeof candidate['code'] === 'string' &&
+    'details' in candidate &&
+    'hint' in candidate
+  )
+}
+
 registerErrorMapper((error) => {
-  if (!(error instanceof PostgrestError)) return null
+  if (!isPostgrestError(error)) return null
 
   // 23505 is unique_violation — a second row where the schema allows one. It is
   // a normal outcome of a double tap, not a failure worth an error screen.
@@ -118,6 +151,14 @@ registerErrorMapper((error) => {
 
   if (error.code === 'PGRST116') {
     return new AppError('not-found', 'That could not be found.', { cause: error })
+  }
+
+  // 42501 is insufficient_privilege and PGRST301/302 are an absent or expired
+  // token. All three mean the same thing to a reader — you are not allowed to
+  // do this — and none of them mean the app is broken, which is what a generic
+  // failure message implies and what sends somebody to the error log.
+  if (error.code === '42501' || error.code === 'PGRST301' || error.code === 'PGRST302') {
+    return new AppError('denied', 'You are not allowed to do that.', { cause: error })
   }
 
   return new AppError('unknown', error.message, { cause: error })

@@ -3,6 +3,17 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.4.1 — 2026-09-06
+
+### Fixed
+
+- **`PageContainer` insisted on its own width.** It shipped with `75rem` baked
+  in, and the first app that wanted it had deliberately measured its page at
+  1120px — so the component written to remove that app's hand-rolled container
+  could not replace it. Same mistake as a hex inside a component, one axis
+  over. The measures are now tokens (`--measure-page`, `--measure-reading`),
+  overridden in the consuming app's `@theme` like every colour role.
+
 ## 0.4.0 — 2026-09-06
 
 The kit was extracted from a phone app and had never grown the parts a desktop

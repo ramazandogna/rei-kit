@@ -139,12 +139,16 @@ describe('BaseAlert', () => {
 })
 
 describe('PageContainer', () => {
-  it('gives prose a narrower measure than a page', () => {
+  it('takes its measure from a token, not a literal', () => {
+    // Baked in, this component was unusable by the first app that wanted it:
+    // that app had deliberately measured its page at 1120px, and a container
+    // that insists on 1200 is the same mistake as a component with a hex in
+    // it, one axis over.
     const page = mount(PageContainer, { slots: { default: 'x' } })
     const prose = mount(PageContainer, { props: { width: 'reading' }, slots: { default: 'x' } })
 
-    expect(page.classes()).toContain('max-w-[75rem]')
-    expect(prose.classes()).toContain('max-w-[68ch]')
+    expect(page.attributes('style')).toContain('var(--measure-page)')
+    expect(prose.attributes('style')).toContain('var(--measure-reading)')
   })
 
   it('can be the landmark it actually is', () => {

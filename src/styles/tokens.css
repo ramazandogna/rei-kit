@@ -16,6 +16,18 @@
   --color-ink-soft: #5c7480;
   --color-hair: #e1edea;
 
+  /* ---------------------------------------------------------------------
+     Measures.
+
+     A width is a role like a colour is. `PageContainer` shipped with 75rem
+     baked in and the first app that wanted it had deliberately chosen 1120px,
+     so the component it was written for could not be used — which is the same
+     mistake as a component with a hex in it, one axis over.
+     --------------------------------------------------------------------- */
+  --measure-page: 75rem;
+  /* ~68 characters. Longer and the eye loses the line it was returning to. */
+  --measure-reading: 68ch;
+
   --radius-cell: 3px;
   --radius-card: 16px;
   --radius-shell: 30px;

@@ -13,7 +13,8 @@ import { computed } from 'vue'
  *
  * Two widths rather than one, because a page and a passage are different
  * problems: `wide` is the page, `reading` is a column of prose at the width
- * type wants to be read at.
+ * type wants to be read at. Both come from tokens, so an app that measures its
+ * page at 1120 rather than 1200 can still use this.
  */
 const { width = 'wide', as = 'div' } = defineProps<{
   /** `wide` for a page, `reading` for prose, `full` to opt out. */
@@ -22,18 +23,25 @@ const { width = 'wide', as = 'div' } = defineProps<{
   as?: string
 }>()
 
+/**
+ * From tokens, not from literals.
+ *
+ * A width is a role the same way a colour is, and baking one in makes the
+ * component unusable by any app that measured its own page differently — which
+ * the first consumer had, deliberately. Override `--measure-page` and
+ * `--measure-reading` in the app's `@theme` and every container follows.
+ */
 const WIDTHS = {
-  wide: 'max-w-[75rem]',
-  // ~68 characters. Longer than this and the eye loses the line it was on.
-  reading: 'max-w-[68ch]',
-  full: '',
+  wide: 'var(--measure-page)',
+  reading: 'var(--measure-reading)',
+  full: 'none',
 } as const
 
 const measure = computed(() => WIDTHS[width])
 </script>
 
 <template>
-  <component :is="as" class="mx-auto w-full px-5 sm:px-8" :class="measure">
+  <component :is="as" class="mx-auto w-full px-5 sm:px-8" :style="{ maxWidth: measure }">
     <slot />
   </component>
 </template>

@@ -3,6 +3,18 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.4.2 — 2026-09-06
+
+### Added
+
+- **`PriceCard` takes a `bullet` slot.** A pricing table often uses the list
+  marker to say something the tone cannot — on the tier you already have, the
+  features are things you hold rather than things you would get — and the first
+  consumer had drawn exactly that distinction in green. Adopting the component
+  would have meant giving it up, which is the same reason `PageContainer`'s
+  width became a token in 0.4.1: a part is not reusable if reaching for it
+  costs a design decision somebody made on purpose.
+
 ## 0.4.1 — 2026-09-06
 
 ### Fixed

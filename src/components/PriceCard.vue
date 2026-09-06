@@ -106,7 +106,14 @@ const palette = computed(() => TONE[tone])
 
     <ul class="mt-7 flex-1 space-y-3">
       <li v-for="feature in features" :key="feature" class="flex gap-3 text-sm">
+        <!-- The marker is a slot because a pricing table often uses it to say
+             something the tone cannot: on the tier you already have, these are
+             things you hold rather than things you would get. A consumer that
+             had drawn that distinction should not have to give it up to reach
+             for this component. -->
+        <span v-if="$slots.bullet" class="mt-[0.45rem] shrink-0"><slot name="bullet" /></span>
         <span
+          v-else
           class="bg-primary/45 mt-[0.45rem] size-1.5 shrink-0 rounded-full"
           aria-hidden="true"
         />

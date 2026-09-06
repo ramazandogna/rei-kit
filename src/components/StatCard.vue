@@ -8,7 +8,7 @@ const {
 } = defineProps<{
   value: string
   label: string
-  trend?: 'up' | 'down' | 'flat' | null
+  trend?: 'up' | 'down' | 'flat' | null | undefined
 }>()
 
 const TREND_ICON = { up: ArrowUp, down: ArrowDown, flat: ArrowRight } as const

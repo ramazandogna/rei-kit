@@ -29,7 +29,7 @@ const {
   /** Which item is current. Usually from `route.meta`. */
   active?: K | undefined
   /** Accessible name for the navigation landmark. */
-  label?: string
+  label?: string | undefined
 }>()
 </script>
 

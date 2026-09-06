@@ -27,7 +27,7 @@ const {
   tone: Tone
   label: string
   /** Hidden when zero, so an empty group's heading stays quiet. */
-  count?: number
+  count?: number | undefined
 }>()
 </script>
 

@@ -18,9 +18,9 @@ import { computed } from 'vue'
  */
 const { width = 'wide', as = 'div' } = defineProps<{
   /** `wide` for a page, `reading` for prose, `full` to opt out. */
-  width?: 'wide' | 'reading' | 'full'
+  width?: 'wide' | 'reading' | 'full' | undefined
   /** The element to render. `main`, `section` and `article` all belong here. */
-  as?: string
+  as?: string | undefined
 }>()
 
 /**

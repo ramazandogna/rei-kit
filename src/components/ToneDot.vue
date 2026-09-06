@@ -10,7 +10,7 @@ const { fill, label = '' } = defineProps<{
   /** Background utility for the dot, e.g. `bg-positive`. */
   fill: string
   /** Optional text after the dot. Omit for a bare marker. */
-  label?: string
+  label?: string | undefined
 }>()
 </script>
 

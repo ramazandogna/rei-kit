@@ -27,19 +27,19 @@ const {
   recommended = false,
 } = defineProps<{
   name: string
-  lead?: string
+  lead?: string | undefined
   /** Already formatted, or whatever stands in while there is no price. */
   price: string
-  period?: string
-  note?: string
+  period?: string | undefined
+  note?: string | undefined
   features: readonly string[]
-  tone?: 'neutral' | 'warm' | 'cool'
+  tone?: 'neutral' | 'warm' | 'cool' | undefined
   /** Rides on the card's edge, e.g. "Recommended". */
-  badge?: string
+  badge?: string | undefined
   /** Sits inside, e.g. "30% cheaper" or "Your plan". */
-  chip?: string
+  chip?: string | undefined
   /** Raises the card and lets the badge show. */
-  recommended?: boolean
+  recommended?: boolean | undefined
 }>()
 
 const TONE = {

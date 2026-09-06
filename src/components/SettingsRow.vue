@@ -16,12 +16,12 @@ const {
   stacked = false,
 } = defineProps<{
   label: string
-  description?: string
+  description?: string | undefined
   icon?: Component | undefined
   /** Renders the row as a button with a chevron. */
-  interactive?: boolean
+  interactive?: boolean | undefined
   /** Puts the control on its own line below the label, for wide controls. */
-  stacked?: boolean
+  stacked?: boolean | undefined
 }>()
 
 const emit = defineEmits<{ click: [] }>()

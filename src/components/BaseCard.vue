@@ -12,8 +12,8 @@
  * when the pointer crosses it.
  */
 const { interactive = false, as = 'div' } = defineProps<{
-  interactive?: boolean
-  as?: string
+  interactive?: boolean | undefined
+  as?: string | undefined
 }>()
 </script>
 

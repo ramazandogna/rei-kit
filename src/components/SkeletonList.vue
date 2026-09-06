@@ -6,7 +6,7 @@ const {
   rowHeight = 'h-14',
   label = 'Loading…',
 } = defineProps<{
-  rows?: number
+  rows?: number | undefined
   /**
    * How tall each row is, as either a utility class (`h-20`) or a CSS length
    * (`5rem`, `72px`, `var(--row)`).
@@ -17,8 +17,8 @@ const {
    * state that shows an empty page is worse than no loading state, because it
    * looks like the page is finished and empty.
    */
-  rowHeight?: string
-  label?: string
+  rowHeight?: string | undefined
+  label?: string | undefined
 }>()
 
 /** A length starts with a digit, a dot, or opens a CSS function. */

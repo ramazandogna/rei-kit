@@ -11,14 +11,14 @@ const {
   closeLabel = 'Close',
 } = defineProps<{
   title: string
-  subtitle?: string
+  subtitle?: string | undefined
   /**
    * Accessible name for the close button.
    *
    * A prop rather than a translation: a component that calls t() forces every
    * consumer onto one i18n setup, and this is the package's only visible string.
    */
-  closeLabel?: string
+  closeLabel?: string | undefined
 }>()
 
 const viewport = useVisualViewport()

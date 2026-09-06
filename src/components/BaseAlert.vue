@@ -16,9 +16,9 @@ import { computed } from 'vue'
  * guess.
  */
 const { tone = 'info', assertive = false } = defineProps<{
-  tone?: 'info' | 'success' | 'warning' | 'danger'
+  tone?: 'info' | 'success' | 'warning' | 'danger' | undefined
   /** Announce immediately, interrupting. For failures the reader must act on. */
-  assertive?: boolean
+  assertive?: boolean | undefined
 }>()
 
 const TONES = {

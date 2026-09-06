@@ -18,8 +18,8 @@ const {
    * surrounding row already names them — dropping the label entirely would
    * leave the input with no accessible name at all.
    */
-  labelHidden?: boolean
-  type?: 'text' | 'email' | 'password' | 'number'
+  labelHidden?: boolean | undefined
+  type?: 'text' | 'email' | 'password' | 'number' | undefined
 }>()
 
 const model = defineModel<string | undefined>()

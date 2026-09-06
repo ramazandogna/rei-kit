@@ -15,7 +15,7 @@ const {
   /** Endonyms, e.g. `{ en: 'English', tr: 'Türkçe' }`. */
   labels: Record<L, string>
   /** Accessible name for the group. */
-  label?: string
+  label?: string | undefined
 }>()
 
 /**

@@ -16,7 +16,7 @@ const {
   label,
 } = defineProps<{
   value: number
-  max?: number
+  max?: number | undefined
   /** For screen readers. Without it this is a rectangle that means nothing. */
   label?: string | undefined
 }>()

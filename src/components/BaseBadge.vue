@@ -9,7 +9,7 @@ import { computed } from 'vue'
  * to be removed. Keeping that line drawn is most of the value.
  */
 const { tone = 'neutral' } = defineProps<{
-  tone?: 'neutral' | 'primary' | 'success' | 'warning' | 'danger'
+  tone?: 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | undefined
 }>()
 
 const TONES = {

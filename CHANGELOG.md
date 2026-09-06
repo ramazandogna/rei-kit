@@ -3,6 +3,22 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.4.3 — 2026-09-06
+
+### Fixed
+
+- **Optional props refused an explicit `undefined`.** The kit compiles with
+  `exactOptionalPropertyTypes`, and under that flag `note?: string` means the
+  prop may be *absent* — not that it may be `undefined`. So a consumer with the
+  same flag on could not forward its own optional value: passing
+  `:note="note"` where `note` is `string | undefined` failed to type-check
+  against a component built to receive exactly that.
+
+  Every optional prop now reads `?: T | undefined`. Thirty-five of them across
+  sixteen components. Widening what a prop accepts, so nothing that compiles
+  today stops compiling — but a strict consumer can now bind a value it might
+  not have, which is the ordinary case and was the blocked one.
+
 ## 0.4.2 — 2026-09-06
 
 ### Added

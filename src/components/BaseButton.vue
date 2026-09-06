@@ -6,11 +6,11 @@ const {
   disabled = false,
   type = 'button',
 } = defineProps<{
-  variant?: 'primary' | 'ghost' | 'danger'
-  size?: 'sm' | 'md'
-  loading?: boolean
-  disabled?: boolean
-  type?: 'button' | 'submit'
+  variant?: 'primary' | 'ghost' | 'danger' | undefined
+  size?: 'sm' | 'md' | undefined
+  loading?: boolean | undefined
+  disabled?: boolean | undefined
+  type?: 'button' | 'submit' | undefined
 }>()
 
 const VARIANT_CLASS = {

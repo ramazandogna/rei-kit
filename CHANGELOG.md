@@ -3,6 +3,18 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.4.4 — 2026-09-06
+
+### Added
+
+- **`BaseButton` gains a `secondary` variant** — bordered, on the surface
+  colour. There were three variants and none of them was "a real action that
+  is not the one being urged", so `ghost` had been standing in for it. Ghost
+  has no border and no fill, which is right for a control that should recede
+  until it is wanted and wrong for one half of a choice: "Save draft" beside
+  "Publish" read as a caption rather than a button, in every consumer that
+  tried it.
+
 ## 0.4.3 — 2026-09-06
 
 ### Fixed

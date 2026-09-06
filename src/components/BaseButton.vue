@@ -6,7 +6,7 @@ const {
   disabled = false,
   type = 'button',
 } = defineProps<{
-  variant?: 'primary' | 'ghost' | 'danger' | undefined
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | undefined
   size?: 'sm' | 'md' | undefined
   loading?: boolean | undefined
   disabled?: boolean | undefined
@@ -15,6 +15,16 @@ const {
 
 const VARIANT_CLASS = {
   primary: 'bg-primary text-white hover:bg-primary/90',
+  /*
+   * An action that is real but not the one being urged.
+   *
+   * `ghost` had been standing in for this and cannot: with no border and no
+   * fill it reads as text, so "Save draft" sitting next to "Publish" looked
+   * like a caption rather than the other half of a choice. Ghost is for a
+   * control that should recede until it is wanted — a toolbar, a menu row —
+   * and that is a different job.
+   */
+  secondary: 'border-hair bg-surface text-ink border hover:bg-muted',
   ghost: 'bg-transparent text-ink hover:bg-muted',
   danger: 'bg-negative text-white hover:bg-negative/90',
 } as const

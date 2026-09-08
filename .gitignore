@@ -14,3 +14,6 @@ coverage
 *.log
 
 .npmrc
+
+# Yerel analiz raporu — yayınlanmaz
+REI-KIT-ANALIZ.md

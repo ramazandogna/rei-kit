@@ -3,6 +3,28 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.6.1 — 2026-09-09
+
+### Added
+
+- **`variant="quiet"`** — the control that is present without asking for
+  attention: a dismiss beside an install prompt, a chevron beside a month, a
+  delete at the end of a row.
+
+  `ghost` had been the only candidate and is not this. Ghost keeps
+  full-strength ink and answers a hover with a fill, which is a control waiting
+  to be used. Quiet starts soft and answers a hover by getting darker; no
+  surface appears at all.
+
+  The exact pair `text-ink-soft hover:text-ink` was hand-written **47 times**
+  across the three apps. That is what a missing variant looks like from the
+  outside, and it was found by trying to convert the first prompt rather than
+  by reading the component.
+
+Deliberately **not** added: a `positive` fill. Hibi's install button is green,
+but it is the only one, in one app — the rule is two, and a kit that grows on
+one call site grows on a guess.
+
 ## 0.6.0 — 2026-09-09
 
 0.5.0 claimed to be about the 136 hand-written `<button>` elements across the

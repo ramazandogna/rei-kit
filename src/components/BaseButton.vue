@@ -36,7 +36,7 @@ const {
    * height and no padding: giving it either would make it a ghost button,
    * which is a different thing and was already here.
    */
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'link' | undefined
+  variant?: 'primary' | 'secondary' | 'ghost' | 'quiet' | 'danger' | 'link' | undefined
   /** `xs` is the action inside a prompt or a nudge, not on a page. */
   size?: 'xs' | 'sm' | 'md' | 'lg' | undefined
   loading?: boolean | undefined
@@ -81,6 +81,17 @@ const VARIANT_CLASS = {
    */
   secondary: 'border-hair bg-surface text-ink border hover:bg-muted',
   ghost: 'bg-transparent text-ink hover:bg-muted',
+  /*
+   * The control that is present without asking for attention: a dismiss beside
+   * an install prompt, a chevron beside a month, a delete at the end of a row.
+   *
+   * `ghost` is not this. Ghost keeps full-strength ink and answers a hover with
+   * a fill, which is a control waiting to be used. This one starts quiet and
+   * answers a hover by getting darker — no surface appears at all. The exact
+   * pair `text-ink-soft hover:text-ink` was hand-written 47 times across the
+   * three apps, which is what a missing variant looks like from the outside.
+   */
+  quiet: 'bg-transparent text-ink-soft hover:text-ink',
   danger: 'bg-negative text-white hover:bg-negative/90',
   /* No fill, no border, no box: underlined so it is still obviously a control
      without one. `ghost` cannot stand in — it has a hover surface and a

@@ -321,3 +321,20 @@ describe('the shapes a button has to be able to take', () => {
     expect(mount(BaseButton).classes()).toContain('rounded-card')
   })
 })
+
+describe('quiet, which is not ghost', () => {
+  it('starts soft and darkens, rather than growing a surface', () => {
+    // `text-ink-soft hover:text-ink` was hand-written 47 times across the three
+    // apps. Ghost keeps full-strength ink and answers a hover with a fill,
+    // which is a control waiting to be used; this one is present without
+    // asking for attention.
+    const quiet = mount(BaseButton, { props: { variant: 'quiet' } })
+    const ghost = mount(BaseButton, { props: { variant: 'ghost' } })
+
+    expect(quiet.classes()).toContain('text-ink-soft')
+    expect(quiet.classes()).toContain('hover:text-ink')
+    expect(quiet.classes().some((c) => c.startsWith('hover:bg-'))).toBe(false)
+
+    expect(ghost.classes()).toContain('hover:bg-muted')
+  })
+})

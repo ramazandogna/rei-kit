@@ -16,6 +16,24 @@ below, and there has not been one yet.
 
 ---
 
+## 0.6.1
+
+**You gain** `variant="quiet"` — soft ink that darkens on hover, with no
+surface at any point.
+
+```vue
+<BaseButton variant="quiet" icon :aria-label="t('common.close')"><X /></BaseButton>
+```
+
+Use `ghost` for a control that should recede until it is wanted and then look
+like a button; use `quiet` for one that should stay out of the way even while
+being used. The pair `text-ink-soft hover:text-ink` was hand-written 47 times
+across the three apps, which is how this was found.
+
+**To take it:** nothing.
+
+---
+
 ## 0.6.0
 
 **You gain** the two button shapes the kit could not make, and the size that

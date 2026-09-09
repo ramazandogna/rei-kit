@@ -3,6 +3,50 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.7.0 — 2026-09-10
+
+**The button stops being a look and becomes a primitive.**
+
+The measurement that forced this: across the three apps there were **58 raw
+`<button>` elements sitting in 24 files that already imported and used
+`BaseButton`**. Not in files that ignore the kit — in files that reach for it
+and then give up halfway down. Twenty-three were icon buttons the kit could
+already make and nobody had converted; eighteen were toggles it had no way to
+express; one was filled with a colour role the kit's own `tokens.css` declares
+and the button could not use.
+
+The rule this release corrects is one the kit had written down: _a thing enters
+the kit when two apps need it._ That is right for a composed component — a
+`PriceCard`, a `TourShell` — whose API you would design wrong from a single
+example. It is wrong for a primitive. There is no uncertainty about whether the
+fourth app will want a button that can be switched on, and waiting for a second
+consumer means every new app begins by copying, which is the thing the kit
+exists to prevent. **A primitive set is complete by construction, not by
+demand.**
+
+### Added
+
+- **`positive`, `warning` and `accent` variants.** `tokens.css` declares five
+  colour roles and this component exposed two of them. A component that cannot
+  use a role its own design system declares is not avoiding a guess; it is
+  incomplete.
+
+- **`pressed`** — that this button is a switch, and whether it is on. Omit it
+  and nothing changes: the button is an action. Pass it and `aria-pressed` is
+  written, and the variants with an "off" look take a filled one when on.
+
+  Eighteen of these were hand-written across the apps — picker cells, filter
+  chips, mode selectors — and almost none said `aria-pressed`. A screen reader
+  met a row of identical buttons with no way to know which was chosen.
+
+- **`variant="unstyled"`** — everything this component is, except the paint.
+  No surface, no size, no radius, no layout; the element, the `as` switch, the
+  `pressed` bookkeeping, the disabled handling and the focus ring all stay.
+
+  This is the answer to the 58. A picker cell, a chip, a calendar day: the
+  surface is the app's and should be. What was being rewritten alongside it
+  every time — usually without a focus ring — was not.
+
 ## 0.6.1 — 2026-09-09
 
 ### Added

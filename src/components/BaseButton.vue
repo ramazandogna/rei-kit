@@ -25,6 +25,7 @@ const {
   icon = false,
   block = false,
   pill = false,
+  pressed = undefined,
   to = undefined,
   href = undefined,
 } = defineProps<{
@@ -36,7 +37,18 @@ const {
    * height and no padding: giving it either would make it a ghost button,
    * which is a different thing and was already here.
    */
-  variant?: 'primary' | 'secondary' | 'ghost' | 'quiet' | 'danger' | 'link' | undefined
+  variant?:
+    | 'primary'
+    | 'secondary'
+    | 'ghost'
+    | 'quiet'
+    | 'danger'
+    | 'positive'
+    | 'warning'
+    | 'accent'
+    | 'link'
+    | 'unstyled'
+    | undefined
   /** `xs` is the action inside a prompt or a nudge, not on a page. */
   size?: 'xs' | 'sm' | 'md' | 'lg' | undefined
   loading?: boolean | undefined
@@ -66,6 +78,19 @@ const {
    * them could use this component, because it only knew one corner radius.
    */
   pill?: boolean | undefined
+  /**
+   * That this button is a switch, and whether it is on.
+   *
+   * Omit it and the button is an action. Pass it and the button becomes a
+   * toggle: `aria-pressed` is written, and the variants that have an "off"
+   * look — ghost, quiet, secondary — take a filled one when on.
+   *
+   * There were 18 of these hand-written across the three apps, every one a
+   * picker cell or a filter chip, and almost none of them said `aria-pressed`
+   * at all. A screen reader met a row of identical buttons with no way to know
+   * which was chosen.
+   */
+  pressed?: boolean | undefined
 }>()
 
 const VARIANT_CLASS = {
@@ -93,10 +118,37 @@ const VARIANT_CLASS = {
    */
   quiet: 'bg-transparent text-ink-soft hover:text-ink',
   danger: 'bg-negative text-white hover:bg-negative/90',
+  /*
+   * The rest of the roles the kit already declares.
+   *
+   * `tokens.css` names five colour roles and this component exposed two of
+   * them, so an app that wanted a success-coloured action had to hand-write
+   * the button — which is what Hibi's green install button is. A component
+   * that cannot use a role its own design system declares is not avoiding a
+   * guess; it is incomplete.
+   */
+  positive: 'bg-positive text-white hover:bg-positive/90',
+  warning: 'bg-warning text-white hover:bg-warning/90',
+  accent: 'bg-accent text-white hover:bg-accent/90',
   /* No fill, no border, no box: underlined so it is still obviously a control
      without one. `ghost` cannot stand in — it has a hover surface and a
      radius, so it reads as a button that happens to be empty. */
   link: 'bg-transparent underline underline-offset-2 hover:opacity-80',
+  /*
+   * Everything this component is, except the paint.
+   *
+   * The reason it exists is measurable: across the three apps there were 58
+   * raw `<button>` elements sitting in 24 files that already imported and used
+   * `BaseButton`. The developer reached for the kit and gave up halfway down
+   * the same file — because the kit offered all of its appearance or none of
+   * itself, and what those places needed was everything but the appearance.
+   *
+   * A picker cell, a chip, a calendar day: the surface is the app's, and it
+   * should be. The element, the focus ring, the disabled handling, the
+   * `aria-pressed` bookkeeping and the `as` switch are not, and were being
+   * rewritten every time — usually without the focus ring.
+   */
+  unstyled: '',
 } as const
 
 /* Two scales, because a square control cannot take horizontal padding and
@@ -126,8 +178,38 @@ const LINK_SIZE_CLASS = {
 } as const
 
 const sizing = computed(() => {
+  // Unstyled owns no box, so it takes no size: the app's own classes decide.
+  if (variant === 'unstyled') return ''
   if (variant === 'link') return LINK_SIZE_CLASS[size]
   return icon ? ICON_SIZE_CLASS[size] : SIZE_CLASS[size]
+})
+
+/* The variants with an "off" look, and what "on" looks like for them. The
+   filled ones are already on; link and unstyled have no surface to fill. */
+const PRESSED_CLASS: Partial<Record<string, string>> = {
+  ghost: 'bg-primary text-white hover:bg-primary/90',
+  quiet: 'bg-primary text-white hover:bg-primary/90',
+  secondary: 'bg-primary border-primary text-white hover:bg-primary/90',
+}
+
+const surface = computed(() => {
+  if (pressed === true) return PRESSED_CLASS[variant] ?? VARIANT_CLASS[variant]
+  return VARIANT_CLASS[variant]
+})
+
+/* Layout and feel, which unstyled does not impose either — but the focus ring
+   and the disabled handling stay, because those are the floor. A raw <button>
+   is what happens when a component makes them optional. */
+const shell = computed(() =>
+  variant === 'unstyled'
+    ? ''
+    : 'inline-flex items-center justify-center gap-2 font-medium transition-transform duration-100 select-none active:scale-95',
+)
+
+const radius = computed(() => {
+  if (variant === 'unstyled') return ''
+  if (variant === 'link') return 'rounded-xs'
+  return pill ? 'rounded-full' : 'rounded-card'
 })
 
 /** Anything that is not a `<button>` cannot be `disabled`; it has to be told. */
@@ -151,13 +233,9 @@ const linkProps = computed(() => {
     :disabled="as === 'button' ? inactive : undefined"
     :aria-disabled="as !== 'button' && inactive ? 'true' : undefined"
     :aria-busy="loading"
-    class="focus-visible:outline-primary inline-flex items-center justify-center gap-2 font-medium transition-transform duration-100 select-none focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50"
-    :class="[
-      VARIANT_CLASS[variant],
-      sizing,
-      variant === 'link' ? 'rounded-xs' : pill ? 'rounded-full' : 'rounded-card',
-      block ? 'w-full' : '',
-    ]"
+    :aria-pressed="pressed === undefined ? undefined : String(pressed)"
+    class="focus-visible:outline-primary focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50"
+    :class="[shell, surface, sizing, radius, block ? 'w-full' : '']"
   >
     <span
       v-if="loading"

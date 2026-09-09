@@ -338,3 +338,61 @@ describe('quiet, which is not ghost', () => {
     expect(ghost.classes()).toContain('hover:bg-muted')
   })
 })
+
+describe('the button as a primitive rather than a look', () => {
+  it('can be every colour role the kit declares', () => {
+    // tokens.css names five roles and this component exposed two, so an app
+    // that wanted a success-coloured action hand-wrote the button. A component
+    // that cannot use a role its own design system declares is incomplete.
+    for (const [variant, expected] of [
+      ['positive', 'bg-positive'],
+      ['warning', 'bg-warning'],
+      ['accent', 'bg-accent'],
+    ] as const) {
+      expect(mount(BaseButton, { props: { variant } }).classes()).toContain(expected)
+    }
+  })
+
+  it('gives everything but the paint when asked', () => {
+    // 58 raw <button> elements sat in 24 files that already used BaseButton.
+    // The kit offered all of its appearance or none of itself, and those
+    // places needed everything except the appearance.
+    const wrapper = mount(BaseButton, { props: { variant: 'unstyled' } })
+    const classes = wrapper.classes()
+
+    expect(classes.some((c) => c.startsWith('bg-'))).toBe(false)
+    expect(classes.some((c) => c.startsWith('rounded'))).toBe(false)
+    expect(classes.some((c) => /^h-\d|^px-/.test(c))).toBe(false)
+    expect(classes).not.toContain('inline-flex')
+
+    // The floor stays. A raw <button> is what happens when these are optional.
+    expect(classes).toContain('focus-visible:outline-primary')
+    expect(classes).toContain('disabled:opacity-50')
+  })
+
+  it('is an action until it is told it is a switch', () => {
+    expect(mount(BaseButton).attributes('aria-pressed')).toBeUndefined()
+    expect(mount(BaseButton, { props: { pressed: false } }).attributes('aria-pressed')).toBe(
+      'false',
+    )
+    expect(mount(BaseButton, { props: { pressed: true } }).attributes('aria-pressed')).toBe('true')
+  })
+
+  it('fills a variant that has an off look when the switch is on', () => {
+    // 18 hand-written toggles across the apps, and almost none said
+    // aria-pressed: a screen reader met a row of identical buttons with no way
+    // to know which was chosen.
+    const off = mount(BaseButton, { props: { variant: 'ghost', pressed: false } })
+    const on = mount(BaseButton, { props: { variant: 'ghost', pressed: true } })
+
+    expect(off.classes()).toContain('bg-transparent')
+    expect(on.classes()).toContain('bg-primary')
+  })
+
+  it('leaves an unstyled toggle entirely to the app, except the semantics', () => {
+    const on = mount(BaseButton, { props: { variant: 'unstyled', pressed: true } })
+
+    expect(on.attributes('aria-pressed')).toBe('true')
+    expect(on.classes().some((c) => c.startsWith('bg-'))).toBe(false)
+  })
+})

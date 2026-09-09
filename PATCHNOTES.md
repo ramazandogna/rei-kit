@@ -16,6 +16,40 @@ below, and there has not been one yet.
 
 ---
 
+## 0.7.0
+
+**You gain** a button you can build your own controls out of.
+
+```vue
+<!-- a picker cell: the kit's semantics, your paint -->
+<BaseButton
+  variant="unstyled"
+  :pressed="value === scale"
+  class="flex flex-1 flex-col items-center gap-2 py-1"
+  @click="pick(scale)"
+>…</BaseButton>
+
+<!-- a success action -->
+<BaseButton variant="positive">{{ t('install.action') }}</BaseButton>
+```
+
+- **`positive`, `warning`, `accent`** complete the colour roles. `tokens.css`
+  declares five and the button exposed two.
+- **`pressed`** makes it a switch: `aria-pressed` is written, and ghost, quiet
+  and secondary take a filled look when on. Omit it and nothing changes.
+- **`variant="unstyled"`** gives you the element, the `as` switch, the disabled
+  handling and the focus ring, and no appearance at all.
+
+Why: there were 58 raw `<button>` elements in 24 files that already used
+`BaseButton` — reached for the kit, gave up halfway down the same file. The kit
+offered all of its appearance or none of itself, and those places needed
+everything except the appearance.
+
+**To take it:** nothing. All three are additive and every default is what you
+already had.
+
+---
+
 ## 0.6.1
 
 **You gain** `variant="quiet"` — soft ink that darkens on hover, with no

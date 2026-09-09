@@ -1,0 +1,78 @@
+/* rei-kit — the wide shell.
+ *
+ * The counterpart to `shell/mobile.css`, for an app that is a site rather than
+ * a phone: a column with gutters, and a transition between pages that is a
+ * fade rather than a slide.
+ *
+ * Extracted from the kit's first wide consumer rather than invented. A shell
+ * is a decision about what shape the app is, and this one had already been
+ * made and written down once.
+ *
+ *   @import 'rei-kit/tokens.css';
+ *   @import 'rei-kit/shell/web.css';
+ *
+ * Opt-in throughout. Nothing applies until a class lands on an element.
+ */
+
+@layer components {
+  /* The page's column, as a class.
+   *
+   * `PageContainer` is the same measure as a component, and is the right
+   * choice when the container is the element. This is for the ones where it is
+   * not: a `<header>` whose bar spans the window while its contents line up
+   * with the text, a `<footer>`, a hero that paints edge to edge. Wrapping
+   * those in a component means an extra div whose only job is a max-width.
+   *
+   * Both read `--measure-page`, so a page cannot disagree with itself by 80px
+   * depending on which one it used. */
+  .shell {
+    margin-inline: auto;
+    inline-size: 100%;
+    max-inline-size: var(--measure-page);
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .shell {
+      padding-inline: 2rem;
+    }
+  }
+}
+
+/* ---- Between pages ----
+   Short, and only ever a fade with a few pixels of travel. A page transition
+   that can be described afterwards is too long: the reader asked to go
+   somewhere, and the animation's whole job is to stop the new page arriving as
+   a flash of unrelated content.
+
+   Leaving is half the length of arriving. The old page is not worth watching,
+   and matching the two makes every navigation feel like it is being
+   considered. */
+.page-enter-active {
+  transition:
+    opacity 260ms ease-out,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.page-leave-active {
+  transition:
+    opacity 130ms ease-in,
+    transform 130ms ease-in;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active,
+  .page-leave-active {
+    transition: none;
+  }
+}

@@ -1,4 +1,5 @@
 import { copyFileSync, mkdirSync, readdirSync, readFileSync } from 'node:fs'
+import { dirname } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -36,11 +37,18 @@ export default defineConfig({
       closeBundle() {
         mkdirSync('dist', { recursive: true })
 
-        for (const file of readdirSync('src/styles')) {
+        // Recursive, because the shells live in a directory of their own:
+        // `shell/mobile.css` and `shell/web.css` are two answers to the same
+        // question and reading as a pair matters more than a flat dist.
+        for (const file of readdirSync('src/styles', { recursive: true, encoding: 'utf8' })) {
           // Files starting with _ are build-time helpers, not part of the API.
           if (file.startsWith('_')) continue
+          if (!file.endsWith('.css')) continue
 
-          copyFileSync(`src/styles/${file}`, `dist/${file}`)
+          const target = `dist/${file}`
+
+          mkdirSync(dirname(target), { recursive: true })
+          copyFileSync(`src/styles/${file}`, target)
         }
       },
     },

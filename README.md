@@ -108,12 +108,13 @@ import { createSupabaseClient } from 'rei-kit/supabase'
 
 ### Wiring the styles
 
-Four lines, and all four are load-bearing:
+Four lines, and every one is load-bearing:
 
 ```css
 /* your app's main.css */
 @import 'tailwindcss';
 @import 'rei-kit/tokens.css'; /* colour roles, the dark variant, measures, utilities */
+@import 'rei-kit/shell/mobile.css'; /* or shell/web.css — see The shell, below */
 @import 'rei-kit/styles.css'; /* compiled component styles */
 
 /* Tailwind generates a utility only where it has seen the class, and it does
@@ -125,10 +126,10 @@ Four lines, and all four are load-bearing:
 The path is relative to the CSS file, so adjust the `../` depth to where your
 `main.css` sits.
 
-**Leaving any of the four out fails quietly:** the build succeeds, the
+**Leaving any of these out fails quietly:** the build succeeds, the
 components mount, and they come out unstyled. Nothing type-checks this, so it
 is worth a test — Hibi's `kit-styling.spec.ts` reads its own stylesheet and
-asserts all four, at unit-test speed. Copy it.
+asserts them, at unit-test speed. Copy it.
 
 That test exists because the failure is real: Hibi shipped with the tab bar
 invisible once, and separately spent three versions restating `tokens.css`
@@ -183,12 +184,22 @@ it — the same mistake as a hex inside a component, one axis over.
 }
 ```
 
-### The phone shell
+### The shell
 
-`tokens.css` also carries the geometry of a phone shell — `shell-frame`,
-`page-slide`, `page-auth` and the slide transitions between screens. All of it
-is opt-in: nothing applies unless you put the class on an element, so a wide
-app can ignore it. Two of the three consumers use it.
+Tokens are what every app needs. A shell is a decision about what shape the app
+is, so it is a separate import and there are two of them.
+
+|                            |                                                                                                                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rei-kit/shell/mobile.css` | `shell-frame` (a 430px column at viewport height), `page-slide` and `page-auth` scroll containers, and the sliding transition between screens                        |
+| `rei-kit/shell/web.css`    | `.shell` — the page's column as a class, for a header or footer whose bar spans the window while its contents line up with the text — and a short fade between pages |
+
+Both are opt-in throughout: nothing applies until a class lands on an element,
+and both read `--measure-page` rather than declaring a width of their own.
+
+They were one file until 0.9.0, and it was `tokens.css` — so a wide course site
+downloaded a 430px column, a full-viewport height and an iOS sheet curve in
+order to ignore them, and had no counterpart of its own.
 
 ### Prerendering
 

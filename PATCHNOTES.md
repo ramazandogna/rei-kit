@@ -16,6 +16,32 @@ below, and there has not been one yet.
 
 ---
 
+## 0.9.0
+
+**Action required — one line.**
+
+`tokens.css` no longer contains the phone shell. Add the shell your app is:
+
+```css
+@import 'rei-kit/tokens.css';
+@import 'rei-kit/shell/mobile.css'; /* phone-shaped: shell-frame, page-slide, the screen slide */
+@import 'rei-kit/shell/web.css'; /* a site: .shell column, a short fade between pages */
+```
+
+If you skip it the shell disappears on the first screen — this fails loudly,
+not quietly.
+
+**You gain** `shell/web.css`, which did not exist. `.shell` is the page's column
+as a class, for the places where `PageContainer` is awkward: a `<header>` whose
+bar spans the window while its contents line up with the text, a `<footer>`, a
+hero that paints edge to edge. Plus a short page fade.
+
+Why: `tokens.css` was shipping a 430px column, a full-viewport height and an
+iOS sheet curve to a wide course site, which downloaded them in order to ignore
+them — and had no counterpart of its own to reach for.
+
+---
+
 ## 0.8.0
 
 **You gain** a way to say that something happened.

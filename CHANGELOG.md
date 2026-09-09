@@ -3,6 +3,54 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.9.0 — 2026-09-10
+
+**Breaking, and it is one line.** See _Migrating_ below.
+
+### Changed
+
+- **`tokens.css` no longer carries the phone shell.** It had been shipping
+  `shell-frame` (a 430px column at viewport height), `page-slide`, `page-auth`
+  and the iOS sheet curve to every consumer — including a wide course site
+  that used none of them and downloaded all of them in order to ignore them.
+
+  Tokens are what every app needs. A shell is a decision about what shape the
+  app is, and putting the two in one file meant an app could not take the
+  first without the second. It also made the kit read as a phone-app kit,
+  which is why the wide consumer had no counterpart to reach for.
+
+### Added
+
+- **`rei-kit/shell/mobile.css`** — everything that left `tokens.css`, unchanged.
+- **`rei-kit/shell/web.css`** — the counterpart. `.shell`, the page's column as
+  a class, for the elements where `PageContainer` is awkward: a `<header>`
+  whose bar spans the window while its contents line up with the text, a
+  `<footer>`, a hero that paints edge to edge. And a short fade between pages —
+  leaving takes half as long as arriving, because the old page is not worth
+  watching.
+
+  Extracted from the kit's first wide consumer rather than invented. Both
+  shells read `--measure-page` and neither declares a colour.
+
+- **`stylesheets.spec.ts`**, which asserts what each sheet may contain. Nothing
+  caught the original mistake because a stylesheet has no types and an unused
+  class breaks nothing.
+
+### Migrating
+
+Add one line next to the tokens:
+
+```css
+@import 'rei-kit/tokens.css';
+@import 'rei-kit/shell/mobile.css'; /* a phone-shaped app */
+@import 'rei-kit/shell/web.css'; /* a site */
+```
+
+Leaving it out is not silent: the shell disappears on the first screen. It was
+tempting to keep `tokens.css` importing both for compatibility, and that was
+refused — the split would then exist only in the documentation, and the wide
+app would go on downloading a phone.
+
 ## 0.8.0 — 2026-09-10
 
 ### Added

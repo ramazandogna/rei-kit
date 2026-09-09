@@ -233,6 +233,48 @@ describe('the size scale', () => {
     expect(wrapper.get('input').classes()).toContain('h-11')
   })
 
+  it('never shrinks a typing target below 16px, whatever the size', () => {
+    // iOS zooms the viewport when it focuses a text field under 16px, and the
+    // page does not zoom back. Both phone consumers had written
+    // `input { font-size: 16px }` into their base layer to stop it, and a
+    // `text-sm` from here would have overridden that in every app at once.
+    for (const size of ['sm', 'md'] as const) {
+      expect(
+        mount(BaseInput, { props: { label: 'Tarih', size } })
+          .get('input')
+          .classes(),
+      ).toContain('text-base')
+      expect(
+        mount(BaseTextarea, { props: { label: 'Not', size } })
+          .get('textarea')
+          .classes(),
+      ).toContain('text-base')
+    }
+  })
+
+  it('lets a select shrink, because a select does not zoom', () => {
+    // It opens a native picker rather than a caret.
+    expect(
+      mount(BaseSelect, {
+        props: { label: 'Sırala', size: 'sm', options: [{ value: 'a', label: 'A' }] },
+      })
+        .get('select')
+        .classes(),
+    ).toContain('text-sm')
+  })
+
+  it('is every type a text field can be', () => {
+    // `date` and `search` were hand-written three times each and `url` twice,
+    // in files that already imported this component.
+    for (const type of ['date', 'search', 'url', 'tel', 'time'] as const) {
+      expect(
+        mount(BaseInput, { props: { label: 'Alan', type } })
+          .get('input')
+          .attributes('type'),
+      ).toBe(type)
+    }
+  })
+
   it('gives a control that filters rather than answers a smaller one', () => {
     // Every hand-written select across the three apps was this one, and the
     // kit only had the large one — which is why none of them used it.

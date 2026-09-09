@@ -3,6 +3,32 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.9.1 — 2026-09-10
+
+### Fixed
+
+- **`size="sm"` would have caused iOS to zoom every text field it touched.**
+  It applied `text-sm` — 14px — and mobile Safari zooms the viewport when it
+  focuses a text input under 16px, and does not zoom back. Both phone
+  consumers had written `input, select, textarea { font-size: 16px }` into
+  their base layer to prevent exactly this, and a utility class from the kit
+  overrides a base-layer rule, so adopting `sm` would have reintroduced the bug
+  in every app at once.
+
+  `BaseInput` and `BaseTextarea` now keep 16px at every size. `size` reaches
+  the label and the spacing through `FormField` and leaves the typing target
+  alone. `BaseSelect` still shrinks: a select opens a native picker rather than
+  a caret and does not trigger the zoom.
+
+  Found by trying to replace a date field, not by reading the component.
+
+### Added
+
+- **`BaseInput` accepts every type a text field can be** — `search`, `tel`,
+  `url`, `date`, `time` and `datetime-local` join the four it had. The missing
+  ones were the ones being hand-written: `date` and `search` three times each
+  and `url` twice, in files that already imported this component.
+
 ## 0.9.0 — 2026-09-10
 
 **Breaking, and it is one line.** See _Migrating_ below.

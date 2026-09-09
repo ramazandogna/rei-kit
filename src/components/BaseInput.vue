@@ -20,20 +20,38 @@ const {
    * leave the input with no accessible name at all.
    */
   labelHidden?: boolean | undefined
-  type?: 'text' | 'email' | 'password' | 'number' | undefined
+  /**
+   * Every type a text field can be, because the ones missing were the ones
+   * apps needed: `date` and `search` were hand-written three times each and
+   * `url` twice, in files that already imported this component.
+   */
+  type?:
+    | 'text'
+    | 'email'
+    | 'password'
+    | 'number'
+    | 'search'
+    | 'tel'
+    | 'url'
+    | 'date'
+    | 'time'
+    | 'datetime-local'
+    | undefined
   /** `sm` for a field inside a row rather than in a form of its own. */
   size?: 'sm' | 'md' | undefined
 }>()
 
-/* The scale is typographic, not dimensional. Both sizes keep the 44px touch
-   target — of the five hand-written controls this replaces, none was shorter
-   than 40px and two were exactly 44, and a select that filters a list is
-   pressed with the same thumb as one that answers a form. What changes is the
-   type, and with it how loudly the field asks to be read. */
-const SIZE_CLASS = {
-  sm: 'h-11 text-sm',
-  md: 'h-11 text-base',
-} as const
+/* The control keeps 16px at every size, and that is not a rounding of the
+   scale — it is the rule. iOS zooms the viewport when a text field it is
+   focusing has a font-size under 16px, and the page never zooms back. Both
+   phone consumers had written `input { font-size: 16px }` into their base
+   layer to stop exactly this, and a `text-sm` utility from here would have
+   overridden it in every app at once.
+
+   So `size` reaches the label and the spacing, through FormField, and leaves
+   the typing target alone. `BaseSelect` is free to shrink: a select opens a
+   native picker rather than a caret, and does not trigger the zoom. */
+const CONTROL_CLASS = 'h-11 text-base'
 
 const model = defineModel<string | undefined>()
 </script>
@@ -49,7 +67,7 @@ const model = defineModel<string | undefined>()
         :aria-describedby="describedBy"
         v-bind="$attrs"
         class="border-hair bg-surface text-ink rounded-card focus-visible:outline-primary border px-3 focus-visible:outline-2 focus-visible:outline-offset-1"
-        :class="[SIZE_CLASS[size], invalid ? 'border-negative' : '']"
+        :class="[CONTROL_CLASS, invalid ? 'border-negative' : '']"
       />
     </template>
   </FormField>

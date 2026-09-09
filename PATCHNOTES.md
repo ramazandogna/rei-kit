@@ -16,6 +16,29 @@ below, and there has not been one yet.
 
 ---
 
+## 0.9.1
+
+**Fixed, and worth taking before you adopt `size="sm"` on a phone:** it applied
+`text-sm` to text fields, and iOS zooms the viewport when it focuses an input
+under 16px — and does not zoom back. If your app has
+`input { font-size: 16px }` in its base layer, a utility class from the kit was
+overriding it.
+
+`BaseInput` and `BaseTextarea` now stay at 16px at every size; `size` changes
+the label and the spacing instead. `BaseSelect` still shrinks, because a select
+opens a picker rather than a caret.
+
+**You gain** the input types that were missing: `search`, `tel`, `url`, `date`,
+`time`, `datetime-local`. Those were the ones being hand-written.
+
+```vue
+<BaseInput v-model="occurredOn" type="date" size="sm" :label="t('transaction.date')" />
+```
+
+**To take it:** nothing.
+
+---
+
 ## 0.9.0
 
 **Action required — one line.**

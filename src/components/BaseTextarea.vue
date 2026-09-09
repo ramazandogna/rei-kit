@@ -24,7 +24,12 @@ const {
   hint?: string | undefined
   labelHidden?: boolean | undefined
   rows?: number | undefined
-  /** `sm` for editing in place, inside a row that is already small. */
+  /**
+   * `sm` tightens the label and the spacing. It does **not** shrink the text:
+   * iOS zooms the viewport when it focuses a field under 16px and never zooms
+   * back, which is why both phone apps force 16px on form elements in their
+   * base layer.
+   */
   size?: 'sm' | 'md' | undefined
 }>()
 
@@ -42,7 +47,7 @@ const model = defineModel<string | undefined>()
         :aria-describedby="describedBy"
         v-bind="$attrs"
         class="border-hair bg-surface text-ink rounded-card focus-visible:outline-primary resize-y border px-3 py-2 leading-relaxed focus-visible:outline-2 focus-visible:outline-offset-1"
-        :class="[size === 'sm' ? 'text-sm' : 'text-base', invalid ? 'border-negative' : '']"
+        :class="['text-base', invalid ? 'border-negative' : '']"
       />
     </template>
   </FormField>

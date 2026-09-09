@@ -5,6 +5,7 @@ import { RouterLinkStub } from '@vue/test-utils'
 import {
   BaseButton,
   BaseCheckbox,
+  BaseInput,
   BaseRadioGroup,
   BaseSelect,
   BaseTextarea,
@@ -218,5 +219,50 @@ describe('the controls built on it', () => {
 
     expect(new Set(names).size).toBe(1)
     expect(names[0]).toBeTruthy()
+  })
+})
+
+describe('the size scale', () => {
+  it('states the input type size the kit had been leaving to the host page', () => {
+    // Two consumers force 16px on form elements to stop iOS zooming and a
+    // third does not, so `BaseInput` rendered at two different sizes
+    // depending on which app it was in. `md` now says which it is.
+    const wrapper = mount(BaseInput, { props: { label: 'E-posta' } })
+
+    expect(wrapper.get('input').classes()).toContain('text-base')
+    expect(wrapper.get('input').classes()).toContain('h-11')
+  })
+
+  it('gives a control that filters rather than answers a smaller one', () => {
+    // Every hand-written select across the three apps was this one, and the
+    // kit only had the large one — which is why none of them used it.
+    const wrapper = mount(BaseSelect, {
+      props: { label: 'Sırala', size: 'sm', options: [{ value: 'new', label: 'Yeni' }] },
+    })
+
+    expect(wrapper.get('select').classes()).toContain('text-sm')
+    expect(wrapper.get('select').classes()).toContain('h-9')
+  })
+
+  it('quiets the label of a small field so it does not outweigh its control', () => {
+    const wrapper = mount(BaseSelect, {
+      props: { label: 'Sırala', size: 'sm', options: [{ value: 'new', label: 'Yeni' }] },
+    })
+
+    expect(wrapper.get('label').classes()).toContain('text-xs')
+    expect(wrapper.get('label').classes()).toContain('text-ink-soft')
+  })
+
+  it('separates a checkbox that is a setting from one that is an aside', () => {
+    // Four of the five hand-written checkboxes were the aside; one was the
+    // setting. They differed in exactly the gap and the ink.
+    const setting = mount(BaseCheckbox, { props: { label: 'Bildirimler' } })
+    const aside = mount(BaseCheckbox, { props: { label: 'Beni hatırla', size: 'sm' } })
+
+    expect(setting.get('label').classes()).toContain('gap-3')
+    expect(setting.get('span').classes()).toContain('text-ink')
+
+    expect(aside.get('label').classes()).toContain('gap-2')
+    expect(aside.get('span').classes()).toContain('text-ink-soft')
   })
 })

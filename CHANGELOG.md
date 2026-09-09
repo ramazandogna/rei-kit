@@ -3,6 +3,36 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.5.1 — 2026-09-09
+
+### Added
+
+- **A size scale on the form layer** — `size: 'sm' | 'md'` on `FormField`,
+  `BaseInput`, `BaseSelect`, `BaseTextarea` and `BaseCheckbox`.
+
+  0.5.0 shipped the form components at one size, and then not one hand-written
+  control in the three consuming apps could be replaced by them. Every
+  hand-rolled `<select>` in all three — five of them — was small and set in
+  `text-sm`; the kit only had the large one. Of the five hand-written
+  checkboxes, four were the quiet aside under a form ("remember me", "show the
+  ones I have learned") at `gap-2` in `text-ink-soft`, and one was a setting at
+  `gap-3` in ink.
+
+  This is 0.4.1's `PageContainer` mistake one axis over: a component that bakes
+  in one measure cannot be reached for by an app that chose a different one on
+  purpose, and the app keeps its hand-written copy. A size is a role like a
+  colour and a width are.
+
+### Fixed
+
+- **The form controls now state their own type size.** They never had one, so
+  they inherited it: Hibi and Kakei force `font-size: 16px` on form elements to
+  stop iOS zooming on focus, Kakehashi does not, and the same `BaseInput`
+  therefore rendered at two different sizes depending on which app it was in. A
+  design system component whose type scale depends on the host page is not one.
+  `md` is `text-base`, which is what the two apps forcing 16px were already
+  getting, so nothing moves in them.
+
 ## 0.5.0 — 2026-09-09
 
 The kit had one button that could only ever be a `<button>`, and one form

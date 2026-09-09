@@ -21,6 +21,7 @@ const {
   hint = '',
   labelHidden = false,
   placeholder = '',
+  size = 'md',
 } = defineProps<{
   label: string
   options: readonly { value: string; label: string; disabled?: boolean | undefined }[]
@@ -34,13 +35,28 @@ const {
    * someone go back to having answered nothing, which no form wants.
    */
   placeholder?: string | undefined
+  /**
+   * `sm` for a select that filters or sorts rather than answers a form.
+   *
+   * Every hand-written select across the three consuming apps was this one.
+   */
+  size?: 'sm' | 'md' | undefined
 }>()
+
+/* The control's own scale. `md` states the type size the kit had been leaving
+   to whatever the host page happened to set — two consumers force 16px on
+   form elements to stop iOS zooming, a third does not, so the same component
+   rendered at two sizes depending on the app. */
+const SIZE_CLASS = {
+  sm: 'h-9 text-sm',
+  md: 'h-11 text-base',
+} as const
 
 const model = defineModel<string | undefined>()
 </script>
 
 <template>
-  <FormField :label="label" :error="error" :hint="hint" :label-hidden="labelHidden">
+  <FormField :label="label" :error="error" :hint="hint" :label-hidden="labelHidden" :size="size">
     <template #default="{ id, describedBy, invalid }">
       <div class="relative">
         <select
@@ -48,8 +64,8 @@ const model = defineModel<string | undefined>()
           v-model="model"
           :aria-invalid="invalid"
           :aria-describedby="describedBy"
-          class="border-hair bg-surface text-ink rounded-card focus-visible:outline-primary h-11 w-full appearance-none border py-0 pr-10 pl-3 focus-visible:outline-2 focus-visible:outline-offset-1"
-          :class="invalid ? 'border-negative' : ''"
+          class="border-hair bg-surface text-ink rounded-card focus-visible:outline-primary w-full appearance-none border py-0 pr-10 pl-3 focus-visible:outline-2 focus-visible:outline-offset-1"
+          :class="[SIZE_CLASS[size], invalid ? 'border-negative' : '']"
         >
           <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
           <option

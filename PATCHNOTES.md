@@ -16,6 +16,36 @@ below, and there has not been one yet.
 
 ---
 
+## 0.5.1
+
+**You gain** `size` on the form layer — `FormField`, `BaseInput`, `BaseSelect`,
+`BaseTextarea`, `BaseCheckbox`.
+
+```vue
+<BaseSelect v-model="order" :label="t('courses.sort')" label-hidden size="sm" :options="ORDER" />
+<BaseCheckbox v-model="remember" :label="t('auth.rememberMe')" size="sm" />
+```
+
+`sm` is the control that sits inside something else — a filter row, a settings
+line, an aside under a form. It is `text-sm`, and its label goes quiet
+(`text-xs`, `text-ink-soft`) so it does not outweigh the thing it names.
+
+This exists because 0.5.0's form components could not replace a single
+hand-written control in any of the three apps: all five hand-rolled `<select>`s
+were the small one, and four of the five checkboxes were the quiet aside. The
+kit only had the large one.
+
+**Fixed:** the form controls never stated their own type size, so they
+inherited whatever the page set. Two of the three apps force `font-size: 16px`
+on form elements to stop iOS zooming on focus and the third does not, so the
+same `BaseInput` rendered at two sizes depending on the app. `md` is now
+explicitly `text-base` — which is what the apps forcing 16px already had, so
+nothing moves in them.
+
+**To take it:** nothing. `md` is the default and is what you have.
+
+---
+
 ## 0.5.0
 
 **You gain** a button that can be a link, and a form layer.

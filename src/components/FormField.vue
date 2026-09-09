@@ -29,10 +29,20 @@ const {
   error = '',
   hint = '',
   labelHidden = false,
+  size = 'md',
 } = defineProps<{
   label: string
   error?: string | undefined
   hint?: string | undefined
+  /**
+   * `sm` for a control that sits inside something else — a toolbar, a filter
+   * row, a settings line — rather than in a form of its own.
+   *
+   * It exists because every hand-written select in all three apps was the
+   * small one, and the kit only had the large one. A part is not reusable if
+   * reaching for it costs a size somebody chose on purpose.
+   */
+  size?: 'sm' | 'md' | undefined
   /**
    * Hides the label visually but keeps it for assistive tech. For fields whose
    * surrounding row already names them — dropping the label entirely would
@@ -56,12 +66,19 @@ const describedBy = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-1.5">
-    <label :for="id" class="text-ink text-sm font-medium" :class="labelHidden ? 'sr-only' : ''">
+  <div class="flex flex-col" :class="size === 'sm' ? 'gap-1' : 'gap-1.5'">
+    <label
+      :for="id"
+      class="font-medium"
+      :class="[
+        labelHidden ? 'sr-only' : '',
+        size === 'sm' ? 'text-ink-soft text-xs' : 'text-ink text-sm',
+      ]"
+    >
       {{ label }}
     </label>
 
-    <slot :id="id" :described-by="describedBy" :invalid="Boolean(error)" />
+    <slot :id="id" :described-by="describedBy" :invalid="Boolean(error)" :size="size" />
 
     <p v-if="error" :id="errorId" class="text-negative text-xs">{{ error }}</p>
     <p v-else-if="hint" :id="hintId" class="text-ink-soft text-xs">{{ hint }}</p>

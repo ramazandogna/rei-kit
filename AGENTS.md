@@ -14,18 +14,49 @@ Hibi, [Kakei](https://github.com/ramazandogna/kakei) and
 
 ## What gets to be in here
 
-Before adding anything, three things have to be true at once:
+**The rule depends on what kind of thing it is, and getting this wrong is how
+the kit spent a release shipping parts nobody could use.**
 
-1. **Two apps genuinely need it** — measured, not predicted. A component one
-   app needs stays in that app however general it looks. The kit does not grow
-   on a guess; that is the lesson Hibi taught it.
-2. **It adds no required peer.** Anything needing a new library goes behind its
-   own entry point, or stays in the app.
-3. **It carries no product decision** — no colour, no copy, no icon. Those
-   arrive as props and slots.
+### Primitives are complete by construction
 
-The corollary is the useful one: **a file that is 90% identical in two apps is
-a kit candidate.** The measure is `diff`, not taste.
+A button, a field, a toast, a modal. There is no uncertainty about whether the
+next app will want one, so **do not wait for a second consumer** — waiting
+means every new app begins by copying, which is the thing this package exists
+to prevent.
+
+A primitive is finished when it can express what its own design system
+declares. Two tests, both checkable:
+
+- **Does it cover every role `tokens.css` names?** The kit declared five colour
+  roles while `BaseButton` exposed two, so an app that wanted a success-
+  coloured action hand-wrote the button. That is not caution, it is an
+  incomplete component contradicting its own token file.
+- **Can the app take the behaviour without the appearance?** `variant="unstyled"`
+  exists because 58 raw `<button>` elements sat in 24 files that already
+  imported `BaseButton`. Those places wanted the element, the focus ring, the
+  disabled handling and `aria-pressed` — everything but the paint — and the
+  kit offered all or nothing, so they took nothing.
+
+### Composed components wait for two apps
+
+A `PriceCard`, a `TourShell`, a `DangerZone`. These carry a shape, and a shape
+designed from one example is designed wrong. Here the old rule holds: measured,
+not predicted, and the corollary is the useful one — **a file that is 90%
+identical in two apps is a kit candidate.** The measure is `diff`, not taste.
+
+### Both kinds
+
+- **No new required peer.** Anything needing a new library goes behind its own
+  entry point, or stays in the app.
+- **No product decision** — no colour, no copy, no icon. Those arrive as props
+  and slots.
+
+### The test that matters more than any of them
+
+**A raw `<button>` in a file that imports `BaseButton` is a bug in the kit, not
+in the app.** Grep for that pattern before believing a component is finished.
+It found every gap this package closed between 0.5.0 and 0.7.0, and it found
+them after those releases claimed to be done.
 
 ## The one rule that explains the API
 

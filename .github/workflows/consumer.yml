@@ -60,7 +60,16 @@ jobs:
       # point of the matrix is to see which consumers a change reaches.
       fail-fast: false
       matrix:
-        app: [hibi, kakei, kakehashi]
+        include:
+          - app: hibi
+            repo: ramazandogna/hibi
+          - app: kakei
+            repo: ramazandogna/kakei
+          # The repository is not named after the app. Deriving it from the
+          # name would check out a repository that does not exist, and the
+          # failure looks like a missing consumer rather than a typo.
+          - app: kakehashi
+            repo: ramazandogna/kakehashi-nihongo
 
     steps:
       - name: Download the tarball
@@ -69,10 +78,16 @@ jobs:
           name: kit-tarball
           path: ${{ runner.temp }}
 
+      # The default GITHUB_TOKEN is scoped to this repository alone, so it can
+      # read the public consumers and not a private one. CONSUMER_REPO_TOKEN is
+      # a fine-grained PAT with read access to the private consumers; without
+      # it that leg of the matrix fails at checkout, loudly and on its own,
+      # while the public ones still report.
       - name: Check out ${{ matrix.app }}
         uses: actions/checkout@v7
         with:
-          repository: ramazandogna/${{ matrix.app }}
+          repository: ${{ matrix.repo }}
+          token: ${{ secrets.CONSUMER_REPO_TOKEN || github.token }}
           path: consumer
 
       - uses: pnpm/action-setup@v6

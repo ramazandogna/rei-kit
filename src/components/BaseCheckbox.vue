@@ -1,0 +1,63 @@
+<script setup lang="ts">
+import { computed, useId } from 'vue'
+
+/**
+ * A single checkbox, with its label beside it.
+ *
+ * Deliberately not built on `FormField`. That component stacks a label above
+ * its control, which is right for every field where the control is a box you
+ * type into and wrong here: a checkbox is read as one sentence with a mark in
+ * front of it, and putting the words above the box breaks the association a
+ * sighted reader makes before they get to the accessible name.
+ *
+ * The whole row is the label, so the words are part of the hit target. On a
+ * phone that is the difference between a control and a coin toss.
+ */
+const {
+  label,
+  error = '',
+  hint = '',
+  disabled = false,
+} = defineProps<{
+  label: string
+  error?: string | undefined
+  hint?: string | undefined
+  disabled?: boolean | undefined
+}>()
+
+const model = defineModel<boolean>({ default: false })
+
+const id = useId()
+const errorId = `${id}-error`
+const hintId = `${id}-hint`
+
+const describedBy = computed(() => {
+  if (error) return errorId
+  if (hint) return hintId
+  return undefined
+})
+</script>
+
+<template>
+  <div class="flex flex-col gap-1.5">
+    <label
+      :for="id"
+      class="flex items-center gap-3"
+      :class="disabled ? 'opacity-50' : 'cursor-pointer'"
+    >
+      <input
+        :id="id"
+        v-model="model"
+        type="checkbox"
+        :disabled="disabled"
+        :aria-invalid="Boolean(error)"
+        :aria-describedby="describedBy"
+        class="accent-primary focus-visible:outline-primary size-4 shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2"
+      />
+      <span class="text-ink text-sm">{{ label }}</span>
+    </label>
+
+    <p v-if="error" :id="errorId" class="text-negative text-xs">{{ error }}</p>
+    <p v-else-if="hint" :id="hintId" class="text-ink-soft text-xs">{{ hint }}</p>
+  </div>
+</template>

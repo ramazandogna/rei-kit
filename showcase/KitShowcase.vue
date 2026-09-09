@@ -7,6 +7,10 @@ import {
   BaseButton,
   BaseInput,
   BaseCard,
+  BaseCheckbox,
+  BaseRadioGroup,
+  BaseSelect,
+  BaseTextarea,
   EmptyState,
   GoogleButton,
   PageContainer,
@@ -51,6 +55,10 @@ function setTheme(next: string) {
 const progress = ref(7)
 const email = ref('')
 const segment = ref('all')
+const currency = ref('')
+const note = ref('')
+const themeChoice = ref('system')
+const remember = ref(false)
 
 const TONES = ['info', 'success', 'warning', 'danger'] as const
 const BADGES = ['neutral', 'primary', 'success', 'warning', 'danger'] as const
@@ -186,6 +194,34 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
         <BaseCard class="mt-5 max-w-md">
           <BaseInput v-model="email" label="E-posta" type="email" placeholder="ornek@site.com" />
           <BaseInput class="mt-4" label="Şifre" type="password" error="En az 10 karakter olmalı." />
+
+          <BaseSelect
+            v-model="currency"
+            class="mt-4"
+            label="Para birimi"
+            placeholder="Seçin"
+            hint="Rapordaki her tutar bununla gösterilir."
+            :options="[
+              { value: 'TRY', label: 'Türk lirası' },
+              { value: 'JPY', label: 'Japon yeni' },
+              { value: 'EUR', label: 'Euro' },
+            ]"
+          />
+
+          <BaseTextarea v-model="note" class="mt-4" label="Not" :rows="3" />
+
+          <BaseRadioGroup
+            v-model="themeChoice"
+            class="mt-5"
+            legend="Tema"
+            :options="[
+              { value: 'system', label: 'Sistem' },
+              { value: 'light', label: 'Açık' },
+              { value: 'dark', label: 'Koyu' },
+            ]"
+          />
+
+          <BaseCheckbox v-model="remember" class="mt-5" label="Beni hatırla" />
 
           <SegmentedControl
             class="mt-5"

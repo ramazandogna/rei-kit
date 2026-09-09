@@ -16,6 +16,41 @@ below, and there has not been one yet.
 
 ---
 
+## 0.5.0
+
+**You gain** a button that can be a link, and a form layer.
+
+`BaseButton` takes `as` — `'button'` (default), `'a'` with `href`, or
+`'router-link'` with `to`:
+
+```vue
+<BaseButton as="router-link" to="/kurslar">Kurslar</BaseButton>
+<BaseButton as="a" href="/fiyatlandirma" variant="secondary">Fiyatlar</BaseButton>
+```
+
+**If your app wraps buttons in links, unwrap them.** `<RouterLink><BaseButton>`
+renders an `<a>` around a `<button>`: invalid HTML, two stops in the tab order,
+two controls announced for one thing on the screen. This is the fix.
+
+Also on `BaseButton`: `size="lg"` (56px, for a wide page's call to action),
+`icon` (square, sized to its glyph — **pass `aria-label`**), and `block` (full
+width, the ordinary case under a form).
+
+New components:
+
+|                  |                                                                                                                                                 |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FormField`      | Label, hint, error and the id wiring between them. Wrap your own control in it via the slot                                                     |
+| `BaseSelect`     | A native `<select>` with the chrome replaced. Takes `options`, and a `placeholder` nobody can choose back to                                    |
+| `BaseTextarea`   | Multi-line, with `rows`. Growth is left to the browser's resize handle rather than moving everything below it as you type                       |
+| `BaseCheckbox`   | Label beside the box, and the whole row is the hit target                                                                                       |
+| `BaseRadioGroup` | `fieldset` + `legend`, because the thing being named is the question. There is no `BaseRadio`: one radio is half a choice that cannot be unmade |
+
+**To take it:** nothing. Every addition is additive, and `BaseInput` — now
+built on `FormField` — has the same props, behaviour and markup it had.
+
+---
+
 ## 0.4.4
 
 **You gain** a fourth `BaseButton` variant, `secondary`: bordered, on the

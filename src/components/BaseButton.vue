@@ -1,16 +1,55 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
+/**
+ * The kit's button, and — when asked — its link.
+ *
+ * `as` exists because a button and a link are the same shape and a different
+ * element, and the app was resolving that by nesting them: a consumer had
+ * `<RouterLink><BaseButton>` in every call to action, which is an `<a>` around
+ * a `<button>`. That is invalid HTML, two stops in the tab order and two
+ * controls to a screen reader, for one thing on the screen. Whether something
+ * navigates is the app's decision; carrying it is this component's job.
+ *
+ * `router-link` is resolved by name rather than imported, so `vue-router` stays
+ * the optional peer it is. Only an app that passes `as="router-link"` needs it,
+ * and an app that passes it has it.
+ */
 const {
+  as = 'button',
   variant = 'primary',
   size = 'md',
   loading = false,
   disabled = false,
   type = 'button',
+  icon = false,
+  block = false,
+  to = undefined,
+  href = undefined,
 } = defineProps<{
+  /** What to render. `button` unless this navigates. */
+  as?: 'button' | 'a' | 'router-link' | undefined
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | undefined
-  size?: 'sm' | 'md' | undefined
+  size?: 'sm' | 'md' | 'lg' | undefined
   loading?: boolean | undefined
   disabled?: boolean | undefined
+  /** Ignored unless `as` is `button`. */
   type?: 'button' | 'submit' | undefined
+  /**
+   * Square, sized to its icon, with no label beside it.
+   *
+   * **Pass `aria-label`.** An icon on its own has no accessible name, and a
+   * control a screen reader announces as "button" is not usable. Attributes
+   * fall through, so `aria-label` lands where it should — nothing here can
+   * check that you passed one, which is why it is said this loudly.
+   */
+  icon?: boolean | undefined
+  /** Fills its container. The ordinary case under a form. */
+  block?: boolean | undefined
+  /** For `as="router-link"`. */
+  to?: string | Record<string, unknown> | undefined
+  /** For `as="a"`. */
+  href?: string | undefined
 }>()
 
 const VARIANT_CLASS = {
@@ -29,19 +68,48 @@ const VARIANT_CLASS = {
   danger: 'bg-negative text-white hover:bg-negative/90',
 } as const
 
+/* Two scales, because a square control cannot take horizontal padding and
+   still be square. `lg` is here for a wide page's call to action: a 44px
+   button is right under a thumb and undersized under a headline. */
 const SIZE_CLASS = {
   sm: 'h-9 px-3 text-sm',
   md: 'h-11 px-4 text-base',
+  lg: 'h-14 px-6 text-lg',
 } as const
+
+const ICON_SIZE_CLASS = {
+  sm: 'size-9 text-sm',
+  md: 'size-11 text-base',
+  lg: 'size-14 text-lg',
+} as const
+
+/** Anything that is not a `<button>` cannot be `disabled`; it has to be told. */
+const inactive = computed(() => disabled || loading)
+
+const linkProps = computed(() => {
+  if (as === 'router-link') return { to }
+  // The href is dropped rather than kept alongside aria-disabled: an anchor
+  // without one is not focusable and not activatable, which is the whole of
+  // what "disabled" means for a link.
+  if (as === 'a') return inactive.value ? {} : { href }
+  return {}
+})
 </script>
 
 <template>
-  <button
-    :type="type"
-    :disabled="disabled || loading"
+  <component
+    :is="as"
+    v-bind="linkProps"
+    :type="as === 'button' ? type : undefined"
+    :disabled="as === 'button' ? inactive : undefined"
+    :aria-disabled="as !== 'button' && inactive ? 'true' : undefined"
     :aria-busy="loading"
-    class="rounded-card focus-visible:outline-primary inline-flex items-center justify-center gap-2 font-medium transition-transform duration-100 select-none focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
-    :class="[VARIANT_CLASS[variant], SIZE_CLASS[size]]"
+    class="rounded-card focus-visible:outline-primary inline-flex items-center justify-center gap-2 font-medium transition-transform duration-100 select-none focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50"
+    :class="[
+      VARIANT_CLASS[variant],
+      icon ? ICON_SIZE_CLASS[size] : SIZE_CLASS[size],
+      block ? 'w-full' : '',
+    ]"
   >
     <span
       v-if="loading"
@@ -49,5 +117,5 @@ const SIZE_CLASS = {
       aria-hidden="true"
     />
     <slot />
-  </button>
+  </component>
 </template>

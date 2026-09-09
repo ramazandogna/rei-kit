@@ -3,6 +3,67 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.5.0 — 2026-09-09
+
+The kit had one button that could only ever be a `<button>`, and one form
+control. Across the three consuming apps that came to **136 hand-written
+`<button>` elements**, five `<select>`s, six `<textarea>`s and seven
+checkboxes — every one of them a place where the focus ring, the disabled
+state and the error wiring had to be remembered rather than inherited. A kit
+whose most-used component cannot cover its most common case is arguing against
+itself.
+
+### Added
+
+- **`BaseButton` can be an anchor or a `RouterLink`** — `as`, with `href` or
+  `to`. A button and a link are the same shape and a different element, and
+  the apps were resolving that by nesting them: `<RouterLink><BaseButton>` is
+  an `<a>` around a `<button>`, which is invalid HTML, two stops in the tab
+  order and two controls announced for one thing on the screen. `router-link`
+  is resolved by name rather than imported, so `vue-router` stays the optional
+  peer it is.
+
+  A disabled link has its `href` removed outright rather than kept beside an
+  `aria-disabled`. An anchor without one is not focusable and not activatable,
+  which is the whole of what disabled means for a link.
+
+- **`BaseButton` grows `size="lg"`, `icon` and `block`.** A 44px button is
+  right under a thumb and undersized under a headline, so a wide page's call to
+  action had been hand-written. `icon` is square — an icon button cannot take
+  horizontal padding and stay square, so it has its own scale. Pass
+  `aria-label` with it; nothing in the component can check that you did, which
+  is why the prop's documentation says so twice.
+
+- **`FormField`** — the label, the hint, the error and the wiring between them.
+  This was _inside_ `BaseInput`, which is why the kit had one form control
+  instead of five. The hard part of a field is not the `<input>`: it is
+  generating an id, pointing the label at it, deciding whether the description
+  is the hint or the error, and telling assistive tech which one to read. That
+  part is identical for a select, a textarea and an input, and every app that
+  needed one of the other two wrote all of it again.
+
+- **`BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseRadioGroup`.**
+  `BaseSelect` stays a native `<select>` — a custom listbox has to reimplement
+  typeahead, the keyboard and the way a phone lifts options into its own
+  picker, and it gets one of them wrong; what is worth replacing is the chrome.
+
+  `BaseCheckbox` is deliberately _not_ built on `FormField`: that component
+  stacks a label above its control, and a checkbox is read as one sentence with
+  a mark in front of it. The whole row is the label, so the words are part of
+  the hit target.
+
+  It is `BaseRadioGroup` rather than `BaseRadio` because one radio is not a
+  control — it is half of a choice that cannot be unmade, and every real use is
+  a group. It renders `fieldset` and `legend`: a label points at one element,
+  and the thing being named is the question, not any single answer.
+
+### Changed
+
+- `BaseInput` is built on `FormField`. Its props, its behaviour and its markup
+  are unchanged; the wiring simply lives somewhere it can be shared.
+
+Additive throughout: no existing export changed name, props or behaviour.
+
 ## 0.4.4 — 2026-09-06
 
 ### Added
@@ -21,7 +82,7 @@ the major is `0`, a minor may carry a breaking change and will say so here.
 
 - **Optional props refused an explicit `undefined`.** The kit compiles with
   `exactOptionalPropertyTypes`, and under that flag `note?: string` means the
-  prop may be *absent* — not that it may be `undefined`. So a consumer with the
+  prop may be _absent_ — not that it may be `undefined`. So a consumer with the
   same flag on could not forward its own optional value: passing
   `:note="note"` where `note` is `string | undefined` failed to type-check
   against a component built to receive exactly that.

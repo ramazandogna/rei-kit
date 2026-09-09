@@ -24,13 +24,21 @@ const {
   type = 'button',
   icon = false,
   block = false,
+  pill = false,
   to = undefined,
   href = undefined,
 } = defineProps<{
   /** What to render. `button` unless this navigates. */
   as?: 'button' | 'a' | 'router-link' | undefined
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | undefined
-  size?: 'sm' | 'md' | 'lg' | undefined
+  /**
+   * `link` is a real action that should read as text — "clear this note",
+   * "remove", "change category". It has no surface at all, so it also has no
+   * height and no padding: giving it either would make it a ghost button,
+   * which is a different thing and was already here.
+   */
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'link' | undefined
+  /** `xs` is the action inside a prompt or a nudge, not on a page. */
+  size?: 'xs' | 'sm' | 'md' | 'lg' | undefined
   loading?: boolean | undefined
   disabled?: boolean | undefined
   /** Ignored unless `as` is `button`. */
@@ -50,6 +58,14 @@ const {
   to?: string | Record<string, unknown> | undefined
   /** For `as="a"`. */
   href?: string | undefined
+  /**
+   * Fully rounded rather than card-cornered.
+   *
+   * Every install prompt, update prompt and nudge across the apps used the
+   * same pair — a filled pill to act and a quiet one to dismiss — and none of
+   * them could use this component, because it only knew one corner radius.
+   */
+  pill?: boolean | undefined
 }>()
 
 const VARIANT_CLASS = {
@@ -66,22 +82,42 @@ const VARIANT_CLASS = {
   secondary: 'border-hair bg-surface text-ink border hover:bg-muted',
   ghost: 'bg-transparent text-ink hover:bg-muted',
   danger: 'bg-negative text-white hover:bg-negative/90',
+  /* No fill, no border, no box: underlined so it is still obviously a control
+     without one. `ghost` cannot stand in — it has a hover surface and a
+     radius, so it reads as a button that happens to be empty. */
+  link: 'bg-transparent underline underline-offset-2 hover:opacity-80',
 } as const
 
 /* Two scales, because a square control cannot take horizontal padding and
    still be square. `lg` is here for a wide page's call to action: a 44px
    button is right under a thumb and undersized under a headline. */
 const SIZE_CLASS = {
+  xs: 'h-8 px-3 text-xs',
   sm: 'h-9 px-3 text-sm',
   md: 'h-11 px-4 text-base',
   lg: 'h-14 px-6 text-lg',
 } as const
 
 const ICON_SIZE_CLASS = {
+  xs: 'size-8 text-xs',
   sm: 'size-9 text-sm',
   md: 'size-11 text-base',
   lg: 'size-14 text-lg',
 } as const
+
+/* A link takes the type size and nothing else. Height and padding are what
+   make a surface, and this variant is the one without one. */
+const LINK_SIZE_CLASS = {
+  xs: 'text-xs',
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+} as const
+
+const sizing = computed(() => {
+  if (variant === 'link') return LINK_SIZE_CLASS[size]
+  return icon ? ICON_SIZE_CLASS[size] : SIZE_CLASS[size]
+})
 
 /** Anything that is not a `<button>` cannot be `disabled`; it has to be told. */
 const inactive = computed(() => disabled || loading)
@@ -104,10 +140,11 @@ const linkProps = computed(() => {
     :disabled="as === 'button' ? inactive : undefined"
     :aria-disabled="as !== 'button' && inactive ? 'true' : undefined"
     :aria-busy="loading"
-    class="rounded-card focus-visible:outline-primary inline-flex items-center justify-center gap-2 font-medium transition-transform duration-100 select-none focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50"
+    class="focus-visible:outline-primary inline-flex items-center justify-center gap-2 font-medium transition-transform duration-100 select-none focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50"
     :class="[
       VARIANT_CLASS[variant],
-      icon ? ICON_SIZE_CLASS[size] : SIZE_CLASS[size],
+      sizing,
+      variant === 'link' ? 'rounded-xs' : pill ? 'rounded-full' : 'rounded-card',
       block ? 'w-full' : '',
     ]"
   >

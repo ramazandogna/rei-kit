@@ -16,6 +16,34 @@ below, and there has not been one yet.
 
 ---
 
+## 0.6.0
+
+**You gain** the two button shapes the kit could not make, and the size that
+goes with them.
+
+```vue
+<BaseButton variant="link" size="xs">{{ t('entry.clearNote') }}</BaseButton>
+
+<!-- the pair every prompt and nudge is built from -->
+<BaseButton pill size="xs">{{ t('pwa.install') }}</BaseButton>
+<BaseButton pill size="xs" variant="ghost">{{ t('common.later') }}</BaseButton>
+```
+
+`variant="link"` has no surface, and therefore no height and no padding —
+giving it either would make it a ghost button. Use `ghost` for a control that
+should recede until it is wanted, and `link` for one that is meant to read as
+text.
+
+Why now: 0.5.0 said it was about the hand-written `<button>` elements and then
+converted none of them. Classifying them showed that about two thirds are app
+code and always were — pickers, day cells, bespoke surfaces — and that of the
+rest, the kit could express only the icon buttons. These are the other two
+shapes.
+
+**To take it:** nothing.
+
+---
+
 ## 0.5.3
 
 **You gain** a `BaseSelect` that holds numbers:

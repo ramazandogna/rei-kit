@@ -289,3 +289,35 @@ describe('BaseSelect over its value type', () => {
     expect((wrapper.get('select').element as HTMLSelectElement).value).toBe('3')
   })
 })
+
+describe('the shapes a button has to be able to take', () => {
+  it('drops its surface entirely for a text action', () => {
+    // "Clear this note", "remove", "change category" — 10 of these were hand
+    // written across the three apps. `ghost` cannot stand in: it has a hover
+    // surface and a radius, so it reads as a button that happens to be empty.
+    const wrapper = mount(BaseButton, { props: { variant: 'link' } })
+
+    expect(wrapper.classes()).toContain('underline')
+    // No height and no padding: those are what make a surface.
+    expect(wrapper.classes().some((c) => /^h-\d/.test(c))).toBe(false)
+    expect(wrapper.classes().some((c) => c.startsWith('px-'))).toBe(false)
+    expect(wrapper.classes()).not.toContain('rounded-card')
+  })
+
+  it('rounds fully when it is the action inside a prompt', () => {
+    // Every install prompt, update prompt and nudge used the same pair: a
+    // filled pill to act and a quiet one to dismiss. None could use this
+    // component, which knew one radius.
+    const act = mount(BaseButton, { props: { pill: true, size: 'xs' } })
+    const dismiss = mount(BaseButton, { props: { pill: true, size: 'xs', variant: 'ghost' } })
+
+    expect(act.classes()).toContain('rounded-full')
+    expect(act.classes()).toContain('h-8')
+    expect(act.classes()).toContain('text-xs')
+    expect(dismiss.classes()).toContain('rounded-full')
+  })
+
+  it('keeps the card corner when nothing asks otherwise', () => {
+    expect(mount(BaseButton).classes()).toContain('rounded-card')
+  })
+})

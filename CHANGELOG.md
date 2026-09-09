@@ -3,6 +3,45 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.6.0 — 2026-09-09
+
+0.5.0 claimed to be about the 136 hand-written `<button>` elements across the
+three apps. It shipped `icon`, `lg` and `block`, and then **not one of those
+136 was converted** — the release note quietly changed the subject to selects
+and checkboxes. Classifying them afterwards showed why, and showed that the
+number itself was doing no work:
+
+|                                                                  |     |
+| ---------------------------------------------------------------- | --- |
+| Carry a selected state — scale pickers, day cells, tab-like rows | 40  |
+| Square icon buttons                                              | ~29 |
+| Text actions with no surface                                     | ~10 |
+| Pill actions inside a prompt                                     | 8   |
+| Full-width interactive rows                                      | 5   |
+| Bespoke surfaces                                                 | ~43 |
+
+Roughly two thirds are app code and always were. Of the third that is not, the
+kit could express only the icon buttons — the other two shapes it had no way
+to make at all, which is the actual reason those files were hand-written.
+
+### Added
+
+- **`variant="link"`** — a real action that reads as text. "Clear this note",
+  "remove", "change category". It has no surface, so it also has no height and
+  no padding: giving it either makes it a ghost button, which is a different
+  thing and was already here. `ghost` had been the only candidate and it has a
+  hover fill and a radius, so it reads as a button that happens to be empty.
+
+- **`pill`** — fully rounded rather than card-cornered. Every install prompt,
+  update prompt and nudge in the two phone apps used the same pair: a filled
+  pill to act and a quiet one to dismiss. Eight buttons, four files, two apps,
+  and none of them could use this component because it knew one radius.
+
+- **`size="xs"`** — the action inside a prompt or a nudge rather than on a
+  page. It is what those eight were.
+
+Additive throughout.
+
 ## 0.5.3 — 2026-09-09
 
 ### Changed

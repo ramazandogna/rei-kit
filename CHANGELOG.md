@@ -3,6 +3,20 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.5.3 — 2026-09-09
+
+### Changed
+
+- **`BaseSelect` is generic over its value** (`T extends string | number`).
+
+  It was typed to `string`, and the first two selects anyone tried to replace
+  with it held a day of the month — a number. Adopting it would have meant a
+  computed getter converting out and a setter converting back, at every call
+  site, forever. A component you have to wrap in order to use is a component
+  you write yourself instead, which is exactly what those apps had done.
+
+  Widening a type parameter, so nothing that compiles today stops compiling.
+
 ## 0.5.2 — 2026-09-09
 
 ### Fixed

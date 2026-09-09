@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends string | number">
 import { ChevronDown } from 'lucide-vue-next'
 
 import FormField from './FormField.vue'
@@ -11,8 +11,13 @@ import FormField from './FormField.vue'
  * gets one of them wrong. What is worth replacing is the chrome, so the arrow
  * is drawn and the browser's own is removed.
  *
- * Options are passed rather than slotted so the value can be anything and the
- * label can be a translated string the kit never sees.
+ * Options are passed rather than slotted so the label can be a translated
+ * string the kit never sees.
+ *
+ * Generic over the value, because a select whose value must be a string makes
+ * every consumer with numbered options write conversion glue on both sides of
+ * it — and a component you have to wrap to use is one you write yourself
+ * instead. A day of the month is a number.
  */
 const {
   label,
@@ -24,7 +29,7 @@ const {
   size = 'md',
 } = defineProps<{
   label: string
-  options: readonly { value: string; label: string; disabled?: boolean | undefined }[]
+  options: readonly { value: T; label: string; disabled?: boolean | undefined }[]
   error?: string | undefined
   hint?: string | undefined
   labelHidden?: boolean | undefined
@@ -53,7 +58,7 @@ const SIZE_CLASS = {
   md: 'h-11 text-base',
 } as const
 
-const model = defineModel<string | undefined>()
+const model = defineModel<T | undefined>()
 </script>
 
 <template>
@@ -68,7 +73,7 @@ const model = defineModel<string | undefined>()
           class="border-hair bg-surface text-ink rounded-card focus-visible:outline-primary w-full appearance-none border py-0 pr-10 pl-3 focus-visible:outline-2 focus-visible:outline-offset-1"
           :class="[SIZE_CLASS[size], invalid ? 'border-negative' : '']"
         >
-          <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
+          <option v-if="placeholder" :value="undefined" disabled>{{ placeholder }}</option>
           <option
             v-for="option in options"
             :key="option.value"

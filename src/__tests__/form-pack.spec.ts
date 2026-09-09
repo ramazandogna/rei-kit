@@ -269,3 +269,23 @@ describe('the size scale', () => {
     expect(aside.get('span').classes()).toContain('text-ink-soft')
   })
 })
+
+describe('BaseSelect over its value type', () => {
+  it('takes numbers without the caller converting on both sides', () => {
+    // A day of the month is a number. Typed to `string`, this component made
+    // every consumer with numbered options write glue in and glue out -- and a
+    // component you have to wrap is one you write yourself instead.
+    const wrapper = mount(BaseSelect, {
+      props: {
+        label: 'Ayın günü',
+        modelValue: 3,
+        options: [
+          { value: 1, label: '1' },
+          { value: 3, label: '3' },
+        ],
+      },
+    })
+
+    expect((wrapper.get('select').element as HTMLSelectElement).value).toBe('3')
+  })
+})

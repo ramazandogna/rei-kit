@@ -16,6 +16,24 @@ below, and there has not been one yet.
 
 ---
 
+## 0.5.3
+
+**You gain** a `BaseSelect` that holds numbers:
+
+```vue
+<BaseSelect v-model="dayOfMonth" :label="t('recurring.day')" :options="DAY_OPTIONS" />
+<!-- DAY_OPTIONS: { value: 1, label: '1' }[] -->
+```
+
+It was typed to `string`, and the first two selects anyone tried to replace
+with it held a day of the month. Adopting it would have meant converting out
+in a getter and back in a setter, at every call site — and a component you have
+to wrap in order to use is one you write yourself instead.
+
+**To take it:** nothing. The type only widened.
+
+---
+
 ## 0.5.2
 
 **Fixed:** `size="sm"` was 36px tall, and every hand-written control it was

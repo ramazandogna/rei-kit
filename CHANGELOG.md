@@ -3,6 +3,47 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.8.0 — 2026-09-10
+
+### Added
+
+- **`useToast` and `ToastHost`.** The word "toast" appeared **zero times**
+  across all three consuming apps — not because they had decided against it,
+  but because there was nothing to reach for. Every save, delete and export
+  finished in silence, and the only way to know something had worked was that
+  nothing had visibly broken.
+
+  `useToast()` gives `info`, `success`, `warning`, `danger`, `dismiss`,
+  `dismissAll`, `pause` and `resume`. `ToastHost` goes once at the app root and
+  takes `closeLabel`, because the dismiss button is an X and an X has no name.
+
+  The decisions worth knowing:
+
+  - **No text in the kit.** Callers pass the message. A component that called a
+    translator would force one on the app.
+  - **`aria-live="polite"`, not assertive.** A toast reports something that has
+    already happened; interrupting a screen reader mid-sentence to say "saved"
+    is ruder than waiting. A failure the reader must act on belongs in a
+    `BaseAlert` beside the thing that failed, and this is deliberately not for
+    form errors — a field that was rejected says so beside itself, where the
+    eye already is and where it stays until fixed.
+  - **Three at a time.** A fourth pushes the oldest out rather than growing the
+    stack off the screen: an action that produces ten toasts is a loop, and a
+    loop must not be able to cover the app it is running in.
+  - **The clock stops while it is being read.** Hover or focus pauses, and
+    resuming continues from where it stopped rather than starting again.
+  - **A failure stays longer** than a confirmation, because it is read more
+    slowly and more often twice.
+  - **No timer on a server.** Arming one would keep a prerender process alive
+    past the last page, which is how a build hangs instead of finishing.
+
+### Changed
+
+- **`BaseSheet`'s close button is a `BaseButton`** (`variant="unstyled"`, so it
+  keeps the exact appearance it had). What it gains is a focus ring: it was a
+  raw `<button>` with no `focus-visible` rule, so closing a sheet from the
+  keyboard was invisible. The kit was breaking its own rule in its own source.
+
 ## 0.7.1 — 2026-09-10
 
 ### Fixed

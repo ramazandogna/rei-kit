@@ -30,6 +30,7 @@ import {
   SettingsRow,
   SkeletonList,
   StatCard,
+  ToastHost,
   ToneDot,
   applyTheme,
   createI18nRuntime,
@@ -94,6 +95,9 @@ describe('server rendering', () => {
       ['SettingsRow', SettingsRow, { label: 'Tema' }],
       ['SkeletonList', SkeletonList, {}],
       ['StatCard', StatCard, { value: '12', label: 'Gün' }],
+      // Renders nothing until mounted: Teleport needs a body and a server has
+      // none, and a prerendered page has no toasts to hydrate anyway.
+      ['ToastHost', ToastHost, { closeLabel: 'Kapat' }],
       ['ToneDot', ToneDot, { fill: 'bg-primary' }],
     ]
 

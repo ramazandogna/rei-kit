@@ -21,9 +21,11 @@ import {
   SettingsRow,
   SkeletonList,
   StatCard,
+  ToastHost,
   ToneDot,
   VERSION,
   applyTheme,
+  useToast,
 } from '../src/index'
 
 /**
@@ -59,6 +61,7 @@ const currency = ref('')
 const note = ref('')
 const themeChoice = ref('system')
 const remember = ref(false)
+const toast = useToast()
 
 const TONES = ['info', 'success', 'warning', 'danger'] as const
 const BADGES = ['neutral', 'primary', 'success', 'warning', 'danger'] as const
@@ -86,6 +89,8 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           />
         </div>
       </PageContainer>
+
+      <ToastHost close-label="Kapat" />
     </header>
 
     <PageContainer as="main" class="py-12">
@@ -185,6 +190,30 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           <StatCard value="28" label="Gün" />
           <StatCard value="113" label="Kanji" trend="up" />
           <StatCard value="690" label="Kelime" trend="flat" />
+        </div>
+      </section>
+
+      <section class="mt-14">
+        <SectionHeading tone="neutral" label="Bildirim" />
+
+        <p class="text-ink-soft mt-2 max-w-prose text-sm leading-relaxed">
+          Üç uygulamanın hiçbirinde yoktu — karar verilmediği için değil, uzanacak bir şey olmadığı
+          için. Kaydetme, silme, dışa aktarma hepsi sessizce bitiyordu.
+        </p>
+
+        <div class="mt-5 flex flex-wrap gap-2">
+          <BaseButton size="sm" variant="secondary" @click="toast.info('Dışa aktarılıyor…')">
+            Bilgi
+          </BaseButton>
+          <BaseButton size="sm" variant="secondary" @click="toast.success('Kaydedildi')">
+            Başarı
+          </BaseButton>
+          <BaseButton size="sm" variant="secondary" @click="toast.warning('Bağlantı zayıf')">
+            Uyarı
+          </BaseButton>
+          <BaseButton size="sm" variant="secondary" @click="toast.danger('Kaydedilemedi')">
+            Hata
+          </BaseButton>
         </div>
       </section>
 

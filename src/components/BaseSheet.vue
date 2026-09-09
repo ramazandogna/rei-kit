@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BaseButton from './BaseButton.vue'
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 import { X } from 'lucide-vue-next'
 
@@ -116,14 +117,18 @@ onUnmounted(() => {
                 </p>
               </div>
 
-              <button
-                type="button"
+              <!-- `unstyled`, so the sheet keeps the exact button it had. What it
+                   gains is the focus ring it never had: this was a raw
+                   `<button>` with no `focus-visible` rule, so closing a sheet
+                   from the keyboard was invisible. -->
+              <BaseButton
+                variant="unstyled"
                 class="text-ink-soft hover:bg-muted hover:text-ink -mt-1 flex size-10 shrink-0 items-center justify-center rounded-full transition-colors active:scale-90"
                 :aria-label="closeLabel"
                 @click="close"
               >
                 <X class="size-5" />
-              </button>
+              </BaseButton>
             </header>
 
             <div

@@ -45,6 +45,7 @@ const PUBLIC_API = [
   'useDragScroll',
   'useMediaQuery',
   'useVisualViewport',
+  'useToast',
   // components
   'BaseAlert',
   'BaseBadge',
@@ -71,6 +72,7 @@ const PUBLIC_API = [
   'SettingsRow',
   'SkeletonList',
   'StatCard',
+  'ToastHost',
   'TabBar',
   'ToneDot',
   // i18n

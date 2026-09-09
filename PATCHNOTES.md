@@ -16,6 +16,44 @@ below, and there has not been one yet.
 
 ---
 
+## 0.8.0
+
+**You gain** a way to say that something happened.
+
+```vue
+<!-- once, at the app root -->
+<ToastHost :close-label="t('common.close')" />
+```
+
+```ts
+const toast = useToast()
+
+toast.success(t('habit.saved'))
+toast.danger(t('common.failed'))
+const id = toast.info(t('export.preparing'), { duration: 0 }) // stays
+toast.dismiss(id)
+```
+
+The word "toast" appeared zero times across all three apps — there was nothing
+to reach for, so every save, delete and export finished in silence.
+
+Worth knowing before you wire it:
+
+- **Not for form errors.** A rejected field says so beside itself, where the
+  eye already is and where it stays until fixed. Use `FormField`'s `error` and
+  `BaseAlert` for those; use this for what has already happened.
+- **It announces politely.** A toast does not interrupt a screen reader
+  mid-sentence.
+- **Three at a time**, oldest pushed out; the clock pauses on hover and focus.
+- `ToastHost` renders nothing on a server, so a prerendered page is unaffected.
+
+`BaseSheet`'s close button now has a focus ring it never had. Nothing else
+about it changed.
+
+**To take it:** add `ToastHost` once at your app root. Everything else is opt-in.
+
+---
+
 ## 0.7.1
 
 **Fixed:** `BaseButton` transitioned `transform` only, so its hover colour

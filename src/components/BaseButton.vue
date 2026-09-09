@@ -199,11 +199,17 @@ const surface = computed(() => {
 
 /* Layout and feel, which unstyled does not impose either — but the focus ring
    and the disabled handling stay, because those are the floor. A raw <button>
-   is what happens when a component makes them optional. */
+   is what happens when a component makes them optional.
+   
+   Colour is in the transition, not just transform. Every variant here changes
+   colour on hover and none of them animated it, so every button in every
+   consuming app snapped while the hand-written controls beside them faded —
+   `transition-colors` appears 106 times across the three apps, which is the
+   convention this component was the only thing not following. */
 const shell = computed(() =>
   variant === 'unstyled'
     ? ''
-    : 'inline-flex items-center justify-center gap-2 font-medium transition-transform duration-100 select-none active:scale-95',
+    : 'inline-flex items-center justify-center gap-2 font-medium transition-[transform,color,background-color,border-color] duration-100 select-none active:scale-95',
 )
 
 const radius = computed(() => {

@@ -3,6 +3,21 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.7.1 — 2026-09-10
+
+### Fixed
+
+- **The button never animated the colour it changes on hover.** It transitioned
+  `transform` only, so every variant — all of which shift colour on hover —
+  snapped, while the hand-written controls sitting beside them faded.
+  `transition-colors` appears **106 times** across the three consuming apps;
+  this component was the one interactive surface not following the convention,
+  and it was only noticed when a hand-written icon button was replaced by it
+  and the hover got worse.
+
+  `unstyled` still imposes no transition: an app painting its own surface
+  animates it too.
+
 ## 0.7.0 — 2026-09-10
 
 **The button stops being a look and becomes a primitive.**

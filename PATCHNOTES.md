@@ -16,6 +16,18 @@ below, and there has not been one yet.
 
 ---
 
+## 0.7.1
+
+**Fixed:** `BaseButton` transitioned `transform` only, so its hover colour
+snapped instead of fading — in every app, on every variant. `transition-colors`
+appears 106 times across the three consuming apps; this was the one interactive
+surface not doing it.
+
+**To take it:** nothing. Hovers get smoother; `unstyled` still imposes no
+transition of its own.
+
+---
+
 ## 0.7.0
 
 **You gain** a button you can build your own controls out of.

@@ -396,3 +396,23 @@ describe('the button as a primitive rather than a look', () => {
     expect(on.classes().some((c) => c.startsWith('bg-'))).toBe(false)
   })
 })
+
+describe('the hover it was not animating', () => {
+  it('transitions colour, not only transform', () => {
+    // Every variant changes colour on hover and none of them animated it, so
+    // every button in every consuming app snapped while the hand-written
+    // controls beside them faded. `transition-colors` appears 106 times across
+    // the three apps; this component was the one thing not following it.
+    const classes = mount(BaseButton).classes().join(' ')
+
+    expect(classes).toContain('transition-[transform,color,background-color,border-color]')
+  })
+
+  it('still imposes no transition on an unstyled button', () => {
+    const classes = mount(BaseButton, { props: { variant: 'unstyled' } })
+      .classes()
+      .join(' ')
+
+    expect(classes).not.toContain('transition-')
+  })
+})

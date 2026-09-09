@@ -16,6 +16,20 @@ below, and there has not been one yet.
 
 ---
 
+## 0.5.2
+
+**Fixed:** `size="sm"` was 36px tall, and every hand-written control it was
+meant to replace was 40px or more — adopting it would have shrunk them all and
+put each one under the 44px touch target.
+
+Both sizes are now `h-11`. The scale is typographic: `sm` changes the type size
+and quiets the label, and leaves the touch target alone.
+
+**To take it:** nothing, unless you already adopted `size="sm"` from 0.5.1 and
+wanted the shorter control — you now get a taller one. Nothing else moves.
+
+---
+
 ## 0.5.1
 
 **You gain** `size` on the form layer — `FormField`, `BaseInput`, `BaseSelect`,

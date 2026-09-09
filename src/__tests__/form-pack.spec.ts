@@ -241,7 +241,10 @@ describe('the size scale', () => {
     })
 
     expect(wrapper.get('select').classes()).toContain('text-sm')
-    expect(wrapper.get('select').classes()).toContain('h-9')
+    // The height does not change with it: both sizes keep the 44px touch
+    // target, because a select that filters is pressed with the same thumb as
+    // one that answers a form.
+    expect(wrapper.get('select').classes()).toContain('h-11')
   })
 
   it('quiets the label of a small field so it does not outweigh its control', () => {

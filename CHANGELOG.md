@@ -3,6 +3,23 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.5.2 — 2026-09-09
+
+### Fixed
+
+- **`size="sm"` was shorter than every control it was meant to replace.** It
+  shipped as `h-9` (36px), and of the five hand-written selects across the
+  three apps none was under 40px and two were exactly 44. Adopting it would
+  have shrunk all five and put every one of them under the 44px touch target.
+
+  The scale is typographic rather than dimensional now: `sm` and `md` are both
+  `h-11`, and what changes is the type size and how loudly the label asks to be
+  read. A select that filters a list is pressed with the same thumb as one that
+  answers a form.
+
+  Caught by trying to adopt 0.5.1 rather than by reading it, which is the
+  argument for adopting in the same session as releasing.
+
 ## 0.5.1 — 2026-09-09
 
 ### Added

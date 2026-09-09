@@ -25,12 +25,13 @@ const {
   size?: 'sm' | 'md' | undefined
 }>()
 
-/* The control's own scale. `md` states the type size the kit had been leaving
-   to whatever the host page happened to set — two consumers force 16px on
-   form elements to stop iOS zooming, a third does not, so the same component
-   rendered at two sizes depending on the app. */
+/* The scale is typographic, not dimensional. Both sizes keep the 44px touch
+   target — of the five hand-written controls this replaces, none was shorter
+   than 40px and two were exactly 44, and a select that filters a list is
+   pressed with the same thumb as one that answers a form. What changes is the
+   type, and with it how loudly the field asks to be read. */
 const SIZE_CLASS = {
-  sm: 'h-9 text-sm',
+  sm: 'h-11 text-sm',
   md: 'h-11 text-base',
 } as const
 

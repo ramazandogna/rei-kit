@@ -3,7 +3,12 @@ name: Consumer check
 # The guard that matters. The kit's own tests pass happily while a renamed prop
 # or a dropped export breaks every app using it — nothing here imports the way
 # a consumer does. This builds the package exactly as it would be published,
-# installs it into Hibi, and runs Hibi's full check against it.
+# installs it into each consuming app, and runs that app's full gate.
+#
+# All three, not one. The kit had been checked against Hibi alone, which meant
+# the only *prerendered* consumer (Kakehashi, whose `build-only` is `vite-ssg
+# build`) and the only consumers that import `tokens.css` were never exercised.
+# A change to the stylesheet contract could ship green.
 #
 # It runs before anything is published, so a break is a red pull request rather
 # than a broken release.
@@ -14,51 +19,87 @@ on:
   workflow_dispatch:
 
 jobs:
-  hibi:
-    name: Hibi builds against this
+  pack:
+    name: Pack the tarball
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out rei-kit
-        uses: actions/checkout@v7
-        with:
-          path: kit
+      - uses: actions/checkout@v7
 
-      # The repo is checked out into kit/, so the workspace root has no
-      # package.json for the action to read packageManager from.
       - uses: pnpm/action-setup@v6
-        with:
-          package_json_file: kit/package.json
 
       - uses: actions/setup-node@v7
         with:
           node-version: 24
+          cache: pnpm
 
-      - name: Pack the kit
-        working-directory: kit
+      - name: Build and pack
         run: |
           pnpm install --frozen-lockfile
           pnpm build
           # A tarball, not a link: this is byte-for-byte what npm would serve,
           # so the check also covers the files list and the exports map.
-          pnpm pack --pack-destination "$GITHUB_WORKSPACE"
-          echo "TARBALL=$(ls "$GITHUB_WORKSPACE"/rei-kit-*.tgz)" >> "$GITHUB_ENV"
+          pnpm pack --pack-destination "$RUNNER_TEMP"
 
-      - name: Check out Hibi
+      # Packed once and shared, rather than rebuilt per consumer: three
+      # identical builds would also be three chances to test three tarballs.
+      - name: Upload the tarball
+        uses: actions/upload-artifact@v5
+        with:
+          name: kit-tarball
+          path: ${{ runner.temp }}/rei-kit-*.tgz
+          retention-days: 1
+
+  consumer:
+    name: ${{ matrix.app }} builds against this
+    needs: pack
+    runs-on: ubuntu-latest
+
+    strategy:
+      # One app breaking must not hide the state of the other two: the whole
+      # point of the matrix is to see which consumers a change reaches.
+      fail-fast: false
+      matrix:
+        app: [hibi, kakei, kakehashi]
+
+    steps:
+      - name: Download the tarball
+        uses: actions/download-artifact@v5
+        with:
+          name: kit-tarball
+          path: ${{ runner.temp }}
+
+      - name: Check out ${{ matrix.app }}
         uses: actions/checkout@v7
         with:
-          repository: ramazandogna/hibi
+          repository: ramazandogna/${{ matrix.app }}
           path: consumer
 
-      - name: Install Hibi against the packed kit
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: consumer/package.json
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install ${{ matrix.app }} against the packed kit
         working-directory: consumer
         run: |
           pnpm install --no-frozen-lockfile
-          pnpm add "file:$TARBALL"
+          pnpm add "file:$(ls "$RUNNER_TEMP"/rei-kit-*.tgz)"
 
-      - name: Hibi's own gate
+      # Each app's own `check`: format, lint, types, tests, production build.
+      # Kakehashi's build is `vite-ssg build`, so this is also the real
+      # prerender — the one thing `ssr.spec.ts` cannot stand in for, because
+      # jsdom supplies the very `document` a server lacks.
+      - name: ${{ matrix.app }}'s own gate
         working-directory: consumer
         run: pnpm check
         env:
           VITE_SUPABASE_URL: https://example.supabase.co
+          # Deliberately not JWT-shaped and without an `sb_` prefix: Kakei
+          # refuses a secret key at build time, and a placeholder that classifies
+          # as anything but "unknown" would be testing the wrong thing.
           VITE_SUPABASE_ANON_KEY: ci-placeholder
+          VITE_SITE_URL: https://example.com

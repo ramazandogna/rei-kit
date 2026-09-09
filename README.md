@@ -1,22 +1,47 @@
 # rei-kit
 
-Vue 3 and Tailwind 4 design system and shared runtime. Extracted from
-[Hibi](https://github.com/ramazandogna/hibi).
+Vue 3 and Tailwind 4 design system and shared runtime.
 
 零 — the layer everything else starts from.
 
 ## Why it exists
 
-Hibi's shared layer turned out to be genuinely portable: no file under
-`shared/` imported from `features/`, so the components, the date and theme
-helpers, and the i18n runtime could leave without being rewritten. This is that
-layer, packaged so the next app installs it instead of copying it.
+**The kit distributes decisions, not a look.** Three apps run on it and no two
+resemble each other: a phone journal, a phone ledger, and a wide Japanese
+course site. None of them forked it, because there is not a single hex value
+inside a component. Colours are named for the role they play, and an app
+rebrands by redefining eleven values.
+
+That is the whole trick, and everything else follows from it.
+
+### What gets to be in here
+
+Three things have to be true at once:
+
+1. **Two apps genuinely need it** — measured, not predicted. A component one
+   app needs stays in that app however general it looks.
+2. **It adds no required peer.** Anything that needs a new library goes behind
+   its own entry point, or stays in the app.
+3. **It contains no product decision** — no colour, no copy, no icon. Those
+   arrive as props and slots.
+
+The corollary is the useful one: **a file that is 90% identical in two apps is
+a kit candidate.** The measure is `diff`, not taste.
 
 ## Status
 
-**v0.0.0 — extraction complete, no consumer yet.** Thirteen components,
-eight utilities, six composables, a generic i18n runtime and an optional
-Supabase entry. Hibi moves onto it next.
+**v0.4.4 — three consumers.**
+
+|             |                                                                                                                                                        |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Components  | 22                                                                                                                                                     |
+| Composables | 11                                                                                                                                                     |
+| Utilities   | 20                                                                                                                                                     |
+| Also        | a generic i18n runtime, an optional Supabase entry                                                                                                     |
+| Consumers   | [Hibi](https://github.com/ramazandogna/hibi) · [Kakei](https://github.com/ramazandogna/kakei) · [Kakehashi](https://github.com/ramazandogna/kakehashi) |
+
+Every export is listed by name in `src/__tests__/public-api.spec.ts`, which is
+the package's promise written down.
 
 ## Install
 
@@ -37,7 +62,7 @@ is the only copy:
 | `@supabase/supabase-js` | the `rei-kit/supabase` entry only |
 
 This is not a formality. A second copy of a library that works through
-provide/inject is not a spare copy -- it is a different injection key, so the
+provide/inject is not a spare copy — it is a different injection key, so the
 app's own provider becomes invisible and the component throws on mount.
 
 ## Use
@@ -59,12 +84,12 @@ import { createSupabaseClient } from 'rei-kit/supabase'
 
 ### Wiring the styles
 
-Three lines, and all three are load-bearing:
+Four lines, and all four are load-bearing:
 
 ```css
 /* your app's main.css */
 @import 'tailwindcss';
-@import 'rei-kit/tokens.css'; /* colour roles, the dark variant, utilities */
+@import 'rei-kit/tokens.css'; /* colour roles, the dark variant, measures, utilities */
 @import 'rei-kit/styles.css'; /* compiled component styles */
 
 /* Tailwind generates a utility only where it has seen the class, and it does
@@ -76,27 +101,19 @@ Three lines, and all three are load-bearing:
 The path is relative to the CSS file, so adjust the `../` depth to where your
 `main.css` sits.
 
-Leaving any of the three out fails quietly: the build succeeds, the components
-mount, and they come out unstyled. Nothing type-checks this, so it is worth a
-test -- see _Not breaking the apps that use it_.
+**Leaving any of the four out fails quietly:** the build succeeds, the
+components mount, and they come out unstyled. Nothing type-checks this, so it
+is worth a test — Hibi's `kit-styling.spec.ts` reads its own stylesheet and
+asserts all four, at unit-test speed. Copy it.
 
-### Prerendering
-
-The kit imports and renders on a server, so an app can prerender with
-`vite-ssg` or any other SSR build. Two things stay the app's job, because only
-the app knows the answer:
-
-- **The theme.** `applyTheme` does nothing without a document, so prerendered
-  HTML carries no `.dark`. Set it before hydration with a small synchronous
-  script in `index.html`, or the first paint flashes light.
-- **Today's date.** `useToday()` on a server is the *server's* today, a
-  different day from the visitor's either side of midnight. Render anything
-  derived from it on the client.
+That test exists because the failure is real: Hibi shipped with the tab bar
+invisible once, and separately spent three versions restating `tokens.css`
+locally instead of importing it, which nothing noticed.
 
 ### Colours
 
-`tokens.css` defines all eleven roles, a `.dark` block for each surface, and the
-`dark` variant. A new app rebrands by overriding values, never by renaming:
+`tokens.css` defines all eleven roles, a `.dark` block for each surface, and
+the `dark` variant. A new app rebrands by overriding values, never by renaming:
 
 ```css
 @theme {
@@ -125,8 +142,52 @@ the app's own dark-mode overrides carry into the kit's components:
 }
 ```
 
-Tokens are named for what they do, not for the app they came from, so a new
-product changes values rather than renaming anything.
+Put your own `.dark` block _after_ the import. Both blocks match at the same
+specificity, so the later one wins — which is what makes the override work.
+
+### Measures
+
+Widths are roles too. `PageContainer` shipped with `75rem` baked in, and the
+first app that wanted it had deliberately measured its page at 1120px, so the
+component written to remove that app's hand-rolled container could not replace
+it — the same mistake as a hex inside a component, one axis over.
+
+```css
+@theme {
+  --measure-page: 1120px; /* a page */
+  --measure-reading: 68ch; /* a column of prose */
+}
+```
+
+### The phone shell
+
+`tokens.css` also carries the geometry of a phone shell — `shell-frame`,
+`page-slide`, `page-auth` and the slide transitions between screens. All of it
+is opt-in: nothing applies unless you put the class on an element, so a wide
+app can ignore it. Two of the three consumers use it.
+
+### Prerendering
+
+The kit imports and renders on a server, so an app can prerender with
+`vite-ssg` or any other SSR build. Two things stay the app's job, because only
+the app knows the answer:
+
+- **The theme.** `applyTheme` does nothing without a document, so prerendered
+  HTML carries no `.dark`. Set it before hydration with a small synchronous
+  script in `index.html`, or the first paint flashes light.
+- **Today's date.** `useToday()` on a server is the _server's_ today, a
+  different day from the visitor's either side of midnight. Render anything
+  derived from it on the client.
+
+## Seeing what is in it
+
+```sh
+pnpm showcase
+```
+
+A page that wires the kit exactly the way this README says to, so a broken
+install shows up there before it ships. A component nobody can see is a
+component nobody uses.
 
 ## Commands
 
@@ -135,26 +196,34 @@ product changes values rather than renaming anything.
 | `pnpm dev`       | Rebuild on change, for use with a linked app          |
 | `pnpm build`     | Type-check, then build                                |
 | `pnpm check`     | Everything CI runs: format, lint, types, tests, build |
+| `pnpm showcase`  | The showcase, in dev mode                             |
 | `pnpm test:unit` | Vitest, watch mode                                    |
 | `pnpm lint`      | oxlint + ESLint, with `--fix`                         |
 
 ## Not breaking the apps that use it
 
-Three layers, cheapest first.
+Four layers, cheapest first.
 
-**Pinned ranges.** A consumer depends on `^0.1.0`, which at 0.x means
-`>=0.1.0 <0.2.0` — publishing 0.2.0 upgrades nobody. Apps move on their own
-schedule, and a release can never reach an app that has not asked for it.
+**Pinned ranges.** A consumer depends on `^0.4.0`, which at 0.x means
+`>=0.4.0 <0.5.0` — publishing 0.5.0 upgrades nobody. Apps move on their own
+schedule, and a release can never reach an app that has not asked for it. The
+cost is the mirror image: an app that never asks never moves. Two of these
+three sat two minors behind, so `PATCHNOTES.md` exists to make taking one a
+short read.
 
 **The public API test.** `src/__tests__/public-api.spec.ts` lists every export
 by name. The kit compiles perfectly well without an export nothing here calls,
 so removing one is invisible to every other test; this one fails loudly and
 asks whether the version should be a major.
 
+**The SSR test.** `src/__tests__/ssr.spec.ts` renders in the **node**
+environment, not jsdom — jsdom supplies the very `document` a server lacks, and
+passed all four of the SSR bugs 0.2.2 fixed.
+
 **The consumer check.** `.github/workflows/consumer.yml` packs the tarball npm
-would serve, installs it into Hibi, and runs Hibi's full gate — format, lint,
-types, 37 tests, production build. A renamed prop shows up as a red pull
-request here rather than as a broken app after release.
+would serve and installs it into **all three** apps, running each one's full
+gate — format, lint, types, tests, production build. Kakehashi's build is
+`vite-ssg build`, so that job is also the real prerender.
 
 That last one is the important one: the kit's own tests never import it the way
 an app does.
@@ -168,6 +237,9 @@ from a branch, so `main` can move without shipping.
 pnpm version minor
 git push --follow-tags
 ```
+
+Then write the release into `PATCHNOTES.md` — what a consumer gains, and what
+they have to do to take it.
 
 ## License
 

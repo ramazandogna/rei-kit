@@ -6,9 +6,26 @@ opening the source.
 
 ## What this is
 
-A Vue 3 + Tailwind 4 layer: thirteen components, eight utilities, six
+A Vue 3 + Tailwind 4 layer: twenty-two components, twenty utilities, eleven
 composables, an i18n runtime and an optional Supabase entry. Extracted from
-[Hibi](https://github.com/ramazandogna/hibi), which is its first consumer.
+[Hibi](https://github.com/ramazandogna/hibi); it now has three consumers —
+Hibi, [Kakei](https://github.com/ramazandogna/kakei) and
+[Kakehashi](https://github.com/ramazandogna/kakehashi).
+
+## What gets to be in here
+
+Before adding anything, three things have to be true at once:
+
+1. **Two apps genuinely need it** — measured, not predicted. A component one
+   app needs stays in that app however general it looks. The kit does not grow
+   on a guess; that is the lesson Hibi taught it.
+2. **It adds no required peer.** Anything needing a new library goes behind its
+   own entry point, or stays in the app.
+3. **It carries no product decision** — no colour, no copy, no icon. Those
+   arrive as props and slots.
+
+The corollary is the useful one: **a file that is 90% identical in two apps is
+a kit candidate.** The measure is `diff`, not taste.
 
 ## The one rule that explains the API
 
@@ -173,8 +190,15 @@ the tab.
 Consumers pin `^0.x`, so a minor release upgrades nobody — apps opt in. Two
 tests back that up: `public-api.spec.ts` names every export, because the kit
 compiles fine without one nothing here calls; and `consumer.yml` packs the real
-tarball, installs it into Hibi and runs Hibi's whole gate, which is the only
-check that imports this package the way an app does.
+tarball, installs it into **all three** consumers and runs each one's whole
+gate, which is the only check that imports this package the way an app does.
+Kakehashi's build is `vite-ssg build`, so that job is also the real prerender —
+`ssr.spec.ts` cannot stand in for it, because jsdom supplies the very
+`document` a server lacks.
+
+The mirror-image hazard is worth knowing: because `^0.x` never crosses a minor,
+an app that never asks never moves. Hibi and Kakei sat two minors behind for
+that reason. `PATCHNOTES.md` exists to make taking a release a short read.
 
 If you change a prop name or drop an export, expect the consumer check to fail.
 That is the point.

@@ -3,6 +3,23 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.10.0 — 2026-09-10
+
+### Added
+
+- **`variant="unstyled"` on `BaseInput`, `BaseTextarea` and `BaseSelect`** —
+  the wiring without the surface, the same way `BaseButton` has it.
+
+  The label, the generated id, `aria-describedby` and the error are what a
+  field _is_. The border, the height and the radius are what it looks like. A
+  search box inside a bordered row, a url field in an editor popover, a number
+  in a compact panel: those places were hand-writing the whole field to escape
+  the appearance, and losing the wiring along with it.
+
+  This is the second of the two completeness tests the kit writes down for a
+  primitive — _can the app take the behaviour without the appearance?_ — and
+  the form controls were failing it while the button had already been fixed.
+
 ## 0.9.1 — 2026-09-10
 
 ### Fixed

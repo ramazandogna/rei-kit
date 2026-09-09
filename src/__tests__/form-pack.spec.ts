@@ -458,3 +458,53 @@ describe('the hover it was not animating', () => {
     expect(classes).not.toContain('transition-')
   })
 })
+
+describe('the fields without their surface', () => {
+  it('keeps the wiring and drops the paint', () => {
+    // A search box inside a bordered row, a url field in an editor popover:
+    // those places hand-wrote the whole field to avoid the appearance, and
+    // lost the label wiring with it.
+    const wrapper = mount(BaseInput, {
+      props: { label: 'Ara', variant: 'unstyled', error: 'Geçersiz' },
+    })
+    const input = wrapper.get('input')
+
+    expect(input.classes().some((c) => c.startsWith('border'))).toBe(false)
+    expect(input.classes().some((c) => c.startsWith('rounded'))).toBe(false)
+    expect(input.classes().some((c) => /^h-\d/.test(c))).toBe(false)
+
+    // What a field actually is, still here.
+    expect(input.attributes('id')).toBe(wrapper.get('label').attributes('for'))
+    expect(input.attributes('aria-invalid')).toBe('true')
+    expect(wrapper.get(`#${input.attributes('aria-describedby')}`).text()).toBe('Geçersiz')
+  })
+
+  it('holds the 16px line even with no surface', () => {
+    // The zoom is caused by the font size, not by the border.
+    expect(
+      mount(BaseInput, { props: { label: 'Ara', variant: 'unstyled' } })
+        .get('input')
+        .classes(),
+    ).toContain('text-base')
+  })
+
+  it('does it for the select and the textarea too', () => {
+    const select = mount(BaseSelect, {
+      props: { label: 'Sırala', variant: 'unstyled', options: [{ value: 'a', label: 'A' }] },
+    })
+    const textarea = mount(BaseTextarea, { props: { label: 'Not', variant: 'unstyled' } })
+
+    expect(
+      select
+        .get('select')
+        .classes()
+        .some((c) => c.startsWith('border')),
+    ).toBe(false)
+    expect(
+      textarea
+        .get('textarea')
+        .classes()
+        .some((c) => c.startsWith('border')),
+    ).toBe(false)
+  })
+})

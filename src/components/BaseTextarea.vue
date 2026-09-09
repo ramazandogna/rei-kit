@@ -18,6 +18,7 @@ const {
   labelHidden = false,
   rows = 4,
   size = 'md',
+  variant = 'default',
 } = defineProps<{
   label: string
   error?: string | undefined
@@ -31,6 +32,20 @@ const {
    * base layer.
    */
   size?: 'sm' | 'md' | undefined
+  /**
+   * `unstyled` keeps the wiring and drops the surface.
+   *
+   * The label, the generated id, `aria-describedby` and the error are what a
+   * field is; the border and the height are what it looks like. A search box
+   * inside a bordered row, a url field in an editor popover — those places
+   * were hand-writing the whole thing to avoid the appearance, and losing the
+   * wiring with it.
+   *
+   * The same reasoning as `BaseButton`'s `unstyled`, and the same test: a
+   * primitive is finished when the app can take its behaviour without its
+   * paint.
+   */
+  variant?: 'default' | 'unstyled' | undefined
 }>()
 
 const model = defineModel<string | undefined>()
@@ -46,8 +61,13 @@ const model = defineModel<string | undefined>()
         :aria-invalid="invalid"
         :aria-describedby="describedBy"
         v-bind="$attrs"
-        class="border-hair bg-surface text-ink rounded-card focus-visible:outline-primary resize-y border px-3 py-2 leading-relaxed focus-visible:outline-2 focus-visible:outline-offset-1"
-        :class="['text-base', invalid ? 'border-negative' : '']"
+        :class="[
+          variant === 'unstyled'
+            ? ''
+            : 'border-hair bg-surface text-ink rounded-card focus-visible:outline-primary resize-y border px-3 py-2 leading-relaxed focus-visible:outline-2 focus-visible:outline-offset-1',
+          'text-base',
+          variant !== 'unstyled' && invalid ? 'border-negative' : '',
+        ]"
       />
     </template>
   </FormField>

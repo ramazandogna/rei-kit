@@ -16,6 +16,31 @@ below, and there has not been one yet.
 
 ---
 
+## 0.10.0
+
+**You gain** `variant="unstyled"` on `BaseInput`, `BaseTextarea` and
+`BaseSelect` — the same escape hatch `BaseButton` already had.
+
+```vue
+<!-- a search field inside a row that is itself the bordered box -->
+<BaseInput
+  v-model="query"
+  type="search"
+  variant="unstyled"
+  label-hidden
+  :label="t('search')"
+  class="min-w-0 flex-1 bg-transparent outline-none"
+/>
+```
+
+You keep the label, the generated id, `aria-describedby` and the error; you
+supply the surface. The 16px line is held either way, because the iOS zoom is
+caused by the font size and not by the border.
+
+**To take it:** nothing. `default` is what you have.
+
+---
+
 ## 0.9.1
 
 **Fixed, and worth taking before you adopt `size="sm"` on a phone:** it applied

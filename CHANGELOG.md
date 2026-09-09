@@ -3,6 +3,19 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.10.1 — 2026-09-10
+
+### Changed
+
+- **`BaseInput`'s model accepts a number.** It was `string | undefined`, so
+  `type="number"` forced the caller to keep a string ref and convert on both
+  sides of it — and a component you have to wrap in order to use is one you
+  write yourself instead, which is what the first numeric field that reached
+  for it went back to doing. The same widening `BaseSelect` took in 0.5.3, for
+  the same reason.
+
+  A type parameter widened: nothing that compiles today stops compiling.
+
 ## 0.10.0 — 2026-09-10
 
 ### Added

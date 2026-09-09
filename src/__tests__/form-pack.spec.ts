@@ -508,3 +508,15 @@ describe('the fields without their surface', () => {
     ).toBe(false)
   })
 })
+
+describe('BaseInput over its value', () => {
+  it('holds a number for a number field', () => {
+    // Typed to `string` alone, `type="number"` forced the caller to keep a
+    // string ref and convert on both sides.
+    const wrapper = mount(BaseInput, {
+      props: { label: 'Ofset', type: 'number', modelValue: 1200 },
+    })
+
+    expect((wrapper.get('input').element as HTMLInputElement).value).toBe('1200')
+  })
+})

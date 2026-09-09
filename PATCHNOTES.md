@@ -16,6 +16,21 @@ below, and there has not been one yet.
 
 ---
 
+## 0.10.1
+
+**You gain** a `BaseInput` that holds a number:
+
+```vue
+<BaseInput v-model="viewsOffset" type="number" :label="t('admin.blog.offset')" min="0" />
+```
+
+It was typed to `string`, so a number field meant a string ref and a conversion
+on each side. Same widening `BaseSelect` took in 0.5.3.
+
+**To take it:** nothing. The type only widened.
+
+---
+
 ## 0.10.0
 
 **You gain** `variant="unstyled"` on `BaseInput`, `BaseTextarea` and

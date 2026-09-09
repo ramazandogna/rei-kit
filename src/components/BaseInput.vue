@@ -68,7 +68,15 @@ const {
    native picker rather than a caret, and does not trigger the zoom. */
 const CONTROL_CLASS = 'h-11 text-base'
 
-const model = defineModel<string | undefined>()
+/**
+ * A number field's value is a number.
+ *
+ * Typed to `string` alone, `type="number"` forced the caller to keep a string
+ * ref and convert on both sides of it — and a component you have to wrap in
+ * order to use is one you write yourself instead, which is exactly what the
+ * first numeric field tried to reach for it did.
+ */
+const model = defineModel<string | number | undefined>()
 </script>
 
 <template>

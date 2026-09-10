@@ -206,3 +206,53 @@ describe('VERSION', () => {
     expect(VERSION).not.toBe('0.0.0')
   })
 })
+
+describe('the parts that shipped and nobody could reach', () => {
+  it('BaseCard lets the card decide how much room it gives', () => {
+    // It shipped with `px-5 py-4` baked in and was used by nobody, across
+    // three apps and thirty-five hand-written card surfaces — which used p-3
+    // six times, p-4 six times, p-5 five times, and not once the pair this
+    // insisted on.
+    for (const [padding, expected] of [
+      ['sm', 'p-3'],
+      ['md', 'p-4'],
+      ['lg', 'p-5'],
+    ] as const) {
+      const wrapper = mount(BaseCard, { props: { padding }, slots: { default: 'x' } })
+
+      expect(wrapper.findAll('div')[1]!.classes()).toContain(expected)
+    }
+  })
+
+  it('BaseCard gives none at all to a card that holds a list', () => {
+    // The rows own the padding, and the dividers have to reach the border.
+    const wrapper = mount(BaseCard, { props: { padding: 'none' }, slots: { default: 'x' } })
+
+    expect(
+      wrapper
+        .get('div > div')
+        .classes()
+        .some((c) => c.startsWith('p')),
+    ).toBe(false)
+  })
+
+  it('BaseCard keeps its head as tight as its body', () => {
+    // A card cannot be tight around its contents and loose around its title.
+    const wrapper = mount(BaseCard, {
+      props: { padding: 'sm' },
+      slots: { head: 'title', default: 'x' },
+    })
+
+    // findAll: [0] the card, [1] the head, [2] the body.
+    expect(wrapper.findAll('div')[1]!.classes()).toContain('py-2.5')
+  })
+
+  it('ProgressBar is thinner where it is a hint rather than the subject', () => {
+    // It shipped at one thickness and the two bars anybody wanted were h-1.
+    const hint = mount(ProgressBar, { props: { value: 1, max: 2, size: 'sm' } })
+    const subject = mount(ProgressBar, { props: { value: 1, max: 2, size: 'lg' } })
+
+    expect(hint.get('[role="progressbar"]').classes()).toContain('h-1')
+    expect(subject.get('[role="progressbar"]').classes()).toContain('h-2')
+  })
+})

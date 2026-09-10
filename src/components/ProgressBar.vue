@@ -14,12 +14,26 @@ const {
   value,
   max = 100,
   label,
+  size = 'md',
 } = defineProps<{
   value: number
   max?: number | undefined
+  /**
+   * How thick the track is. `sm` for a bar under a step counter, where it is a
+   * hint rather than the subject; `lg` where the progress is the point.
+   *
+   * It shipped at one thickness and the two bars anybody wanted were `h-1`.
+   */
+  size?: 'sm' | 'md' | 'lg' | undefined
   /** For screen readers. Without it this is a rectangle that means nothing. */
   label?: string | undefined
 }>()
+
+const TRACK = {
+  sm: 'h-1',
+  md: 'h-1.5',
+  lg: 'h-2',
+} as const
 
 const portion = computed(() => {
   if (!Number.isFinite(value) || !Number.isFinite(max) || max <= 0) return 0
@@ -30,7 +44,8 @@ const portion = computed(() => {
 
 <template>
   <div
-    class="bg-muted h-1.5 w-full overflow-hidden rounded-full"
+    class="bg-muted w-full overflow-hidden rounded-full"
+    :class="TRACK[size]"
     role="progressbar"
     :aria-valuenow="Math.round(portion)"
     aria-valuemin="0"

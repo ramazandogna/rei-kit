@@ -11,10 +11,44 @@
  * the press, and it is opt-in because a card holding a form should not move
  * when the pointer crosses it.
  */
-const { interactive = false, as = 'div' } = defineProps<{
+const {
+  interactive = false,
+  as = 'div',
+  padding = 'md',
+} = defineProps<{
   interactive?: boolean | undefined
   as?: string | undefined
+  /**
+   * How much room the card gives its contents.
+   *
+   * This component shipped with `px-5 py-4` baked in and was then used by
+   * nobody, across three apps and thirty-five hand-written card surfaces —
+   * which used `p-3` six times, `p-4` six times, `p-5` five times and `p-1`
+   * four times, and not once the pair this insisted on. A card that fixes its
+   * padding cannot be reached for, which is the same mistake `PageContainer`
+   * made with its width and `size="sm"` made with its height.
+   *
+   * `none` is for a card that holds a list: the rows own the padding, and the
+   * dividers have to reach the border.
+   */
+  padding?: 'none' | 'sm' | 'md' | 'lg' | undefined
 }>()
+
+const BODY = {
+  none: '',
+  sm: 'p-3',
+  md: 'p-4',
+  lg: 'p-5',
+} as const
+
+/* The head and the foot follow the body, so a card cannot be tight around its
+   contents and loose around its title. */
+const HEAD = {
+  none: '',
+  sm: 'px-3 py-2.5',
+  md: 'px-4 py-3',
+  lg: 'px-5 py-4',
+} as const
 </script>
 
 <template>
@@ -27,15 +61,13 @@ const { interactive = false, as = 'div' } = defineProps<{
         : ''
     "
   >
-    <div v-if="$slots.head" class="border-hair/70 border-b px-5 py-4">
+    <div v-if="$slots.head" class="border-hair/70 border-b" :class="HEAD[padding]">
       <slot name="head" />
     </div>
 
-    <div class="px-5 py-4">
-      <slot />
-    </div>
+    <div :class="BODY[padding]"><slot /></div>
 
-    <div v-if="$slots.foot" class="border-hair/70 bg-muted/30 border-t px-5 py-3.5">
+    <div v-if="$slots.foot" class="border-hair/70 bg-muted/30 border-t" :class="HEAD[padding]">
       <slot name="foot" />
     </div>
   </component>

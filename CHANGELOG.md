@@ -3,6 +3,40 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.12.0 — 2026-09-10
+
+The button audit, applied to the rest of the kit. Counting usage across the
+three apps found three components that shipped in 0.4.0 and were then used by
+**nobody** — and in two of them the reason was the same defect the button kept
+having.
+
+### Added
+
+- **`BaseCard` takes a `padding`** — `none`, `sm`, `md`, `lg`.
+
+  It shipped with `px-5 py-4` baked in, and across three apps and **thirty-five
+  hand-written card surfaces** it was reached for zero times. Those surfaces
+  used `p-3` six times, `p-4` six times, `p-5` five times and `p-1` four times,
+  and not once the pair the component insisted on. A card that fixes its
+  padding cannot be used, which is `PageContainer`'s width in 0.4.1 and
+  `size="sm"`'s height in 0.5.2, a third time.
+
+  `none` is for the card that holds a list: the rows own the padding and the
+  dividers have to reach the border. The head and the foot follow the body, so
+  a card cannot be tight around its contents and loose around its title.
+
+- **`ProgressBar` takes a `size`** — `sm`, `md`, `lg`. Same story, one axis
+  over: it shipped at `h-1.5` and both bars anybody wanted were `h-1`.
+
+### Noted
+
+- **`PageContainer` still has no users**, and that one is not a defect.
+  `shell/web.css` ships `.shell`, which is the same measure as a class, and the
+  class is what the wide app reaches for — a `<header>` whose bar spans the
+  window while its contents line up with the text cannot be a component
+  wrapper. Both read `--measure-page`, so they cannot disagree. The component
+  stays for the case where the container _is_ the element.
+
 ## 0.11.3 — 2026-09-10
 
 ### Added

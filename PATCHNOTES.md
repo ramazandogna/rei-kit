@@ -16,6 +16,27 @@ below, and there has not been one yet.
 
 ---
 
+## 0.12.0
+
+**You gain** a `BaseCard` you can actually use, and a `ProgressBar` that can be
+thin.
+
+```vue
+<BaseCard padding="sm">…</BaseCard>
+<BaseCard padding="none"><ul class="divide-hair divide-y">…</ul></BaseCard>
+<ProgressBar :value="done" :max="total" size="sm" :label="t('course.progress')" />
+```
+
+`BaseCard` shipped with `px-5 py-4` baked in and was used by nobody: across the
+three apps, thirty-five hand-written card surfaces used `p-3`, `p-4`, `p-5` and
+`p-1`, and never that pair. If you have a `border-hair bg-surface rounded-card
+border p-4` div, it is now `<BaseCard>`.
+
+**To take it:** nothing, but the default padding changed from `px-5 py-4` to
+`p-4`. Nothing was using it, which is the point.
+
+---
+
 ## 0.11.3
 
 **You gain** a row that can be selected:

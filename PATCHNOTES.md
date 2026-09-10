@@ -16,6 +16,18 @@ below, and there has not been one yet.
 
 ---
 
+## 0.14.1
+
+**Fixed:** `TourShell`'s slide transition shipped as scoped CSS and therefore
+never applied — a scoped rule cannot reach slot content. It is in
+`rei-kit/shell/mobile.css` now, so make sure you import that shell if you use
+`TourShell`.
+
+**To take it:** nothing, unless your guide's slides had no animation, in which
+case they now have one.
+
+---
+
 ## 0.14.0
 
 **You gain** the last three parts the two phone apps had written twice.

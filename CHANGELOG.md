@@ -3,6 +3,22 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.14.1 — 2026-09-10
+
+### Fixed
+
+- **`TourShell`'s slide transition was dead CSS.** It shipped in the
+  component's `<style scoped>`, and a scoped rule cannot reach slot content —
+  the slides belong to the calling component's scope, so `.tour-forward-*`
+  never matched anything.
+
+  It ships unscoped in `rei-kit/shell/mobile.css` now, where the caller's
+  slides can see it, next to the `slide-forward-*` pair it is a sibling of. The
+  dialog's own fade stays scoped, because that element _is_ the component's.
+
+  An app that already styles its own slide transition is unaffected: a scoped
+  rule outranks an unscoped one.
+
 ## 0.14.0 — 2026-09-10
 
 The rest of what the two phone apps had written twice.

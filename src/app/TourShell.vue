@@ -188,6 +188,10 @@ function onKeydown(event: KeyboardEvent) {
 </template>
 
 <style scoped>
+/* The dialog's own fade. The *slide* transition is not here: a scoped rule
+   cannot reach slot content, which belongs to the caller's scope, so
+   `.tour-forward-*` and `.tour-backward-*` ship unscoped in
+   `rei-kit/shell/mobile.css` where the caller's slide can actually see them. */
 .tour-enter-active,
 .tour-leave-active {
   transition: opacity 220ms ease;
@@ -196,48 +200,5 @@ function onKeydown(event: KeyboardEvent) {
 .tour-enter-from,
 .tour-leave-to {
   opacity: 0;
-}
-
-.tour-forward-enter-active,
-.tour-backward-enter-active {
-  transition:
-    opacity 260ms ease-out,
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.tour-forward-leave-active,
-.tour-backward-leave-active {
-  transition:
-    opacity 130ms ease-in,
-    transform 130ms ease-in;
-}
-
-.tour-forward-enter-from {
-  opacity: 0;
-  transform: translateX(1.25rem);
-}
-
-.tour-forward-leave-to {
-  opacity: 0;
-  transform: translateX(-0.75rem);
-}
-
-.tour-backward-enter-from {
-  opacity: 0;
-  transform: translateX(-1.25rem);
-}
-
-.tour-backward-leave-to {
-  opacity: 0;
-  transform: translateX(0.75rem);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tour-forward-enter-from,
-  .tour-forward-leave-to,
-  .tour-backward-enter-from,
-  .tour-backward-leave-to {
-    transform: none;
-  }
 }
 </style>

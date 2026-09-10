@@ -73,6 +73,11 @@ describe('the shells', () => {
   it('mobile holds the phone, and only the phone', () => {
     for (const shape of PHONE) expect(mobile).toContain(shape)
 
+    // The guide's slide transition lives here rather than in TourShell's
+    // scoped block, because a scoped rule cannot reach slot content and the
+    // slides belong to the app.
+    expect(mobile).toContain('.tour-forward-enter-active')
+
     // The values a shell must not invent: they come from tokens.css.
     expect(mobile).not.toMatch(/--color-[a-z-]+:/)
   })

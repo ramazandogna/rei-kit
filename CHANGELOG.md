@@ -3,6 +3,23 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.11.2 — 2026-09-10
+
+### Changed
+
+- **`quiet` fills on hover whether it holds a glyph or a word.** 0.11.0 filled
+  only icon buttons, on the theory that a square hit area has bounds the reader
+  cannot see while a line of text has its own. Reading the third app's editor
+  said otherwise: its toolbar buttons carry text and fill exactly the same way.
+
+  The shape is _a control in a strip_, not _a control with a glyph in it_. A
+  text action that should have no surface at all is `link`, which is what it is
+  for.
+
+  `ghost` and `quiet` now differ only in the ink they start at — full strength
+  against soft — which is the difference between a control waiting to be used
+  and one that is merely available.
+
 ## 0.11.1 — 2026-09-10
 
 ### Added

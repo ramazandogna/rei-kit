@@ -140,13 +140,18 @@ const VARIANT_CLASS = {
    * The control that is present without asking for attention: a dismiss beside
    * an install prompt, a chevron beside a month, a delete at the end of a row.
    *
-   * `ghost` is not this. Ghost keeps full-strength ink and answers a hover with
-   * a fill, which is a control waiting to be used. This one starts quiet and
-   * answers a hover by getting darker — no surface appears at all. The exact
-   * pair `text-ink-soft hover:text-ink` was hand-written 47 times across the
-   * three apps, which is what a missing variant looks like from the outside.
+   * `ghost` is not this. Ghost keeps full-strength ink; this one starts soft
+   * and darkens, which is the difference between a control waiting to be used
+   * and one that is merely available. The pair `text-ink-soft hover:text-ink`
+   * was hand-written 47 times across the three apps.
+   *
+   * It fills on hover, and 0.11.0 got that half-right by fill... only for
+   * icons. The evidence said otherwise once the third app was read: an editor
+   * toolbar's buttons carry text and fill exactly the same way. The shape is
+   * "a control in a strip", not "a control with a glyph in it". A text action
+   * that should have no surface at all is `link`.
    */
-  quiet: 'bg-transparent text-ink-soft hover:text-ink',
+  quiet: 'bg-transparent text-ink-soft hover:bg-muted hover:text-ink',
   danger: 'bg-negative text-white hover:bg-negative/90',
   /*
    * The rest of the roles the kit already declares.
@@ -236,17 +241,9 @@ const PRESSED_CLASS: Partial<Record<string, string>> = {
 const surface = computed(() => {
   if (pressed === true) return PRESSED_CLASS[variant] ?? VARIANT_CLASS[variant]
 
-  /* A quiet *icon* fills on hover; a quiet *text* action does not.
-   *
-   * Not a special case — the difference is that a square hit area has bounds
-   * the reader cannot see until something shows them, and a line of text has
-   * its own. Every icon button in all three apps had been written by hand with
-   * exactly this fill, and every text action by hand without it. */
-  if (variant === 'quiet' && icon) return `${VARIANT_CLASS.quiet} hover:bg-muted`
-
-  /* The destructive icon button tints its own fill rather than borrowing the
-     neutral one: a red glyph on a grey wash reads as two different states. */
-  if (variant === 'destructive' && icon) return `${VARIANT_CLASS.destructive} hover:bg-negative/10`
+  /* Destructive tints its own fill rather than borrowing the neutral one: a
+     red glyph on a grey wash reads as two different states at once. */
+  if (variant === 'destructive') return `${VARIANT_CLASS.destructive} hover:bg-negative/10`
 
   return VARIANT_CLASS[variant]
 })

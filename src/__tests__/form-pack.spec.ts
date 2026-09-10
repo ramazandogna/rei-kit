@@ -365,19 +365,19 @@ describe('the shapes a button has to be able to take', () => {
 })
 
 describe('quiet, which is not ghost', () => {
-  it('starts soft and darkens, rather than growing a surface', () => {
+  it('starts soft where ghost starts at full strength', () => {
     // `text-ink-soft hover:text-ink` was hand-written 47 times across the three
-    // apps. Ghost keeps full-strength ink and answers a hover with a fill,
-    // which is a control waiting to be used; this one is present without
-    // asking for attention.
+    // apps. Both fill on hover; the difference is the ink it starts at, which
+    // is the difference between a control waiting to be used and one that is
+    // merely available.
     const quiet = mount(BaseButton, { props: { variant: 'quiet' } })
     const ghost = mount(BaseButton, { props: { variant: 'ghost' } })
 
     expect(quiet.classes()).toContain('text-ink-soft')
     expect(quiet.classes()).toContain('hover:text-ink')
-    expect(quiet.classes().some((c) => c.startsWith('hover:bg-'))).toBe(false)
 
-    expect(ghost.classes()).toContain('hover:bg-muted')
+    expect(ghost.classes()).toContain('text-ink')
+    expect(ghost.classes()).not.toContain('text-ink-soft')
   })
 })
 
@@ -522,15 +522,20 @@ describe('BaseInput over its value', () => {
 })
 
 describe('the shapes the apps were painting by hand', () => {
-  it('fills a quiet icon on hover, and a quiet text action not', () => {
-    // A square hit area has bounds the reader cannot see until something shows
-    // them; a line of text has its own. Every icon button in all three apps was
-    // hand-written with this fill and every text action without it.
-    const iconButton = mount(BaseButton, { props: { variant: 'quiet', icon: true } })
-    const textAction = mount(BaseButton, { props: { variant: 'quiet' } })
+  it('fills on hover whether it holds a glyph or a word', () => {
+    // 0.11.0 filled only icons, on the theory that a square hit area has bounds
+    // the reader cannot see. Reading the third app said otherwise: an editor
+    // toolbar's buttons carry text and fill identically. The shape is "a
+    // control in a strip". A text action that should have no surface is `link`.
+    for (const props of [{ variant: 'quiet' }, { variant: 'quiet', icon: true }] as const) {
+      expect(mount(BaseButton, { props }).classes()).toContain('hover:bg-muted')
+    }
 
-    expect(iconButton.classes()).toContain('hover:bg-muted')
-    expect(textAction.classes().some((c) => c.startsWith('hover:bg-'))).toBe(false)
+    expect(
+      mount(BaseButton, { props: { variant: 'link' } })
+        .classes()
+        .some((c) => c.startsWith('hover:bg-')),
+    ).toBe(false)
   })
 
   it('is a row when the control is a line in a list', () => {
@@ -593,11 +598,12 @@ describe('destructive, which is not danger', () => {
     expect(wrapper.classes()).not.toContain('hover:text-ink')
   })
 
-  it('tints its own fill when it is an icon', () => {
+  it('tints its own fill rather than borrowing the neutral one', () => {
     // A red glyph on a neutral grey wash reads as two different states.
-    const wrapper = mount(BaseButton, { props: { variant: 'destructive', icon: true } })
+    const wrapper = mount(BaseButton, { props: { variant: 'destructive' } })
 
     expect(wrapper.classes()).toContain('hover:bg-negative/10')
     expect(wrapper.classes()).not.toContain('hover:bg-muted')
+    expect(wrapper.classes()).toContain('hover:text-negative')
   })
 })

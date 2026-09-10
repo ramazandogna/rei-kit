@@ -16,6 +16,18 @@ below, and there has not been one yet.
 
 ---
 
+## 0.11.2
+
+**Changed:** `quiet` fills on hover for text buttons too, not only icons.
+0.11.0 drew that line at the wrong place — an editor toolbar's buttons carry
+words and fill identically. If you want a text action with no surface at any
+point, that is `variant="link"`.
+
+**To take it:** nothing, unless you were relying on a quiet _text_ button
+staying flat on hover — use `link` for that.
+
+---
+
 ## 0.11.1
 
 **You gain** `variant="destructive"`:

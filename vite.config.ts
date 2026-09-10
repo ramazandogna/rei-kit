@@ -58,11 +58,17 @@ export default defineConfig({
   },
   build: {
     lib: {
-      // Three entries: an app that never touches Supabase must not download the
-      // client, and the CSS has to be importable on its own.
+      // Four entries: an app that never touches Supabase must not download the
+      // client, a wide site must not download the phone shell's components, and
+      // the CSS has to be importable on its own.
       entry: {
         index: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
         supabase: fileURLToPath(new URL('./src/supabase/index.ts', import.meta.url)),
+        // The phone-app parts. A wide site never downloads them.
+        app: fileURLToPath(new URL('./src/app/index.ts', import.meta.url)),
+        // Installing and updating. Reaches for a service worker, so a website
+        // never imports it and the main barrel stays server-safe.
+        pwa: fileURLToPath(new URL('./src/pwa/index.ts', import.meta.url)),
       },
       formats: ['es'],
       // Named so the import line reads as what it is — the compiled styles of

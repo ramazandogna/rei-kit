@@ -3,6 +3,49 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.13.0 — 2026-09-10
+
+Two new entry points, for the parts that are not primitives.
+
+The kit was extracted from one phone app and then a second one was built beside
+it. What the two ended up sharing was not only buttons: `AuthLayout.vue` was
+**thirty-seven lines with no difference at all** between them, `tab-transition.ts`
+thirty-four the same, `use-theme-sync.ts` thirty-five, the install card 111
+lines differing in a storage key and a colour. None of that is code nobody
+could have written — it is code nobody should have written twice and then kept
+in step.
+
+### Added
+
+- **`rei-kit/app`** — what a phone app is made of.
+
+  |                              |                                                                                                                                                                                                     |
+  | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `AuthShell`                  | Brand, a narrow column, a foot. The language links live in that foot because sign-in is the first screen a new user sees and Settings is behind it                                                  |
+  | `createTabTransition(order)` | Which way the screens slide, read off the tab order rather than told. Generic over the tab key, so the app keeps its own union. `force()` covers the navigations that are not a tab change at heart |
+  | `useThemeSync(stored)`       | Adopts the account's theme once, as soon as it arrives, and never again — a later refetch must not undo a choice the user just made locally                                                         |
+
+  A separate entry because these assume an app with tabs, an account and a
+  sign-in screen. A wide site should not have to know they exist.
+
+- **`rei-kit/pwa`** — installing the app, and updating it.
+
+  |                                 |                                                                                                                                                |
+  | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `watchInstallability()`         | Starts listening, from the app's entry file. `beforeinstallprompt` fires once and early, so a listener attached on mount has usually missed it |
+  | `useInstall()`                  | The three-way platform state: Chromium hands over an event, iOS Safari has no API and needs the Share menu, everything else can only be told   |
+  | `useSnooze(key, days)`          | A nudge that stops asking after it is dismissed. Both apps had this inside their install card, and a notification nudge wants the same thing   |
+  | `InstallPrompt`, `UpdatePrompt` | The two cards, with every string as a prop                                                                                                     |
+
+  `watchInstallability` is a function rather than module-scope side effects, so
+  the package can be imported on a server — the phone apps ran it at module
+  scope, which is the bug 0.2.2 spent a release on.
+
+  **The service worker stays the app's.** `virtual:pwa-register/vue` is a
+  build-time module and a library cannot import one, so `UpdatePrompt` takes
+  `open` and emits `update`. That split is honest anyway: whether an update is
+  waiting is the app's business, what the card looks like is the kit's.
+
 ## 0.12.1 — 2026-09-10
 
 ### Changed

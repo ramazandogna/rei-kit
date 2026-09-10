@@ -16,6 +16,48 @@ below, and there has not been one yet.
 
 ---
 
+## 0.13.0
+
+**You gain** two entry points for the parts a phone app is built from.
+
+```ts
+import { AuthShell, createTabTransition, useThemeSync } from 'rei-kit/app'
+import { InstallPrompt, UpdatePrompt, useInstall, watchInstallability } from 'rei-kit/pwa'
+```
+
+```ts
+// main.ts — beforeinstallprompt fires once and early
+watchInstallability()
+
+// shared/lib/tabs.ts
+export const tabs = createTabTransition(['today', 'week', 'year', 'profile'] as const)
+router.afterEach((to, from) => tabs.resolve(to.meta.tab, from.meta.tab))
+```
+
+```vue
+<UpdatePrompt
+  :open="needRefresh"
+  :title="t('pwa.updateTitle')"
+  :body="t('pwa.updateBody')"
+  :action="t('pwa.reload')"
+  :dismiss-label="t('pwa.later')"
+  @update="updateServiceWorker(true)"
+  @dismiss="needRefresh = false"
+/>
+```
+
+Why: two phone apps had written all of it twice. `AuthLayout.vue` was
+thirty-seven lines with no difference at all between them; the install card was
+111 lines differing in a storage key and a colour.
+
+The service worker stays yours — `virtual:pwa-register/vue` is a build-time
+module a library cannot import, so `UpdatePrompt` takes `open` and emits
+`update`.
+
+**To take it:** nothing. Both are new entries; the main barrel is unchanged.
+
+---
+
 ## 0.12.1
 
 **Changed:** a `BaseCard` with no head and no foot no longer wraps its content

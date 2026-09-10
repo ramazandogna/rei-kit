@@ -1,6 +1,6 @@
 {
   "name": "rei-kit",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "description": "Vue 3 and Tailwind 4 design system and shared runtime. Extracted from Hibi.",
   "license": "MIT",
   "author": "Ramazan Doğan",
@@ -24,6 +24,14 @@
     "./shell/mobile.css": "./dist/shell/mobile.css",
     "./shell/web.css": "./dist/shell/web.css",
     "./styles.css": "./dist/styles.css",
+    "./app": {
+      "types": "./dist/app/index.d.ts",
+      "import": "./dist/app.js"
+    },
+    "./pwa": {
+      "types": "./dist/pwa/index.d.ts",
+      "import": "./dist/pwa.js"
+    },
     "./supabase": {
       "types": "./dist/supabase/index.d.ts",
       "import": "./dist/supabase.js"

@@ -16,6 +16,25 @@ below, and there has not been one yet.
 
 ---
 
+## 0.14.0
+
+**You gain** the last three parts the two phone apps had written twice.
+
+```ts
+import { LocaleSheet, TourShell } from 'rei-kit/app'
+import { InstallSettings } from 'rei-kit/pwa'
+```
+
+- **`TourShell`** — the onboarding frame: teleport, `inert`, focus, arrow keys,
+  the slide direction and the progress track. Your slides go in the slot.
+- **`LocaleSheet`** — a settings row that opens a language list. Pass endonyms.
+- **`InstallSettings`** — the settings row that offers installing again after
+  the card was dismissed.
+
+**To take it:** nothing.
+
+---
+
 ## 0.13.0
 
 **You gain** two entry points for the parts a phone app is built from.

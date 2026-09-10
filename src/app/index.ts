@@ -11,6 +11,8 @@
  * product; this is the part underneath it.
  */
 export { default as AuthShell } from './AuthShell.vue'
+export { default as LocaleSheet } from './LocaleSheet.vue'
+export { default as TourShell } from './TourShell.vue'
 
 export { createTabTransition } from './use-tab-transition'
 export type { SlideDirection } from './use-tab-transition'

@@ -3,6 +3,42 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.14.0 — 2026-09-10
+
+The rest of what the two phone apps had written twice.
+
+### Added
+
+- **`TourShell`** (`rei-kit/app`) — the frame an onboarding guide runs inside.
+  Both apps had 296 lines of this, 94% identical, and what differed was every
+  part that should: the slides, the wash colours, the illustrations.
+
+  What did not differ is the part that is easy to get wrong. `inert` on the app
+  behind it, or Tab walks into a screen the reader cannot see — and it has to
+  be undone on unmount, or the whole app stays inert forever. Focusing the
+  dialog, which is the only reason the arrow keys work at all. A direction that
+  follows the _index_ rather than the button pressed, so jumping from slide
+  seven to slide two still animates backwards. And a segmented track rather
+  than dots, because ten slides is a sequence with a length and the reader
+  deserves to see how much is left.
+
+  The slide is a slot and every string is a prop: the kit renders the frame and
+  knows nothing about what is being explained.
+
+- **`LocaleSheet`** (`rei-kit/app`) — choosing the interface language from a
+  settings row. A sheet rather than a segmented control, because past four
+  options a row of pills stops being readable and the list only grows.
+
+  The labels are the caller's and should be **endonyms** — a language is always
+  listed in its own language, so someone who cannot read the current interface
+  can still find theirs. The kit cannot know them.
+
+- **`InstallSettings`** (`rei-kit/pwa`) — the way back to installing after the
+  card has been dismissed. The card snoozes for a week; without this row,
+  somebody who tapped "Not now" and changed their mind has nowhere to go. It
+  renders nothing where installing is neither possible nor already done, since
+  a settings group that says "you cannot install this" is worse than silence.
+
 ## 0.13.0 — 2026-09-10
 
 Two new entry points, for the parts that are not primitives.

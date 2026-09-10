@@ -13,4 +13,5 @@ export { useInstall, watchInstallability } from './use-install'
 export { useSnooze } from './use-snooze'
 
 export { default as InstallPrompt } from './InstallPrompt.vue'
+export { default as InstallSettings } from './InstallSettings.vue'
 export { default as UpdatePrompt } from './UpdatePrompt.vue'

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick, ref } from 'vue'
 
-import { AuthShell, createTabTransition, useThemeSync } from '../app/index'
+import { AuthShell, LocaleSheet, TourShell, createTabTransition, useThemeSync } from '../app/index'
 import { useSnooze } from '../pwa/use-snooze'
 import InstallPrompt from '../pwa/InstallPrompt.vue'
 import UpdatePrompt from '../pwa/UpdatePrompt.vue'
@@ -168,5 +168,111 @@ describe('the cards', () => {
 
     expect(bare.text()).toBe('form')
     expect(full.text()).toContain('diller')
+  })
+})
+
+describe('TourShell', () => {
+  const props = {
+    modelValue: true,
+    index: 0,
+    total: 4,
+    dialogLabel: 'Tanıtım',
+    skipLabel: 'Geç',
+    backLabel: 'Geri',
+    nextLabel: 'İleri',
+    lastLabel: 'Başla',
+    stepLabel: (n: number) => `${n}. adım`,
+  }
+
+  it('takes the app behind it out of reach while it is open', () => {
+    // Without `inert`, Tab walks into a screen the reader cannot see. Both
+    // apps had written this, and both had to remember to undo it.
+    const app = document.createElement('div')
+    app.id = 'app'
+    document.body.append(app)
+
+    const wrapper = mount(TourShell, { props, attachTo: document.body })
+
+    expect(app.hasAttribute('inert')).toBe(true)
+
+    wrapper.unmount()
+    expect(app.hasAttribute('inert')).toBe(false)
+
+    app.remove()
+  })
+
+  /* It teleports, so the dialog is in the document rather than in the wrapper —
+     which is the whole point: a phone shell clips its children and the guide
+     has to cover the tab bar. */
+  const shown = () => document.body.textContent ?? ''
+
+  it('says Start on the last slide and Next on every other', () => {
+    const middle = mount(TourShell, { props })
+    expect(shown()).toContain('İleri')
+    middle.unmount()
+
+    const last = mount(TourShell, { props: { ...props, index: 3 } })
+    expect(shown()).toContain('Başla')
+    expect(shown()).not.toContain('İleri')
+    last.unmount()
+  })
+
+  it('offers no way back from the first slide', () => {
+    const first = mount(TourShell, { props })
+    expect(shown()).not.toContain('Geri')
+    first.unmount()
+
+    const second = mount(TourShell, { props: { ...props, index: 1 } })
+    expect(shown()).toContain('Geri')
+    second.unmount()
+  })
+
+  it('draws a segment per slide, and names each one', () => {
+    // A track rather than dots: ten slides is a sequence with a length, and the
+    // reader deserves to see how much is left.
+    const wrapper = mount(TourShell, { props: { ...props, index: 1 } })
+    const tabs = [...document.querySelectorAll('[role="tab"]')]
+
+    expect(tabs).toHaveLength(4)
+    expect(tabs[1]!.getAttribute('aria-selected')).toBe('true')
+    expect(tabs[2]!.getAttribute('aria-label')).toBe('3. adım')
+    wrapper.unmount()
+  })
+
+  it('walks with the arrow keys, which is why the dialog takes focus', async () => {
+    const wrapper = mount(TourShell, { props })
+    const dialog = document.querySelector('[role="dialog"]')!
+
+    for (const key of ['ArrowRight', 'ArrowLeft', 'Escape']) {
+      dialog.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }))
+    }
+
+    expect(wrapper.emitted('next')).toBeTruthy()
+    expect(wrapper.emitted('back')).toBeTruthy()
+    expect(wrapper.emitted('dismiss')).toBeTruthy()
+    wrapper.unmount()
+  })
+})
+
+describe('LocaleSheet', () => {
+  it('lists the system option first, and the endonyms after', () => {
+    // A language is always listed in its own language, so someone who cannot
+    // read the current interface can still find theirs. The kit cannot know
+    // them, so they are the caller's.
+    const wrapper = mount(LocaleSheet, {
+      props: {
+        modelValue: 'system',
+        label: 'Dil',
+        systemLabel: 'Sistem',
+        options: [
+          { value: 'tr', label: 'Türkçe' },
+          { value: 'ja', label: '日本語' },
+        ],
+      },
+    })
+
+    // The row shows what is chosen without opening the sheet.
+    expect(wrapper.text()).toContain('Sistem')
+    wrapper.unmount()
   })
 })

@@ -607,3 +607,18 @@ describe('destructive, which is not danger', () => {
     expect(wrapper.classes()).toContain('hover:text-negative')
   })
 })
+
+describe('a row that can be chosen', () => {
+  it('fills rather than recolours when it is the selected one', () => {
+    // A list says "this one" with a fill. Painting the row in the primary
+    // colour instead makes one line of a list shout.
+    const on = mount(BaseButton, { props: { variant: 'row', pressed: true } })
+    const off = mount(BaseButton, { props: { variant: 'row', pressed: false } })
+
+    expect(on.classes()).toContain('bg-muted')
+    expect(on.classes()).toContain('justify-start')
+    expect(on.attributes('aria-pressed')).toBe('true')
+
+    expect(off.classes()).toContain('bg-transparent')
+  })
+})

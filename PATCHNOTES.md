@@ -16,6 +16,23 @@ below, and there has not been one yet.
 
 ---
 
+## 0.11.3
+
+**You gain** a row that can be selected:
+
+```vue
+<BaseButton variant="row" :pressed="selected === node.id" @click="pick(node)">…</BaseButton>
+```
+
+If you were writing `:class="on ? 'chip-on' : 'chip-off'"`, that is now
+`:pressed="on"` on a `secondary pill xs` button — `chip-off` was `secondary`
+and `chip-on` was `secondary` pressed, exactly. You also get the `aria-pressed`
+those hand-written pairs never had.
+
+**To take it:** nothing.
+
+---
+
 ## 0.11.2
 
 **Changed:** `quiet` fills on hover for text buttons too, not only icons.

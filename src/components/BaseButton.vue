@@ -236,6 +236,10 @@ const PRESSED_CLASS: Partial<Record<string, string>> = {
   ghost: 'bg-primary text-white hover:bg-primary/90',
   quiet: 'bg-primary text-white hover:bg-primary/90',
   secondary: 'bg-primary border-primary text-white hover:bg-primary/90',
+  /* A selected row is filled, not recoloured: the line stays a line, and the
+     fill is what a list uses to say "this one". Filling it with the primary
+     colour instead would make one row of a list shout. */
+  row: 'w-full justify-start text-left bg-muted text-ink hover:bg-muted',
 }
 
 const surface = computed(() => {

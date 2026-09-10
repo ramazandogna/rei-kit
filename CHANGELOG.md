@@ -3,6 +3,21 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.11.3 — 2026-09-10
+
+### Added
+
+- **A row can be the selected one.** `variant="row"` with `pressed` fills
+  rather than recolours: a list says _this one_ with a fill, and painting the
+  row in the primary colour instead makes one line of a list shout. Two of the
+  consumers had written `.tree-row-on { @apply bg-muted }` for exactly this.
+
+  With it, a chip's `.chip-on` / `.chip-off` pair also disappears —
+  `chip-off` was `border-hair bg-surface text-ink hover:bg-muted`, which is
+  `secondary`, and `chip-on` was `border-primary bg-primary text-white`, which
+  is `secondary` pressed. The whole `:class="on ? 'chip-on' : 'chip-off'"`
+  becomes `:pressed="on"`, and the button gains the `aria-pressed` it never had.
+
 ## 0.11.2 — 2026-09-10
 
 ### Changed

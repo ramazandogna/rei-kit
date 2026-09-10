@@ -14,63 +14,31 @@ Hibi, [Kakei](https://github.com/ramazandogna/kakei) and
 
 ## What gets to be in here
 
-**The rule depends on what kind of thing it is, and getting this wrong is how
-the kit spent a release shipping parts nobody could use.**
+**This is a kit. It is built for the ecosystem, not for the apps that happen to
+exist today.**
 
-### Primitives are complete by construction
+A part belongs here if it is a piece of user interface at all — a button, a
+field, a toast, a modal, a shell. There is no waiting for a second consumer and
+no counting of call sites: an app that needs something the kit does not have is
+a gap in the kit, and the kit is what changes. Waiting means the next app
+begins by copying, and a kit whose parts arrive after the apps that needed them
+is a library of things nobody reached for.
 
-A button, a field, a toast, a modal. There is no uncertainty about whether the
-next app will want one, so **do not wait for a second consumer** — waiting
-means every new app begins by copying, which is the thing this package exists
-to prevent.
+A part is finished when three things are true:
 
-A primitive is finished when it can express what its own design system
-declares. Two tests, both checkable:
+1. **It covers every role the design system declares.** `tokens.css` names five
+   colour roles; a button that exposes two of them is incomplete, whatever the
+   apps currently use.
+2. **The app can take the behaviour without the appearance.** `variant="unstyled"`
+   is the last resort, not the first: if several apps paint the same shape by
+   hand, that shape is a variant the kit is missing.
+3. **It carries no product decision** — no colour value, no copy, no icon.
+   Those arrive as props and slots, which is what lets three apps that look
+   nothing alike share one part.
 
-- **Does it cover every role `tokens.css` names?** The kit declared five colour
-  roles while `BaseButton` exposed two, so an app that wanted a success-
-  coloured action hand-wrote the button. That is not caution, it is an
-  incomplete component contradicting its own token file.
-- **Can the app take the behaviour without the appearance?** `variant="unstyled"`
-  exists because 58 raw `<button>` elements sat in 24 files that already
-  imported `BaseButton`. Those places wanted the element, the focus ring, the
-  disabled handling and `aria-pressed` — everything but the paint — and the
-  kit offered all or nothing, so they took nothing.
-
-### Composed components wait for two apps
-
-A `PriceCard`, a `TourShell`, a `DangerZone`. These carry a shape, and a shape
-designed from one example is designed wrong. Here the old rule holds: measured,
-not predicted, and the corollary is the useful one — **a file that is 90%
-identical in two apps is a kit candidate.** The measure is `diff`, not taste.
-
-### Both kinds
-
-- **No new required peer.** Anything needing a new library goes behind its own
-  entry point, or stays in the app.
-- **No product decision** — no colour, no copy, no icon. Those arrive as props
-  and slots.
-
-### The test that matters more than any of them
-
-**A raw `<button>` in a file that imports `BaseButton` is a bug in the kit, not
-in the app.** Grep for that pattern before believing a component is finished.
-It found every gap this package closed between 0.5.0 and 0.7.0, and it found
-them after those releases claimed to be done.
-
-## The one rule that explains the API
-
-**Nothing in this package makes a decision for the app.** Components take
-strings rather than calling a translator, utilities take the clock rather than
-reading it, and the error type knows about no database. So:
-
-- there is no `t()` inside a component — pass `closeLabel`, `label`, `title`
-- there is no `new Date()` inside a helper — pass `today`
-- colours arrive as Tailwind class strings, never as category names
-
-That last one is not style. Tailwind scans source files as plain text, so a
-class assembled at runtime (`` `bg-${kind}` ``) never reaches the stylesheet.
-The app writes the classes out; the package receives them.
+**The test that finds the gaps:** a hand-written control in a file that already
+imports the kit's version of it. That is a bug in the kit, every time. Not in
+the app, and not a matter of taste.
 
 ## Install
 

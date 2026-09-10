@@ -16,41 +16,31 @@ That is the whole trick, and everything else follows from it.
 
 ### What gets to be in here
 
-The kit is not built from what its current apps happen to need. It is built to
-be the thing the next app starts from. So the rule depends on what kind of
-thing is being added — and conflating the two cost this package three releases
-that shipped parts nobody could use.
+**This is a kit. It is built for the ecosystem, not for the apps that happen to
+exist today.**
 
-**Primitives are complete by construction.** A button, a field, a toast, a
-modal. There is no uncertainty about whether the next app will want one, so
-they do not wait for a second consumer: waiting means every new app begins by
-copying, which is the thing this package exists to prevent. A primitive is
-finished when two checkable things are true:
+A part belongs here if it is a piece of user interface at all — a button, a
+field, a toast, a modal, a shell. There is no waiting for a second consumer and
+no counting of call sites: an app that needs something the kit does not have is
+a gap in the kit, and the kit is what changes. Waiting means the next app
+begins by copying, and a kit whose parts arrive after the apps that needed them
+is a library of things nobody reached for.
 
-- **It covers every role the design system declares.** `tokens.css` names five
-  colour roles while `BaseButton` exposed two, so an app that wanted a
-  success-coloured action hand-wrote the button. A component that cannot use a
-  role its own token file declares is not being careful; it is incomplete.
-- **The app can take the behaviour without the appearance.** `variant="unstyled"`
-  exists because 58 raw `<button>` elements sat in 24 files that already
-  imported `BaseButton`. A picker cell, a chip, a calendar day: the surface is
-  the app's and should be, but the element, the focus ring, the disabled
-  handling and the `aria-pressed` bookkeeping are not — and they were being
-  rewritten every time, usually without the focus ring.
+A part is finished when three things are true:
 
-**Composed components wait for two apps.** A `PriceCard`, a `TourShell`, a
-`DangerZone`. These carry a shape, and a shape designed from one example is
-designed wrong. Here the measure is `diff`, not taste: **a file that is 90%
-identical in two apps is a kit candidate.**
+1. **It covers every role the design system declares.** `tokens.css` names five
+   colour roles; a button that exposes two of them is incomplete, whatever the
+   apps currently use.
+2. **The app can take the behaviour without the appearance.** `variant="unstyled"`
+   is the last resort, not the first: if several apps paint the same shape by
+   hand, that shape is a variant the kit is missing.
+3. **It carries no product decision** — no colour value, no copy, no icon.
+   Those arrive as props and slots, which is what lets three apps that look
+   nothing alike share one part.
 
-**Both kinds:** no new required peer — anything needing a library goes behind
-its own entry point or stays in the app — and no product decision. No colour,
-no copy, no icon. Those arrive as props and slots.
-
-**And one test worth more than the rule:** a raw `<button>` in a file that
-already imports `BaseButton` is a bug in the kit, not in the app. That grep
-found every gap closed between 0.5.0 and 0.7.0, and it found them after those
-releases had claimed to be finished.
+**The test that finds the gaps:** a hand-written control in a file that already
+imports the kit's version of it. That is a bug in the kit, every time. Not in
+the app, and not a matter of taste.
 
 ## Status
 

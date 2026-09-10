@@ -42,6 +42,7 @@ const {
     | 'secondary'
     | 'ghost'
     | 'quiet'
+    | 'row'
     | 'danger'
     | 'positive'
     | 'warning'
@@ -107,6 +108,19 @@ const VARIANT_CLASS = {
   secondary: 'border-hair bg-surface text-ink border hover:bg-muted',
   ghost: 'bg-transparent text-ink hover:bg-muted',
   /*
+   * A line in a list that is also a control: a settings row, a node in a tree,
+   * a heading that opens something.
+   *
+   * Full width, aligned to the start, and a hover that fills the whole line
+   * rather than a box inside it. Every app had written this — `.tree-row`,
+   * `.row`, `.header-action` — because a button that centres its content
+   * cannot be a row, and the alignment is the only thing that had to change.
+   *
+   * Padding stays the app's: a menu row and a tree node are not the same
+   * height, and the kit has no opinion about which one this is.
+   */
+  row: 'w-full justify-start text-left bg-transparent text-ink hover:bg-muted',
+  /*
    * The control that is present without asking for attention: a dismiss beside
    * an install prompt, a chevron beside a month, a delete at the end of a row.
    *
@@ -168,6 +182,16 @@ const ICON_SIZE_CLASS = {
   lg: 'size-14 text-lg',
 } as const
 
+/* A row is sized by its padding, not by a height. A settings line holds one
+   line of text and a tree node can hold two, and a fixed height turns the
+   second into an overflow. */
+const ROW_SIZE_CLASS = {
+  xs: 'px-2 py-1.5 text-xs',
+  sm: 'px-3 py-2 text-sm',
+  md: 'px-3 py-2.5 text-base',
+  lg: 'px-4 py-3 text-lg',
+} as const
+
 /* A link takes the type size and nothing else. Height and padding are what
    make a surface, and this variant is the one without one. */
 const LINK_SIZE_CLASS = {
@@ -181,6 +205,7 @@ const sizing = computed(() => {
   // Unstyled owns no box, so it takes no size: the app's own classes decide.
   if (variant === 'unstyled') return ''
   if (variant === 'link') return LINK_SIZE_CLASS[size]
+  if (variant === 'row') return ROW_SIZE_CLASS[size]
   return icon ? ICON_SIZE_CLASS[size] : SIZE_CLASS[size]
 })
 
@@ -194,6 +219,15 @@ const PRESSED_CLASS: Partial<Record<string, string>> = {
 
 const surface = computed(() => {
   if (pressed === true) return PRESSED_CLASS[variant] ?? VARIANT_CLASS[variant]
+
+  /* A quiet *icon* fills on hover; a quiet *text* action does not.
+   *
+   * Not a special case — the difference is that a square hit area has bounds
+   * the reader cannot see until something shows them, and a line of text has
+   * its own. Every icon button in all three apps had been written by hand with
+   * exactly this fill, and every text action by hand without it. */
+  if (variant === 'quiet' && icon) return `${VARIANT_CLASS.quiet} hover:bg-muted`
+
   return VARIANT_CLASS[variant]
 })
 
@@ -206,11 +240,17 @@ const surface = computed(() => {
    consuming app snapped while the hand-written controls beside them faded —
    `transition-colors` appears 106 times across the three apps, which is the
    convention this component was the only thing not following. */
-const shell = computed(() =>
-  variant === 'unstyled'
-    ? ''
-    : 'inline-flex items-center justify-center gap-2 font-medium transition-[transform,color,background-color,border-color] duration-100 select-none active:scale-95',
-)
+const shell = computed(() => {
+  if (variant === 'unstyled') return ''
+
+  const feel = 'transition-[transform,color,background-color,border-color] duration-100 select-none'
+
+  /* A row does not press. Scaling a full-width line looks like the list itself
+     flinched, and every hand-written row in the apps animated colour only. */
+  if (variant === 'row') return `inline-flex items-center gap-2 font-medium ${feel}`
+
+  return `inline-flex items-center justify-center gap-2 font-medium ${feel} active:scale-95`
+})
 
 const radius = computed(() => {
   if (variant === 'unstyled') return ''

@@ -3,6 +3,54 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.11.0 — 2026-09-10
+
+The admission rule is rewritten, and this release is what it produces.
+
+**A part belongs in the kit if it is a piece of user interface at all.** No
+waiting for a second consumer, no counting of call sites. An app that needs
+something the kit does not have is a gap in the kit, and the kit is what
+changes. The old rule — _two apps must need it_ — is gone from the README,
+`AGENTS.md` and the consumers' notes, because it produced a kit that arrived
+after the apps that needed it and a set of parts nobody reached for.
+
+Reading the 117 hand-painted `variant="unstyled"` buttons across the three apps
+as a specification rather than as app code, three answers fell out.
+
+### Added
+
+- **`variant="row"`** — a line in a list that is also a control: a settings
+  row, a node in a tree, a heading that opens something. Full width, aligned to
+  the start, and a hover that fills the whole line rather than a box inside it.
+
+  All three apps had written this by hand — `.tree-row`, `.row`,
+  `.header-action` — because a button that centres its content cannot be a row,
+  and the alignment was the only thing that had to change.
+
+  It is sized by padding rather than by a height, because a settings line holds
+  one line of text and a tree node can hold two, and a fixed height turns the
+  second into an overflow. And it does not press: scaling a full-width line
+  looks like the list itself flinched, which is why none of the hand-written
+  ones did.
+
+### Changed
+
+- **A quiet _icon_ button fills on hover; a quiet _text_ action still does
+  not.** Not a special case: a square hit area has bounds the reader cannot see
+  until something shows them, and a line of text has its own. Every icon button
+  in all three apps was hand-written with exactly this fill — `.icon-button`,
+  `.stepper`, and four more — and every text action without it. `quiet` was
+  unusable for the commonest control in the kit's own consumers.
+
+### Noted
+
+- **The chip was already expressible and nobody had noticed.** `.chip-off` —
+  `border-hair bg-surface text-ink hover:bg-muted` on a
+  `rounded-full px-3 py-1.5 text-xs` box — is `variant="secondary"` with `pill`
+  and `size="xs"`, exactly. Seven of them were hand-written. A part that exists
+  and is not found is not much better than one that does not exist, which is
+  what the showcase is for.
+
 ## 0.10.1 — 2026-09-10
 
 ### Changed

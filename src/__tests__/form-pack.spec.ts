@@ -520,3 +520,55 @@ describe('BaseInput over its value', () => {
     expect((wrapper.get('input').element as HTMLInputElement).value).toBe('1200')
   })
 })
+
+describe('the shapes the apps were painting by hand', () => {
+  it('fills a quiet icon on hover, and a quiet text action not', () => {
+    // A square hit area has bounds the reader cannot see until something shows
+    // them; a line of text has its own. Every icon button in all three apps was
+    // hand-written with this fill and every text action without it.
+    const iconButton = mount(BaseButton, { props: { variant: 'quiet', icon: true } })
+    const textAction = mount(BaseButton, { props: { variant: 'quiet' } })
+
+    expect(iconButton.classes()).toContain('hover:bg-muted')
+    expect(textAction.classes().some((c) => c.startsWith('hover:bg-'))).toBe(false)
+  })
+
+  it('is a row when the control is a line in a list', () => {
+    // `.tree-row`, `.row`, `.header-action` — every app had written this,
+    // because a button that centres its content cannot be a row.
+    const wrapper = mount(BaseButton, { props: { variant: 'row' } })
+
+    expect(wrapper.classes()).toContain('w-full')
+    expect(wrapper.classes()).toContain('justify-start')
+    expect(wrapper.classes()).toContain('text-left')
+    expect(wrapper.classes()).not.toContain('justify-center')
+  })
+
+  it('sizes a row by its padding, so it can hold two lines', () => {
+    // A settings line holds one line of text and a tree node can hold two; a
+    // fixed height turns the second into an overflow.
+    const wrapper = mount(BaseButton, { props: { variant: 'row' } })
+
+    expect(wrapper.classes().some((c) => /^h-\d/.test(c))).toBe(false)
+    expect(wrapper.classes()).toContain('py-2.5')
+  })
+
+  it('does not let a row flinch when pressed', () => {
+    // Scaling a full-width line looks like the list itself moved.
+    expect(mount(BaseButton, { props: { variant: 'row' } }).classes()).not.toContain(
+      'active:scale-95',
+    )
+    expect(mount(BaseButton).classes()).toContain('active:scale-95')
+  })
+
+  it('already had the chip, and nobody had noticed', () => {
+    // `.chip-off` was `border-hair bg-surface text-ink hover:bg-muted` on a
+    // `rounded-full px-3 py-1.5 text-xs` box. That is this, exactly.
+    const chip = mount(BaseButton, { props: { variant: 'secondary', pill: true, size: 'xs' } })
+
+    expect(chip.classes()).toContain('rounded-full')
+    expect(chip.classes()).toContain('text-xs')
+    expect(chip.classes().join(' ')).toContain('bg-surface')
+    expect(chip.classes().join(' ')).toContain('hover:bg-muted')
+  })
+})

@@ -16,6 +16,37 @@ below, and there has not been one yet.
 
 ---
 
+## 0.11.0
+
+**You gain** the row, and an icon button that behaves like the ones you were
+writing by hand.
+
+```vue
+<!-- a line in a list that is also a control -->
+<BaseButton variant="row" @click="open(node)">{{ node.name }}</BaseButton>
+
+<!-- the icon button you already had, without the classes -->
+<BaseButton variant="quiet" icon :aria-label="t('common.edit')"><Pencil /></BaseButton>
+
+<!-- and the chip, which was expressible all along -->
+<BaseButton variant="secondary" pill size="xs">{{ tag }}</BaseButton>
+```
+
+- **`variant="row"`** is full width, start-aligned, and fills on hover. Sized by
+  padding rather than height so it can hold two lines, and it does not press —
+  a full-width line that scales looks like the list moved.
+- **`quiet` + `icon`** now fills on hover. A quiet text action still does not:
+  a square hit area has bounds the reader cannot see, a line of text has its own.
+
+Why: the 117 hand-painted `unstyled` buttons across the three apps read as a
+specification. `.tree-row`, `.row`, `.header-action` were all the same row;
+`.icon-button` and `.stepper` were the same icon button; `.chip-off` was
+already `secondary pill xs` and nobody had found it.
+
+**To take it:** nothing.
+
+---
+
 ## 0.10.1
 
 **You gain** a `BaseInput` that holds a number:

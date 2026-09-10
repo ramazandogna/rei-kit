@@ -3,6 +3,21 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.12.1 — 2026-09-10
+
+### Changed
+
+- **`BaseCard` has no wrapper when it has no head and no foot.** The padding
+  lands on the card itself and the card _is_ the element.
+
+  This matters more than a saved node. Most cards in the apps lay their
+  contents out — `flex items-center gap-4`, `flex flex-col gap-3` — and with a
+  wrapper in the way those classes reach the border and not the content, so the
+  app has to add back a div of its own. A component that makes you write the
+  div it exists to remove is one you skip, which is what all three apps did.
+
+  Found immediately after 0.12.0 by trying to adopt it.
+
 ## 0.12.0 — 2026-09-10
 
 The button audit, applied to the rest of the kit. Counting usage across the

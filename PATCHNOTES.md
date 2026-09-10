@@ -16,6 +16,23 @@ below, and there has not been one yet.
 
 ---
 
+## 0.12.1
+
+**Changed:** a `BaseCard` with no head and no foot no longer wraps its content
+in a div — the padding is on the card, so your layout classes land on the
+content:
+
+```vue
+<BaseCard padding="md" class="flex items-center gap-4">…</BaseCard>
+```
+
+Before this, that `flex` reached the border and not the content, so you had to
+add back the div the component exists to remove.
+
+**To take it:** nothing, unless you were styling `> div` inside a plain card.
+
+---
+
 ## 0.12.0
 
 **You gain** a `BaseCard` you can actually use, and a `ProgressBar` that can be

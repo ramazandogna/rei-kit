@@ -171,9 +171,9 @@ describe('BaseCard and BaseBadge', () => {
     const plain = mount(BaseCard, { slots: { default: 'gövde' } })
     const full = mount(BaseCard, { slots: { head: 'başlık', default: 'gövde', foot: 'altlık' } })
 
-    // The body wrapper and nothing else: no empty head or foot rule drawn
-    // across a card that was given neither.
-    expect(plain.element.children).toHaveLength(1)
+    // Given neither, there is no wrapper at all — the slot's content is the
+    // card's content, and no empty head or foot rule is drawn across it.
+    expect(plain.element.children).toHaveLength(0)
     expect(plain.text()).toBe('gövde')
 
     expect(full.element.children).toHaveLength(3)
@@ -220,7 +220,8 @@ describe('the parts that shipped and nobody could reach', () => {
     ] as const) {
       const wrapper = mount(BaseCard, { props: { padding }, slots: { default: 'x' } })
 
-      expect(wrapper.findAll('div')[1]!.classes()).toContain(expected)
+      // No head or foot, so the padding is on the card itself.
+      expect(wrapper.classes()).toContain(expected)
     }
   })
 
@@ -245,6 +246,17 @@ describe('the parts that shipped and nobody could reach', () => {
 
     // findAll: [0] the card, [1] the head, [2] the body.
     expect(wrapper.findAll('div')[1]!.classes()).toContain('py-2.5')
+  })
+
+  it('BaseCard is the element when it has no head and no foot', () => {
+    // Most cards lay their contents out. With a wrapper in the way, a
+    // `flex items-center gap-4` on the card reaches the border and not the
+    // content, and the app has to add back the div this exists to remove.
+    const plain = mount(BaseCard, { slots: { default: '<span>x</span>' } })
+    const withHead = mount(BaseCard, { slots: { head: 'title', default: '<span>x</span>' } })
+
+    expect(plain.findAll('div')).toHaveLength(1)
+    expect(withHead.findAll('div').length).toBeGreaterThan(1)
   })
 
   it('ProgressBar is thinner where it is a hint rather than the subject', () => {

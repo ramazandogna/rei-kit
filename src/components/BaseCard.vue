@@ -7,6 +7,13 @@
  * so a card on one screen had a heavier border than a card on the next and
  * nobody could say why.
  *
+ * With no head and no foot there is no wrapper div: the padding lands on the
+ * card itself and the card *is* the element. That matters more than a saved
+ * node — most cards in the apps lay their contents out (`flex items-center
+ * gap-4`, `flex flex-col gap-3`), and with a wrapper in the way those classes
+ * reach the border and not the content, so the app has to add back the div
+ * this component exists to remove. One that makes you do that is one you skip.
+ *
  * `interactive` is for a card that is a link or a button: it adds the lift and
  * the press, and it is opt-in because a card holding a form should not move
  * when the pointer crosses it.
@@ -55,17 +62,19 @@ const HEAD = {
   <component
     :is="as"
     class="border-hair bg-surface rounded-card border"
-    :class="
+    :class="[
       interactive
         ? 'transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm'
-        : ''
-    "
+        : '',
+      $slots.head || $slots.foot ? '' : BODY[padding],
+    ]"
   >
     <div v-if="$slots.head" class="border-hair/70 border-b" :class="HEAD[padding]">
       <slot name="head" />
     </div>
 
-    <div :class="BODY[padding]"><slot /></div>
+    <div v-if="$slots.head || $slots.foot" :class="BODY[padding]"><slot /></div>
+    <slot v-else />
 
     <div v-if="$slots.foot" class="border-hair/70 bg-muted/30 border-t" :class="HEAD[padding]">
       <slot name="foot" />

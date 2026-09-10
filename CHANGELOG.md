@@ -3,6 +3,24 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.11.1 — 2026-09-10
+
+### Added
+
+- **`variant="destructive"`** — quiet until you reach for it, and then plainly
+  destructive: a delete at the end of a row, a "remove this note", an archive.
+
+  Not `danger`, which is filled and shouts before it is needed — a red button
+  at the end of every row makes the list look like a warning. And not `quiet`
+  with a `hover:text-negative` class beside it, which is how all three apps
+  were doing it, **fifteen times**: that class and the variant's own
+  `hover:text-ink` set the same property at the same specificity, so which one
+  wins depends on the order they happen to land in the stylesheet. Every one of
+  those was a coin toss.
+
+  As an icon it tints its own fill rather than borrowing the neutral one: a red
+  glyph on a grey wash reads as two different states at once.
+
 ## 0.11.0 — 2026-09-10
 
 The admission rule is rewritten, and this release is what it produces.

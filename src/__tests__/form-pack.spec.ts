@@ -572,3 +572,32 @@ describe('the shapes the apps were painting by hand', () => {
     expect(chip.classes().join(' ')).toContain('hover:bg-muted')
   })
 })
+
+describe('destructive, which is not danger', () => {
+  it('stays quiet until it is reached for', () => {
+    // `danger` is filled and shouts before it is needed: a red button at the
+    // end of every row makes the list look like a warning.
+    const wrapper = mount(BaseButton, { props: { variant: 'destructive' } })
+
+    expect(wrapper.classes()).toContain('text-ink-soft')
+    expect(wrapper.classes()).toContain('hover:text-negative')
+    expect(wrapper.classes()).toContain('bg-transparent')
+  })
+
+  it('settles a coin toss the apps were all losing', () => {
+    // They wrote `variant="quiet"` with a `hover:text-negative` class beside
+    // it. That class and quiet's own `hover:text-ink` set the same property at
+    // the same specificity, so the winner depended on stylesheet order.
+    const wrapper = mount(BaseButton, { props: { variant: 'destructive' } })
+
+    expect(wrapper.classes()).not.toContain('hover:text-ink')
+  })
+
+  it('tints its own fill when it is an icon', () => {
+    // A red glyph on a neutral grey wash reads as two different states.
+    const wrapper = mount(BaseButton, { props: { variant: 'destructive', icon: true } })
+
+    expect(wrapper.classes()).toContain('hover:bg-negative/10')
+    expect(wrapper.classes()).not.toContain('hover:bg-muted')
+  })
+})

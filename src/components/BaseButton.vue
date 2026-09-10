@@ -42,6 +42,7 @@ const {
     | 'secondary'
     | 'ghost'
     | 'quiet'
+    | 'destructive'
     | 'row'
     | 'danger'
     | 'positive'
@@ -107,6 +108,21 @@ const VARIANT_CLASS = {
    */
   secondary: 'border-hair bg-surface text-ink border hover:bg-muted',
   ghost: 'bg-transparent text-ink hover:bg-muted',
+  /*
+   * Quiet until you reach for it, and then plainly destructive: a delete at
+   * the end of a row, a "remove this note", an archive.
+   *
+   * Not `danger`, which is filled and shouts before it is needed — a red
+   * button in a list of rows makes the list look like a warning. And not
+   * `quiet` with a `hover:text-negative` class beside it, which is how all
+   * three apps were doing it: that class and the variant's own
+   * `hover:text-ink` set the same property at the same specificity, so which
+   * one wins depends on the order they happen to land in the stylesheet.
+   *
+   * Fifteen of these across the three apps, and every one of them was that
+   * coin toss.
+   */
+  destructive: 'bg-transparent text-ink-soft hover:text-negative',
   /*
    * A line in a list that is also a control: a settings row, a node in a tree,
    * a heading that opens something.
@@ -227,6 +243,10 @@ const surface = computed(() => {
    * its own. Every icon button in all three apps had been written by hand with
    * exactly this fill, and every text action by hand without it. */
   if (variant === 'quiet' && icon) return `${VARIANT_CLASS.quiet} hover:bg-muted`
+
+  /* The destructive icon button tints its own fill rather than borrowing the
+     neutral one: a red glyph on a grey wash reads as two different states. */
+  if (variant === 'destructive' && icon) return `${VARIANT_CLASS.destructive} hover:bg-negative/10`
 
   return VARIANT_CLASS[variant]
 })

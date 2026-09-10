@@ -16,6 +16,26 @@ below, and there has not been one yet.
 
 ---
 
+## 0.11.1
+
+**You gain** `variant="destructive"`:
+
+```vue
+<BaseButton variant="destructive" icon :aria-label="t('common.delete')"><Trash2 /></BaseButton>
+```
+
+Quiet until hovered, then negative. Use `danger` for the filled button that
+confirms a deletion, and this for the one that offers it.
+
+**If you were writing `variant="quiet" class="hover:text-negative"`, stop.**
+That class and quiet's own `hover:text-ink` set the same property at the same
+specificity, so which one applied depended on stylesheet order — it was a coin
+toss, fifteen times across the three apps.
+
+**To take it:** nothing.
+
+---
+
 ## 0.11.0
 
 **You gain** the row, and an icon button that behaves like the ones you were

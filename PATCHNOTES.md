@@ -16,6 +16,88 @@ below, and there has not been one yet.
 
 ---
 
+## Coming
+
+What is planned, why, and the measurement behind it. Each line is a file two or
+more apps have written separately — the number is how much of it is identical
+today, so it is a promise about duplication rather than a wish list.
+
+Dates are not given. A part ships when a consumer can adopt it in the same
+session, which is the rule that produced 0.5.2, 0.5.3, 0.6.1, 0.9.1, 0.12.1 and
+0.14.1 — every one of those was a gap found by adopting rather than by reading.
+
+### 0.15.0 — the auth pack
+
+| Component                               | Replaces                                   | Identical today |
+| --------------------------------------- | ------------------------------------------ | --------------- |
+| `AuthForm`                              | `SignupView` (119 lines), `LoginView` (97) | 97% / 90%       |
+| `toAuthMessageKey` → `rei-kit/supabase` | `auth.errors.ts` (40)                      | 100%            |
+| `authSchema`                            | `auth.schema.ts` (28)                      | 100%            |
+
+`AuthForm` takes the field list, the OAuth slot and every string; the app keeps
+its copy, its links and its redirect. `toAuthMessageKey` returns a key rather
+than a sentence, so an error stored before a language switch still reads
+correctly after — that belongs beside the Supabase error mapper the kit already
+ships.
+
+`authSchema` needs `zod`. It will go behind `rei-kit/app` as an optional peer,
+never in the main barrel.
+
+### 0.16.0 — the tab shell
+
+| Component             | Replaces                                     | Identical today |
+| --------------------- | -------------------------------------------- | --------------- |
+| `TabShell`            | `AppLayout.vue` (180 lines), `App.vue` (120) | 86% / 93%       |
+| `createQueryDefaults` | `providers/query.ts` (30)                    | 96%             |
+| `createAuthGuard`     | `router/guards.ts` (27)                      | 89%             |
+| `useWriteReport`      | `report.ts` (36)                             | 87%             |
+
+`TabShell` is the phone frame itself: the shell, the tab bar, the slide between
+screens and the sheet root, with the tabs and their icons passed in. It is the
+largest remaining duplication and the last thing standing between a fourth
+phone app and an empty `src/`.
+
+### 0.17.0 — the web pack (`rei-kit/web`)
+
+`TopNav`, `Modal`, `Tooltip`, `Tabs`, `Accordion`, `Avatar`, `Breadcrumb`,
+`Pagination`.
+
+All eight are hand-written in the one wide consumer today. `TopNav` will take
+the same `TabItem<K>` contract as `TabBar`, so moving an app between a bottom
+bar and a top one is one line. `Modal` is not `BaseSheet` with different
+padding — a sheet arrives from the bottom edge and a modal from nowhere, and
+they dismiss differently.
+
+### Considering
+
+- **`formatCurrency` / `formatNumber`.** One consumer has 186 lines of money
+  handling — minor units, `bigint` arithmetic, `Intl` — and only its currency
+  list is product-specific. The kit ships `formatDate` and nothing else.
+- **A sentinel in `styles.css`** that warns in development when one of the four
+  CSS lines is missing. The failure is currently silent: the build stays green
+  and the components render unstyled.
+- **`BaseRadioGroup` and `size="lg"`** have no users. They stay — a primitive
+  set is complete by construction — but if a second release passes without
+  either being reached for, the shape is probably wrong rather than unneeded.
+
+### Not planned
+
+Anything that carries a product decision. `FuriganaText`, `KanjiStrokes`,
+`WordQuiz`, `ExamShell`, `DayTimeline` and their relatives stay in the app that
+owns the subject. The rule is not how general a component looks — it is whether
+the kit would have to learn what the app is about.
+
+### Before 1.0.0
+
+- A behaviour test for every component. 154 tests cover the parts that fail
+  quietly; the rest are covered only by the public-API list and the SSR gate.
+- The showcase completed and published. Six components are still missing from
+  it, and they are the six that are hardest to install correctly.
+- Prop tables for people. `AGENTS.md` documents the kit for assistants; there
+  is no equivalent for a reader.
+
+---
+
 ## 0.14.1
 
 **Fixed:** `TourShell`'s slide transition shipped as scoped CSS and therefore

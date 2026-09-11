@@ -44,7 +44,14 @@ the app, and not a matter of taste.
 
 ## Status
 
-**v0.4.4 — three consumers.**
+**v0.14.1 — three consumers.**
+
+|              |                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Components   | 30 (`BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseRadioGroup`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
+| Composables  | 14 (`useToast`, `useTheme`, `useToday`, `useMediaQuery`, `useInstall`, `watchInstallability`, `createTabTransition`, `useThemeSync`, `useVisualViewport`, etc.)                                                                                                                                                                                                                          |
+| Utilities    | 20 (`applyTheme`, `formatDate`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                             |
+| Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/pwa`, `rei-kit/shell/mobile.css`, `rei-kit/shell/web.css`                                                                                                                                                                                                                                                                                             |
 
 |             |                                                                                                                                                        |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |

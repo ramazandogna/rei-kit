@@ -3,6 +3,74 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.15.0 — 2026-09-12
+
+The auth pack. A sign-in screen written four times across three apps.
+
+### Added
+
+- **`AuthForm`** (`rei-kit/app`) — the sign-in and sign-up forms, which are one
+  component. Two of the three consumers had a `LoginView` and a `SignupView`
+  differing by a single input and an autocomplete hint; the third had already
+  merged them and was the model for this.
+
+  Two components that differ by one field drift apart, and these had: the
+  failure message was `text-negative` in one app and `text-alert` in another,
+  one changed the submit wording while busy and one did not, one had a
+  placeholder on the e-mail field and one did not. None of that was a decision
+  anybody made — it is what four copies do over a few months.
+
+  It does not sign anybody in. It emits `submit` with the values and takes
+  `busy` and `error` back, because the store, the redirect and the wording of a
+  failure are the app's. Validation is a function the caller passes, for the
+  same reason: the password minimum is a product decision — eight characters in
+  two of these apps and ten in the third — and the kit has no opinion on it.
+
+  Every string is a required prop. A label the kit invented would ship English
+  into an app that has none, and it would do it silently: the form would look
+  finished and read wrong.
+
+- **`fieldErrors`** (`rei-kit/app`) — flattens a validator's error tree to one
+  message per field, or null when the values are good. Typed structurally
+  rather than against `z.ZodType`, so the kit never imports Zod and an app that
+  validates with something else does not download a validator to use a form.
+  Zod satisfies the shape as it is.
+
+  Null rather than an empty object on success, so `if (errors)` is the guard.
+  The exception is a schema that fails entirely at the root — a `refine` with no
+  `path` — which returns an empty object that is still not null, because
+  reporting "valid" there would let a broken submission through.
+
+- **`toAuthMessageKey`** and **`AUTH_ERROR_CODES`** (`rei-kit/supabase`) — maps
+  a Supabase auth failure to a message key rather than a sentence, so the caller
+  translates it at render time. An error stored before a language switch still
+  reads correctly after it, which is the whole reason it returns a string that
+  looks unfinished.
+
+  Two of the three copies were byte-for-byte identical. The third recognised one
+  extra code, which is now the `extraCodes` option rather than a fork: a key is
+  only an improvement on the generic message if something translates it, so
+  widening the list stays the app's decision. An app that has not written
+  `authError.validation_failed` is better served by the sentence it has than by
+  a key rendered raw on screen.
+
+  `AUTH_ERROR_CODES` is exported so an app can assert its locale files cover
+  every key this can return.
+
+- **`disabled` on `GoogleButton`.** One consumer was passing `:disabled="busy"`
+  and getting half of what it asked for: the attribute fell through to the
+  element, so the button stopped responding but went on looking clickable. It is
+  a real prop now, and it greys out.
+
+### Not shipped, and why
+
+`authSchema` was planned for this release and is not here. The two schemas that
+are identical today are identical because both apps chose an eight-character
+minimum; the third chose ten. That is a product decision, and the kit's own rule
+is that anything carrying one stays in the app that owns it. With `fieldErrors`
+shipped, what remains in each app is fourteen lines that state its own password
+policy — which is a thing worth being able to read in the app.
+
 ## 0.14.1 — 2026-09-10
 
 ### Fixed

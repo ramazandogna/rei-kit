@@ -4,6 +4,9 @@ import type { SupabaseClient, SupportedStorage } from '@supabase/supabase-js'
 
 import { AppError, registerErrorMapper } from '../utils/app-error'
 
+export { AUTH_ERROR_CODES, toAuthMessageKey } from './auth-errors'
+export type { AuthErrorCode, AuthMessageKeyOptions } from './auth-errors'
+
 /**
  * The optional Supabase entry.
  *

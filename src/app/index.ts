@@ -10,9 +10,14 @@
  * the tab transition thirty-four. What differs between two phone apps is the
  * product; this is the part underneath it.
  */
+export { default as AuthForm } from './AuthForm.vue'
+export type { AuthFormLabels, AuthFormValues } from './auth-form'
 export { default as AuthShell } from './AuthShell.vue'
 export { default as LocaleSheet } from './LocaleSheet.vue'
 export { default as TourShell } from './TourShell.vue'
+
+export { fieldErrors } from './field-errors'
+export type { SafeParsable } from './field-errors'
 
 export { createTabTransition } from './use-tab-transition'
 export type { SlideDirection } from './use-tab-transition'

@@ -23,25 +23,8 @@ more apps have written separately — the number is how much of it is identical
 today, so it is a promise about duplication rather than a wish list.
 
 Dates are not given. A part ships when a consumer can adopt it in the same
-session, which is the rule that produced 0.5.2, 0.5.3, 0.6.1, 0.9.1, 0.12.1 and
-0.14.1 — every one of those was a gap found by adopting rather than by reading.
-
-### 0.15.0 — the auth pack
-
-| Component                               | Replaces                                   | Identical today |
-| --------------------------------------- | ------------------------------------------ | --------------- |
-| `AuthForm`                              | `SignupView` (119 lines), `LoginView` (97) | 97% / 90%       |
-| `toAuthMessageKey` → `rei-kit/supabase` | `auth.errors.ts` (40)                      | 100%            |
-| `authSchema`                            | `auth.schema.ts` (28)                      | 100%            |
-
-`AuthForm` takes the field list, the OAuth slot and every string; the app keeps
-its copy, its links and its redirect. `toAuthMessageKey` returns a key rather
-than a sentence, so an error stored before a language switch still reads
-correctly after — that belongs beside the Supabase error mapper the kit already
-ships.
-
-`authSchema` needs `zod`. It will go behind `rei-kit/app` as an optional peer,
-never in the main barrel.
+session, which is the rule that produced 0.5.2, 0.5.3, 0.6.1, 0.9.1, 0.12.1, 0.14.1
+and 0.15.0 — every one of those was a gap found by adopting rather than by reading.
 
 ### 0.16.0 — the tab shell
 
@@ -70,6 +53,11 @@ they dismiss differently.
 
 ### Considering
 
+- **`authSchema`.** Planned for 0.15.0 and held back. The two identical copies
+  are identical because both apps picked an eight-character minimum and the
+  third picked ten — a product decision, which the rule keeps in the app. With
+  `fieldErrors` shipped, what is left in each app is fourteen lines stating its
+  own password policy. It ships if a fourth app writes the same fourteen.
 - **`formatCurrency` / `formatNumber`.** One consumer has 186 lines of money
   handling — minor units, `bigint` arithmetic, `Intl` — and only its currency
   list is product-specific. The kit ships `formatDate` and nothing else.
@@ -95,6 +83,71 @@ the kit would have to learn what the app is about.
   it, and they are the six that are hardest to install correctly.
 - Prop tables for people. `AGENTS.md` documents the kit for assistants; there
   is no equivalent for a reader.
+
+---
+
+## 0.15.0
+
+**You gain** the sign-in screen, which three apps had written four times.
+
+```ts
+import { AuthForm, fieldErrors } from 'rei-kit/app'
+import { toAuthMessageKey } from 'rei-kit/supabase'
+```
+
+`AuthForm` is both modes in one component — `mode="signIn"` or `mode="signUp"`.
+It renders the OAuth button, the divider, the fields, remember-me and the
+submit button; it does not sign anybody in. You get `submit` with the values
+and you hand back `busy` and `error`, because the store, the redirect and the
+wording of a failure are yours.
+
+```vue
+<AuthForm
+  mode="signIn"
+  :labels="{
+    email: t('auth.email'),
+    password: t('auth.password'),
+    confirmPassword: t('auth.confirmPassword'),
+    submit: t('auth.signIn'),
+    submitBusy: t('auth.signingIn'),
+    google: t('auth.google'),
+    or: t('auth.or'),
+    rememberMe: t('auth.rememberMe'),
+  }"
+  v-model:remember="rememberMe"
+  :busy="busy"
+  :error="serverError ? t(serverError) : ''"
+  :validate="(values) => fieldErrors(loginSchema(), values)"
+  @submit="onSubmit"
+  @google="onGoogle"
+>
+  <template #header>…</template>
+  <template #foot>…</template>
+</AuthForm>
+```
+
+Every string is a required prop. There are no English defaults to forget to
+override.
+
+Two labels are also switches, because a label you do not pass is a thing you do
+not want: omit `google` and there is no OAuth button, omit `or` and there is no
+divider, omit `rememberMe` and there is no checkbox. Remember-me renders on
+`signIn` only — a new account has nothing to remember.
+
+`fieldErrors(schema, values)` turns any validator with a `safeParse` into the
+`validate` prop. It is typed structurally, so the kit does not depend on Zod and
+you do not install one to use the form.
+
+`toAuthMessageKey(error)` returns `'authError.invalid_credentials'` rather than
+a sentence, so an error stored before a language switch still reads correctly
+after. Pass `{ extraCodes: ['validation_failed'] }` for codes your locale files
+cover beyond the shared nine; `AUTH_ERROR_CODES` is exported so you can test
+that they do.
+
+**To take it:** `pnpm add rei-kit@^0.15.0`. Nothing is removed, so nothing
+breaks. If you are replacing a vee-validate login view, `validate` plus
+`fieldErrors` does what `useForm` and `toTypedSchema` were doing and you can
+drop both packages.
 
 ---
 

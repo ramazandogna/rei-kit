@@ -1,5 +1,15 @@
 <script setup lang="ts">
-const { label } = defineProps<{ label: string }>()
+const { label, disabled = false } = defineProps<{
+  label: string
+  /**
+   * Greyed out and unclickable while a sign-in is already in flight.
+   *
+   * A real prop rather than a fallthrough attribute: the button needs to look
+   * disabled as well as be it, and a bare `disabled` landing on the element by
+   * itself gets the second half only.
+   */
+  disabled?: boolean | undefined
+}>()
 
 const emit = defineEmits<{ click: [] }>()
 </script>
@@ -7,7 +17,8 @@ const emit = defineEmits<{ click: [] }>()
 <template>
   <button
     type="button"
-    class="border-hair bg-surface text-ink rounded-card hover:bg-muted flex h-11 w-full items-center justify-center gap-2 border text-sm font-medium transition-colors active:scale-95"
+    :disabled="disabled"
+    class="border-hair bg-surface text-ink rounded-card hover:bg-muted flex h-11 w-full items-center justify-center gap-2 border text-sm font-medium transition-colors active:scale-95 disabled:pointer-events-none disabled:opacity-50"
     @click="emit('click')"
   >
     <!-- Google asks for its own mark, so it is inlined rather than themed. -->

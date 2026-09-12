@@ -289,8 +289,14 @@ const sliderText = computed(() => `${minutes.value} dakika`)
           <PropTable name="BasePagination" />
         </div>
 
-        <div class="relative h-24">
-          <TabBar :items="BOTTOM" active="ledger" label="Alt çubuk" />
+        <div>
+          <!-- The bar is absolutely positioned -- it hangs inside the phone
+               shell rather than in the flow -- so it needs a box of its own.
+               The table has to sit outside that box, or opening it spills out
+               of the fixed height. -->
+          <div class="border-hair/70 rounded-card relative h-24 overflow-hidden border">
+            <TabBar :items="BOTTOM" active="ledger" label="Alt çubuk" />
+          </div>
           <PropTable name="TabBar" />
         </div>
       </BaseCard>

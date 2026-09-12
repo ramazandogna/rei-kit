@@ -1,12 +1,31 @@
 {
   "name": "rei-kit",
-  "version": "0.20.0",
-  "description": "Vue 3 and Tailwind 4 design system and shared runtime. Extracted from Hibi.",
+  "version": "1.0.0",
+  "description": "A Vue 3 and Tailwind 4 component kit: 53 accessible components, five entry points, and a theme an app rebrands by redefining eleven values.",
+  "keywords": [
+    "vue",
+    "vue3",
+    "tailwind",
+    "tailwindcss",
+    "design-system",
+    "component-library",
+    "ui-kit",
+    "components",
+    "accessible",
+    "a11y",
+    "typescript",
+    "pwa",
+    "supabase"
+  ],
   "license": "MIT",
   "author": "Ramazan Doğan",
+  "homepage": "https://ramazandogna.github.io/rei-kit/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ramazandogna/rei-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ramazandogna/rei-kit/issues"
   },
   "type": "module",
   "sideEffects": [

@@ -1,8 +1,37 @@
 # rei-kit
 
-Vue 3 and Tailwind 4 design system and shared runtime.
+**A Vue 3 and Tailwind 4 component kit.** 53 components, five entry points, and
+a theme an app rebrands by redefining eleven values.
+
+[![npm](https://img.shields.io/npm/v/rei-kit?color=%23227c70&label=npm)](https://www.npmjs.com/package/rei-kit)
+[![license](https://img.shields.io/npm/l/rei-kit?color=%23227c70)](./LICENSE)
+[![showcase](https://img.shields.io/badge/showcase-live-%23227c70)](https://ramazandogna.github.io/rei-kit/)
+
+**[See every component →](https://ramazandogna.github.io/rei-kit/)**
+
+```sh
+pnpm add rei-kit
+```
+
+```vue
+<script setup lang="ts">
+import { BaseButton, BaseModal, useToast } from 'rei-kit'
+</script>
+```
 
 零 — the layer everything else starts from.
+
+|                        |                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| **`rei-kit`**          | Buttons, fields, sheets, modals, menus, tables, toasts — the parts any app has |
+| **`rei-kit/web`**      | Wide-site parts: dialogs, tabs, tooltips, pagination, breadcrumbs              |
+| **`rei-kit/app`**      | Phone-app parts: the shell, the tab transition, the sign-in form               |
+| **`rei-kit/pwa`**      | Installing and updating                                                        |
+| **`rei-kit/supabase`** | An optional Supabase entry — auth errors, a remember-me client                 |
+
+Three apps run on it and no two resemble each other. Every component is typed,
+tested, themed by role rather than by colour, and carries the reasoning for its
+own awkward decisions in the source.
 
 ## Why it exists
 
@@ -44,7 +73,7 @@ the app, and not a matter of taste.
 
 ## Status
 
-**v0.20.0 — three consumers.**
+**v1.0.0 — three consumers.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

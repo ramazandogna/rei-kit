@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 
-import { BaseAvatar, BaseMenu, BaseSpinner, BaseSwitch } from '../index'
+import { BaseAvatar, BaseMenu, BaseSheet, BaseSpinner, BaseSwitch, ensureSheetRoot } from '../index'
 
 /**
  * The controls a kit is expected to have.
@@ -222,6 +222,43 @@ describe('BaseMenu', () => {
 
     document.body.dispatchEvent(new Event('pointerdown', { bubbles: true }))
     expect(w.emitted('update:modelValue')?.at(-1)).toEqual([false])
+    w.unmount()
+  })
+})
+
+describe('ensureSheetRoot', () => {
+  it('makes the mount point rather than requiring the page to declare one', () => {
+    // A page without it got a sheet that opened, blocked everything and
+    // rendered nothing: Vue warns about the missing teleport target and carries
+    // on, so the build is green, the types are fine and the screen is wrong.
+    document.getElementById('sheet-root')?.remove()
+
+    expect(ensureSheetRoot()).toBe('#sheet-root')
+    expect(document.getElementById('sheet-root')).not.toBeNull()
+  })
+
+  it('keeps the one the app already declared', () => {
+    document.getElementById('sheet-root')?.remove()
+    const mine = document.createElement('div')
+    mine.id = 'sheet-root'
+    document.body.appendChild(mine)
+
+    ensureSheetRoot()
+
+    expect(document.querySelectorAll('#sheet-root')).toHaveLength(1)
+    expect(document.getElementById('sheet-root')).toBe(mine)
+  })
+
+  it('lets BaseSheet render on a page that declared nothing', async () => {
+    document.getElementById('sheet-root')?.remove()
+
+    const w = mount(BaseSheet, {
+      props: { modelValue: true, title: 'Yeni kayıt', closeLabel: 'Kapat' },
+      slots: { default: '<p class="body">inside</p>' },
+    })
+    await nextTick()
+
+    expect(document.querySelector('#sheet-root .body')).not.toBeNull()
     w.unmount()
   })
 })

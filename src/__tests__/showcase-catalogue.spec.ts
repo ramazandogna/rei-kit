@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 import * as kit from '../index'
@@ -66,6 +66,27 @@ describe('the showcase catalogue', () => {
     const silent = catalogue.filter((entry) => !entry.summary).map((entry) => entry.name)
 
     expect(silent).toEqual([])
+  })
+
+  it('has a behaviour test that mounts every component', () => {
+    /* The 1.0.0 line. Twelve components reached 0.20.0 with none -- all of them
+       the oldest parts of the kit, written before there was a habit of testing
+       them, and none of them failing loudly enough for anybody to notice.
+
+       Mounting is the bar rather than coverage percentage: a component that has
+       never been mounted in a test is a component whose props have never been
+       passed, and that is where the silent breakages live. */
+    const dir = 'src/__tests__'
+    const suites = readdirSync(dir)
+      .filter((file) => !['public-api.spec.ts', 'showcase-catalogue.spec.ts'].includes(file))
+      .map((file) => readFileSync(`${dir}/${file}`, 'utf8'))
+      .join('\n')
+
+    const unmounted = catalogue
+      .map((entry) => entry.name)
+      .filter((name) => !new RegExp(`mount\\(\\s*${name}[,)\\s]`).test(suites))
+
+    expect(unmounted).toEqual([])
   })
 
   it('names the entry point each component is imported from', () => {

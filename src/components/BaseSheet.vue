@@ -4,6 +4,7 @@ import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 import { X } from 'lucide-vue-next'
 
 import { useVisualViewport } from '../composables/use-visual-viewport'
+import { ensureSheetRoot } from '../utils/sheet-root'
 
 const open = defineModel<boolean>({ required: true })
 const {
@@ -21,6 +22,10 @@ const {
    */
   closeLabel?: string | undefined
 }>()
+
+/* Resolved in setup, before the first render, so the Teleport always has a
+   target to find. */
+const sheetRoot = ensureSheetRoot()
 
 const viewport = useVisualViewport()
 
@@ -82,7 +87,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Teleport to="#sheet-root">
+  <Teleport :to="sheetRoot">
     <Transition name="sheet">
       <div
         v-if="open"

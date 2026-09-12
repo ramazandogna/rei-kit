@@ -3,6 +3,74 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 1.0.0 — 2026-09-12
+
+**The version number now means something.** Until today the major was `0`, and
+at `0.x` a caret range does not cross a minor — `^0.14.1` resolves to `<0.15.0`,
+so publishing a minor upgraded nobody and every release was a deliberate act on
+the consumer's side. That was the right default while the shape was still
+moving. It has stopped moving.
+
+### What 1.0.0 promises
+
+- **`^1.0.0` is safe to take.** Minors add; patches fix. Neither removes an
+  export, renames a prop, or changes what a component renders for the same
+  input. `src/__tests__/public-api.spec.ts` lists every export by name, so
+  removing one cannot pass review by accident — it has caught five omissions
+  in the last week alone.
+- **A breaking change waits for 2.0.0** and arrives with the reason written
+  down here, not with a paragraph in a commit message.
+- **The showcase is the contract you can see.** Every component, live, with its
+  props: [ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/).
+  The tables are generated from the source before each build, and a test asserts
+  the catalogue matches the package's exports in both directions.
+
+### What made it ready
+
+Three things were outstanding after 0.20.0, and this release closes the last of
+them.
+
+- **A behaviour test for every component.** Twelve had none — `EmptyState`,
+  `GoogleButton`, `LocaleLinks`, `PageHeader`, `SectionHeading`,
+  `SegmentedControl`, `SettingsGroup`, `SettingsRow`, `StatCard`, `TabBar`,
+  `ToneDot`, `InstallSettings`. They are the oldest parts of the kit, which is
+  exactly why: written before there was a habit of testing them, and never
+  failing loudly enough for anybody to notice.
+
+  Mounting is the bar rather than a coverage percentage. A component that has
+  never been mounted in a test is a component whose props have never been
+  passed, and that is where the quiet breakages live. A test now enforces it, so
+  the next component cannot arrive without one.
+
+  Writing them found two of my own assumptions wrong: `SegmentedControl` is a
+  real radio group rather than painted buttons, and `SectionHeading` takes its
+  colours as whole class names because Tailwind reads source as text. Both are
+  better than what I was about to assert.
+
+- **The package page.** The npm listing had no keywords, so the package could
+  not be found by searching for what it is; no homepage, so there was no way to
+  see it; and a description reading "Extracted from Hibi", which tells a
+  stranger nothing. All three are fixed.
+
+### Fixed
+
+- **`BaseSheet` required a DOM node nothing documented.** It teleports out of
+  the app's tree so the app behind it can be marked `inert` — a sheet inside the
+  element it is disabling would disable itself — and that mount point had to be
+  `<div id="sheet-root">` in the consumer's `index.html`. A page without it got
+  a sheet that opened, blocked everything and rendered nothing: Vue warns about
+  the missing teleport target and carries on, so the build is green, the types
+  are fine, and the screen is wrong.
+
+  The node is created on demand now. An app that already declares one keeps it.
+  `ensureSheetRoot` is exported for anyone who wants it earlier.
+
+  Found in the kit's own showcase, by a reader clicking the button.
+
+- **A prop table could spill out of its card** in the showcase, where a
+  component positioned absolutely needs a box of a fixed height and the table
+  was inside it.
+
 ## 0.20.0 — 2026-09-12
 
 The three things standing between this and 1.0.0, and they were all the same

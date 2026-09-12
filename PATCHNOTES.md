@@ -5,14 +5,15 @@ other half: it records _why_ a change was made and reads like an argument.
 This file answers two questions only — **what you gain**, and **what you have
 to do to take it**.
 
-Versions follow [semver](https://semver.org). While the major is `0`, a minor
-may carry a breaking change; every one of them is marked **Action required**
-below, and there has not been one yet.
+Versions follow [semver](https://semver.org). Since 1.0.0 a minor adds and a
+patch fixes; neither removes an export, renames a prop, or changes what a
+component renders for the same input. A breaking change waits for the next
+major and arrives with its reason written down.
 
-> **A note on `^0.x`.** A caret range at `0.x` does not cross a minor:
-> `^0.2.1` resolves to `<0.3.0`, so publishing 0.3.0 upgrades nobody. Two of
-> this kit's three consumers sat two minors behind for exactly this reason.
-> Until 1.0.0, taking a minor is a deliberate act — `pnpm add rei-kit@^0.4.4`.
+> **A note on the `0.x` releases below.** A caret range at `0.x` does not cross
+> a minor: `^0.2.1` resolves to `<0.3.0`, so publishing 0.3.0 upgraded nobody,
+> and two of this kit's three consumers sat two minors behind for exactly that
+> reason. From `^1.0.0` a caret behaves the way you expect.
 
 ---
 
@@ -50,15 +51,39 @@ Anything that carries a product decision. `FuriganaText`, `KanjiStrokes`,
 owns the subject. The rule is not how general a component looks — it is whether
 the kit would have to learn what the app is about.
 
-### Before 1.0.0
+### Shipped in 1.0.0
 
-- ~~The showcase completed and published.~~ Done in 0.20.0 — all 53 components,
-  live, at [ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/).
-- ~~Prop tables for people.~~ Done in 0.20.0, generated from the source so they
-  cannot drift.
-- A behaviour test for every component. 298 tests cover the parts that fail
-  quietly; the rest are covered only by the public-API list, the SSR gate and
-  the catalogue check.
+Everything that was on this list. The showcase is published, the prop tables are
+generated from the source, and every one of the 53 components has a behaviour
+test that mounts it — enforced by a test, so the next one cannot arrive
+without.
+
+---
+
+## 1.0.0
+
+**You gain a version number that means something.**
+
+Until now the major was `0`, and at `0.x` a caret range does not cross a minor:
+`^0.14.1` resolves to `<0.15.0`, so every release was a deliberate act on your
+side. From here, `^1.0.0` is safe to take — minors add, patches fix, and neither
+removes an export, renames a prop, or changes what a component renders for the
+same input. A breaking change waits for 2.0.0 and arrives with its reason
+written down.
+
+**The last of the 1.0.0 list is done.** Twelve components had no behaviour test;
+they have one now, and a test enforces that the next one cannot arrive without.
+Mounting is the bar rather than a coverage number: a component never mounted in
+a test is a component whose props have never been passed.
+
+**Fixed, and worth reading if you use `BaseSheet`:** it required
+`<div id="sheet-root">` in your `index.html` and nothing said so. Without it the
+sheet opened, blocked the page and rendered nothing — Vue warns about the
+missing teleport target and carries on, so the build stays green. The node is
+created on demand now. If you already declare one, it is kept.
+
+**To take it:** `pnpm add rei-kit@^1.0.0`. Nothing is removed and nothing is
+renamed; if you are on 0.20.x this is a version bump and no more.
 
 ---
 

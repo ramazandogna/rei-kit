@@ -25,6 +25,8 @@ const PUBLIC_API = [
   'toDateKey',
   'todayKey',
   'downloadJson',
+  'SHEET_ROOT_ID',
+  'ensureSheetRoot',
   'safeRedirect',
   'toRedirectPath',
   'tapFeedback',

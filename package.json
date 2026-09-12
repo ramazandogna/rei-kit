@@ -1,6 +1,6 @@
 {
   "name": "rei-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Vue 3 and Tailwind 4 component kit: 53 accessible components, five entry points, and a theme an app rebrands by redefining eleven values.",
   "keywords": [
     "vue",

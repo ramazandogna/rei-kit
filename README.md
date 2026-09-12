@@ -73,7 +73,7 @@ the app, and not a matter of taste.
 
 ## Status
 
-**v1.0.0 — three consumers.**
+**v1.0.1 — three consumers.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -82,7 +82,7 @@ the app, and not a matter of taste.
 | Utilities    | 27 (`applyTheme`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/shell/mobile.css`, `rei-kit/shell/web.css`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
-| Consumers | [Hibi](https://github.com/ramazandogna/hibi) · [Kakei](https://github.com/ramazandogna/kakei) · [Kakehashi](https://github.com/ramazandogna/kakehashi) |
+| Consumers | [Hibi](https://github.com/ramazandogna/hibi) · [Kakei](https://github.com/ramazandogna/kakei) · [Kakehashi](https://github.com/ramazandogna/kakehashi-nihongo) |
 
 Every export is listed by name in `src/__tests__/public-api.spec.ts`, which is
 the package's promise written down.

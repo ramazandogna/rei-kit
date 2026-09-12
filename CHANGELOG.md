@@ -3,6 +3,50 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 1.0.1 — 2026-09-12
+
+### Fixed
+
+- **The Kakehashi link was wrong** in the README and `AGENTS.md`. The repository
+  is `kakehashi-nihongo`; the link pointed at a repository that does not exist.
+  CI had it right, which is why nothing failed.
+
+### Documentation
+
+The showcase is a documentation site now rather than a long page.
+
+- **A menu that follows you.** Every component listed and filterable by name,
+  grouped by entry point, with the current section marked. People arrive knowing
+  what they need — "a dropdown", "a date field" — and want to know whether it
+  exists; scrolling fifteen thousand pixels to find out is not an answer.
+
+  The highlight cost four attempts and each one is worth recording, because they
+  are the ways this is normally wrong:
+
+  1. The showcase's own nav used `.rk-nav-link`, which is what the kit's
+     `NavLinks` component calls its links. Searching for "modal" matched the
+     demo's own navigation.
+  2. Taking the last element the observer reported made the highlight depend on
+     callback order. Several sections sit in the band at once.
+  3. Taking the topmost visible one picked the section _above_ the one being
+     read: a tall card ending just inside the band still counts as visible. What
+     a reader means by "where am I" is the last thing that has started.
+  4. The observer fires while a smooth scroll travels and then stops, so its
+     last word was measured halfway through the journey. A click is better
+     information than anything measured mid-flight, so measurement now waits for
+     the page to settle.
+
+- **A hero that says what the package is**, with the install line as a button
+  that copies itself, and links out to npm and the repository.
+
+- **Every section is addressable.** `#gezinme`, `#api-BaseModal` — a link to a
+  component is a link somebody can send.
+
+- On a phone the menu is a drawer rather than a permanent column: 280px of menu
+  on a 390px screen is a menu with a page attached to it. It closes when you
+  choose something, and while closed its links are `visibility: hidden` rather
+  than merely off screen, so a Tab press cannot reach what nobody can see.
+
 ## 1.0.0 — 2026-09-12
 
 **The version number now means something.** Until today the major was `0`, and

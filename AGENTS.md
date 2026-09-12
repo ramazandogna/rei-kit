@@ -10,7 +10,7 @@ A Vue 3 + Tailwind 4 layer: twenty-two components, twenty utilities, eleven
 composables, an i18n runtime and an optional Supabase entry. Extracted from
 [Hibi](https://github.com/ramazandogna/hibi); it now has three consumers —
 Hibi, [Kakei](https://github.com/ramazandogna/kakei) and
-[Kakehashi](https://github.com/ramazandogna/kakehashi).
+[Kakehashi](https://github.com/ramazandogna/kakehashi-nihongo).
 
 ## What gets to be in here
 

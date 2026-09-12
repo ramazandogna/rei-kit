@@ -60,6 +60,21 @@ without.
 
 ---
 
+## 1.0.1
+
+**Fixed:** the Kakehashi link in the README pointed at a repository that does
+not exist. It is `kakehashi-nihongo`.
+
+**The showcase is a documentation site now** —
+[ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/). A
+menu listing every component, filterable by name and grouped by entry point,
+that marks where you are; a hero with an install line that copies itself; and
+an address for every section, so a link to `BaseModal` is a link you can send.
+
+**To take it:** nothing changes in the package.
+
+---
+
 ## 1.0.0
 
 **You gain a version number that means something.**

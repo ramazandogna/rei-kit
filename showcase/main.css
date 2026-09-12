@@ -14,3 +14,9 @@
 @import '../src/styles/shell/mobile.css';
 
 @source '../src';
+
+/* Anything the menu jumps to stops below the sticky header rather than under
+   it. Without this the heading you asked for is the one thing you cannot see. */
+[id] {
+  scroll-margin-top: 5.5rem;
+}

@@ -108,7 +108,7 @@ const sliderText = computed(() => `${minutes.value} dakika`)
 <template>
   <div class="flex flex-col gap-14">
     <!-- ─────────────────────────── Form ─────────────────────────── -->
-    <section>
+    <section id="form-devam">
       <SectionHeading tone="neutral" label="Form — devamı" />
       <p class="text-ink-soft mt-2 text-sm">
         Bir değeri alan kontroller. Anahtarın onay kutusundan farkı görsel değil: onay kutusu bir
@@ -162,7 +162,7 @@ const sliderText = computed(() => `${minutes.value} dakika`)
     </section>
 
     <!-- ─────────────────────────── Katmanlar ─────────────────────────── -->
-    <section>
+    <section id="ust-katman">
       <SectionHeading tone="neutral" label="Üst katman" />
       <p class="text-ink-soft mt-2 text-sm">
         Sayfanın üstüne çıkan şeyler. Sayfa alt kenardan gelir ve başparmağa aittir; kip hiçbir
@@ -241,7 +241,7 @@ const sliderText = computed(() => `${minutes.value} dakika`)
     </section>
 
     <!-- ─────────────────────────── Gezinme ─────────────────────────── -->
-    <section>
+    <section id="gezinme">
       <SectionHeading tone="neutral" label="Gezinme" />
       <p class="text-ink-soft mt-2 text-sm">
         Nerede olduğunu ve nereye gidebileceğini söyleyen parçalar.
@@ -303,7 +303,7 @@ const sliderText = computed(() => `${minutes.value} dakika`)
     </section>
 
     <!-- ─────────────────────────── Açılır bölümler ─────────────────────────── -->
-    <section>
+    <section id="acilir">
       <SectionHeading tone="neutral" label="Açılır bölümler" />
       <p class="text-ink-soft mt-2 text-sm">
         Cevap kapalıyken de işaretlemede durur — tarayıcı görmese de tarayıcı botu görür.
@@ -332,7 +332,7 @@ const sliderText = computed(() => `${minutes.value} dakika`)
     </section>
 
     <!-- ─────────────────────────── Veri ─────────────────────────── -->
-    <section>
+    <section id="veri">
       <SectionHeading tone="neutral" label="Veri" />
       <p class="text-ink-soft mt-2 text-sm">
         Tablonun kendi kaydırıcısı var ve o kaydırıcı klavyeyle erişilebilir — sürükleyerek ulaşılan
@@ -346,7 +346,7 @@ const sliderText = computed(() => `${minutes.value} dakika`)
     </section>
 
     <!-- ─────────────────────────── Durum ─────────────────────────── -->
-    <section>
+    <section id="durum">
       <SectionHeading tone="neutral" label="Durum" />
       <p class="text-ink-soft mt-2 text-sm">Bekleme, kimlik ve hata.</p>
 
@@ -386,7 +386,7 @@ const sliderText = computed(() => `${minutes.value} dakika`)
     </section>
 
     <!-- ─────────────────────────── Telefon kabuğu ─────────────────────────── -->
-    <section>
+    <section id="kabuk">
       <SectionHeading tone="neutral" label="Telefon kabuğu" />
       <p class="text-ink-soft mt-2 text-sm">
         <code>rei-kit/app</code> — dördüncü bir telefon uygulamasının boş bir

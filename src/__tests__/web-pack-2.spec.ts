@@ -250,6 +250,19 @@ describe('BaseDisclosure', () => {
     ).toBe(true)
   })
 
+  it('lets the page decide how big the question is', () => {
+    // The size of a heading belongs to the page, not to disclosure. Without the
+    // slot, a list wanting a larger question on a wide screen has to override
+    // the component's own stylesheet.
+    const w = mount(BaseDisclosure, {
+      props: { title: 'fallback' },
+      slots: { default: 'a', title: '<span class="mine">Can I cancel?</span>' },
+    })
+
+    expect(w.find('button .mine').text()).toBe('Can I cancel?')
+    expect(w.text()).not.toContain('fallback')
+  })
+
   it("is the app's to open, so a list can decide what only-one-at-a-time means", async () => {
     const w = build()
     await w.find('button').trigger('click')

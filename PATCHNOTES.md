@@ -61,6 +61,24 @@ the kit would have to learn what the app is about.
 
 ---
 
+## 0.18.1
+
+**You gain** a `title` slot on `BaseDisclosure` and `BaseAccordion`, for when
+the question needs its own size or markup:
+
+```vue
+<BaseDisclosure v-model="open">
+  <template #title><span class="text-base sm:text-lg">{{ q }}</span></template>
+  {{ a }}
+</BaseDisclosure>
+```
+
+The `title` prop still works and is still the short way.
+
+**To take it:** nothing.
+
+---
+
 ## 0.18.0
 
 **You gain** everything `rei-kit/web` was meant to have.

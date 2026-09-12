@@ -3,6 +3,20 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.18.1 — 2026-09-12
+
+### Added
+
+- **A `title` slot on `BaseDisclosure` and `BaseAccordion`.** The size of a
+  heading is a decision about the page it sits on, not about disclosure. The
+  first list to adopt these wanted its question a step larger on a wide screen —
+  `text-base sm:text-lg` — and with the title fixed at one size the only way to
+  get it was an override aimed at the component's own stylesheet.
+
+  Caught by a full-page screenshot comparison: the phone frames matched exactly
+  and the wide ones came up 12px and 24px shorter, which is a heading that
+  stopped growing.
+
 ## 0.18.0 — 2026-09-12
 
 The rest of the web pack, and a correction.

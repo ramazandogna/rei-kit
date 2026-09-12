@@ -48,6 +48,8 @@ const {
 defineSlots<{
   /** The answer, per item. */
   default: (props: { item: AccordionItem<K>; open: boolean }) => unknown
+  /** The question, when the item's `title` is not enough. */
+  title?: (props: { item: AccordionItem<K>; open: boolean }) => unknown
 }>()
 
 const uid = useId()
@@ -78,7 +80,9 @@ function toggle(key: K) {
           :aria-controls="`${uid}-${item.key}`"
           @click="toggle(item.key)"
         >
-          <span class="rk-accordion-title">{{ item.title }}</span>
+          <span class="rk-accordion-title">
+            <slot name="title" :item="item" :open="isOpen(item.key)">{{ item.title }}</slot>
+          </span>
 
           <!-- A plus that becomes a minus: one stroke turns, so the control
                keeps its place while it changes meaning. -->

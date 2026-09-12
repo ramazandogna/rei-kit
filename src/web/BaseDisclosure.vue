@@ -45,6 +45,15 @@ const open = defineModel<boolean>({ default: false })
 defineSlots<{
   /** The answer. */
   default: () => unknown
+  /**
+   * The question, when the prop is not enough.
+   *
+   * A slot as well as a prop because the size of a heading is a decision about
+   * the page it is on, not about disclosure: the first list to use this wanted
+   * the question a step larger on a wide screen, and a component that hard-codes
+   * one size makes that an override against its own stylesheet.
+   */
+  title?: () => unknown
 }>()
 
 const id = useId()
@@ -60,7 +69,9 @@ const id = useId()
         :aria-controls="id"
         @click="open = !open"
       >
-        <span class="rk-disclosure-title">{{ title }}</span>
+        <span class="rk-disclosure-title">
+          <slot name="title">{{ title }}</slot>
+        </span>
 
         <!-- A plus that becomes a minus: one stroke turns, so the control keeps
              its place while it changes meaning. -->

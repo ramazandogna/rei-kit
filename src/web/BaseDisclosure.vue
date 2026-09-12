@@ -27,9 +27,15 @@ import { useId } from 'vue'
  * travelling from `0fr` to `1fr`, the one way to animate to a height nobody has
  * measured.
  */
-const { title, headingLevel = 3 } = defineProps<{
-  /** The question. Already translated. */
-  title: string
+const { title = '', headingLevel = 3 } = defineProps<{
+  /**
+   * The question. Already translated.
+   *
+   * Optional only because the `title` slot is the other way to give one — pass
+   * exactly one of them. A disclosure with neither has a control nobody can
+   * read, which is why this is documented rather than defaulted to something.
+   */
+  title?: string | undefined
   /**
    * Which heading the control sits inside.
    *

@@ -3,6 +3,15 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.18.2 — 2026-09-12
+
+### Fixed
+
+- **`BaseDisclosure`'s `title` prop was still required.** 0.18.1 added the
+  `title` slot and left the prop mandatory, so using the slot was a type error
+  and the only way through it was passing both — the prop then rendered nowhere.
+  It is optional now; pass exactly one.
+
 ## 0.18.1 — 2026-09-12
 
 ### Added

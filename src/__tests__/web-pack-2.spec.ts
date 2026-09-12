@@ -250,6 +250,16 @@ describe('BaseDisclosure', () => {
     ).toBe(true)
   })
 
+  it('does not require the prop when the slot supplies the question', () => {
+    // 0.18.1 shipped the slot with the prop still required, so using the slot
+    // was a type error and the only way out was passing both.
+    const w = mount(BaseDisclosure, {
+      slots: { default: 'a', title: '<span class="mine">Q</span>' },
+    })
+
+    expect(w.find('button .mine').exists()).toBe(true)
+  })
+
   it('lets the page decide how big the question is', () => {
     // The size of a heading belongs to the page, not to disclosure. Without the
     // slot, a list wanting a larger question on a wide screen has to override

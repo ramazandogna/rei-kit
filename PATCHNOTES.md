@@ -61,6 +61,15 @@ the kit would have to learn what the app is about.
 
 ---
 
+## 0.18.2
+
+**Fixed:** `BaseDisclosure` still required the `title` prop after 0.18.1 added
+the slot, so using the slot did not type-check. Pass one or the other now.
+
+**To take it:** take this with 0.18.1 if you use the slot.
+
+---
+
 ## 0.18.1
 
 **You gain** a `title` slot on `BaseDisclosure` and `BaseAccordion`, for when

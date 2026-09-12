@@ -212,6 +212,8 @@ pnpm showcase
 ```
 
 **→ [ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/)**
+— published from `main` by `.github/workflows/showcase.yml`, which needs Pages
+switched on once under **Settings → Pages → Source: GitHub Actions**.
 
 Every component, live, with its props. A page that wires the kit exactly the
 way this README says to, so a broken install shows up there before it ships. A

@@ -43,13 +43,15 @@ jobs:
         env:
           SHOWCASE_BASE: /rei-kit/
 
-      # `enablement` turns Pages on for the repository if it is off, rather than
-      # failing with a 404 that reads like a missing file. It needs the token to
-      # have admin rights; where it does not, this is the step that says so and
-      # the fix is one switch in Settings -> Pages.
+      # Needs Pages switched on once, by hand:
+      #   Settings -> Pages -> Build and deployment -> Source: GitHub Actions
+      #
+      # Until that is done this step fails with a 404, which reads like a
+      # missing file rather than a missing switch. `enablement: true` was tried
+      # and cannot help: turning Pages on needs a token with admin rights, and
+      # the one a workflow is given does not have them whatever `permissions`
+      # says.
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist-showcase

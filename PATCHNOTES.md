@@ -24,21 +24,15 @@ today, so it is a promise about duplication rather than a wish list.
 
 Dates are not given. A part ships when a consumer can adopt it in the same
 session, which is the rule that produced 0.5.2, 0.5.3, 0.6.1, 0.9.1, 0.12.1, 0.14.1,
-0.15.0 and 0.16.0 — every one of those was a gap found by adopting rather than by reading.
-
-### 0.17.0 — the web pack (`rei-kit/web`)
-
-`TopNav`, `Modal`, `Tooltip`, `Tabs`, `Accordion`, `Avatar`, `Breadcrumb`,
-`Pagination`.
-
-All eight are hand-written in the one wide consumer today. `TopNav` will take
-the same `TabItem<K>` contract as `TabBar`, so moving an app between a bottom
-bar and a top one is one line. `Modal` is not `BaseSheet` with different
-padding — a sheet arrives from the bottom edge and a modal from nowhere, and
-they dismiss differently.
+0.15.0, 0.16.0 and 0.17.0 — every one of those was a gap found by adopting rather than by reading.
 
 ### Considering
 
+- **`Tooltip`, `Tabs`, `Breadcrumb`, `Pagination`.** Planned for 0.17.0 and not
+  written. `Pagination` has no user in any consumer; `Tabs` and `Breadcrumb`
+  appear only in comments; the one tooltip that exists is CSS-only on purpose,
+  because a tooltip needing JavaScript does not appear in a prerendered page.
+  They ship when something reaches for them.
 - **`authSchema`.** Planned for 0.15.0 and held back. The two identical copies
   are identical because both apps picked an eight-character minimum and the
   third picked ten — a product decision, which the rule keeps in the app. With
@@ -69,6 +63,59 @@ the kit would have to learn what the app is about.
   it, and they are the six that are hardest to install correctly.
 - Prop tables for people. `AGENTS.md` documents the kit for assistants; there
   is no equivalent for a reader.
+
+---
+
+## 0.17.0
+
+**You gain** a fifth entry point for wide sites.
+
+```ts
+import { BaseModal, BaseAccordion, NavLinks } from 'rei-kit/web'
+```
+
+A phone app never downloads it, the same way a wide site never downloads
+`rei-kit/app`.
+
+`BaseModal` is the dialog, and it is not `BaseSheet` with different padding — a
+sheet slides from the bottom edge and belongs to a thumb, a modal appears in the
+middle of what you were reading. Take it for the parts that are invisible when
+they are missing: focus moves in and comes back, Tab wraps instead of walking
+out, Escape closes, the page underneath stops scrolling and starts again even if
+the dialog is unmounted while open.
+
+```vue
+<BaseModal
+  v-model="open"
+  :title="t('exam.warnTitle')"
+  :close-label="t('common.close')"
+  tone="alert"
+>
+  {{ t('exam.warnBody') }}
+  <template #actions>
+    <BaseButton variant="quiet" @click="open = false">{{ t('common.cancel') }}</BaseButton>
+    <BaseButton @click="start">{{ t('exam.begin') }}</BaseButton>
+  </template>
+</BaseModal>
+```
+
+`dismissible: false` removes the close button and stops Escape, for a dialog
+that has to be answered.
+
+`BaseAccordion` keeps every answer in the markup — which is what a crawler and
+a reader without JavaScript get — and animates the panel from `0fr` to `1fr`.
+`headingLevel` is a prop because the level depends on what is above it and
+getting it wrong breaks the page outline.
+
+`NavLinks` takes the same items as `TabBar` without the icon.
+
+**Smaller than promised, on purpose.** The plan listed eight components and
+three shipped; the rest had no user, or would have been the wrong answer. The
+reasoning is in `CHANGELOG.md` and it is the same rule that has been in force
+all along — a component nobody reached for is a guess at a shape.
+
+**To take it:** `pnpm add rei-kit@^0.17.0`. Nothing is removed, so nothing
+breaks.
 
 ---
 

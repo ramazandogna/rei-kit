@@ -3,6 +3,63 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.17.0 — 2026-09-12
+
+`rei-kit/web` — a fifth entry point, for the parts a wide site is made of.
+
+### Added
+
+- **`BaseModal`** (`rei-kit/web`) — a dialog that arrives from nowhere. Named
+  beside `BaseSheet` rather than `Modal` on its own, because the two are the
+  pair this kit keeps insisting they are: a sheet slides from the bottom edge
+  and belongs to a thumb, a modal appears in the middle of what you were reading
+  and is dismissed by leaving it.
+
+  The wide consumer had written a dialog twice, and every part of a dialog that
+  matters is a part nothing shows you is missing. Focus moves in and comes back;
+  Tab wraps rather than walking out; Escape closes; the page underneath stops
+  scrolling, and starts again even if the dialog is torn out while open. The
+  backdrop closes it on `mousedown` on the backdrop itself, so a drag that
+  starts inside the panel and ends outside it is not a dismissal.
+
+- **`BaseAccordion`** (`rei-kit/web`) — a list that opens one section at a time.
+
+  Not `<details>`, and the comment in the source explains why at length: a
+  browser removes `<details>` content from layout when closed, so there is
+  nothing to animate between, and faking it with CSS tells a screen reader the
+  section is open while a sighted reader sees it shut. So the answer is always
+  in the markup — which is also what a crawler and a reader without JavaScript
+  get — and the panel travels from `0fr` to `1fr`, the one way to animate to a
+  height nobody has measured.
+
+- **`NavLinks`** (`rei-kit/web`) — the primary navigation of a wide site, with
+  the sliding rule under the current section. The same item contract as
+  `TabBar` minus the icon, so moving an app between a bottom bar and a top one
+  is a change of component and not of data.
+
+### Not shipped, and why
+
+The plan for this release listed eight components. Three shipped. The other
+five were checked against the consumer before being written, which is what the
+rule asks for, and they did not survive it:
+
+- **`Pagination`** has no user anywhere. Not one consumer has written it.
+- **`Tabs`** and **`Breadcrumb`** appear only in prose — a comment mentioning
+  the word, and nothing rendering one.
+- **`Tooltip`** is the interesting one. The wide consumer's tooltip is CSS-only
+  on purpose: a tooltip that needs JavaScript to appear does not appear in a
+  prerendered page, and that app prerenders its grammar archive. Shipping a
+  JavaScript tooltip would have been shipping the wrong answer in a nicer
+  package.
+- **`TopNav`** was not extractable as a component. The consumer's header is a
+  brand mark, a theme control, two auth-dependent calls to action, an account
+  menu and a mobile disclosure; a component taking all of that is a flex row
+  with eight slots. What was genuinely shared is the link row, which is
+  `NavLinks`.
+
+A kit that ships a component nobody reached for is a kit guessing at a shape,
+and `BaseRadioGroup` is already one standing reminder of that.
+
 ## 0.16.1 — 2026-09-12
 
 ### Fixed

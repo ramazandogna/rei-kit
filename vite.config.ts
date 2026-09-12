@@ -66,6 +66,8 @@ export default defineConfig({
         supabase: fileURLToPath(new URL('./src/supabase/index.ts', import.meta.url)),
         // The phone-app parts. A wide site never downloads them.
         app: fileURLToPath(new URL('./src/app/index.ts', import.meta.url)),
+        // The wide-site parts. A phone app never downloads them.
+        web: fileURLToPath(new URL('./src/web/index.ts', import.meta.url)),
         // Installing and updating. Reaches for a service worker, so a website
         // never imports it and the main barrel stays server-safe.
         pwa: fileURLToPath(new URL('./src/pwa/index.ts', import.meta.url)),

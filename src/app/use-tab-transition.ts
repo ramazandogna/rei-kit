@@ -1,4 +1,4 @@
-import { readonly, ref } from 'vue'
+import { computed, readonly, ref } from 'vue'
 
 /** Which way the screens slide during a tab change. */
 export type SlideDirection = 'forward' | 'backward' | 'none'
@@ -40,6 +40,19 @@ export function createTabTransition<K extends string>(order: readonly K[]) {
   return {
     /** Direction of the current tab change. Read by the route transition. */
     direction: readonly(direction),
+
+    /**
+     * The `<Transition>` name for the current direction, ready to bind.
+     *
+     * Empty when there is nothing to slide, which is how a `<Transition>` is
+     * told to do nothing — an unnamed transition still runs a default `v-*`
+     * animation, so the empty string matters.
+     *
+     * Both phone apps derived this from `direction` in their `App.vue`, in the
+     * same three lines, and the names match the classes shipped in
+     * `rei-kit/shell/mobile.css`.
+     */
+    name: computed(() => (direction.value === 'none' ? '' : `slide-${direction.value}`)),
 
     /**
      * Resolves the direction for a navigation. Call once per route change.

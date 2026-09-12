@@ -3,6 +3,75 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.16.0 — 2026-09-12
+
+The shell pack. `App.vue` and `AppLayout.vue`, which two phone apps had written
+to 300 lines each and kept in step by hand.
+
+### Added
+
+- **`TabShell`** (`rei-kit/app`) — the phone frame the whole app sits inside.
+  On a phone it is invisible; on a desktop it is the bordered card in the middle
+  of a textured field, which is what makes a phone-shaped app look deliberate on
+  a wide screen rather than stretched.
+
+  Both copies were 120 lines and differed in the product name, two colour
+  variables and one hover colour. None of those is a reason to own a frame, so
+  the lattice colour is `--rk-lattice` and the name is a slot.
+
+  What stays in the app is the layout switch and the `RouterView` — the one part
+  that genuinely differs, and the part that must stay outside the frame so a page
+  that throws does not take the tab bar with it.
+
+- **`OfflineBanner`** (`rei-kit/app`) — the floating note that the connection
+  has gone. Floating rather than in flow because connectivity flickers in lifts
+  and tunnels, and a banner that reflows the page on every flicker is worse than
+  the outage. `role="status"`, not `alert`: it is a condition to know about, not
+  a reason to interrupt a reader mid-sentence.
+
+- **`FabButton`** (`rei-kit/app`) — the one action the app is built around,
+  reachable from every screen. Extended rather than a bare circle, because a
+  lone `+` says nothing about what it adds. It shares the tab bar's column
+  rather than being anchored to the layout; anchored to the layout it sat four
+  hundred pixels from the shell on a desktop screen, which is the bug that
+  produced the shared version.
+
+- **`createAuthGuard`** and **`createTitleGuard`** (`rei-kit/app`) — the route
+  guard three apps had written separately. It answers two questions and nothing
+  else: may this visitor see this route, and where do they go if not. The login
+  route, the query key and whether a session must be restored first are options,
+  because each is a decision about the app rather than about guarding.
+
+- **`createQueryDefaults`** (`rei-kit/app`) — the cache settings two apps had
+  picked independently and identically. Returned as a plain object rather than a
+  built `QueryClient`, so the kit does not depend on TanStack Query and the app
+  keeps the client as its own singleton — which is what lets the auth store
+  reach `clear()` on sign-out.
+
+- **`createWriteReport`** (`rei-kit/app`) — saying that a write happened, in one
+  place, so every mutation reports the same way. The messages are functions
+  rather than strings: a string would be read once, when the report was built,
+  and would keep whichever language was active then for the life of the app.
+
+- **`toRedirectPath`** (main entry) — the return path without the fragment.
+
+  This one is a bug fix wearing a feature's clothes. Supabase's implicit OAuth
+  flow hands the browser back with the access and refresh tokens in the URL
+  fragment, which is client-side only. Copied into a query parameter it stops
+  being one: `/login?redirect=/%23access_token=…` is sent on the very next
+  request and lands in the host's access log, in `Referer` headers and in
+  browser history.
+
+  One of the two phone apps had worked this out and written the helper; the
+  other was passing `fullPath` straight through, which is that leak with nothing
+  in the way of it. `createAuthGuard` routes every redirect through it, so the
+  fix is not something the next app has to think of again.
+
+- **`name` on `createTabTransition`** — the `<Transition>` name for the current
+  direction, ready to bind. Empty when there is nothing to slide, which is how a
+  `<Transition>` is actually told to do nothing: an unnamed one still runs a
+  default `v-*` animation. Both apps derived this in the same three lines.
+
 ## 0.15.0 — 2026-09-12
 
 The auth pack. A sign-in screen written four times across three apps.

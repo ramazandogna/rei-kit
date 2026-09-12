@@ -26,6 +26,7 @@ const PUBLIC_API = [
   'todayKey',
   'downloadJson',
   'safeRedirect',
+  'toRedirectPath',
   'tapFeedback',
   'isApplePortable',
   'isInstalled',

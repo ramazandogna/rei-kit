@@ -23,22 +23,8 @@ more apps have written separately — the number is how much of it is identical
 today, so it is a promise about duplication rather than a wish list.
 
 Dates are not given. A part ships when a consumer can adopt it in the same
-session, which is the rule that produced 0.5.2, 0.5.3, 0.6.1, 0.9.1, 0.12.1, 0.14.1
-and 0.15.0 — every one of those was a gap found by adopting rather than by reading.
-
-### 0.16.0 — the tab shell
-
-| Component             | Replaces                                     | Identical today |
-| --------------------- | -------------------------------------------- | --------------- |
-| `TabShell`            | `AppLayout.vue` (180 lines), `App.vue` (120) | 86% / 93%       |
-| `createQueryDefaults` | `providers/query.ts` (30)                    | 96%             |
-| `createAuthGuard`     | `router/guards.ts` (27)                      | 89%             |
-| `useWriteReport`      | `report.ts` (36)                             | 87%             |
-
-`TabShell` is the phone frame itself: the shell, the tab bar, the slide between
-screens and the sheet root, with the tabs and their icons passed in. It is the
-largest remaining duplication and the last thing standing between a fourth
-phone app and an empty `src/`.
+session, which is the rule that produced 0.5.2, 0.5.3, 0.6.1, 0.9.1, 0.12.1, 0.14.1,
+0.15.0 and 0.16.0 — every one of those was a gap found by adopting rather than by reading.
 
 ### 0.17.0 — the web pack (`rei-kit/web`)
 
@@ -83,6 +69,97 @@ the kit would have to learn what the app is about.
   it, and they are the six that are hardest to install correctly.
 - Prop tables for people. `AGENTS.md` documents the kit for assistants; there
   is no equivalent for a reader.
+
+---
+
+## 0.16.0
+
+**You gain** the phone frame itself, and the five smaller things that sat
+around it.
+
+```ts
+import {
+  TabShell,
+  OfflineBanner,
+  FabButton,
+  createAuthGuard,
+  createTitleGuard,
+  createQueryDefaults,
+  createWriteReport,
+} from 'rei-kit/app'
+import { toRedirectPath } from 'rei-kit'
+```
+
+`TabShell` replaces the outer half of `App.vue`: the textured field, the
+desktop credits, and the shell card itself. The layout switch and the
+`RouterView` stay yours — that is the part that differs between apps, and
+keeping it outside the frame is what stops a page that throws from taking the
+tab bar with it.
+
+```vue
+<TabShell>
+  <template #aside><AppCredits /></template>
+  <template #chrome><UpdatePrompt /></template>
+
+  <component :is="layoutComponent">
+    <RouterView v-slot="{ Component, route }">
+      <Transition :name="tabTransition.name.value">
+        <component :is="Component" :key="route.path" :class="pageClass" />
+      </Transition>
+    </RouterView>
+  </component>
+</TabShell>
+```
+
+The lattice colour is `--rk-lattice` (and `--rk-lattice-alpha`); set it wherever
+you set your theme. It defaults to the ink colour, which is legible against
+anything the tokens can produce.
+
+`createTabTransition` gained `name` — the `<Transition>` name for the current
+direction, empty when there is nothing to slide. That empty string matters: an
+unnamed `<Transition>` still runs a default `v-*` animation.
+
+`createAuthGuard` takes what differs and nothing else:
+
+```ts
+router.beforeEach(
+  createAuthGuard({
+    isAuthenticated: () => useAuthStore().isAuthenticated,
+    signIn: { name: 'LoginView' },
+    // redirectQuery: 'next'      — if your login screen reads a different key
+    // home: '/kurslar'           — if a signed-in visitor has somewhere fixed to be
+    // ready: () => auth.init()   — if a session has to be restored first
+  }),
+)
+router.afterEach(createTitleGuard('Kakei'))
+```
+
+It does nothing while prerendering, so an SSG build does not write a login page
+into a file meant to be content.
+
+**Read this one even if you take nothing else.** Every redirect the guard builds
+goes through the new `toRedirectPath`, which drops the URL fragment. Supabase's
+implicit OAuth flow returns the access and refresh tokens in that fragment; a
+fragment never reaches a server, but copied into `?redirect=` it does — into the
+access log, into `Referer`, into history. If your guard passes `to.fullPath`
+straight into a query parameter, it is leaking tokens today. Either adopt the
+guard or wrap that one call:
+
+```ts
+query: {
+  redirect: toRedirectPath(to.fullPath)
+}
+```
+
+`createQueryDefaults()` returns the defaults object, not a client, so the kit
+does not depend on TanStack Query and your `queryClient` stays the module-level
+singleton your auth store calls `clear()` on.
+
+`createWriteReport` takes functions, not strings, so the wording follows a
+language switch instead of freezing at build time.
+
+**To take it:** `pnpm add rei-kit@^0.16.0`. Nothing is removed, so nothing
+breaks.
 
 ---
 

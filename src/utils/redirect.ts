@@ -46,3 +46,32 @@ export function safeRedirect(target: QueryValue | QueryValue[] | undefined): str
 
   return '/'
 }
+
+/**
+ * Where to send somebody back to after signing in, without the fragment.
+ *
+ * Supabase's implicit OAuth flow hands the browser back with the access and
+ * refresh tokens in the URL fragment. A fragment is client-side only — it is
+ * never sent to a server. Copied into a query parameter it stops being one:
+ * `/login?redirect=/%23access_token=…` is sent on the very next request and
+ * lands in the host's access logs, in `Referer` headers and in browser history.
+ *
+ * So the redirect keeps the path and the query and drops everything from the
+ * `#`. There is nothing after it worth returning to anyway.
+ *
+ * One of the two phone apps had this and the other was passing `fullPath`
+ * straight through, which is the leak above with nothing in the way of it. That
+ * is the shape of bug a shared kit exists to end: it was fixed once, in the app
+ * whose author happened to think of it.
+ *
+ * @example
+ * ```ts
+ * toRedirectPath('/ledger?direction=out')  // '/ledger?direction=out'
+ * toRedirectPath('/#access_token=abc')     // '/'
+ * ```
+ */
+export function toRedirectPath(fullPath: string): string {
+  const [path] = fullPath.split('#')
+
+  return path === undefined || path === '' ? '/' : path
+}

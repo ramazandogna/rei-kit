@@ -41,7 +41,7 @@ export { relativeDayLabel } from './utils/day-label'
 export type { DayLabels } from './utils/day-label'
 
 export { downloadJson } from './utils/download'
-export { safeRedirect } from './utils/redirect'
+export { safeRedirect, toRedirectPath } from './utils/redirect'
 export type { QueryValue } from './utils/redirect'
 export { tapFeedback } from './utils/haptics'
 export { isApplePortable, isInstalled, needsIosInstall } from './utils/platform'

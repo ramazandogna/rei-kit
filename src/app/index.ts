@@ -13,8 +13,20 @@
 export { default as AuthForm } from './AuthForm.vue'
 export type { AuthFormLabels, AuthFormValues } from './auth-form'
 export { default as AuthShell } from './AuthShell.vue'
+export { default as FabButton } from './FabButton.vue'
 export { default as LocaleSheet } from './LocaleSheet.vue'
+export { default as OfflineBanner } from './OfflineBanner.vue'
+export { default as TabShell } from './TabShell.vue'
 export { default as TourShell } from './TourShell.vue'
+
+export { createAuthGuard, createTitleGuard } from './guards'
+export type { AuthGuardOptions } from './guards'
+
+export { createQueryDefaults } from './query-defaults'
+export type { QueryDefaultsOverrides } from './query-defaults'
+
+export { createWriteReport } from './write-report'
+export type { WriteReport, WriteReportMessages } from './write-report'
 
 export { fieldErrors } from './field-errors'
 export type { SafeParsable } from './field-errors'

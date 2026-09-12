@@ -234,6 +234,19 @@ describe('NavLinks', () => {
     expect(links[0]!.attributes('aria-current')).toBeUndefined()
   })
 
+  it("lets a caller's class beat its own layout", () => {
+    // The root's `display` is zero-specificity, so `hidden` from a utility
+    // framework wins. Without that the nav shows on a phone, over whatever the
+    // header put in its place.
+    const w = mount(NavLinks, {
+      props: { items, label: 'Primary' },
+      attrs: { class: 'hidden' },
+      global: { stubs: { RouterLink: { template: '<a><slot /></a>' } } },
+    })
+
+    expect(w.find('nav').classes()).toContain('hidden')
+  })
+
   it('names the landmark', () => {
     expect(build().find('nav').attributes('aria-label')).toBe('Primary')
   })

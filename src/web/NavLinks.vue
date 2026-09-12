@@ -53,7 +53,14 @@ const {
 </template>
 
 <style scoped>
-.rk-nav {
+/* `:where()` on purpose, and it is the whole fix for a real bug.
+   A component that sets `display: flex` on its own root ties with a utility
+   class like Tailwind's `hidden` on specificity, and the component's scoped
+   stylesheet ships after the utilities -- so the nav won, and appeared on a
+   phone on top of the call to action. `:where()` has zero specificity, so any
+   class the caller puts on the root wins outright. The layout is a default
+   here, not a rule. */
+:where(.rk-nav) {
   display: flex;
   align-items: center;
   gap: 0.25rem;

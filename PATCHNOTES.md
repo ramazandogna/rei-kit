@@ -66,6 +66,18 @@ the kit would have to learn what the app is about.
 
 ---
 
+## 0.17.1
+
+**Fixed:** `NavLinks` ignored `class="hidden"`. Its root declared
+`display: flex` at the same specificity as the utility and later in the
+cascade, so the nav showed on a phone. The layout is inside `:where()` now, so
+your class always wins.
+
+**To take it:** nothing, unless you shipped 0.17.0 with a responsive class on
+`NavLinks` — in which case take this and drop the wrapper you needed.
+
+---
+
 ## 0.17.0
 
 **You gain** a fifth entry point for wide sites.

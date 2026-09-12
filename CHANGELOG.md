@@ -3,6 +3,23 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.17.1 — 2026-09-12
+
+### Fixed
+
+- **`NavLinks` could not be hidden by a utility class.** Its root set
+  `display: flex` in the component's own scoped stylesheet, which ties with
+  Tailwind's `hidden` on specificity and ships after it — so `class="hidden
+sm:flex"` lost, and the bar appeared on a phone on top of the call to action.
+
+  The root's layout is now declared inside `:where()`, which has zero
+  specificity, so any class the caller puts on the root wins outright. The
+  layout is a default, not a rule.
+
+  Found by comparing screenshots before and after adoption. It is invisible to
+  types, to tests, and to a rendered-DOM comparison — the markup was right, and
+  only the cascade was wrong.
+
 ## 0.17.0 — 2026-09-12
 
 `rei-kit/web` — a fifth entry point, for the parts a wide site is made of.

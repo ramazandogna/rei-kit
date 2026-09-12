@@ -3,6 +3,23 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.17.2 — 2026-09-12
+
+### Fixed
+
+- **`NavLinks` still could not be hidden by a utility class.** 0.17.1 moved the
+  root's layout into `:where()` and that was not enough, for a reason worth
+  writing down: Vue's scoped CSS compiles `.rk-nav` to `.rk-nav[data-v-hash]`,
+  and the scoping attribute puts back the specificity `:where()` had removed. A
+  rule on a scoped component's root outranks a plain utility class whatever you
+  wrap it in.
+
+  So the flex row moved to an inner element the caller does not own, and the
+  root is left bare for them to style. `TabBar` has been built this way all
+  along, which is the argument for it.
+
+  Verified the way the bug was found: by screenshot, not by test.
+
 ## 0.17.1 — 2026-09-12
 
 ### Fixed

@@ -66,6 +66,18 @@ the kit would have to learn what the app is about.
 
 ---
 
+## 0.17.2
+
+**Fixed:** `NavLinks` still ignored `class="hidden"` after 0.17.1. A scoped
+component's root rule outranks a utility class no matter how it is written —
+Vue's `[data-v-hash]` supplies the specificity — so the layout moved off the
+root entirely. Style the root freely now.
+
+**To take it:** nothing. If you worked around 0.17.0 with a wrapper, you can
+drop it.
+
+---
+
 ## 0.17.1
 
 **Fixed:** `NavLinks` ignored `class="hidden"`. Its root declared

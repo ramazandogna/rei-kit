@@ -245,6 +245,8 @@ describe('NavLinks', () => {
     })
 
     expect(w.find('nav').classes()).toContain('hidden')
+    // The flex row is on an element the caller does not own.
+    expect(w.find('nav > .rk-nav-inner').exists()).toBe(true)
   })
 
   it('names the landmark', () => {

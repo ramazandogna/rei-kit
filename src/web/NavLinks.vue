@@ -37,30 +37,36 @@ const {
 </script>
 
 <template>
-  <nav class="rk-nav" :aria-label="label || undefined">
-    <RouterLink
-      v-for="item in items"
-      :key="item.key"
-      :to="item.to"
-      class="rk-nav-link"
-      :class="{ 'is-active': item.key === active }"
-      :aria-current="item.key === active ? 'page' : undefined"
-    >
-      {{ item.label }}
-      <span class="rk-nav-rule" aria-hidden="true" />
-    </RouterLink>
+  <nav :aria-label="label || undefined">
+    <div class="rk-nav-inner">
+      <RouterLink
+        v-for="item in items"
+        :key="item.key"
+        :to="item.to"
+        class="rk-nav-link"
+        :class="{ 'is-active': item.key === active }"
+        :aria-current="item.key === active ? 'page' : undefined"
+      >
+        {{ item.label }}
+        <span class="rk-nav-rule" aria-hidden="true" />
+      </RouterLink>
+    </div>
   </nav>
 </template>
 
 <style scoped>
-/* `:where()` on purpose, and it is the whole fix for a real bug.
-   A component that sets `display: flex` on its own root ties with a utility
-   class like Tailwind's `hidden` on specificity, and the component's scoped
-   stylesheet ships after the utilities -- so the nav won, and appeared on a
-   phone on top of the call to action. `:where()` has zero specificity, so any
-   class the caller puts on the root wins outright. The layout is a default
-   here, not a rule. */
-:where(.rk-nav) {
+/* The root carries no layout of its own, and that is the fix for a real bug
+   rather than a style preference.
+
+   A rule on the root loses to nothing: Vue's scoped CSS compiles `.rk-nav` to
+   `.rk-nav[data-v-hash]`, which outranks a utility class like Tailwind's
+   `hidden` outright — so `class="hidden sm:flex"` did nothing and the nav
+   appeared on a phone, on top of the call to action. `:where()` does not save
+   it either; the scoping attribute puts the specificity back.
+
+   So the flex row lives on an element the caller does not own, and the root is
+   left for them to style. `TabBar` is built the same way for the same reason. */
+.rk-nav-inner {
   display: flex;
   align-items: center;
   gap: 0.25rem;

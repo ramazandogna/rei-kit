@@ -5,19 +5,28 @@
  * assume a page with a header, a mouse and room to spare. A phone app importing
  * the kit should not download them.
  *
- * Smaller than it was meant to be, and deliberately. The plan for this release
- * listed eight components; four of them had no user anywhere — `Pagination` was
- * not written once in any consumer, and `Tabs` and `Breadcrumb` appear only in
- * prose. A kit that ships a component nobody reached for is a kit guessing at
- * a shape, and `BaseRadioGroup` is already one standing reminder of that.
- *
- * `Tooltip` is missing for a better reason: the one consumer's tooltip is
- * CSS-only on purpose, because a tooltip that needs JavaScript to appear does
- * not appear in a prerendered page. Shipping a JavaScript one would have been
- * shipping the wrong answer in a nicer package.
+ * Everything a wide site is normally built from is here whether or not a
+ * consumer has reached for it yet. That is the rule in `AGENTS.md` — no waiting
+ * for a second consumer and no counting of call sites — and 0.17.0 broke it by
+ * shipping three of eight planned components on the grounds that the other five
+ * had no users. A kit is a separate project: somebody installing it should not
+ * have to hand-write a pagination control because the apps that happen to exist
+ * today do not paginate.
  */
 export { default as BaseAccordion } from './BaseAccordion.vue'
 export type { AccordionItem } from './BaseAccordion.vue'
+
+export { default as BaseBreadcrumb } from './BaseBreadcrumb.vue'
+export type { Crumb } from './BaseBreadcrumb.vue'
+
+/**
+ * One accordion row on its own.
+ *
+ * For the common case where the list belongs to the app — staggered as it
+ * scrolls in, interleaved with something else, or built from a source the
+ * accordion cannot know about.
+ */
+export { default as BaseDisclosure } from './BaseDisclosure.vue'
 
 /**
  * `BaseModal`, beside `BaseSheet` rather than named `Modal` on its own.
@@ -27,6 +36,13 @@ export type { AccordionItem } from './BaseAccordion.vue'
  * to make somebody reaching for one notice the other exists.
  */
 export { default as BaseModal } from './BaseModal.vue'
+
+export { default as BasePagination } from './BasePagination.vue'
+
+export { default as BaseTabs } from './BaseTabs.vue'
+export type { TabPanel } from './BaseTabs.vue'
+
+export { default as BaseTooltip } from './BaseTooltip.vue'
 
 export { default as NavLinks } from './NavLinks.vue'
 export type { NavLinkItem } from './NavLinks.vue'

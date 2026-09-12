@@ -24,15 +24,10 @@ today, so it is a promise about duplication rather than a wish list.
 
 Dates are not given. A part ships when a consumer can adopt it in the same
 session, which is the rule that produced 0.5.2, 0.5.3, 0.6.1, 0.9.1, 0.12.1, 0.14.1,
-0.15.0, 0.16.0 and 0.17.0 — every one of those was a gap found by adopting rather than by reading.
+0.15.0, 0.16.0, 0.17.0 and 0.18.0 — every one of those was a gap found by adopting rather than by reading.
 
 ### Considering
 
-- **`Tooltip`, `Tabs`, `Breadcrumb`, `Pagination`.** Planned for 0.17.0 and not
-  written. `Pagination` has no user in any consumer; `Tabs` and `Breadcrumb`
-  appear only in comments; the one tooltip that exists is CSS-only on purpose,
-  because a tooltip needing JavaScript does not appear in a prerendered page.
-  They ship when something reaches for them.
 - **`authSchema`.** Planned for 0.15.0 and held back. The two identical copies
   are identical because both apps picked an eight-character minimum and the
   third picked ten — a product decision, which the rule keeps in the app. With
@@ -63,6 +58,45 @@ the kit would have to learn what the app is about.
   it, and they are the six that are hardest to install correctly.
 - Prop tables for people. `AGENTS.md` documents the kit for assistants; there
   is no equivalent for a reader.
+
+---
+
+## 0.18.0
+
+**You gain** everything `rei-kit/web` was meant to have.
+
+```ts
+import { BaseTooltip, BaseTabs, BasePagination, BaseBreadcrumb, BaseDisclosure } from 'rei-kit/web'
+```
+
+0.17.0 held four of these back because no consumer had written one. That was
+the wrong test — `AGENTS.md` says no counting of call sites — and this release
+undoes it. You should not have to hand-write a pagination control because the
+kit's authors' apps do not paginate.
+
+`BaseTooltip` needs no JavaScript: it is shown by `:hover` and `:focus-within`,
+so it survives prerendering and a reader with scripting off. Pass the trigger
+through the slot to get the `aria-describedby` wiring:
+
+```vue
+<BaseTooltip :label="t('copy.hint')" v-slot="{ describedBy }">
+  <button :aria-describedby="describedBy" @click="copy">⧉</button>
+</BaseTooltip>
+```
+
+`BaseTabs` is in-page tabs with the keyboard behaviour the pattern requires:
+Tab in once and out once, arrows to move, Home and End for the ends. `v-model`
+carries the active key.
+
+`BasePagination` emits `change` with a number; routing is yours. `previousLabel`
+and `nextLabel` are required because the arrows are glyphs.
+
+`BaseDisclosure` is one accordion row. Reach for it instead of `BaseAccordion`
+whenever the list is yours — when the rows are staggered, interleaved, or come
+from somewhere the accordion cannot see.
+
+**To take it:** `pnpm add rei-kit@^0.18.0`. Nothing is removed, so nothing
+breaks.
 
 ---
 

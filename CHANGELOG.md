@@ -3,6 +3,74 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.18.0 — 2026-09-12
+
+The rest of the web pack, and a correction.
+
+### Corrected
+
+**0.17.0 shipped three of eight planned components and gave the wrong reason.**
+It said a component nobody had reached for was a guess at a shape, and counted
+call sites across the three apps that exist today. `AGENTS.md` has said the
+opposite since it was written: _no waiting for a second consumer and no
+counting of call sites._
+
+The rule is right and the release was wrong. A kit is a separate project.
+Somebody installing it tomorrow should not have to hand-write a pagination
+control because the apps that happen to exist today do not paginate, and the
+question was never how many of them reached for it — it is whether the thing is
+a piece of user interface. All four withheld components are.
+
+`Tooltip` was withheld for a better reason: a tooltip needing JavaScript does
+not appear in a prerendered page. That was a real objection to a design, not to
+the component, and the answer is the design below.
+
+### Added
+
+- **`BaseTooltip`** — shown by `:hover` and `:focus-within` in the stylesheet.
+  No listener, no state, no positioning library. It gives up collision
+  detection — a tooltip near the right edge is clipped rather than flipped — and
+  keeps the thing that matters more: it works in a prerendered page, before the
+  bundle lands, and with scripting off.
+
+  `:focus-within` is the half people leave out. A tooltip that only answers a
+  mouse does not exist for anyone using a keyboard, and it is usually the only
+  explanation of what the control does. The bubble is wired with
+  `aria-describedby` through the slot, so a screen reader reads it as a
+  description rather than as loose text nearby.
+
+- **`BaseTabs`** — sections of one page, one visible at a time. Not `TabBar` and
+  not `NavLinks`: those navigate and the back button undoes them.
+
+  The keyboard is the whole reason it is a component. Tab enters the tablist
+  once and leaves once — it does not walk through every tab — and the arrows
+  move between them, wrapping at both ends, with Home and End for the ends.
+  That is roving tabindex, and hand-written tabs get it wrong in the same way
+  every time: every tab is tabbable, so reaching the content takes six presses.
+
+- **`BasePagination`** — with the window that keeps its width as you move
+  through it, because a row of numbers that reflows under the pointer is a row
+  you have to re-aim at. A short list is shown whole: an ellipsis standing in
+  for one page is longer than the page it replaces. It emits a number rather
+  than navigating, because it cannot know whether the app pages by route, by
+  query or in memory. The arrows take their names as props — `‹` is a glyph and
+  a screen reader reading it announces nothing to act on.
+
+- **`BaseBreadcrumb`** — an ordered list inside a `nav`, because the order is
+  the meaning. The last crumb is not a link: a link to the page you are on is a
+  control that does nothing. The separators are `aria-hidden`, since the list
+  and the reader's position in it already say what the slashes say.
+
+- **`BaseDisclosure`** — one accordion row on its own, for the common case where
+  the list belongs to the app: staggered as it scrolls in, interleaved with
+  something else, or built from a source the accordion cannot know about.
+
+  Not hypothetical. The first list this kit met decorated every row with a
+  reveal directive, which has to sit on the element `BaseAccordion` owns — so
+  adopting the accordion meant dropping the design, and 0.17.0's only new
+  accordion went unused for exactly that reason. Shipping the list without the
+  row was the actual mistake.
+
 ## 0.17.2 — 2026-09-12
 
 ### Fixed

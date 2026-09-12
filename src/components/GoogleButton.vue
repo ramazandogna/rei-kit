@@ -1,4 +1,12 @@
 <script setup lang="ts">
+/**
+ * Sign in with Google, in Google's own clothes.
+ *
+ * The mark is inlined rather than themed, and that is not an oversight: Google's
+ * brand guidelines require their colours, and a reader scanning for the button
+ * they already know is scanning for those exact four. It is the one component
+ * here that carries a colour value, and the reason is written on the path.
+ */
 const { label, disabled = false } = defineProps<{
   label: string
   /**

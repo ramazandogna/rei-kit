@@ -1,4 +1,13 @@
 <script setup lang="ts">
+/**
+ * The bar at the top of a screen: a title with room either side of it.
+ *
+ * Three fixed columns rather than a flex row, so the title is centred on the
+ * screen rather than centred on what is left after the buttons. A back arrow on
+ * one side and nothing on the other would otherwise push every title off centre
+ * by exactly half a button, which is visible the moment two screens sit next to
+ * each other.
+ */
 const { title } = defineProps<{ title: string }>()
 </script>
 

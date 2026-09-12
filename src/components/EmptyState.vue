@@ -1,4 +1,12 @@
 <script lang="ts" setup>
+/**
+ * A list with nothing in it yet, said kindly.
+ *
+ * A blank area reads as a page that failed to load, and the reader's first
+ * thought is that something is broken rather than that they have not started.
+ * So there is always a sentence, and the slot below it is where the way out
+ * goes — the button that creates the first one.
+ */
 const { title, description = '' } = defineProps<{
   title: string
   description?: string | undefined

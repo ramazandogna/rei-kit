@@ -44,14 +44,14 @@ the app, and not a matter of taste.
 
 ## Status
 
-**v0.19.0 — three consumers.**
+**v0.20.0 — three consumers.**
 
-|              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Components   | 46 (`AuthForm`, `TabShell`, `BaseModal`, `BaseTabs`, `BaseTooltip`, `BasePagination`, `BaseBreadcrumb`, `BaseDisclosure`, `BaseAccordion`, `NavLinks`, `OfflineBanner`, `FabButton`, `BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseSwitch`, `BaseRadioGroup`, `BaseMenu`, `BaseAvatar`, `BaseSpinner`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
-| Composables  | 14 (`useToast`, `useTheme`, `useToday`, `useMediaQuery`, `useInstall`, `watchInstallability`, `createTabTransition`, `useThemeSync`, `useVisualViewport`, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Utilities    | 27 (`applyTheme`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/shell/mobile.css`, `rei-kit/shell/web.css`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+|              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Components   | 53 (`AuthForm`, `BaseTable`, `BaseCombobox`, `BaseSlider`, `TabShell`, `BaseModal`, `BaseTabs`, `BaseTooltip`, `BasePagination`, `BaseBreadcrumb`, `BaseDisclosure`, `BaseAccordion`, `NavLinks`, `OfflineBanner`, `FabButton`, `BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseSwitch`, `BaseRadioGroup`, `BaseMenu`, `BaseAvatar`, `BaseSpinner`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
+| Composables  | 14 (`useToast`, `useTheme`, `useToday`, `useMediaQuery`, `useInstall`, `watchInstallability`, `createTabTransition`, `useThemeSync`, `useVisualViewport`, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Utilities    | 27 (`applyTheme`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/shell/mobile.css`, `rei-kit/shell/web.css`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 | Consumers | [Hibi](https://github.com/ramazandogna/hibi) · [Kakei](https://github.com/ramazandogna/kakei) · [Kakehashi](https://github.com/ramazandogna/kakehashi) |
 
@@ -211,20 +211,29 @@ the app knows the answer:
 pnpm showcase
 ```
 
-A page that wires the kit exactly the way this README says to, so a broken
-install shows up there before it ships. A component nobody can see is a
-component nobody uses.
+**→ [ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/)**
+
+Every component, live, with its props. A page that wires the kit exactly the
+way this README says to, so a broken install shows up there before it ships. A
+component nobody can see is a component nobody uses.
+
+The prop tables are generated from the source by `scripts/extract-props.mjs`
+before every showcase build, and a test asserts the catalogue matches the
+package's exports in both directions. A table maintained by hand is wrong by
+the second release, and being wrong is worse than being absent — a reader
+trusts it.
 
 ## Commands
 
-| Command          | What it does                                          |
-| ---------------- | ----------------------------------------------------- |
-| `pnpm dev`       | Rebuild on change, for use with a linked app          |
-| `pnpm build`     | Type-check, then build                                |
-| `pnpm check`     | Everything CI runs: format, lint, types, tests, build |
-| `pnpm showcase`  | The showcase, in dev mode                             |
-| `pnpm test:unit` | Vitest, watch mode                                    |
-| `pnpm lint`      | oxlint + ESLint, with `--fix`                         |
+| Command               | What it does                                          |
+| --------------------- | ----------------------------------------------------- |
+| `pnpm dev`            | Rebuild on change, for use with a linked app          |
+| `pnpm build`          | Type-check, then build                                |
+| `pnpm check`          | Everything CI runs: format, lint, types, tests, build |
+| `pnpm showcase`       | The showcase, in dev mode                             |
+| `pnpm showcase:build` | The showcase, built (`SHOWCASE_BASE` for a subpath)   |
+| `pnpm test:unit`      | Vitest, watch mode                                    |
+| `pnpm lint`           | oxlint + ESLint, with `--fix`                         |
 
 ## Not breaking the apps that use it
 

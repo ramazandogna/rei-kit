@@ -1,11 +1,16 @@
 /*
- * The consuming app's three lines, exactly as the README gives them.
+ * The consuming app's lines, exactly as the README gives them.
  *
- * The showcase is a consumer like any other, and that is half its value: if
- * the setup instructions are wrong, this page is the first thing to notice.
+ * The showcase is a consumer like any other, and that is half its value: if the
+ * setup instructions are wrong, this page is the first thing to notice.
+ *
+ * `styles.css` is absent on purpose and only here — the showcase imports the
+ * components from source, so Vite compiles their scoped styles itself. A real
+ * consumer installs the built package and needs that fourth line.
  */
 @import 'tailwindcss';
 
 @import '../src/styles/tokens.css';
+@import '../src/styles/shell/mobile.css';
 
 @source '../src';

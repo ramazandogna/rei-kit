@@ -3,6 +3,67 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.20.0 — 2026-09-12
+
+The three things standing between this and 1.0.0, and they were all the same
+thing: a kit you cannot see, cannot read, and cannot finish a form with.
+
+### Added
+
+- **The showcase covers the whole package.** It showed 22 of 53 components, and
+  the 31 it left out were the ones hardest to install correctly — the dialog,
+  the menu, the combobox, the phone shell. Somebody comparing kits looks at the
+  gallery and concludes the package is the part they can see, which is how the
+  newest consumer came to hand-write 737 class attributes against a kit that
+  already had most of what it needed.
+
+  It is published now, from `main` rather than from a tag: the showcase
+  describes what the package is, not what the last release was.
+
+- **Prop tables, generated from the source.** `scripts/extract-props.mjs` reads
+  every `defineProps` and the comment above it and writes
+  `showcase/props.generated.json`, which the page renders. A table maintained by
+  hand is wrong by the second release, and wrong is worse than absent because a
+  reader trusts it. A test regenerates the catalogue and asserts it matches the
+  package's exports in both directions — nothing ships undocumented, and nothing
+  is documented that no longer exists.
+
+  Writing that test found five components with no description at all —
+  `EmptyState`, `GoogleButton`, `PageHeader`, `SettingsGroup`, `StatCard`. They
+  have one now.
+
+- **`BaseTable`** — rows of data with the parts a hand-written `<table>` leaves
+  out. The caption is required, because a table with no caption is announced as
+  "table" and nothing else. The scroller is focusable: a region you can only
+  reach by dragging is a region a keyboard cannot read at all, which is one line
+  of markup and the line everyone forgets.
+
+- **`BaseCombobox`** — a field you type into to narrow a long list. Reach for
+  `BaseSelect` up to a few dozen options; a native select uses the platform's
+  own picker, which on a phone is a wheel no web control can match.
+
+  The ARIA combobox is prescribed down to which element owns which attribute,
+  and hand-written ones get the same three things wrong: focus has to stay in
+  the text field while `aria-activedescendant` moves the highlight (moving real
+  focus means typing stops working), `aria-expanded` belongs on the input rather
+  than the wrapper, and Escape closes before it clears — one press to get the
+  list out of the way without losing what was typed.
+
+- **`BaseSlider`** — a native `input[type="range"]`, painted. The native control
+  already has the keyboard, the pointer, the touch target and the correct
+  announcements; only the look is replaced. `aria-valuetext` is the part worth
+  stopping on: without it a screen reader reads "45", and a number with no unit
+  is not an answer to anything.
+
+### Fixed
+
+- **`BaseCombobox` called `scrollIntoView` unguarded.** It is missing in jsdom
+  and in more than one embedded webview, and a keyboard that throws is worse
+  than a list that does not scroll.
+
+- **The README contradicted itself** — a stale table from an earlier release sat
+  four lines under the live one, answering the same question two ways.
+
 ## 0.19.0 — 2026-09-12
 
 The controls a kit is expected to have. Found by auditing the package the way

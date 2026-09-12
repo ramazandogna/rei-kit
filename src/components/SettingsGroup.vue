@@ -1,4 +1,11 @@
 <script setup lang="ts">
+/**
+ * A titled run of settings rows.
+ *
+ * The heading is a real `h2` rather than styled text, because a settings screen
+ * is long and the headings are how somebody moves through it without reading
+ * all of it. Uppercase and quiet in the design, structural in the markup.
+ */
 defineProps<{ title: string }>()
 </script>
 

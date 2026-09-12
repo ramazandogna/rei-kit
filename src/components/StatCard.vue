@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { ArrowDown, ArrowRight, ArrowUp } from 'lucide-vue-next'
 
+/**
+ * One number, with what it means and which way it is going.
+ *
+ * The trend is an arrow and a colour, and neither is allowed to be the whole
+ * message: the direction is also in the arrow's shape, so it survives a reader
+ * who cannot separate the kit's positive and negative hues. `null` is a real
+ * state rather than a missing one — a figure with no comparison yet is not a
+ * flat figure.
+ */
 const {
   value,
   label,

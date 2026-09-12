@@ -1,0 +1,61 @@
+name: Showcase
+
+# The storefront. A component nobody can see is a component nobody uses, and
+# the kit's newest consumer hand-wrote 737 class attributes against a package
+# that already had most of what it needed -- partly because there was no way to
+# look at it without cloning the repository.
+#
+# Published from main rather than from a tag: the showcase describes what the
+# package is, not what the last release was, and a gallery that lags the code
+# is how a reader ends up trusting something that is no longer true.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: showcase
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The prop tables are generated from the source by `showcase:build`, so
+      # the page cannot document a component the package no longer ships.
+      - name: Build the showcase
+        run: pnpm showcase:build
+        env:
+          SHOWCASE_BASE: /rei-kit/
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist-showcase
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

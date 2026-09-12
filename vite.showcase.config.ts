@@ -24,6 +24,10 @@ export default defineConfig({
   define: { __REI_KIT_VERSION__: JSON.stringify(version) },
   root: fileURLToPath(new URL('./showcase', import.meta.url)),
   plugins: [vue(), tailwindcss()],
+  /* Served from a repository subpath on GitHub Pages, so every asset URL has to
+     carry the repository name. Absent, the page loads and every stylesheet and
+     script 404s -- a white screen with a green build behind it. */
+  base: process.env['SHOWCASE_BASE'] ?? '/',
   build: {
     outDir: fileURLToPath(new URL('./dist-showcase', import.meta.url)),
     emptyOutDir: true,

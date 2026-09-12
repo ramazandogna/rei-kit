@@ -1,0 +1,1778 @@
+[
+  {
+    "name": "AuthForm",
+    "entry": "rei-kit/app",
+    "summary": "The sign-in and sign-up forms, which are one component.",
+    "props": [
+      {
+        "name": "mode",
+        "required": true,
+        "type": "'signIn' | 'signUp'",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "labels",
+        "required": true,
+        "type": "AuthFormLabels",
+        "description": "Every string on screen. No defaults, in any language: a label the kit invented would ship English into an app that has none, and it would do it silently.",
+        "default": ""
+      },
+      {
+        "name": "busy",
+        "required": false,
+        "type": "boolean",
+        "description": "Disables the controls and spins the submit button.",
+        "default": "false"
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "A failure to show above the submit button, already translated. A sentence rather than a key, because the kit cannot translate and `toAuthMessageKey` hands the caller a key precisely so the caller can.",
+        "default": "''"
+      },
+      {
+        "name": "validate",
+        "required": false,
+        "type": "((values: AuthFormValues) => Record<string, string> | null)",
+        "description": "Returns one message per invalid field, or null when the values are good. Omitted, the form submits whatever is typed and lets the server decide — which is a legitimate choice, not a broken one. `fieldErrors` turns a Zod schema into this in one line.",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "AuthShell",
+    "entry": "rei-kit/app",
+    "summary": "The frame every sign-in screen sits in.",
+    "props": []
+  },
+  {
+    "name": "BaseAccordion",
+    "entry": "rei-kit/web",
+    "summary": "A list that opens one section at a time.",
+    "props": [
+      {
+        "name": "items",
+        "required": true,
+        "type": "readonly AccordionItem<K>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "multiple",
+        "required": false,
+        "type": "boolean",
+        "description": "Allow several open at once. Off by default, which is what makes it an accordion.",
+        "default": "false"
+      },
+      {
+        "name": "headingLevel",
+        "required": false,
+        "type": "2 | 3 | 4",
+        "description": "Which heading the control sits inside. A heading, always — it is how a screen reader user moves between sections without opening any of them. The level is a prop because it depends on what is above it on the page, and getting it wrong breaks the outline.",
+        "default": "3"
+      }
+    ]
+  },
+  {
+    "name": "BaseAlert",
+    "entry": "rei-kit",
+    "summary": "A message the reader has to take in before carrying on.",
+    "props": [
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'info' | 'success' | 'warning' | 'danger'",
+        "description": "",
+        "default": "'info'"
+      },
+      {
+        "name": "assertive",
+        "required": false,
+        "type": "boolean",
+        "description": "Announce immediately, interrupting. For failures the reader must act on.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "BaseAvatar",
+    "entry": "rei-kit",
+    "summary": "The person, in the corner where the account lives.",
+    "props": [
+      {
+        "name": "name",
+        "required": false,
+        "type": "string",
+        "description": "Used for the initials and, failing a `label`, as the accessible name.",
+        "default": "''"
+      },
+      {
+        "name": "src",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "",
+        "default": "'md'"
+      },
+      {
+        "name": "fallback",
+        "required": false,
+        "type": "'figure' | 'initials'",
+        "description": "",
+        "default": "'figure'"
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "Overrides the accessible name. For \"Your account\" rather than a person's name.",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "BaseBadge",
+    "entry": "rei-kit",
+    "summary": "A small standing label: a level, a state, a count.",
+    "props": [
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'neutral' | 'primary' | 'success' | 'warning' | 'danger'",
+        "description": "",
+        "default": "'neutral'"
+      }
+    ]
+  },
+  {
+    "name": "BaseBreadcrumb",
+    "entry": "rei-kit/web",
+    "summary": "Where this page sits, and the way back up.",
+    "props": [
+      {
+        "name": "items",
+        "required": true,
+        "type": "readonly Crumb[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "Accessible name for the landmark.",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "BaseButton",
+    "entry": "rei-kit",
+    "summary": "The kit's button, and — when asked — its link.",
+    "props": [
+      {
+        "name": "as",
+        "required": false,
+        "type": "'button' | 'a' | 'router-link'",
+        "description": "What to render. `button` unless this navigates.",
+        "default": "'button'"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'xs' | 'sm' | 'md' | 'lg'",
+        "description": "`xs` is the action inside a prompt or a nudge, not on a page.",
+        "default": "'md'"
+      },
+      {
+        "name": "loading",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "type",
+        "required": false,
+        "type": "'button' | 'submit'",
+        "description": "Ignored unless `as` is `button`.",
+        "default": "'button'"
+      },
+      {
+        "name": "icon",
+        "required": false,
+        "type": "boolean",
+        "description": "Square, sized to its icon, with no label beside it. **Pass `aria-label`.** An icon on its own has no accessible name, and a control a screen reader announces as \"button\" is not usable. Attributes fall through, so `aria-label` lands where it should — nothing here can check that you passed one, which is why it is said this loudly.",
+        "default": "false"
+      },
+      {
+        "name": "block",
+        "required": false,
+        "type": "boolean",
+        "description": "Fills its container. The ordinary case under a form.",
+        "default": "false"
+      },
+      {
+        "name": "to",
+        "required": false,
+        "type": "string | Record<string, unknown>",
+        "description": "For `as=\"router-link\"`.",
+        "default": "undefined"
+      },
+      {
+        "name": "href",
+        "required": false,
+        "type": "string",
+        "description": "For `as=\"a\"`.",
+        "default": "undefined"
+      },
+      {
+        "name": "pill",
+        "required": false,
+        "type": "boolean",
+        "description": "Fully rounded rather than card-cornered. Every install prompt, update prompt and nudge across the apps used the same pair — a filled pill to act and a quiet one to dismiss — and none of them could use this component, because it only knew one corner radius.",
+        "default": "false"
+      },
+      {
+        "name": "pressed",
+        "required": false,
+        "type": "boolean",
+        "description": "That this button is a switch, and whether it is on. Omit it and the button is an action. Pass it and the button becomes a toggle: `aria-pressed` is written, and the variants that have an \"off\" look — ghost, quiet, secondary — take a filled one when on. There were 18 of these hand-written across the three apps, every one a picker cell or a filter chip, and almost none of them said `aria-pressed` at all. A screen reader met a row of identical buttons with no way to know which was chosen.",
+        "default": "undefined"
+      }
+    ]
+  },
+  {
+    "name": "BaseCard",
+    "entry": "rei-kit",
+    "summary": "A surface with a border, and optionally a head and a foot.",
+    "props": [
+      {
+        "name": "interactive",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "as",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'div'"
+      },
+      {
+        "name": "padding",
+        "required": false,
+        "type": "'none' | 'sm' | 'md' | 'lg'",
+        "description": "How much room the card gives its contents. This component shipped with `px-5 py-4` baked in and was then used by nobody, across three apps and thirty-five hand-written card surfaces — which used `p-3` six times, `p-4` six times, `p-5` five times and `p-1` four times, and not once the pair this insisted on. A card that fixes its padding cannot be reached for, which is the same mistake `PageContainer` made with its width and `size=\"sm\"` made with its height. `none` is for a card that holds a list: the rows own the padding, and the dividers have to reach the border.",
+        "default": "'md'"
+      }
+    ]
+  },
+  {
+    "name": "BaseCheckbox",
+    "entry": "rei-kit",
+    "summary": "A single checkbox, with its label beside it.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "`md` is a setting: a line the reader came here to change, in ink. `sm` is an aside — \"remember me\" under a sign-in form, \"show the ones I have learned\" above a list — quieter and tighter. The two are not a guess. Of the five hand-written checkboxes across the three consuming apps, four were the aside and one was the setting, and they differed in exactly these two ways.",
+        "default": "'md'"
+      }
+    ]
+  },
+  {
+    "name": "BaseCombobox",
+    "entry": "rei-kit",
+    "summary": "A field you type into to narrow a list, then choose from it.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "options",
+        "required": true,
+        "type": "readonly ComboboxOption<V>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "placeholder",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "emptyLabel",
+        "required": true,
+        "type": "string",
+        "description": "Shown when nothing matches. Already translated.",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "BaseDisclosure",
+    "entry": "rei-kit/web",
+    "summary": "One section that opens and closes.",
+    "props": [
+      {
+        "name": "title",
+        "required": false,
+        "type": "string",
+        "description": "The question. Already translated. Optional only because the `title` slot is the other way to give one — pass exactly one of them. A disclosure with neither has a control nobody can read, which is why this is documented rather than defaulted to something.",
+        "default": "''"
+      },
+      {
+        "name": "headingLevel",
+        "required": false,
+        "type": "2 | 3 | 4",
+        "description": "Which heading the control sits inside. A heading, always — it is how a screen reader user moves between sections without opening any of them. The level depends on what is above it on the page, and getting it wrong breaks the outline.",
+        "default": "3"
+      }
+    ]
+  },
+  {
+    "name": "BaseInput",
+    "entry": "rei-kit",
+    "summary": "A number field's value is a number.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "Hides the label visually but keeps it for assistive tech. For fields whose surrounding row already names them — dropping the label entirely would leave the input with no accessible name at all.",
+        "default": "false"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "`sm` for a field inside a row rather than in a form of its own.",
+        "default": "'md'"
+      },
+      {
+        "name": "variant",
+        "required": false,
+        "type": "'default' | 'unstyled'",
+        "description": "`unstyled` keeps the wiring and drops the surface. The label, the generated id, `aria-describedby` and the error are what a field is; the border and the height are what it looks like. A search box inside a bordered row, a url field in an editor popover — those places were hand-writing the whole thing to avoid the appearance, and losing the wiring with it. The same reasoning as `BaseButton`'s `unstyled`, and the same test: a primitive is finished when the app can take its behaviour without its paint.",
+        "default": "'default'"
+      }
+    ]
+  },
+  {
+    "name": "BaseMenu",
+    "entry": "rei-kit",
+    "summary": "A list of actions behind one control.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name for the trigger. Required: the trigger is usually a glyph.",
+        "default": ""
+      },
+      {
+        "name": "align",
+        "required": false,
+        "type": "'start' | 'end'",
+        "description": "Which edge the panel lines up with.",
+        "default": "'end'"
+      }
+    ]
+  },
+  {
+    "name": "BaseModal",
+    "entry": "rei-kit/web",
+    "summary": "A dialog that arrives from nowhere.",
+    "props": [
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "Names the dialog for assistive tech. Required; an unnamed dialog is a box.",
+        "default": ""
+      },
+      {
+        "name": "closeLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name for the close button.",
+        "default": ""
+      },
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'default' | 'alert'",
+        "description": "`alert` marks it as a decision that interrupts — `role=\"alertdialog\"`, which a screen reader announces immediately rather than on arrival.",
+        "default": "'default'"
+      },
+      {
+        "name": "dismissible",
+        "required": false,
+        "type": "boolean",
+        "description": "Whether Escape and the backdrop close it. Off for a dialog that must be answered — but never off as a way of forcing a reader to a decision they have not been given the information for.",
+        "default": "true"
+      }
+    ]
+  },
+  {
+    "name": "BasePagination",
+    "entry": "rei-kit/web",
+    "summary": "Moving between pages of a list.",
+    "props": [
+      {
+        "name": "page",
+        "required": true,
+        "type": "number",
+        "description": "Current page, 1-based.",
+        "default": ""
+      },
+      {
+        "name": "pages",
+        "required": true,
+        "type": "number",
+        "description": "How many there are.",
+        "default": ""
+      },
+      {
+        "name": "siblings",
+        "required": false,
+        "type": "number",
+        "description": "How many numbers to show either side of the current one.",
+        "default": "1"
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "Accessible name for the landmark.",
+        "default": "''"
+      },
+      {
+        "name": "previousLabel",
+        "required": true,
+        "type": "string",
+        "description": "Names for the arrows, already translated. Required, because `‹` is a glyph and not a word: a screen reader reading the arrow announces nothing a person can act on.",
+        "default": ""
+      },
+      {
+        "name": "nextLabel",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "BaseRadioGroup",
+    "entry": "rei-kit",
+    "summary": "A set of radios, and the reason there is no `BaseRadio`.",
+    "props": [
+      {
+        "name": "legend",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "options",
+        "required": true,
+        "type": "readonly { value: string; label: string; disabled?: boolean | undefined }[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "legendHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "BaseSelect",
+    "entry": "rei-kit",
+    "summary": "A native `<select>`, wearing the kit's field.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "options",
+        "required": true,
+        "type": "readonly { value: T; label: string; disabled?: boolean | undefined }[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "placeholder",
+        "required": false,
+        "type": "string",
+        "description": "An unselectable first row, for a field with no sensible default. Disabled rather than merely empty: an empty option that can be chosen lets someone go back to having answered nothing, which no form wants.",
+        "default": "''"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "`sm` for a select that filters or sorts rather than answers a form. Every hand-written select across the three consuming apps was this one.",
+        "default": "'md'"
+      },
+      {
+        "name": "variant",
+        "required": false,
+        "type": "'default' | 'unstyled'",
+        "description": "`unstyled` keeps the wiring and drops the surface. The label, the generated id, `aria-describedby` and the error are what a field is; the border and the height are what it looks like. A search box inside a bordered row, a url field in an editor popover — those places were hand-writing the whole thing to avoid the appearance, and losing the wiring with it. The same reasoning as `BaseButton`'s `unstyled`, and the same test: a primitive is finished when the app can take its behaviour without its paint.",
+        "default": "'default'"
+      }
+    ]
+  },
+  {
+    "name": "BaseSheet",
+    "entry": "rei-kit",
+    "summary": "Pins the sheet to the area the keyboard has left visible.",
+    "props": [
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "subtitle",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "closeLabel",
+        "required": false,
+        "type": "string",
+        "description": "Accessible name for the close button. A prop rather than a translation: a component that calls t() forces every consumer onto one i18n setup, and this is the package's only visible string.",
+        "default": "'Close'"
+      }
+    ]
+  },
+  {
+    "name": "BaseSlider",
+    "entry": "rei-kit",
+    "summary": "A value picked from a range, where roughly right is the point.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "min",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "0"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "100"
+      },
+      {
+        "name": "step",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "1"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "format",
+        "required": false,
+        "type": "((value: number) => string)",
+        "description": "Turns the number into something a person would say — \"45 minutes\", \"₺12\". Used for the visible readout and for `aria-valuetext`, so both say the same thing and neither is a bare number.",
+        "default": ""
+      },
+      {
+        "name": "showValue",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "true"
+      }
+    ]
+  },
+  {
+    "name": "BaseSpinner",
+    "entry": "rei-kit",
+    "summary": "Work in progress, with no idea how much is left.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "What is being waited for. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "",
+        "default": "'md'"
+      }
+    ]
+  },
+  {
+    "name": "BaseSwitch",
+    "entry": "rei-kit",
+    "summary": "A setting that takes effect the moment it is touched.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "For a switch inside a row that already names it — it keeps its accessible name.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "BaseTable",
+    "entry": "rei-kit",
+    "summary": "Rows of data, with the parts a hand-written `<table>` leaves out.",
+    "props": [
+      {
+        "name": "columns",
+        "required": true,
+        "type": "readonly Column<Row>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "rows",
+        "required": true,
+        "type": "readonly Row[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "caption",
+        "required": true,
+        "type": "string",
+        "description": "What this table is. Required — an unnamed table is a box of numbers.",
+        "default": ""
+      },
+      {
+        "name": "captionHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "Keeps the caption for assistive tech when the page already shows a heading.",
+        "default": "false"
+      },
+      {
+        "name": "rowKey",
+        "required": false,
+        "type": "(string & keyof Row)",
+        "description": "Which field identifies a row. Falls back to the index.",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "BaseTabs",
+    "entry": "rei-kit/web",
+    "summary": "Sections of one page, one visible at a time.",
+    "props": [
+      {
+        "name": "items",
+        "required": true,
+        "type": "readonly TabPanel<K>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "Accessible name for the tablist.",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "BaseTextarea",
+    "entry": "rei-kit",
+    "summary": "A multi-line field.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "rows",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "4"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "`sm` tightens the label and the spacing. It does **not** shrink the text: iOS zooms the viewport when it focuses a field under 16px and never zooms back, which is why both phone apps force 16px on form elements in their base layer.",
+        "default": "'md'"
+      },
+      {
+        "name": "variant",
+        "required": false,
+        "type": "'default' | 'unstyled'",
+        "description": "`unstyled` keeps the wiring and drops the surface. The label, the generated id, `aria-describedby` and the error are what a field is; the border and the height are what it looks like. A search box inside a bordered row, a url field in an editor popover — those places were hand-writing the whole thing to avoid the appearance, and losing the wiring with it. The same reasoning as `BaseButton`'s `unstyled`, and the same test: a primitive is finished when the app can take its behaviour without its paint.",
+        "default": "'default'"
+      }
+    ]
+  },
+  {
+    "name": "BaseTooltip",
+    "entry": "rei-kit/web",
+    "summary": "A short label that appears beside a control.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The description. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "placement",
+        "required": false,
+        "type": "'top' | 'bottom'",
+        "description": "",
+        "default": "'top'"
+      }
+    ]
+  },
+  {
+    "name": "EmptyState",
+    "entry": "rei-kit",
+    "summary": "A list with nothing in it yet, said kindly.",
+    "props": [
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "description",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "ErrorBoundary",
+    "entry": "rei-kit",
+    "summary": "Keeps one broken screen from taking the whole app down.",
+    "props": [
+      {
+        "name": "resetKey",
+        "required": false,
+        "type": "string | number",
+        "description": "Clears the error whenever it changes — a route path, usually. An error on one screen should not follow somebody to the next one, and without this the boundary stays broken until a full reload.",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "FabButton",
+    "entry": "rei-kit/app",
+    "summary": "The one action the app is built around, reachable from every screen.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The words beside the icon.",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "FormField",
+    "entry": "rei-kit",
+    "summary": "A label, a hint, an error, and the wiring between them.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "`sm` for a control that sits inside something else — a toolbar, a filter row, a settings line — rather than in a form of its own. It exists because every hand-written select in all three apps was the small one, and the kit only had the large one. A part is not reusable if reaching for it costs a size somebody chose on purpose.",
+        "default": "'md'"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "Hides the label visually but keeps it for assistive tech. For fields whose surrounding row already names them — dropping the label entirely would leave the control with no accessible name at all.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "GoogleButton",
+    "entry": "rei-kit",
+    "summary": "Sign in with Google, in Google's own clothes.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "Greyed out and unclickable while a sign-in is already in flight. A real prop rather than a fallthrough attribute: the button needs to look disabled as well as be it, and a bare `disabled` landing on the element by itself gets the second half only.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "InstallPrompt",
+    "entry": "rei-kit/pwa",
+    "summary": "The card that offers to install the app, and remembers being turned down.",
+    "props": [
+      {
+        "name": "storageKey",
+        "required": true,
+        "type": "string",
+        "description": "Where the dismissal is remembered. Namespace it: `hibi-install-nudge`.",
+        "default": ""
+      },
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "body",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "action",
+        "required": true,
+        "type": "string",
+        "description": "The install button. Not shown on iOS, which has no API to call.",
+        "default": ""
+      },
+      {
+        "name": "later",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "iosTitle",
+        "required": false,
+        "type": "string",
+        "description": "Shown instead of `title` where the user has to use the Share menu.",
+        "default": "''"
+      },
+      {
+        "name": "iosBody",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "snoozeDays",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "7"
+      }
+    ]
+  },
+  {
+    "name": "InstallSettings",
+    "entry": "rei-kit/pwa",
+    "summary": "The way back to installing after the card has been dismissed.",
+    "props": [
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "The group's heading.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The row's label while installing is still possible.",
+        "default": ""
+      },
+      {
+        "name": "installedLabel",
+        "required": true,
+        "type": "string",
+        "description": "The row's label once it is installed.",
+        "default": ""
+      },
+      {
+        "name": "body",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "iosBody",
+        "required": true,
+        "type": "string",
+        "description": "Shown instead of `body` on iOS, where the user must use the Share menu.",
+        "default": ""
+      },
+      {
+        "name": "action",
+        "required": true,
+        "type": "string",
+        "description": "The install button. Absent on iOS, which has no API to call.",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "LocaleLinks",
+    "entry": "rei-kit",
+    "summary": "A flat language switcher for screens with no Settings behind them.",
+    "props": [
+      {
+        "name": "locales",
+        "required": true,
+        "type": "readonly L[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "labels",
+        "required": true,
+        "type": "Record<L, string>",
+        "description": "Endonyms, e.g. `{ en: 'English', tr: 'Türkçe' }`.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "Accessible name for the group.",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "LocaleSheet",
+    "entry": "rei-kit/app",
+    "summary": "Choosing the interface language, from a settings row.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The settings row's label, and the sheet's title.",
+        "default": ""
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "systemLabel",
+        "required": true,
+        "type": "string",
+        "description": "What \"follow the device\" is called. Its value is `system`.",
+        "default": ""
+      },
+      {
+        "name": "options",
+        "required": true,
+        "type": "readonly { value: string; label: string }[]",
+        "description": "In the order they should be listed. Labels are endonyms.",
+        "default": ""
+      },
+      {
+        "name": "closeLabel",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "NavLinks",
+    "entry": "rei-kit/web",
+    "summary": "The primary navigation of a wide site.",
+    "props": [
+      {
+        "name": "items",
+        "required": true,
+        "type": "readonly NavLinkItem<K>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "active",
+        "required": false,
+        "type": "K",
+        "description": "Which item is current. Usually derived from the route.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "Accessible name for the navigation landmark.",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "OfflineBanner",
+    "entry": "rei-kit/app",
+    "summary": "A floating note that the connection has gone.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The message. Required, because the kit has no language of its own.",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "PageContainer",
+    "entry": "rei-kit",
+    "summary": "One measure, centred, with the page's gutters.",
+    "props": [
+      {
+        "name": "width",
+        "required": false,
+        "type": "'wide' | 'reading' | 'full'",
+        "description": "`wide` for a page, `reading` for prose, `full` to opt out.",
+        "default": "'wide'"
+      },
+      {
+        "name": "as",
+        "required": false,
+        "type": "string",
+        "description": "The element to render. `main`, `section` and `article` all belong here.",
+        "default": "'div'"
+      }
+    ]
+  },
+  {
+    "name": "PageHeader",
+    "entry": "rei-kit",
+    "summary": "The bar at the top of a screen: a title with room either side of it.",
+    "props": [
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "PriceCard",
+    "entry": "rei-kit",
+    "summary": "One plan in a pricing table.",
+    "props": [
+      {
+        "name": "name",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "lead",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "price",
+        "required": true,
+        "type": "string",
+        "description": "Already formatted, or whatever stands in while there is no price.",
+        "default": ""
+      },
+      {
+        "name": "period",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "note",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "features",
+        "required": true,
+        "type": "readonly string[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'neutral' | 'warm' | 'cool'",
+        "description": "",
+        "default": "'neutral'"
+      },
+      {
+        "name": "badge",
+        "required": false,
+        "type": "string",
+        "description": "Rides on the card's edge, e.g. \"Recommended\".",
+        "default": ""
+      },
+      {
+        "name": "chip",
+        "required": false,
+        "type": "string",
+        "description": "Sits inside, e.g. \"30% cheaper\" or \"Your plan\".",
+        "default": ""
+      },
+      {
+        "name": "recommended",
+        "required": false,
+        "type": "boolean",
+        "description": "Raises the card and lets the badge show.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "ProgressBar",
+    "entry": "rei-kit",
+    "summary": "How far through something somebody is.",
+    "props": [
+      {
+        "name": "value",
+        "required": true,
+        "type": "number",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "100"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "How thick the track is. `sm` for a bar under a step counter, where it is a hint rather than the subject; `lg` where the progress is the point. It shipped at one thickness and the two bars anybody wanted were `h-1`.",
+        "default": "'md'"
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "For screen readers. Without it this is a rectangle that means nothing.",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "SectionHeading",
+    "entry": "rei-kit",
+    "summary": "A pill heading for a group of things.",
+    "props": [
+      {
+        "name": "tone",
+        "required": true,
+        "type": "Tone",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "count",
+        "required": false,
+        "type": "number",
+        "description": "Hidden when zero, so an empty group's heading stays quiet.",
+        "default": "0"
+      }
+    ]
+  },
+  {
+    "name": "SegmentedControl",
+    "entry": "rei-kit",
+    "summary": "A row of mutually exclusive choices.",
+    "props": [
+      {
+        "name": "options",
+        "required": true,
+        "type": "readonly { value: T; label: string }[]",
+        "description": "",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "SettingsGroup",
+    "entry": "rei-kit",
+    "summary": "A titled run of settings rows.",
+    "props": [
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "SettingsRow",
+    "entry": "rei-kit",
+    "summary": "One line in a settings card.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "description",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "icon",
+        "required": false,
+        "type": "Component",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "interactive",
+        "required": false,
+        "type": "boolean",
+        "description": "Renders the row as a button with a chevron.",
+        "default": "false"
+      },
+      {
+        "name": "stacked",
+        "required": false,
+        "type": "boolean",
+        "description": "Puts the control on its own line below the label, for wide controls.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "SkeletonList",
+    "entry": "rei-kit",
+    "summary": "A length starts with a digit, a dot, or opens a CSS function.",
+    "props": [
+      {
+        "name": "rows",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "3"
+      },
+      {
+        "name": "rowHeight",
+        "required": false,
+        "type": "string",
+        "description": "How tall each row is, as either a utility class (`h-20`) or a CSS length (`5rem`, `72px`, `var(--row)`). Both are accepted because the class-only version failed silently: a length passed here landed in `class` as `5rem`, which is not a class, so the rows had no height and the placeholder rendered as nothing at all. A loading state that shows an empty page is worse than no loading state, because it looks like the page is finished and empty.",
+        "default": "'h-14'"
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'Loading…'"
+      }
+    ]
+  },
+  {
+    "name": "StatCard",
+    "entry": "rei-kit",
+    "summary": "One number, with what it means and which way it is going.",
+    "props": [
+      {
+        "name": "value",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "trend",
+        "required": false,
+        "type": "'up' | 'down' | 'flat' | null",
+        "description": "",
+        "default": "null"
+      }
+    ]
+  },
+  {
+    "name": "TabBar",
+    "entry": "rei-kit",
+    "summary": "The floating bottom bar.",
+    "props": [
+      {
+        "name": "items",
+        "required": true,
+        "type": "readonly TabItem<K>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "active",
+        "required": false,
+        "type": "K",
+        "description": "Which item is current. Usually from `route.meta`.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "Accessible name for the navigation landmark.",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "TabShell",
+    "entry": "rei-kit/app",
+    "summary": "The phone frame the whole app sits inside.",
+    "props": []
+  },
+  {
+    "name": "ToastHost",
+    "entry": "rei-kit",
+    "summary": "Where the toasts land. One of these, at the app root.",
+    "props": [
+      {
+        "name": "closeLabel",
+        "required": true,
+        "type": "string",
+        "description": "The accessible name of each dismiss button. Required, because the button is an X and an X has no name — and the kit does not know the language.",
+        "default": ""
+      },
+      {
+        "name": "bottom",
+        "required": false,
+        "type": "boolean",
+        "description": "Stack from the bottom instead of the top. For a phone shell, where the top is a status bar and a header and the thumb is nowhere near it.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "ToneDot",
+    "entry": "rei-kit",
+    "summary": "A small coloured dot, optionally labelled.",
+    "props": [
+      {
+        "name": "fill",
+        "required": true,
+        "type": "string",
+        "description": "Background utility for the dot, e.g. `bg-positive`.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "Optional text after the dot. Omit for a bare marker.",
+        "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "TourShell",
+    "entry": "rei-kit/app",
+    "summary": "The frame an onboarding guide runs inside.",
+    "props": [
+      {
+        "name": "index",
+        "required": true,
+        "type": "number",
+        "description": "Which slide, zero-based.",
+        "default": ""
+      },
+      {
+        "name": "total",
+        "required": true,
+        "type": "number",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "dialogLabel",
+        "required": true,
+        "type": "string",
+        "description": "The dialog's accessible name.",
+        "default": ""
+      },
+      {
+        "name": "skipLabel",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "backLabel",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "nextLabel",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "lastLabel",
+        "required": true,
+        "type": "string",
+        "description": "The button on the final slide — \"Start\", rather than \"Next\".",
+        "default": ""
+      },
+      {
+        "name": "stepLabel",
+        "required": true,
+        "type": "(position: number) => string",
+        "description": "Names one segment for a screen reader, e.g. `(n) => \\`Step ${n} of ${total}\\``.",
+        "default": ""
+      },
+      {
+        "name": "teleportTo",
+        "required": false,
+        "type": "string",
+        "description": "Where the dialog goes. A phone shell clips its children, so the guide has to leave the tree to cover the tab bar and the header alike.",
+        "default": "'body'"
+      }
+    ]
+  },
+  {
+    "name": "UpdatePrompt",
+    "entry": "rei-kit/pwa",
+    "summary": "The card that says a new version is waiting.",
+    "props": [
+      {
+        "name": "open",
+        "required": true,
+        "type": "boolean",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "body",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "action",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "dismissLabel",
+        "required": true,
+        "type": "string",
+        "description": "The X's accessible name. An X on its own has none.",
+        "default": ""
+      }
+    ]
+  }
+]

@@ -52,12 +52,45 @@ the kit would have to learn what the app is about.
 
 ### Before 1.0.0
 
-- A behaviour test for every component. 154 tests cover the parts that fail
-  quietly; the rest are covered only by the public-API list and the SSR gate.
-- The showcase completed and published. Six components are still missing from
-  it, and they are the six that are hardest to install correctly.
-- Prop tables for people. `AGENTS.md` documents the kit for assistants; there
-  is no equivalent for a reader.
+- ~~The showcase completed and published.~~ Done in 0.20.0 — all 53 components,
+  live, at [ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/).
+- ~~Prop tables for people.~~ Done in 0.20.0, generated from the source so they
+  cannot drift.
+- A behaviour test for every component. 298 tests cover the parts that fail
+  quietly; the rest are covered only by the public-API list, the SSR gate and
+  the catalogue check.
+
+---
+
+## 0.20.0
+
+**You gain** a kit you can look at, read, and finish a form with.
+
+**[ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/)** —
+every component, live, with its props. It showed 22 of 53 before; the 31 it left
+out were the ones hardest to install correctly.
+
+The prop tables are generated from the source, and a test asserts the catalogue
+matches the package's exports in both directions. Nothing ships undocumented and
+nothing is documented that no longer exists.
+
+```ts
+import { BaseTable, BaseCombobox, BaseSlider } from 'rei-kit'
+```
+
+`BaseTable` requires its caption — a table without one is announced as "table"
+and nothing else — and makes its own horizontal scroller focusable, so a
+keyboard can read a wide table at all.
+
+`BaseCombobox` is for a list long enough that reading it is the problem. Below a
+few dozen options `BaseSelect` is still better: it opens the platform's own
+picker, which on a phone is a wheel no web control matches.
+
+`BaseSlider` wraps the native range input rather than replacing it, so the
+keyboard, the touch target and the announcements are the platform's. Pass
+`format` and `aria-valuetext` says "45 minutes" instead of "45".
+
+**To take it:** `pnpm add rei-kit@^0.20.0`. Nothing is removed.
 
 ---
 

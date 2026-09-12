@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+import ApiReference from './ApiReference.vue'
+import GalleryExtra from './GalleryExtra.vue'
+
 import {
   BaseAlert,
   BaseBadge,
@@ -306,6 +309,19 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </p>
           </PageContainer>
         </BaseCard>
+      </section>
+
+      <GalleryExtra class="mt-14" />
+
+      <section class="mt-20">
+        <SectionHeading tone="neutral" label="Bütün props" />
+        <p class="text-ink-soft mt-2 max-w-[60ch] text-sm leading-relaxed">
+          Paketin gönderdiği her bileşen, aldığı her prop. Kaynaktan üretiliyor — elle tutulan bir
+          prop tablosu ikinci sürümde yanlıştır, ve yanlış olması hiç olmamasından kötüdür çünkü
+          okuyan ona güvenir.
+        </p>
+
+        <ApiReference class="mt-6" />
       </section>
     </PageContainer>
   </div>

@@ -3,6 +3,58 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.19.0 — 2026-09-12
+
+The controls a kit is expected to have. Found by auditing the package the way
+somebody installing it cold would read it, rather than by a consumer asking.
+
+### Added
+
+- **`BaseMenu`** — a list of actions behind one control, and the one here that
+  the rule caught: the wide consumer had a hand-written dropdown in a file that
+  already imported the kit.
+
+  `role="menu"` is a promise. Declaring it tells a screen reader that the arrow
+  keys move between items, that Escape closes, and that Tab leaves rather than
+  walking through. The menu it replaces declared the role and implemented none
+  of it — which is the usual shape of the bug, because the roles are the part
+  you can see in the markup and the behaviour is the part you cannot.
+
+  So: focus moves in on open and back to the trigger on close, the arrows move
+  and wrap, Home and End jump, Escape closes, Tab leaves, and a press outside
+  closes. Items are found in the DOM rather than declared as data, so a caller
+  mixes links, buttons and separators freely.
+
+- **`BaseSwitch`** — a setting that takes effect the moment it is touched. Not
+  `BaseCheckbox` with a rounder skin: a checkbox states an intention something
+  else commits, and a switch _is_ the commit. A screen reader says "on"/"off"
+  for one and "checked"/"unchecked" for the other, which are different
+  sentences about different things.
+
+- **`BaseAvatar`** — the person in the corner where the account lives. The
+  default fallback is a drawn figure rather than an initial, because an initial
+  in a circle reads as a profile picture that failed to load and says nothing to
+  somebody seeing an avatar in that spot for the first time. Initials are there
+  for the places where telling several people apart is the job. A failed image
+  falls back instead of leaving a broken frame.
+
+- **`BaseSpinner`** — waiting, with no idea how much is left. `ProgressBar` is
+  for when the amount is known; a bar that cannot move is worse than a spinner,
+  because a bar is a promise about how long. The label is required rather than
+  defaulted to "Loading" in a language the app may not speak.
+
+### Fixed
+
+- **`BaseMenu` mounted already open had no outside-click listener** and never
+  moved focus, because both were set up in a watcher that only ran on change. It
+  looked open and behaved like a `div`. The watcher is immediate now. Caught
+  while writing the test for the outside-click, not by the component being used.
+
+- **The README contradicted itself.** A stale table left over from an earlier
+  release sat under the live one saying 22 components, 11 composables and 20
+  utilities. Somebody reading the package cold met two different answers to the
+  same question within four lines.
+
 ## 0.18.2 — 2026-09-12
 
 ### Fixed

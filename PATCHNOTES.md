@@ -61,6 +61,41 @@ the kit would have to learn what the app is about.
 
 ---
 
+## 0.19.0
+
+**You gain** four controls the kit should have had, found by reading it as
+somebody installing it cold rather than by waiting to be asked.
+
+```ts
+import { BaseMenu, BaseSwitch, BaseAvatar, BaseSpinner } from 'rei-kit'
+```
+
+`BaseMenu` is the dropdown. Take it for the keyboard: arrows move and wrap,
+Home and End jump, Escape closes, Tab leaves, focus moves in on open and back
+to the trigger on close. Items are found by role, so mix whatever you like.
+
+```vue
+<BaseMenu :label="t('nav.account')">
+  <template #trigger><BaseAvatar :label="t('nav.account')" /></template>
+
+  <RouterLink to="/profil" role="menuitem">{{ t('nav.profile') }}</RouterLink>
+  <hr />
+  <button type="button" role="menuitem" @click="signOut">{{ t('auth.signOut') }}</button>
+</BaseMenu>
+```
+
+`BaseSwitch` is for a setting with no Save after it — `role="switch"`, so it is
+announced as on/off rather than checked/unchecked. Reach for `BaseCheckbox`
+when something else commits the change.
+
+`BaseAvatar` draws a figure by default and initials on request. `BaseSpinner`
+needs a label, because a spinner with no accessible name is a decoration that
+happens to be the only thing on screen.
+
+**To take it:** `pnpm add rei-kit@^0.19.0`. Nothing is removed.
+
+---
+
 ## 0.18.2
 
 **Fixed:** `BaseDisclosure` still required the `title` prop after 0.18.1 added

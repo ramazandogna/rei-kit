@@ -82,6 +82,15 @@ function press() {
   transform: scale(0.95);
 }
 
+/* The ring is not decoration. This button was a `BaseButton variant="unstyled"`
+   in the app it came from, which meant it inherited a focus ring for free; a
+   bare <button> here would have dropped it, and a keyboard user would have had
+   no way to see where they were. */
+.rk-fab:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 .rk-fab-icon {
   display: grid;
   place-items: center;

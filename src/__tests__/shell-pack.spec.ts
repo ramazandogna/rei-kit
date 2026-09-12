@@ -282,6 +282,14 @@ describe('FabButton', () => {
     expect(w.text()).toContain('New transaction')
   })
 
+  it('keeps a focus ring, which the unstyled BaseButton it replaced supplied', () => {
+    // Dropping it would leave a keyboard user with no way to see where they
+    // are on the one button the whole app is arranged around.
+    const w = mount(FabButton, { props: { label: 'New' } })
+
+    expect(w.find('button').classes()).toContain('rk-fab')
+  })
+
   it('hides the icon from assistive tech, since the label already says it', () => {
     const w = mount(FabButton, { props: { label: 'New' } })
 

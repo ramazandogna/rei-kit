@@ -3,6 +3,20 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 0.16.1 — 2026-09-12
+
+### Fixed
+
+- **`FabButton` had no focus ring.** In the app it was extracted from it was a
+  `BaseButton variant="unstyled"`, so it inherited one for free; rewritten as a
+  bare `<button>` it lost it silently. Nothing about the component looked wrong
+  and a keyboard user had no way to see where they were, on the one button the
+  whole app is arranged around.
+
+  Caught by comparing the rendered DOM before and after the extraction, which is
+  the only thing that would have caught it — it is invisible to types, to tests
+  that do not look, and to anyone using a mouse.
+
 ## 0.16.0 — 2026-09-12
 
 The shell pack. `App.vue` and `AppLayout.vue`, which two phone apps had written

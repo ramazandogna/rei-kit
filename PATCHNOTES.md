@@ -72,6 +72,16 @@ the kit would have to learn what the app is about.
 
 ---
 
+## 0.16.1
+
+**Fixed:** `FabButton` shipped without a focus ring. It was an unstyled
+`BaseButton` in the app it came from and inherited one; as a bare `<button>` it
+had none, so a keyboard user could not see where they were.
+
+**To take it:** nothing, unless you shipped 0.16.0 — in which case take this.
+
+---
+
 ## 0.16.0
 
 **You gain** the phone frame itself, and the five smaller things that sat

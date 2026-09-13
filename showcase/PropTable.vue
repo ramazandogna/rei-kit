@@ -19,7 +19,7 @@ const entry = computed(() => catalogue.find((c) => c.name === name))
 <template>
   <details v-if="entry" class="border-hair/70 mt-4 border-t pt-3">
     <summary class="text-ink-soft hover:text-ink cursor-pointer text-xs font-medium">
-      {{ entry.props.length }} prop · {{ entry.entry }}
+      {{ entry.props.length }} {{ entry.props.length === 1 ? 'prop' : 'props' }} · {{ entry.entry }}
     </summary>
 
     <div class="mt-3 overflow-x-auto">
@@ -27,9 +27,9 @@ const entry = computed(() => catalogue.find((c) => c.name === name))
         <thead class="text-ink-soft">
           <tr>
             <th class="py-1.5 pr-4 font-medium">Prop</th>
-            <th class="py-1.5 pr-4 font-medium">Tip</th>
-            <th class="py-1.5 pr-4 font-medium">Varsayılan</th>
-            <th class="py-1.5 font-medium">Not</th>
+            <th class="py-1.5 pr-4 font-medium">Type</th>
+            <th class="py-1.5 pr-4 font-medium">Default</th>
+            <th class="py-1.5 font-medium">Note</th>
           </tr>
         </thead>
         <tbody>
@@ -40,7 +40,7 @@ const entry = computed(() => catalogue.find((c) => c.name === name))
           >
             <td class="text-ink py-1.5 pr-4 font-mono whitespace-nowrap">
               {{ prop.name
-              }}<span v-if="prop.required" class="text-negative" title="zorunlu">*</span>
+              }}<span v-if="prop.required" class="text-negative" title="required">*</span>
             </td>
             <td class="text-ink-soft py-1.5 pr-4 font-mono">{{ prop.type }}</td>
             <td class="text-ink-soft py-1.5 pr-4 font-mono whitespace-nowrap">
@@ -51,7 +51,7 @@ const entry = computed(() => catalogue.find((c) => c.name === name))
             </td>
           </tr>
           <tr v-if="entry.props.length === 0">
-            <td colspan="4" class="text-ink-soft py-2">Prop almaz — slot ile kullanılır.</td>
+            <td colspan="4" class="text-ink-soft py-2">Takes no props — driven by slots.</td>
           </tr>
         </tbody>
       </table>

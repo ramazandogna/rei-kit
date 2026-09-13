@@ -36,7 +36,7 @@ const groups = computed(() => {
   <div class="flex flex-col gap-10">
     <section v-for="group in groups" :key="group.entry">
       <h3 class="text-ink font-mono text-sm font-semibold">{{ group.entry }}</h3>
-      <p class="text-ink-soft mt-1 text-xs">{{ group.items.length }} bileşen</p>
+      <p class="text-ink-soft mt-1 text-xs">{{ group.items.length }} components</p>
 
       <div class="mt-4 flex flex-col gap-3">
         <article

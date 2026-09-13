@@ -23,23 +23,23 @@ import catalogue from './props.generated.json'
  * heading that has just scrolled off is still the section you are reading.
  */
 const SECTIONS = [
-  { id: 'aksiyon', label: 'Aksiyon' },
-  { id: 'yuzey', label: 'Yüzey' },
-  { id: 'geri-bildirim', label: 'Durum ve geri bildirim' },
-  { id: 'ilerleme', label: 'İlerleme' },
-  { id: 'bildirim', label: 'Bildirim' },
+  { id: 'aksiyon', label: 'Action' },
+  { id: 'yuzey', label: 'Surfaces' },
+  { id: 'geri-bildirim', label: 'Status and feedback' },
+  { id: 'ilerleme', label: 'Progress' },
+  { id: 'bildirim', label: 'Notifications' },
   { id: 'form', label: 'Form' },
-  { id: 'form-devam', label: 'Form — devamı' },
-  { id: 'ayarlar', label: 'Ayarlar' },
-  { id: 'ust-katman', label: 'Üst katman' },
-  { id: 'gezinme', label: 'Gezinme' },
-  { id: 'acilir', label: 'Açılır bölümler' },
-  { id: 'veri', label: 'Veri' },
-  { id: 'durum', label: 'Durum' },
-  { id: 'kabuk', label: 'Telefon kabuğu' },
-  { id: 'bosluk', label: 'Boşluk ve bekleme' },
-  { id: 'olcu', label: 'Ölçü' },
-  { id: 'api', label: 'Bütün props' },
+  { id: 'form-devam', label: 'Form — continued' },
+  { id: 'ayarlar', label: 'Settings' },
+  { id: 'ust-katman', label: 'Overlays' },
+  { id: 'gezinme', label: 'Navigation' },
+  { id: 'acilir', label: 'Disclosure' },
+  { id: 'veri', label: 'Data' },
+  { id: 'durum', label: 'State' },
+  { id: 'kabuk', label: 'Phone shell' },
+  { id: 'bosluk', label: 'Empty and waiting' },
+  { id: 'olcu', label: 'Metrics' },
+  { id: 'api', label: 'All props' },
 ]
 
 const ENTRY_ORDER = ['rei-kit', 'rei-kit/web', 'rei-kit/app', 'rei-kit/pwa']
@@ -181,30 +181,30 @@ function go(id: string) {
       <span :class="{ 'is-open': open }" />
       <span :class="{ 'is-open': open }" />
     </span>
-    {{ open ? 'Kapat' : 'İçindekiler' }}
+    {{ open ? 'Close' : 'Contents' }}
   </button>
 
   <div v-if="open" class="sc-nav-scrim" @click="open = false" />
 
-  <nav class="sc-nav" :class="{ 'is-open': open }" aria-label="Bileşenler">
+  <nav class="sc-nav" :class="{ 'is-open': open }" aria-label="Components">
     <div class="sc-nav-inner">
       <label class="sc-nav-search">
-        <span class="sr-only">Bileşen ara</span>
+        <span class="sr-only">Search components</span>
         <input
           v-model="query"
           type="search"
-          placeholder="Bileşen ara…"
+          placeholder="Search components…"
           autocomplete="off"
           class="sc-nav-input"
         />
       </label>
 
       <p v-if="query" class="sc-nav-count" role="status">
-        {{ found }} bileşen · {{ sections.length }} bölüm
+        {{ found }} components · {{ sections.length }} sections
       </p>
 
       <template v-if="sections.length">
-        <p class="sc-nav-heading">Bölümler</p>
+        <p class="sc-nav-heading">Sections</p>
         <ul class="sc-nav-list">
           <li v-for="section in sections" :key="section.id">
             <a
@@ -238,7 +238,7 @@ function go(id: string) {
       </template>
 
       <p v-if="found === 0 && sections.length === 0" class="sc-nav-empty">
-        “{{ query }}” diye bir şey yok.
+        Nothing matches “{{ query }}”.
       </p>
     </div>
   </nav>

@@ -60,6 +60,18 @@ without.
 
 ---
 
+## 1.0.2
+
+**The showcase is in English**, and the overlays section explains the difference
+between a modal, a sheet and a menu instead of assuming you know. `BaseSheet`
+now says outright that its narrow width on a desktop is deliberate — it is
+pinned to the phone shell's column, which read as a bug to anyone who had not
+built a phone app with this kit.
+
+**To take it:** nothing changes in the package.
+
+---
+
 ## 1.0.1
 
 **Fixed:** the Kakehashi link in the README pointed at a repository that does

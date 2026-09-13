@@ -3,6 +3,24 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 1.0.2 — 2026-09-13
+
+### Documentation
+
+- **The showcase is in English.** It was written in Turkish, which made it
+  useless as the front door of a package published to a global registry.
+
+- **The overlays section explains itself.** It had three buttons — "open modal",
+  "open sheet" — and assumed the reader already knew the difference. One of them
+  looked broken: `BaseSheet` is pinned to the 430px app-shell column because a
+  sheet belongs to a phone-shaped app, so on a desktop it opens as a narrow
+  panel in the middle of a wide screen. Anybody who had not built a phone app
+  with this kit read that as a bug.
+
+  Each overlay now says what it is for and when to reach for it, the sheet says
+  in as many words that its width is deliberate, and every demo names the
+  keyboard behaviour worth testing.
+
 ## 1.0.1 — 2026-09-12
 
 ### Fixed

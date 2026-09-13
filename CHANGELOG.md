@@ -3,6 +3,24 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 1.0.3 — 2026-09-13
+
+No code changes. This release exists to make the published provenance true
+again.
+
+The `v1.0.2` tag was rewritten after it had already been released. npm's
+provenance attestation is signed and immutable, so it still records the commit
+the tarball was built from — a commit that no longer exists on `main`. The
+package contents were never affected, but anyone verifying provenance against
+the repository would find the tag pointing somewhere else.
+
+Publishing from the current history puts the two back in agreement. `1.0.2`
+stays on the registry and stays installable; it is simply the one version whose
+attestation names a commit you cannot browse.
+
+Worth writing down rather than quietly correcting: rewriting a tag that has
+already shipped costs more than it looks like it will.
+
 ## 1.0.2 — 2026-09-13
 
 ### Documentation

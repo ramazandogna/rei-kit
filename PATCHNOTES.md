@@ -60,6 +60,17 @@ without.
 
 ---
 
+## 1.0.3
+
+**Nothing changes in the package.** The `v1.0.2` tag was rewritten after release,
+so npm's provenance attestation — which is signed and cannot be edited — names a
+commit that is no longer on `main`. This release is built from the current
+history, so the attestation and the repository agree again.
+
+`1.0.2` stays installable and its contents were never affected.
+
+---
+
 ## 1.0.2
 
 **The showcase is in English**, and the overlays section explains the difference

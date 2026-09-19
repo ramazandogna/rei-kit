@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { NEUTRAL } from './tones'
 import { computed, ref } from 'vue'
 import { CalendarRange, Plus, ReceiptText, Settings, UserStar } from 'lucide-vue-next'
 
@@ -109,7 +110,7 @@ const sliderText = computed(() => `${minutes.value} minutes`)
   <div class="flex flex-col gap-14">
     <!-- ─────────────────────────── Form ─────────────────────────── -->
     <section id="form-devam">
-      <SectionHeading tone="neutral" label="Form — continued" />
+      <SectionHeading :tone="NEUTRAL" label="Form — continued" />
       <p class="text-ink-soft mt-2 text-sm">
         Controls that take a value. A switch differs from a checkbox in more than shape: a checkbox
         states an intention that something else commits, and a switch <em>is</em> the commit — there
@@ -164,7 +165,7 @@ const sliderText = computed(() => `${minutes.value} minutes`)
 
     <!-- ─────────────────────────── Katmanlar ─────────────────────────── -->
     <section id="ust-katman">
-      <SectionHeading tone="neutral" label="Overlays" />
+      <SectionHeading :tone="NEUTRAL" label="Overlays" />
       <p class="text-ink-soft mt-2 max-w-[68ch] text-sm leading-relaxed">
         Three different answers to “put something on top of the page”, and the kit keeps them
         separate on purpose — merging them gives you one component that is wrong everywhere.
@@ -293,7 +294,7 @@ const sliderText = computed(() => `${minutes.value} minutes`)
 
     <!-- ─────────────────────────── Navigation ─────────────────────────── -->
     <section id="gezinme">
-      <SectionHeading tone="neutral" label="Navigation" />
+      <SectionHeading :tone="NEUTRAL" label="Navigation" />
       <p class="text-ink-soft mt-2 text-sm">
         The parts that say where you are and where you can go.
       </p>
@@ -355,7 +356,7 @@ const sliderText = computed(() => `${minutes.value} minutes`)
 
     <!-- ─────────────────────────── Disclosure ─────────────────────────── -->
     <section id="acilir">
-      <SectionHeading tone="neutral" label="Disclosure" />
+      <SectionHeading :tone="NEUTRAL" label="Disclosure" />
       <p class="text-ink-soft mt-2 text-sm">
         The answer stays in the markup while the section is shut — which is what a crawler, and a
         reader without JavaScript, actually get.
@@ -388,7 +389,7 @@ const sliderText = computed(() => `${minutes.value} minutes`)
 
     <!-- ─────────────────────────── Data ─────────────────────────── -->
     <section id="veri">
-      <SectionHeading tone="neutral" label="Data" />
+      <SectionHeading :tone="NEUTRAL" label="Data" />
       <p class="text-ink-soft mt-2 text-sm">
         The table owns its horizontal scroller and that scroller is reachable by keyboard — a region
         you can only get to by dragging is a region a keyboard cannot read at all.
@@ -402,7 +403,7 @@ const sliderText = computed(() => `${minutes.value} minutes`)
 
     <!-- ─────────────────────────── State ─────────────────────────── -->
     <section id="durum">
-      <SectionHeading tone="neutral" label="State" />
+      <SectionHeading :tone="NEUTRAL" label="State" />
       <p class="text-ink-soft mt-2 text-sm">Waiting, identity, and failure.</p>
 
       <BaseCard class="mt-5 flex flex-col gap-6">
@@ -446,7 +447,7 @@ const sliderText = computed(() => `${minutes.value} minutes`)
 
     <!-- ─────────────────────────── Phone shell ─────────────────────────── -->
     <section id="kabuk">
-      <SectionHeading tone="neutral" label="Phone shell" />
+      <SectionHeading :tone="NEUTRAL" label="Phone shell" />
       <p class="text-ink-soft mt-2 text-sm">
         <code>rei-kit/app</code> — what a fourth phone app starts from instead of an empty
         <code>src/</code>.
@@ -486,12 +487,16 @@ const sliderText = computed(() => `${minutes.value} minutes`)
 
         <div>
           <PriceCard
-            title="Yearly"
-            price="₺1.200"
-            period="/year"
+            name="Yearly"
+            lead="Everything, for a year."
+            price="¥12,000"
+            period="/ year"
+            note="Billed once. Cancel any time."
+            chip="Most popular"
+            badge="Recommended"
+            recommended
+            tone="cool"
             :features="['Every course', 'Exam preparation', 'No commitment']"
-            cta-label="Choose"
-            badge="30% cheaper"
           />
           <PropTable name="PriceCard" />
         </div>

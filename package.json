@@ -81,7 +81,7 @@
     "lint": "run-s \"lint:*\"",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
-    "check": "run-s check:format check:lint type-check test:ci build-only",
+    "check": "run-s check:format check:lint type-check type-check:showcase test:ci build-only",
     "check:format": "prettier --check src/ showcase/",
     "check:lint": "run-s check:lint:*",
     "check:lint:oxlint": "oxlint .",
@@ -89,7 +89,8 @@
     "format": "prettier --write src/ showcase/",
     "prepublishOnly": "pnpm run build",
     "palettes": "node scripts/build-palettes.mjs",
-    "palettes:check": "node scripts/build-palettes.mjs --check"
+    "palettes:check": "node scripts/build-palettes.mjs --check",
+    "type-check:showcase": "vue-tsc -p tsconfig.showcase.json --noEmit"
   },
   "peerDependencies": {
     "@supabase/supabase-js": "^2.0.0",

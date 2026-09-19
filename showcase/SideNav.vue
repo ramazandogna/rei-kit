@@ -23,6 +23,7 @@ import catalogue from './props.generated.json'
  * heading that has just scrolled off is still the section you are reading.
  */
 const SECTIONS = [
+  { id: 'axes', label: 'Themes: materials & palettes' },
   { id: 'aksiyon', label: 'Action' },
   { id: 'yuzey', label: 'Surfaces' },
   { id: 'geri-bildirim', label: 'Status and feedback' },

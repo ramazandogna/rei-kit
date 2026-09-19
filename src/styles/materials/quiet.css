@@ -1,0 +1,39 @@
+/* rei-kit material: quiet.
+ *
+ * The kit's default, which needs no file to be active: with no attribute at
+ * all, this is what the tokens already are. It exists for one case — putting
+ * a quiet region *inside* a page that is set to another material, which a
+ * nested attribute cannot do unless something re-declares the defaults.
+ *
+ * Every value here is copied from tokens.css, and a test asserts they match,
+ * so a change to the default cannot leave this file describing the old one. */
+[data-material='quiet'] {
+  --radius-cell: 3px;
+  --radius-card: 16px;
+  --radius-shell: 30px;
+  --shadow-card:
+    0 1px 2px color-mix(in oklab, var(--shadow-color) 4%, transparent),
+    0 2px 8px -2px color-mix(in oklab, var(--shadow-color) 6%, transparent);
+  --shadow-raised:
+    0 1px 2px color-mix(in oklab, var(--shadow-color) 6%, transparent),
+    0 12px 28px -10px color-mix(in oklab, var(--shadow-color) 18%, transparent);
+  --shadow-overlay:
+    0 4px 12px -4px color-mix(in oklab, var(--shadow-color) 10%, transparent),
+    0 24px 48px -16px color-mix(in oklab, var(--shadow-color) 28%, transparent);
+  --shadow-control: 0 1px 2px color-mix(in oklab, var(--shadow-color) 5%, transparent);
+  --shadow-control-pressed: none;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --surface-opacity: 100%;
+  --surface-backdrop: none;
+  --surface-border-width: 1px;
+  --surface-border-color: var(--color-hair);
+  --control-opacity: 100%;
+  --control-border-width: 1px;
+  --canvas-backdrop: none;
+  --press-scale: 0.97;
+  --press-offset: 0px;
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 340ms;
+  --duration-slower: 420ms;
+}

@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { NEUTRAL } from './tones'
 import { computed, ref } from 'vue'
 
 import ApiReference from './ApiReference.vue'
+import AppearanceBar from './AppearanceBar.vue'
+import AxesSection from './AxesSection.vue'
 import GalleryExtra from './GalleryExtra.vue'
+import HeroSection from './HeroSection.vue'
 import SideNav from './SideNav.vue'
 
 import {
@@ -28,7 +32,6 @@ import {
   ToastHost,
   ToneDot,
   VERSION,
-  applyTheme,
   useToast,
 } from '../src/index'
 
@@ -51,27 +54,6 @@ import {
  * Grouped by what a thing is for rather than alphabetically — somebody arrives
  * here needing "a way to show a warning", not needing the letter A.
  */
-const theme = ref<'light' | 'dark'>('light')
-
-function setTheme(next: string) {
-  theme.value = next as 'light' | 'dark'
-  applyTheme(theme.value)
-}
-
-const copied = ref(false)
-
-/** The one thing a visitor is here to take away. */
-async function copyInstall() {
-  try {
-    await navigator.clipboard.writeText('pnpm add rei-kit')
-    copied.value = true
-    setTimeout(() => (copied.value = false), 1600)
-  } catch {
-    // Clipboard refused -- an insecure origin, or a browser asking first. The
-    // command is on screen either way, which is why this is not an error.
-  }
-}
-
 const progress = ref(7)
 const email = ref('')
 const segment = ref('all')
@@ -88,15 +70,20 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
 </script>
 
 <template>
-  <div class="bg-canvas text-ink min-h-dvh pb-24">
-    <header class="border-hair bg-surface/80 sticky top-0 z-10 border-b backdrop-blur">
-      <PageContainer class="flex items-center justify-between gap-4 py-4">
-        <a href="#top" class="flex items-baseline gap-2 whitespace-nowrap">
+  <!-- `canvas` rather than `bg-canvas`: the utility also carries the
+       material's backdrop, which is what glass has to see through. -->
+  <div class="canvas text-ink min-h-dvh pb-24">
+    <header class="sc-header surface-raised">
+      <PageContainer class="flex flex-wrap items-center gap-x-4 gap-y-3 py-3">
+        <a href="#top" class="flex items-center gap-2.5 whitespace-nowrap">
+          <span class="sc-logo" aria-hidden="true">零</span>
           <span class="text-ink text-sm font-semibold tracking-tight">rei-kit</span>
-          <span class="text-ink-soft text-xs tabular-nums">v{{ VERSION }}</span>
+          <span class="text-ink-soft hidden text-xs tabular-nums sm:inline">v{{ VERSION }}</span>
         </a>
 
-        <div class="ml-auto hidden items-center gap-4 text-xs sm:flex">
+        <nav class="hidden items-center gap-4 text-xs md:flex" aria-label="Project">
+          <a class="text-ink-soft hover:text-ink transition-colors" href="#axes">Themes</a>
+          <a class="text-ink-soft hover:text-ink transition-colors" href="#api">API</a>
           <a
             class="text-ink-soft hover:text-ink transition-colors"
             href="https://www.npmjs.com/package/rei-kit"
@@ -111,55 +98,25 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             rel="noopener"
             >GitHub</a
           >
-        </div>
+        </nav>
 
-        <div class="w-44 shrink-0 sm:w-56">
-          <SegmentedControl
-            :options="[
-              { value: 'light', label: 'Light' },
-              { value: 'dark', label: 'Dark' },
-            ]"
-            :model-value="theme"
-            @update:model-value="setTheme"
-          />
-        </div>
+        <AppearanceBar class="ml-auto" />
       </PageContainer>
 
-      <ToastHost close-label="Kapat" />
+      <ToastHost close-label="Close" />
     </header>
 
-    <PageContainer as="main" id="top" class="py-12">
-      <div class="max-w-[60ch]">
-        <h1 class="text-ink text-4xl font-semibold tracking-tight">rei-kit</h1>
-        <p class="text-ink-soft mt-4 text-lg leading-relaxed">
-          A component kit for Vue 3 and Tailwind 4. <strong class="text-ink">53 components</strong>,
-          five entry points, and a theme an app rebrands by redefining eleven values.
-        </p>
+    <PageContainer as="main" id="top">
+      <HeroSection />
+      <AxesSection />
 
-        <div class="mt-6 flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            class="border-hair bg-surface text-ink rounded-card hover:border-primary/60 flex items-center gap-3 border px-4 py-2.5 font-mono text-sm transition-colors"
-            @click="copyInstall"
-          >
-            <span class="text-ink-soft select-none">$</span>
-            pnpm add rei-kit
-            <span class="text-ink-soft ml-2 text-xs select-none">{{ copied ? '✓' : '⧉' }}</span>
-          </button>
-
-          <a
-            class="text-ink-soft hover:text-ink text-sm underline-offset-4 hover:underline"
-            href="https://github.com/ramazandogna/rei-kit#readme"
-            target="_blank"
-            rel="noopener"
-            >Kurulum ve tema →</a
-          >
-        </div>
-
-        <p class="text-ink-soft mt-8 text-sm leading-relaxed">
-          Everything below is the kit itself: every component live, every prop in a table generated
-          from the source. This page wires the kit exactly the way the README says to, so a broken
-          install shows up here first. Use the menu on the left to find what you came for.
+      <div class="mt-20 max-w-[60ch]">
+        <SectionHeading :tone="NEUTRAL" label="Components" />
+        <h2 class="text-ink mt-4 text-3xl font-bold tracking-tight">Every component, live.</h2>
+        <p class="text-ink-soft mt-3 text-[0.9375rem] leading-relaxed">
+          Everything below is the kit itself, in whatever material and palette you picked above.
+          Every prop is in a table generated from the source. Use the menu to find what you came
+          for.
         </p>
       </div>
 
@@ -171,7 +128,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
            with their names under them tells you what exists; it does not tell
            you which one to reach for. -->
           <section id="aksiyon" class="mt-14">
-            <SectionHeading tone="neutral" label="Aksiyon" />
+            <SectionHeading :tone="NEUTRAL" label="Aksiyon" />
             <p class="text-ink-soft mt-2 text-sm">Controls that start something or confirm it.</p>
 
             <BaseCard class="mt-5">
@@ -189,7 +146,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           </section>
 
           <section id="yuzey" class="mt-14">
-            <SectionHeading tone="neutral" label="Surfaces" />
+            <SectionHeading :tone="NEUTRAL" label="Surfaces" />
             <p class="text-ink-soft mt-2 text-sm">
               Boxes that hold content. <code class="text-xs">BaseCard</code> takes a head and a foot
               slot; pass <code class="text-xs">interactive</code> only when the whole card is
@@ -212,7 +169,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           </section>
 
           <section id="geri-bildirim" class="mt-14">
-            <SectionHeading tone="neutral" label="Status and feedback" />
+            <SectionHeading :tone="NEUTRAL" label="Status and feedback" />
             <p class="text-ink-soft mt-2 text-sm">
               <code class="text-xs">BaseAlert</code> is a message that has to be read;
               <code class="text-xs">BaseBadge</code> is a standing label and never a control.
@@ -237,7 +194,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           </section>
 
           <section id="ilerleme" class="mt-14">
-            <SectionHeading tone="neutral" label="Progress" />
+            <SectionHeading :tone="NEUTRAL" label="Progress" />
             <p class="text-ink-soft mt-2 text-sm">
               The value is clamped: 101, a negative, and a divide-by-zero all stay inside the track.
             </p>
@@ -267,7 +224,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           </section>
 
           <section id="bildirim" class="mt-14">
-            <SectionHeading tone="neutral" label="Notifications" />
+            <SectionHeading :tone="NEUTRAL" label="Notifications" />
 
             <p class="text-ink-soft mt-2 max-w-prose text-sm leading-relaxed">
               None of the three apps had one — not because anybody decided against it, but because
@@ -292,7 +249,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           </section>
 
           <section id="form" class="mt-14">
-            <SectionHeading tone="neutral" label="Form" />
+            <SectionHeading :tone="NEUTRAL" label="Form" />
 
             <BaseCard class="mt-5 max-w-md">
               <BaseInput
@@ -350,7 +307,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           </section>
 
           <section id="ayarlar" class="mt-14">
-            <SectionHeading tone="neutral" label="Ayarlar" />
+            <SectionHeading :tone="NEUTRAL" label="Ayarlar" />
 
             <SettingsGroup class="mt-5" title="Genel">
               <SettingsRow label="Tema"><ToneDot fill="bg-primary" /></SettingsRow>
@@ -359,7 +316,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           </section>
 
           <section id="bosluk" class="mt-14">
-            <SectionHeading tone="neutral" label="Empty and waiting" />
+            <SectionHeading :tone="NEUTRAL" label="Empty and waiting" />
             <p class="text-ink-soft mt-2 text-sm">
               A skeleton's height is a CSS length, not a class. That distinction was confused once,
               and every skeleton in the app rendered at zero height.
@@ -377,7 +334,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           </section>
 
           <section id="olcu" class="mt-14">
-            <SectionHeading tone="neutral" label="Metrics" />
+            <SectionHeading :tone="NEUTRAL" label="Metrics" />
             <p class="text-ink-soft mt-2 text-sm">
               <code class="text-xs">PageContainer</code> gives two widths:
               <code class="text-xs">wide</code> for a page, <code class="text-xs">reading</code> for
@@ -398,7 +355,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           <GalleryExtra class="mt-14" />
 
           <section id="api" class="mt-20">
-            <SectionHeading tone="neutral" label="All props" />
+            <SectionHeading :tone="NEUTRAL" label="All props" />
             <p class="text-ink-soft mt-2 max-w-[60ch] text-sm leading-relaxed">
               Every component the package ships, and every prop it takes. Generated from the source
               — a prop table maintained by hand is wrong by the second release, and wrong is worse

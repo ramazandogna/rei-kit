@@ -12,6 +12,10 @@
 
 @import '../src/styles/tokens.css';
 @import '../src/styles/shell/mobile.css';
+/* Every material and palette, because the showcase offers the choice — the
+   same two lines an app adds to do the same. */
+@import '../src/styles/materials.css';
+@import '../src/styles/palettes.css';
 
 @source '../src';
 
@@ -19,4 +23,28 @@
    it. Without this the heading you asked for is the one thing you cannot see. */
 [id] {
   scroll-margin-top: 5.5rem;
+}
+
+/* The header is a raised surface like any other, so it turns to glass, grows a
+   hard shadow or puffs up with the material — the first thing on the page to
+   show what the picker does. */
+.sc-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-width: 0 0 var(--surface-border-width) 0;
+  border-radius: 0;
+}
+
+.sc-logo {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border-radius: var(--radius-cell);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: var(--color-on-primary);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  transition: border-radius var(--duration-slow) var(--ease-standard);
 }

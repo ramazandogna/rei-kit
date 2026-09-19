@@ -32,7 +32,10 @@ const {
 </script>
 
 <template>
-  <h2 class="flex items-center gap-2 self-start rounded-full border px-3 py-1" :class="tone.card">
+  <h2
+    class="flex w-fit items-center gap-2 self-start rounded-full border px-3 py-1"
+    :class="tone.card"
+  >
     <ToneDot :fill="tone.fill" />
     <span class="text-xs font-semibold tracking-wide uppercase" :class="tone.text">
       {{ label }}

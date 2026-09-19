@@ -22,7 +22,9 @@ const name = useId()
       <input v-model="model" type="radio" :value="option.value" :name="name" class="sr-only" />
       <span
         class="flex h-10 items-center justify-center rounded-xl px-2 text-sm font-medium transition-colors select-none"
-        :class="model === option.value ? 'bg-surface text-ink shadow-control' : 'text-ink-soft'"
+        :class="
+          model === option.value ? 'bg-surface text-ink shadow-(--shadow-control)' : 'text-ink-soft'
+        "
       >
         {{ option.label }}
       </span>

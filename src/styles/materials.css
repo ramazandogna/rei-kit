@@ -9,6 +9,7 @@
  *
  * An app that only ever wants one can import that file alone —
  * `rei-kit/materials/glass.css` — and set the attribute once. */
+@import './materials/quiet.css';
 @import './materials/glass.css';
 @import './materials/brutal.css';
 @import './materials/soft.css';

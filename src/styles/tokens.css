@@ -64,30 +64,6 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 
   /* ---------------------------------------------------------------------
-     Depth.
-
-     Four levels, named for what sits at them rather than for how big the
-     blur is: a card on the page, something lifted off it, a layer over the
-     whole page, and a control you can press. A material redefines all four,
-     which is how "a soft shadow" becomes "a hard offset" or "a raised puff"
-     across fifty components at once.
-
-     `--shadow-color` rather than a hex inside each shadow, so dark mode
-     changes one value instead of twelve.
-     --------------------------------------------------------------------- */
-  --shadow-card:
-    0 1px 2px color-mix(in oklab, var(--shadow-color) 4%, transparent),
-    0 2px 8px -2px color-mix(in oklab, var(--shadow-color) 6%, transparent);
-  --shadow-raised:
-    0 1px 2px color-mix(in oklab, var(--shadow-color) 6%, transparent),
-    0 12px 28px -10px color-mix(in oklab, var(--shadow-color) 18%, transparent);
-  --shadow-overlay:
-    0 4px 12px -4px color-mix(in oklab, var(--shadow-color) 10%, transparent),
-    0 24px 48px -16px color-mix(in oklab, var(--shadow-color) 28%, transparent);
-  --shadow-control: 0 1px 2px color-mix(in oklab, var(--shadow-color) 5%, transparent);
-  --shadow-control-pressed: none;
-
-  /* ---------------------------------------------------------------------
      Motion.
 
      Two curves and four durations, where there had been ten durations and a
@@ -103,6 +79,38 @@
    a material or an app can set them on any element and the subtree follows. */
 :root {
   --shadow-color: #0f2229;
+
+  /* ---------------------------------------------------------------------
+     Depth.
+
+     Four levels, named for what sits at them rather than for how big the
+     blur is: a card on the page, something lifted off it, a layer over the
+     whole page, and a control you can press. A material redefines all four,
+     which is how "a soft shadow" becomes "a hard offset" or "a raised puff"
+     across fifty components at once.
+
+     `--shadow-color` rather than a hex inside each shadow, so dark mode
+     changes one value instead of twelve.
+
+     Not in `@theme`, on purpose. Tailwind turns a theme shadow into a
+     `shadow-*` utility by *inlining its value*, so it can splice in a shadow
+     colour — which freezes it at whatever these say here. A material
+     redefining `--shadow-control` would reach every component except the ones
+     using `shadow-control`, and nothing would say so. Out here there is no such
+     utility to reach for; the way in is `shadow-(--shadow-control)`, which is
+     read at runtime like everything else.
+     --------------------------------------------------------------------- */
+  --shadow-card:
+    0 1px 2px color-mix(in oklab, var(--shadow-color) 4%, transparent),
+    0 2px 8px -2px color-mix(in oklab, var(--shadow-color) 6%, transparent);
+  --shadow-raised:
+    0 1px 2px color-mix(in oklab, var(--shadow-color) 6%, transparent),
+    0 12px 28px -10px color-mix(in oklab, var(--shadow-color) 18%, transparent);
+  --shadow-overlay:
+    0 4px 12px -4px color-mix(in oklab, var(--shadow-color) 10%, transparent),
+    0 24px 48px -16px color-mix(in oklab, var(--shadow-color) 28%, transparent);
+  --shadow-control: 0 1px 2px color-mix(in oklab, var(--shadow-color) 5%, transparent);
+  --shadow-control-pressed: none;
 
   /* How much of the surface colour a surface keeps. Below 100% it lets the
      page through, which is what glass is. */

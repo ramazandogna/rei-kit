@@ -96,7 +96,7 @@ const {
 }>()
 
 const VARIANT_CLASS = {
-  primary: 'bg-primary text-on-primary shadow-control hover:bg-primary/90',
+  primary: 'bg-primary text-on-primary shadow-(--shadow-control) hover:bg-primary/90',
   /*
    * An action that is real but not the one being urged.
    *
@@ -152,7 +152,7 @@ const VARIANT_CLASS = {
    * that should have no surface at all is `link`.
    */
   quiet: 'bg-transparent text-ink-soft hover:bg-muted hover:text-ink',
-  danger: 'bg-negative text-on-negative shadow-control hover:bg-negative/90',
+  danger: 'bg-negative text-on-negative shadow-(--shadow-control) hover:bg-negative/90',
   /*
    * The rest of the roles the kit already declares.
    *
@@ -162,9 +162,9 @@ const VARIANT_CLASS = {
    * that cannot use a role its own design system declares is not avoiding a
    * guess; it is incomplete.
    */
-  positive: 'bg-positive text-on-positive shadow-control hover:bg-positive/90',
-  warning: 'bg-warning text-on-warning shadow-control hover:bg-warning/90',
-  accent: 'bg-accent text-on-accent shadow-control hover:bg-accent/90',
+  positive: 'bg-positive text-on-positive shadow-(--shadow-control) hover:bg-positive/90',
+  warning: 'bg-warning text-on-warning shadow-(--shadow-control) hover:bg-warning/90',
+  accent: 'bg-accent text-on-accent shadow-(--shadow-control) hover:bg-accent/90',
   /* No fill, no border, no box: underlined so it is still obviously a control
      without one. `ghost` cannot stand in — it has a hover surface and a
      radius, so it reads as a button that happens to be empty. */
@@ -274,7 +274,7 @@ const shell = computed(() => {
   /* The press belongs to the material. A shrink by default; a material that
      draws hard offset shadows moves the button *into* its shadow instead, and
      drops the shadow, so pressing reads as pressing on every one of them. */
-  return `inline-flex items-center justify-center gap-2 font-medium ${feel} active:scale-(--press-scale) active:translate-x-(--press-offset) active:translate-y-(--press-offset) active:shadow-control-pressed`
+  return `inline-flex items-center justify-center gap-2 font-medium ${feel} active:scale-(--press-scale) active:translate-x-(--press-offset) active:translate-y-(--press-offset) active:shadow-(--shadow-control-pressed)`
 })
 
 const radius = computed(() => {

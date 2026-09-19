@@ -139,6 +139,22 @@ describe('materials', () => {
     for (const depth of DEPTHS) expect(css).toContain(depth)
   })
 
+  it('can restore quiet inside another material, with the defaults exactly', () => {
+    /* quiet.css re-declares what tokens.css already says, so a quiet region
+       can sit inside a glass page. Copied values drift unless something checks
+       them, and a stale copy would make "quiet" mean last year's quiet. */
+    const flat = (s: string) => s.replace(/\s+/g, ' ')
+    const tokens = flat(read('src/styles/tokens.css'))
+    const quiet = read('src/styles/materials/quiet.css')
+
+    const decls = [...quiet.matchAll(/(--[a-z-]+):\s*([^;]+);/g)]
+    expect(decls.length).toBeGreaterThan(15)
+
+    for (const [, name, value] of decls) {
+      expect(tokens).toContain(`${name}: ${flat(value!).trim()};`)
+    }
+  })
+
   it('bundles every material in materials.css', () => {
     const bundle = read('src/styles/materials.css')
 
@@ -167,6 +183,30 @@ describe('materials', () => {
 
     expect(isMaterial('brutal')).toBe(true)
     expect(isMaterial('skeuomorphic')).toBe(false)
+  })
+})
+
+describe('depth reaches every component', () => {
+  it('is never read through a frozen shadow utility', () => {
+    /* Tailwind builds a theme shadow's utility by inlining its value, so a
+       `shadow-control` class stays quiet's shadow whatever the material says.
+       The brutalist buttons shipped flat for exactly this reason on the first
+       try, while every card beside them had its hard offset. Only the runtime
+       form -- `shadow-(--shadow-control)` -- reaches the material. */
+    const files = ['src/components', 'src/app', 'src/web', 'src/pwa'].flatMap((dir) =>
+      readdirSync(dir)
+        .filter((f) => f.endsWith('.vue'))
+        .map((f) => read(`${dir}/${f}`)),
+    )
+
+    const frozen = files
+      .join('\n')
+      .match(/(?<![-(\w])shadow-(control-pressed|control|card|raised|overlay)\b(?!\))/g)
+
+    expect(frozen ?? []).toEqual([])
+    expect(
+      read('src/styles/tokens.css').slice(0, read('src/styles/tokens.css').indexOf(':root {')),
+    ).not.toContain('--shadow-card')
   })
 })
 

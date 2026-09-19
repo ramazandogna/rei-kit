@@ -417,6 +417,13 @@
     "summary": "A text field with its label, hint and error already wired to it.",
     "props": [
       {
+        "name": "modelValue",
+        "required": false,
+        "type": "T",
+        "description": "The value, with `v-model`. Its type is whatever you bind.",
+        "default": "undefined"
+      },
+      {
         "name": "label",
         "required": true,
         "type": "string",
@@ -619,6 +626,13 @@
     "entry": "rei-kit",
     "summary": "A set of radios, and the reason there is no `BaseRadio`.",
     "props": [
+      {
+        "name": "modelValue",
+        "required": false,
+        "type": "string",
+        "description": "The chosen option's value, with `v-model`.",
+        "default": "undefined"
+      },
       {
         "name": "legend",
         "required": true,
@@ -969,6 +983,13 @@
     "entry": "rei-kit",
     "summary": "A multi-line field.",
     "props": [
+      {
+        "name": "modelValue",
+        "required": false,
+        "type": "string",
+        "description": "The text, with `v-model`.",
+        "default": "undefined"
+      },
       {
         "name": "label",
         "required": true,

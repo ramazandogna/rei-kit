@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, useId } from 'vue'
 
+import { useBoundValue } from '../composables/use-bound-value'
+
 /**
  * A set of radios, and the reason there is no `BaseRadio`.
  *
@@ -13,12 +15,15 @@ import { computed, useId } from 'vue'
  * are options for.
  */
 const {
+  modelValue = undefined,
   legend,
   options,
   error = '',
   hint = '',
   legendHidden = false,
 } = defineProps<{
+  /** The chosen option's value, with `v-model`. */
+  modelValue?: string | undefined
   legend: string
   options: readonly { value: string; label: string; disabled?: boolean | undefined }[]
   error?: string | undefined
@@ -26,11 +31,14 @@ const {
   legendHidden?: boolean | undefined
 }>()
 
-/* An empty string by default, which is what an empty field holds anyway. It
-   also types what this emits as a string: without a default Vue types it as
-   possibly undefined, and under strictTemplates a `ref('')` could not take
-   it. */
-const model = defineModel<string>({ default: '' })
+/* Declared by hand rather than with defineModel: it accepts `undefined` and
+   emits only strings, which defineModel cannot type both ways. See
+   `use-bound-value.ts`. */
+const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
+const model = useBoundValue(
+  () => modelValue,
+  (value) => emit('update:modelValue', value),
+)
 
 const id = useId()
 const errorId = `${id}-error`

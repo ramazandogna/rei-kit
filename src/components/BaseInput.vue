@@ -2,6 +2,7 @@
 import type { InputHTMLAttributes } from 'vue'
 
 import FormField from './FormField.vue'
+import { useBoundValue } from '../composables/use-bound-value'
 
 defineOptions({ inheritAttrs: false })
 
@@ -12,6 +13,7 @@ defineOptions({ inheritAttrs: false })
  * `inputmode` — goes to the input itself, not to the wrapper around it.
  */
 const {
+  modelValue = undefined,
   label,
   error = '',
   hint = '',
@@ -21,6 +23,8 @@ const {
   variant = 'default',
 } = defineProps<
   {
+    /** The value, with `v-model`. Its type is whatever you bind. */
+    modelValue?: T | undefined
     label: string
     error?: string | undefined
     hint?: string | undefined
@@ -89,14 +93,17 @@ const CONTROL_CLASS = 'h-11 text-base'
  * order to use is one you write yourself instead, which is exactly what the
  * first numeric field tried to reach for it did.
  *
- * Generic rather than `string | number`, so the model is whatever the app
- * bound: a `ref('')` gets strings back and a `ref(0)` numbers. The union
- * could not be written into either under strictTemplates. The default
- * is still `undefined` at runtime — the cast only tells Vue what a field
- * emits once typed into, which is a value of the bound type, never nothing. (`as never`, because
- * Vue cannot resolve a default's type for an open generic.)
+ * Generic rather than `string | number`, so the value is whatever the app
+ * bound: a `ref('')` gets strings back and a `ref(0)` numbers, and a
+ * `string | undefined` from a form library is accepted as it is.
  */
-const model = defineModel<Exclude<T, undefined>>({ default: undefined as never })
+const emit = defineEmits<{ 'update:modelValue': [value: T] }>()
+// The destructured prop is typed by T's constraint, not by T itself — a
+// limit of destructuring in a generic component — so it is narrowed here.
+const model = useBoundValue<T>(
+  () => modelValue as T | undefined,
+  (value) => emit('update:modelValue', value),
+)
 </script>
 
 <template>

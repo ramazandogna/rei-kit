@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useBoundValue } from '../composables/use-bound-value'
 import FormField from './FormField.vue'
 
 /**
@@ -12,6 +13,7 @@ import FormField from './FormField.vue'
 defineOptions({ inheritAttrs: false })
 
 const {
+  modelValue = undefined,
   label,
   error = '',
   hint = '',
@@ -20,6 +22,8 @@ const {
   size = 'md',
   variant = 'default',
 } = defineProps<{
+  /** The text, with `v-model`. */
+  modelValue?: string | undefined
   label: string
   error?: string | undefined
   hint?: string | undefined
@@ -48,11 +52,14 @@ const {
   variant?: 'default' | 'unstyled' | undefined
 }>()
 
-/* An empty string by default, which is what an empty field holds anyway. It
-   also types what this emits as a string: without a default Vue types it as
-   possibly undefined, and under strictTemplates a `ref('')` could not take
-   it. */
-const model = defineModel<string>({ default: '' })
+/* Declared by hand rather than with defineModel: it accepts `undefined` and
+   emits only strings, which defineModel cannot type both ways. See
+   `use-bound-value.ts`. */
+const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
+const model = useBoundValue(
+  () => modelValue,
+  (value) => emit('update:modelValue', value),
+)
 </script>
 
 <template>

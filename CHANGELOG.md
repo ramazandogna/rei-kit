@@ -29,12 +29,20 @@ brand.**
 ### Changed
 
 - **`BaseInput`'s model is generic**, inferred from what is bound: a
-  `ref('')` gets strings back and a `ref(0)` numbers. It used to be
-  `string | number | undefined`, which neither could take under
-  `strictTemplates`. A ref typed as the old union still works.
-- **`BaseTextarea` and `BaseRadioGroup` emit strings**, with an empty string
-  as the default instead of undefined. An empty field looks and behaves the
-  same; only the type is narrower.
+  `ref('')` gets strings back and a `ref(0)` numbers, and a form library's
+  `string | undefined` is accepted as it is. It used to be
+  `string | number | undefined` both ways, which a `ref('')` could not take
+  under `strictTemplates`. **`BaseTextarea` and `BaseRadioGroup`** accept
+  `string | undefined` and emit `string`.
+
+  These three declare their `v-model` by hand instead of with
+  `defineModel`. `defineModel` cannot be typed to both accept `undefined` and
+  never emit it: with a default it stops accepting `undefined`, and without
+  one it declares that it emits it. The first version of this release used a
+  default, and the consumer check caught it breaking Hibi, whose form library
+  binds `string | undefined` under `exactOptionalPropertyTypes`. It never
+  shipped. Runtime behaviour is unchanged: an unbound field keeps its own
+  value, and `.trim` and `.number` still apply.
 
 ### Fixed
 

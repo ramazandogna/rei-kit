@@ -148,7 +148,9 @@ describe('usage examples', () => {
           if (prop.name === 'model') {
             const target = arg ?? 'modelValue'
             given.add(target)
-            if (!modelNames.some((m) => m.name === target)) {
+            // A model is either defineModel or a declared prop with its
+            // `update:` event, written by hand.
+            if (!modelNames.some((m) => m.name === target) && !known.has(target)) {
               problems.push(`${example.name}: <${component.name} v-model:${target}>`)
             }
           }

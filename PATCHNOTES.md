@@ -73,11 +73,10 @@ without.
 
 `CountUp` no longer shows decimals while counting to a whole number.
 
-**Action required:** none, in almost every app. `BaseInput`'s `v-model` now
-takes the type of the ref you bind. If your app passed a
-`string | number` union into an input's model on purpose, it still
-type-checks. `BaseTextarea` and `BaseRadioGroup` start from `''` rather
-than `undefined` when nothing is bound.
+**Action required:** none. `BaseInput`'s `v-model` now takes the type of
+whatever you bind — a string ref, a number ref, or a form library's
+`string | undefined` — and all three apps built on the kit pass their full
+checks against it unchanged.
 
 ## 2.3.1
 

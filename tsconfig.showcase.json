@@ -8,7 +8,14 @@
     "exactOptionalPropertyTypes": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
-    "paths": { "@/*": ["./src/*"] },
+    "paths": {
+      "@/*": ["./src/*"],
+      "rei-kit": ["./src/index.ts"],
+      "rei-kit/web": ["./src/web/index.ts"],
+      "rei-kit/app": ["./src/app/index.ts"],
+      "rei-kit/pwa": ["./src/pwa/index.ts"],
+      "rei-kit/motion": ["./src/motion/index.ts"]
+    },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.showcase.tsbuildinfo"
   }
 }

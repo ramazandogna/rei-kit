@@ -1,0 +1,297 @@
+[
+  {
+    "name": "AuthForm",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { AuthForm } from 'rei-kit/app'\nimport type { AuthFormValues } from 'rei-kit/app'\nimport { createAccount, signInWithGoogle } from './auth'\n\nconst remember = ref(true)\nconst busy = ref(false)\nconst labels = {\n  email: 'Email',\n  password: 'Password',\n  confirmPassword: 'Confirm password',\n  submit: 'Create account',\n  google: 'Continue with Google',\n  or: 'or',\n  rememberMe: 'Remember me',\n}\n\nasync function signUp({ email, password }: AuthFormValues) {\n  busy.value = true\n  await createAccount(email, password)\n  busy.value = false\n}\n</script>\n\n<template>\n  <AuthForm\n    v-model:remember=\"remember\"\n    mode=\"signUp\"\n    :labels=\"labels\"\n    :busy=\"busy\"\n    @submit=\"signUp\"\n    @google=\"signInWithGoogle\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { AuthForm } from 'rei-kit/app'\nimport { createAccount, signInWithGoogle } from './auth'\n\nconst remember = ref(true)\nconst busy = ref(false)\nconst labels = {\n  email: 'Email',\n  password: 'Password',\n  confirmPassword: 'Confirm password',\n  submit: 'Create account',\n  google: 'Continue with Google',\n  or: 'or',\n  rememberMe: 'Remember me',\n}\n\nasync function signUp({ email, password }) {\n  busy.value = true\n  await createAccount(email, password)\n  busy.value = false\n}\n</script>\n\n<template>\n  <AuthForm\n    v-model:remember=\"remember\"\n    mode=\"signUp\"\n    :labels=\"labels\"\n    :busy=\"busy\"\n    @submit=\"signUp\"\n    @google=\"signInWithGoogle\"\n  />\n</template>\n"
+  },
+  {
+    "name": "AuthShell",
+    "ts": "<script setup lang=\"ts\">\nimport { AuthForm, AuthShell } from 'rei-kit/app'\nimport type { AuthFormValues } from 'rei-kit/app'\nimport { signInWithPassword } from './auth'\n\nconst labels = {\n  email: 'Email',\n  password: 'Password',\n  confirmPassword: 'Confirm password',\n  submit: 'Sign in',\n}\n\nasync function signIn({ email, password }: AuthFormValues) {\n  await signInWithPassword(email, password)\n}\n</script>\n\n<template>\n  <AuthShell>\n    <template #brand>My app</template>\n\n    <AuthForm mode=\"signIn\" :labels=\"labels\" @submit=\"signIn\" />\n  </AuthShell>\n</template>\n",
+    "js": "<script setup>\nimport { AuthForm, AuthShell } from 'rei-kit/app'\nimport { signInWithPassword } from './auth'\n\nconst labels = {\n  email: 'Email',\n  password: 'Password',\n  confirmPassword: 'Confirm password',\n  submit: 'Sign in',\n}\n\nasync function signIn({ email, password }) {\n  await signInWithPassword(email, password)\n}\n</script>\n\n<template>\n  <AuthShell>\n    <template #brand>My app</template>\n\n    <AuthForm mode=\"signIn\" :labels=\"labels\" @submit=\"signIn\" />\n  </AuthShell>\n</template>\n"
+  },
+  {
+    "name": "BaseAccordion",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseAccordion } from 'rei-kit/web'\n\nconst faq = [\n  { key: 'price', title: 'How much does it cost?' },\n  { key: 'export', title: 'Can I export my data?' },\n]\n</script>\n\n<template>\n  <BaseAccordion :items=\"faq\">\n    <template #default=\"{ item }\">\n      <p v-if=\"item.key === 'price'\">Free while in beta.</p>\n      <p v-else>Yes, from the settings page.</p>\n    </template>\n  </BaseAccordion>\n</template>\n",
+    "js": "<script setup>\nimport { BaseAccordion } from 'rei-kit/web'\n\nconst faq = [\n  { key: 'price', title: 'How much does it cost?' },\n  { key: 'export', title: 'Can I export my data?' },\n]\n</script>\n\n<template>\n  <BaseAccordion :items=\"faq\">\n    <template #default=\"{ item }\">\n      <p v-if=\"item.key === 'price'\">Free while in beta.</p>\n      <p v-else>Yes, from the settings page.</p>\n    </template>\n  </BaseAccordion>\n</template>\n"
+  },
+  {
+    "name": "BaseAlert",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseAlert } from 'rei-kit'\n</script>\n\n<template>\n  <BaseAlert tone=\"warning\">\n    <template #title>Unsaved changes</template>\n    Leave now and the last edit is lost.\n  </BaseAlert>\n</template>\n",
+    "js": "<script setup>\nimport { BaseAlert } from 'rei-kit'\n</script>\n\n<template>\n  <BaseAlert tone=\"warning\">\n    <template #title>Unsaved changes</template>\n    Leave now and the last edit is lost.\n  </BaseAlert>\n</template>\n"
+  },
+  {
+    "name": "BaseAvatar",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseAvatar } from 'rei-kit'\n</script>\n\n<template>\n  <BaseAvatar name=\"Aiko Tanaka\" fallback=\"initials\" size=\"lg\" />\n</template>\n",
+    "js": "<script setup>\nimport { BaseAvatar } from 'rei-kit'\n</script>\n\n<template>\n  <BaseAvatar name=\"Aiko Tanaka\" fallback=\"initials\" size=\"lg\" />\n</template>\n"
+  },
+  {
+    "name": "BaseBadge",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseBadge } from 'rei-kit'\n</script>\n\n<template>\n  <BaseBadge tone=\"success\">Paid</BaseBadge>\n</template>\n",
+    "js": "<script setup>\nimport { BaseBadge } from 'rei-kit'\n</script>\n\n<template>\n  <BaseBadge tone=\"success\">Paid</BaseBadge>\n</template>\n"
+  },
+  {
+    "name": "BaseBreadcrumb",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseBreadcrumb } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseBreadcrumb\n    :items=\"[{ label: 'Docs', to: '/docs' }, { label: 'Install' }]\"\n    label=\"Breadcrumb\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { BaseBreadcrumb } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseBreadcrumb\n    :items=\"[{ label: 'Docs', to: '/docs' }, { label: 'Install' }]\"\n    label=\"Breadcrumb\"\n  />\n</template>\n"
+  },
+  {
+    "name": "BaseButton",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseButton } from 'rei-kit'\n\nconst deleting = ref(false)\n\nfunction save() {\n  // …\n}\n</script>\n\n<template>\n  <div class=\"flex flex-wrap gap-2\">\n    <BaseButton @click=\"save\">Save</BaseButton>\n    <BaseButton variant=\"secondary\">Cancel</BaseButton>\n    <BaseButton variant=\"danger\" :loading=\"deleting\">Delete</BaseButton>\n    <BaseButton as=\"a\" href=\"/docs\" variant=\"ghost\">Read the docs</BaseButton>\n  </div>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton } from 'rei-kit'\n\nconst deleting = ref(false)\n\nfunction save() {\n  // …\n}\n</script>\n\n<template>\n  <div class=\"flex flex-wrap gap-2\">\n    <BaseButton @click=\"save\">Save</BaseButton>\n    <BaseButton variant=\"secondary\">Cancel</BaseButton>\n    <BaseButton variant=\"danger\" :loading=\"deleting\">Delete</BaseButton>\n    <BaseButton as=\"a\" href=\"/docs\" variant=\"ghost\">Read the docs</BaseButton>\n  </div>\n</template>\n"
+  },
+  {
+    "name": "BaseCard",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseCard } from 'rei-kit'\n</script>\n\n<template>\n  <BaseCard>\n    <template #head>This month</template>\n    Spent less than last month.\n    <template #foot>Updated today</template>\n  </BaseCard>\n</template>\n",
+    "js": "<script setup>\nimport { BaseCard } from 'rei-kit'\n</script>\n\n<template>\n  <BaseCard>\n    <template #head>This month</template>\n    Spent less than last month.\n    <template #foot>Updated today</template>\n  </BaseCard>\n</template>\n"
+  },
+  {
+    "name": "BaseCheckbox",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseCheckbox } from 'rei-kit'\n\nconst remember = ref(false)\n</script>\n\n<template>\n  <BaseCheckbox v-model=\"remember\" label=\"Remember me\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseCheckbox } from 'rei-kit'\n\nconst remember = ref(false)\n</script>\n\n<template>\n  <BaseCheckbox v-model=\"remember\" label=\"Remember me\" />\n</template>\n"
+  },
+  {
+    "name": "BaseCombobox",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseCombobox } from 'rei-kit'\n\nconst country = ref('')\nconst countries = [\n  { value: 'tr', label: 'Türkiye' },\n  { value: 'jp', label: 'Japan' },\n  { value: 'de', label: 'Germany' },\n]\n</script>\n\n<template>\n  <BaseCombobox\n    v-model=\"country\"\n    label=\"Country\"\n    :options=\"countries\"\n    placeholder=\"Start typing\"\n    empty-label=\"No country matches\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseCombobox } from 'rei-kit'\n\nconst country = ref('')\nconst countries = [\n  { value: 'tr', label: 'Türkiye' },\n  { value: 'jp', label: 'Japan' },\n  { value: 'de', label: 'Germany' },\n]\n</script>\n\n<template>\n  <BaseCombobox\n    v-model=\"country\"\n    label=\"Country\"\n    :options=\"countries\"\n    placeholder=\"Start typing\"\n    empty-label=\"No country matches\"\n  />\n</template>\n"
+  },
+  {
+    "name": "BaseDisclosure",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseDisclosure } from 'rei-kit/web'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseDisclosure v-model=\"open\" title=\"Show details\">\n    Everything that did not fit in the summary.\n  </BaseDisclosure>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseDisclosure } from 'rei-kit/web'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseDisclosure v-model=\"open\" title=\"Show details\">\n    Everything that did not fit in the summary.\n  </BaseDisclosure>\n</template>\n"
+  },
+  {
+    "name": "BaseInput",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseInput } from 'rei-kit'\n\nconst email = ref('')\n</script>\n\n<template>\n  <BaseInput v-model=\"email\" label=\"Email\" type=\"email\" hint=\"We never share it.\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseInput } from 'rei-kit'\n\nconst email = ref('')\n</script>\n\n<template>\n  <BaseInput v-model=\"email\" label=\"Email\" type=\"email\" hint=\"We never share it.\" />\n</template>\n"
+  },
+  {
+    "name": "BaseMarquee",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseBadge } from 'rei-kit'\nimport { BaseMarquee } from 'rei-kit/motion'\n\nconst names = ['Nord', 'Dracula', 'Catppuccin', 'Gruvbox']\n</script>\n\n<template>\n  <BaseMarquee :duration=\"40\">\n    <BaseBadge v-for=\"name in names\" :key=\"name\">{{ name }}</BaseBadge>\n  </BaseMarquee>\n</template>\n",
+    "js": "<script setup>\nimport { BaseBadge } from 'rei-kit'\nimport { BaseMarquee } from 'rei-kit/motion'\n\nconst names = ['Nord', 'Dracula', 'Catppuccin', 'Gruvbox']\n</script>\n\n<template>\n  <BaseMarquee :duration=\"40\">\n    <BaseBadge v-for=\"name in names\" :key=\"name\">{{ name }}</BaseBadge>\n  </BaseMarquee>\n</template>\n"
+  },
+  {
+    "name": "BaseMenu",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseAvatar, BaseMenu } from 'rei-kit'\n\nfunction signOut() {\n  // …\n}\n</script>\n\n<template>\n  <BaseMenu label=\"Account\">\n    <template #trigger>\n      <BaseAvatar name=\"Aiko Tanaka\" fallback=\"initials\" />\n    </template>\n\n    <a href=\"/profile\" role=\"menuitem\">Profile</a>\n    <button type=\"button\" role=\"menuitem\" @click=\"signOut\">Sign out</button>\n  </BaseMenu>\n</template>\n",
+    "js": "<script setup>\nimport { BaseAvatar, BaseMenu } from 'rei-kit'\n\nfunction signOut() {\n  // …\n}\n</script>\n\n<template>\n  <BaseMenu label=\"Account\">\n    <template #trigger>\n      <BaseAvatar name=\"Aiko Tanaka\" fallback=\"initials\" />\n    </template>\n\n    <a href=\"/profile\" role=\"menuitem\">Profile</a>\n    <button type=\"button\" role=\"menuitem\" @click=\"signOut\">Sign out</button>\n  </BaseMenu>\n</template>\n"
+  },
+  {
+    "name": "BaseModal",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseButton } from 'rei-kit'\nimport { BaseModal } from 'rei-kit/web'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseButton @click=\"open = true\">Delete account</BaseButton>\n\n  <BaseModal v-model=\"open\" title=\"Delete account?\" close-label=\"Close\" tone=\"alert\">\n    This cannot be undone.\n\n    <template #actions>\n      <BaseButton variant=\"secondary\" @click=\"open = false\">Cancel</BaseButton>\n      <BaseButton variant=\"danger\">Delete</BaseButton>\n    </template>\n  </BaseModal>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton } from 'rei-kit'\nimport { BaseModal } from 'rei-kit/web'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseButton @click=\"open = true\">Delete account</BaseButton>\n\n  <BaseModal v-model=\"open\" title=\"Delete account?\" close-label=\"Close\" tone=\"alert\">\n    This cannot be undone.\n\n    <template #actions>\n      <BaseButton variant=\"secondary\" @click=\"open = false\">Cancel</BaseButton>\n      <BaseButton variant=\"danger\">Delete</BaseButton>\n    </template>\n  </BaseModal>\n</template>\n"
+  },
+  {
+    "name": "BasePagination",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BasePagination } from 'rei-kit/web'\n\nconst page = ref(1)\n</script>\n\n<template>\n  <BasePagination\n    :page=\"page\"\n    :pages=\"12\"\n    previous-label=\"Previous\"\n    next-label=\"Next\"\n    label=\"Pages\"\n    @change=\"page = $event\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BasePagination } from 'rei-kit/web'\n\nconst page = ref(1)\n</script>\n\n<template>\n  <BasePagination\n    :page=\"page\"\n    :pages=\"12\"\n    previous-label=\"Previous\"\n    next-label=\"Next\"\n    label=\"Pages\"\n    @change=\"page = $event\"\n  />\n</template>\n"
+  },
+  {
+    "name": "BaseRadioGroup",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseRadioGroup } from 'rei-kit'\n\nconst plan = ref('monthly')\nconst plans = [\n  { value: 'monthly', label: 'Monthly' },\n  { value: 'yearly', label: 'Yearly' },\n]\n</script>\n\n<template>\n  <BaseRadioGroup v-model=\"plan\" legend=\"Plan\" :options=\"plans\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseRadioGroup } from 'rei-kit'\n\nconst plan = ref('monthly')\nconst plans = [\n  { value: 'monthly', label: 'Monthly' },\n  { value: 'yearly', label: 'Yearly' },\n]\n</script>\n\n<template>\n  <BaseRadioGroup v-model=\"plan\" legend=\"Plan\" :options=\"plans\" />\n</template>\n"
+  },
+  {
+    "name": "BaseReveal",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseCard } from 'rei-kit'\nimport { BaseReveal } from 'rei-kit/motion'\n\nconst items = ['Fast', 'Accessible', 'Themeable']\n</script>\n\n<template>\n  <BaseReveal v-for=\"(item, i) in items\" :key=\"item\" :delay=\"i * 80\">\n    <BaseCard>{{ item }}</BaseCard>\n  </BaseReveal>\n</template>\n",
+    "js": "<script setup>\nimport { BaseCard } from 'rei-kit'\nimport { BaseReveal } from 'rei-kit/motion'\n\nconst items = ['Fast', 'Accessible', 'Themeable']\n</script>\n\n<template>\n  <BaseReveal v-for=\"(item, i) in items\" :key=\"item\" :delay=\"i * 80\">\n    <BaseCard>{{ item }}</BaseCard>\n  </BaseReveal>\n</template>\n"
+  },
+  {
+    "name": "BaseSelect",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseSelect } from 'rei-kit'\n\nconst currency = ref()\nconst options = [\n  { value: 'TRY', label: 'Turkish lira' },\n  { value: 'JPY', label: 'Japanese yen' },\n]\n</script>\n\n<template>\n  <BaseSelect v-model=\"currency\" label=\"Currency\" :options=\"options\" placeholder=\"Choose one\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseSelect } from 'rei-kit'\n\nconst currency = ref()\nconst options = [\n  { value: 'TRY', label: 'Turkish lira' },\n  { value: 'JPY', label: 'Japanese yen' },\n]\n</script>\n\n<template>\n  <BaseSelect v-model=\"currency\" label=\"Currency\" :options=\"options\" placeholder=\"Choose one\" />\n</template>\n"
+  },
+  {
+    "name": "BaseSheet",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseButton, BaseSheet } from 'rei-kit'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseButton @click=\"open = true\">New entry</BaseButton>\n\n  <BaseSheet v-model=\"open\" title=\"New entry\" close-label=\"Close\">\n    <p>Anything that belongs to a thumb.</p>\n  </BaseSheet>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton, BaseSheet } from 'rei-kit'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseButton @click=\"open = true\">New entry</BaseButton>\n\n  <BaseSheet v-model=\"open\" title=\"New entry\" close-label=\"Close\">\n    <p>Anything that belongs to a thumb.</p>\n  </BaseSheet>\n</template>\n"
+  },
+  {
+    "name": "BaseSlider",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseSlider } from 'rei-kit'\n\nconst goal = ref(20)\n</script>\n\n<template>\n  <BaseSlider v-model=\"goal\" label=\"Daily goal\" :min=\"5\" :max=\"60\" :step=\"5\" show-value />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseSlider } from 'rei-kit'\n\nconst goal = ref(20)\n</script>\n\n<template>\n  <BaseSlider v-model=\"goal\" label=\"Daily goal\" :min=\"5\" :max=\"60\" :step=\"5\" show-value />\n</template>\n"
+  },
+  {
+    "name": "BaseSpinner",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseSpinner } from 'rei-kit'\n</script>\n\n<template>\n  <BaseSpinner label=\"Loading entries\" />\n</template>\n",
+    "js": "<script setup>\nimport { BaseSpinner } from 'rei-kit'\n</script>\n\n<template>\n  <BaseSpinner label=\"Loading entries\" />\n</template>\n"
+  },
+  {
+    "name": "BaseSwitch",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseSwitch } from 'rei-kit'\n\nconst reminders = ref(true)\n</script>\n\n<template>\n  <BaseSwitch v-model=\"reminders\" label=\"Daily reminder\" hint=\"Every evening at 21:00\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseSwitch } from 'rei-kit'\n\nconst reminders = ref(true)\n</script>\n\n<template>\n  <BaseSwitch v-model=\"reminders\" label=\"Daily reminder\" hint=\"Every evening at 21:00\" />\n</template>\n"
+  },
+  {
+    "name": "BaseTable",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseTable } from 'rei-kit'\n\nconst columns = [\n  { key: 'date', label: 'Date' },\n  { key: 'amount', label: 'Amount', align: 'end' },\n] as const\nconst rows = [\n  { id: 1, date: '12 Sep', amount: 320 },\n  { id: 2, date: '14 Sep', amount: 1250 },\n]\n</script>\n\n<template>\n  <BaseTable :columns=\"columns\" :rows=\"rows\" caption=\"Recent payments\" row-key=\"id\">\n    <template #amount=\"{ value }\">{{ value }} ₺</template>\n  </BaseTable>\n</template>\n",
+    "js": "<script setup>\nimport { BaseTable } from 'rei-kit'\n\nconst columns = [\n  { key: 'date', label: 'Date' },\n  { key: 'amount', label: 'Amount', align: 'end' },\n]\nconst rows = [\n  { id: 1, date: '12 Sep', amount: 320 },\n  { id: 2, date: '14 Sep', amount: 1250 },\n]\n</script>\n\n<template>\n  <BaseTable :columns=\"columns\" :rows=\"rows\" caption=\"Recent payments\" row-key=\"id\">\n    <template #amount=\"{ value }\">{{ value }} ₺</template>\n  </BaseTable>\n</template>\n"
+  },
+  {
+    "name": "BaseTabs",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseTabs } from 'rei-kit/web'\n\nconst tab = ref('week')\nconst tabs = [\n  { key: 'week', label: 'Week' },\n  { key: 'month', label: 'Month' },\n]\n</script>\n\n<template>\n  <BaseTabs v-model=\"tab\" :items=\"tabs\" label=\"Report\">\n    <template #default=\"{ active }\">\n      <p v-if=\"active === 'week'\">This week…</p>\n      <p v-else>This month…</p>\n    </template>\n  </BaseTabs>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseTabs } from 'rei-kit/web'\n\nconst tab = ref('week')\nconst tabs = [\n  { key: 'week', label: 'Week' },\n  { key: 'month', label: 'Month' },\n]\n</script>\n\n<template>\n  <BaseTabs v-model=\"tab\" :items=\"tabs\" label=\"Report\">\n    <template #default=\"{ active }\">\n      <p v-if=\"active === 'week'\">This week…</p>\n      <p v-else>This month…</p>\n    </template>\n  </BaseTabs>\n</template>\n"
+  },
+  {
+    "name": "BaseTextarea",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseTextarea } from 'rei-kit'\n\nconst note = ref('')\n</script>\n\n<template>\n  <BaseTextarea v-model=\"note\" label=\"Note\" :rows=\"4\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseTextarea } from 'rei-kit'\n\nconst note = ref('')\n</script>\n\n<template>\n  <BaseTextarea v-model=\"note\" label=\"Note\" :rows=\"4\" />\n</template>\n"
+  },
+  {
+    "name": "BaseTooltip",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n</template>\n",
+    "js": "<script setup>\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n</template>\n"
+  },
+  {
+    "name": "CountUp",
+    "ts": "<script setup lang=\"ts\">\nimport { CountUp } from 'rei-kit/motion'\n</script>\n\n<template>\n  <CountUp :value=\"12480\" />\n</template>\n",
+    "js": "<script setup>\nimport { CountUp } from 'rei-kit/motion'\n</script>\n\n<template>\n  <CountUp :value=\"12480\" />\n</template>\n"
+  },
+  {
+    "name": "EmptyState",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseButton, EmptyState } from 'rei-kit'\n</script>\n\n<template>\n  <EmptyState title=\"No entries yet\" description=\"Your first one takes ten seconds.\">\n    <template #action>\n      <BaseButton>Write one</BaseButton>\n    </template>\n  </EmptyState>\n</template>\n",
+    "js": "<script setup>\nimport { BaseButton, EmptyState } from 'rei-kit'\n</script>\n\n<template>\n  <EmptyState title=\"No entries yet\" description=\"Your first one takes ten seconds.\">\n    <template #action>\n      <BaseButton>Write one</BaseButton>\n    </template>\n  </EmptyState>\n</template>\n"
+  },
+  {
+    "name": "ErrorBoundary",
+    "ts": "<script setup lang=\"ts\">\nimport { RouterView } from 'vue-router'\nimport { BaseButton, ErrorBoundary } from 'rei-kit'\n\nfunction report(cause: unknown) {\n  console.error(cause)\n}\n</script>\n\n<template>\n  <ErrorBoundary @error=\"report\">\n    <RouterView />\n\n    <template #fallback=\"{ reset }\">\n      <p>That part of the page failed.</p>\n      <BaseButton @click=\"reset\">Try again</BaseButton>\n    </template>\n  </ErrorBoundary>\n</template>\n",
+    "js": "<script setup>\nimport { RouterView } from 'vue-router'\nimport { BaseButton, ErrorBoundary } from 'rei-kit'\n\nfunction report(cause) {\n  console.error(cause)\n}\n</script>\n\n<template>\n  <ErrorBoundary @error=\"report\">\n    <RouterView />\n\n    <template #fallback=\"{ reset }\">\n      <p>That part of the page failed.</p>\n      <BaseButton @click=\"reset\">Try again</BaseButton>\n    </template>\n  </ErrorBoundary>\n</template>\n"
+  },
+  {
+    "name": "FabButton",
+    "ts": "<script setup lang=\"ts\">\nimport { FabButton } from 'rei-kit/app'\n\nfunction create() {\n  // …\n}\n</script>\n\n<template>\n  <FabButton label=\"New entry\" @click=\"create\">+</FabButton>\n</template>\n",
+    "js": "<script setup>\nimport { FabButton } from 'rei-kit/app'\n\nfunction create() {\n  // …\n}\n</script>\n\n<template>\n  <FabButton label=\"New entry\" @click=\"create\">+</FabButton>\n</template>\n"
+  },
+  {
+    "name": "FormField",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { FormField } from 'rei-kit'\n\nconst name = ref('')\nconst error = ref('')\n</script>\n\n<template>\n  <FormField label=\"Username\" hint=\"Letters and numbers only\" :error=\"error\">\n    <template #default=\"{ id, describedBy, invalid }\">\n      <input\n        :id=\"id\"\n        v-model=\"name\"\n        class=\"control rounded-card px-3 py-2\"\n        :aria-describedby=\"describedBy\"\n        :aria-invalid=\"invalid\"\n      />\n    </template>\n  </FormField>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { FormField } from 'rei-kit'\n\nconst name = ref('')\nconst error = ref('')\n</script>\n\n<template>\n  <FormField label=\"Username\" hint=\"Letters and numbers only\" :error=\"error\">\n    <template #default=\"{ id, describedBy, invalid }\">\n      <input\n        :id=\"id\"\n        v-model=\"name\"\n        class=\"control rounded-card px-3 py-2\"\n        :aria-describedby=\"describedBy\"\n        :aria-invalid=\"invalid\"\n      />\n    </template>\n  </FormField>\n</template>\n"
+  },
+  {
+    "name": "GoogleButton",
+    "ts": "<script setup lang=\"ts\">\nimport { GoogleButton } from 'rei-kit'\n\nfunction signInWithGoogle() {\n  // …\n}\n</script>\n\n<template>\n  <GoogleButton label=\"Continue with Google\" @click=\"signInWithGoogle\" />\n</template>\n",
+    "js": "<script setup>\nimport { GoogleButton } from 'rei-kit'\n\nfunction signInWithGoogle() {\n  // …\n}\n</script>\n\n<template>\n  <GoogleButton label=\"Continue with Google\" @click=\"signInWithGoogle\" />\n</template>\n"
+  },
+  {
+    "name": "InstallPrompt",
+    "ts": "<script setup lang=\"ts\">\nimport { InstallPrompt } from 'rei-kit/pwa'\n</script>\n\n<template>\n  <InstallPrompt\n    storage-key=\"my-app-install\"\n    title=\"Install My app\"\n    body=\"Open it from your home screen, even offline.\"\n    action=\"Install\"\n    later=\"Not now\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { InstallPrompt } from 'rei-kit/pwa'\n</script>\n\n<template>\n  <InstallPrompt\n    storage-key=\"my-app-install\"\n    title=\"Install My app\"\n    body=\"Open it from your home screen, even offline.\"\n    action=\"Install\"\n    later=\"Not now\"\n  />\n</template>\n"
+  },
+  {
+    "name": "InstallSettings",
+    "ts": "<script setup lang=\"ts\">\nimport { InstallSettings } from 'rei-kit/pwa'\n</script>\n\n<template>\n  <InstallSettings\n    title=\"App\"\n    label=\"Install on this device\"\n    installed-label=\"Installed\"\n    body=\"Opens from your home screen, works offline.\"\n    ios-body=\"Tap Share, then Add to Home Screen.\"\n    action=\"Install\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { InstallSettings } from 'rei-kit/pwa'\n</script>\n\n<template>\n  <InstallSettings\n    title=\"App\"\n    label=\"Install on this device\"\n    installed-label=\"Installed\"\n    body=\"Opens from your home screen, works offline.\"\n    ios-body=\"Tap Share, then Add to Home Screen.\"\n    action=\"Install\"\n  />\n</template>\n"
+  },
+  {
+    "name": "LocaleLinks",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { LocaleLinks } from 'rei-kit'\n\nconst locale = ref('system')\n</script>\n\n<template>\n  <LocaleLinks v-model=\"locale\" :locales=\"['en', 'tr']\" :labels=\"{ en: 'English', tr: 'Türkçe' }\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { LocaleLinks } from 'rei-kit'\n\nconst locale = ref('system')\n</script>\n\n<template>\n  <LocaleLinks v-model=\"locale\" :locales=\"['en', 'tr']\" :labels=\"{ en: 'English', tr: 'Türkçe' }\" />\n</template>\n"
+  },
+  {
+    "name": "LocaleSheet",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { LocaleSheet } from 'rei-kit/app'\n\nconst locale = ref('system')\n</script>\n\n<template>\n  <LocaleSheet\n    v-model=\"locale\"\n    label=\"Language\"\n    system-label=\"Same as device\"\n    :options=\"[\n      { value: 'en', label: 'English' },\n      { value: 'tr', label: 'Türkçe' },\n    ]\"\n    close-label=\"Close\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { LocaleSheet } from 'rei-kit/app'\n\nconst locale = ref('system')\n</script>\n\n<template>\n  <LocaleSheet\n    v-model=\"locale\"\n    label=\"Language\"\n    system-label=\"Same as device\"\n    :options=\"[\n      { value: 'en', label: 'English' },\n      { value: 'tr', label: 'Türkçe' },\n    ]\"\n    close-label=\"Close\"\n  />\n</template>\n"
+  },
+  {
+    "name": "NavLinks",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { NavLinks } from 'rei-kit/web'\n\nconst active = ref('docs')\nconst links = [\n  { key: 'docs', to: '/docs', label: 'Docs' },\n  { key: 'blog', to: '/blog', label: 'Blog' },\n]\n</script>\n\n<template>\n  <NavLinks :items=\"links\" :active=\"active\" label=\"Main\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { NavLinks } from 'rei-kit/web'\n\nconst active = ref('docs')\nconst links = [\n  { key: 'docs', to: '/docs', label: 'Docs' },\n  { key: 'blog', to: '/blog', label: 'Blog' },\n]\n</script>\n\n<template>\n  <NavLinks :items=\"links\" :active=\"active\" label=\"Main\" />\n</template>\n"
+  },
+  {
+    "name": "NumberTicker",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { NumberTicker } from 'rei-kit/motion'\n\nconst balance = ref(48200)\n</script>\n\n<template>\n  <NumberTicker :value=\"balance\" :format=\"{ style: 'currency', currency: 'TRY' }\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { NumberTicker } from 'rei-kit/motion'\n\nconst balance = ref(48200)\n</script>\n\n<template>\n  <NumberTicker :value=\"balance\" :format=\"{ style: 'currency', currency: 'TRY' }\" />\n</template>\n"
+  },
+  {
+    "name": "OfflineBanner",
+    "ts": "<script setup lang=\"ts\">\nimport { OfflineBanner } from 'rei-kit/app'\n</script>\n\n<template>\n  <OfflineBanner label=\"You are offline. Changes will sync when you are back.\" />\n</template>\n",
+    "js": "<script setup>\nimport { OfflineBanner } from 'rei-kit/app'\n</script>\n\n<template>\n  <OfflineBanner label=\"You are offline. Changes will sync when you are back.\" />\n</template>\n"
+  },
+  {
+    "name": "PageContainer",
+    "ts": "<script setup lang=\"ts\">\nimport { PageContainer } from 'rei-kit'\n</script>\n\n<template>\n  <PageContainer width=\"reading\" as=\"article\">\n    <h1>A long read</h1>\n    <p>Set at about 68 characters a line.</p>\n  </PageContainer>\n</template>\n",
+    "js": "<script setup>\nimport { PageContainer } from 'rei-kit'\n</script>\n\n<template>\n  <PageContainer width=\"reading\" as=\"article\">\n    <h1>A long read</h1>\n    <p>Set at about 68 characters a line.</p>\n  </PageContainer>\n</template>\n"
+  },
+  {
+    "name": "PageHeader",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseButton, PageHeader } from 'rei-kit'\n</script>\n\n<template>\n  <PageHeader title=\"Settings\">\n    <template #right>\n      <BaseButton size=\"sm\" variant=\"ghost\">Done</BaseButton>\n    </template>\n  </PageHeader>\n</template>\n",
+    "js": "<script setup>\nimport { BaseButton, PageHeader } from 'rei-kit'\n</script>\n\n<template>\n  <PageHeader title=\"Settings\">\n    <template #right>\n      <BaseButton size=\"sm\" variant=\"ghost\">Done</BaseButton>\n    </template>\n  </PageHeader>\n</template>\n"
+  },
+  {
+    "name": "PriceCard",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseButton, PriceCard } from 'rei-kit'\n</script>\n\n<template>\n  <PriceCard\n    name=\"Pro\"\n    price=\"₺49\"\n    period=\"/ month\"\n    :features=\"['Unlimited entries', 'Export', 'Sync']\"\n    recommended\n    badge=\"Popular\"\n  >\n    <template #action>\n      <BaseButton block>Choose Pro</BaseButton>\n    </template>\n  </PriceCard>\n</template>\n",
+    "js": "<script setup>\nimport { BaseButton, PriceCard } from 'rei-kit'\n</script>\n\n<template>\n  <PriceCard\n    name=\"Pro\"\n    price=\"₺49\"\n    period=\"/ month\"\n    :features=\"['Unlimited entries', 'Export', 'Sync']\"\n    recommended\n    badge=\"Popular\"\n  >\n    <template #action>\n      <BaseButton block>Choose Pro</BaseButton>\n    </template>\n  </PriceCard>\n</template>\n"
+  },
+  {
+    "name": "ProgressBar",
+    "ts": "<script setup lang=\"ts\">\nimport { ProgressBar } from 'rei-kit'\n</script>\n\n<template>\n  <ProgressBar :value=\"18\" :max=\"28\" label=\"Course progress\" />\n</template>\n",
+    "js": "<script setup>\nimport { ProgressBar } from 'rei-kit'\n</script>\n\n<template>\n  <ProgressBar :value=\"18\" :max=\"28\" label=\"Course progress\" />\n</template>\n"
+  },
+  {
+    "name": "SectionHeading",
+    "ts": "<script setup lang=\"ts\">\nimport { SectionHeading } from 'rei-kit'\n\n// Written out, so Tailwind sees the classes.\nconst income = {\n  fill: 'bg-positive',\n  card: 'bg-positive/5 border-positive/25',\n  text: 'text-positive',\n}\n</script>\n\n<template>\n  <SectionHeading :tone=\"income\" label=\"Income\" :count=\"3\" />\n</template>\n",
+    "js": "<script setup>\nimport { SectionHeading } from 'rei-kit'\n\n// Written out, so Tailwind sees the classes.\nconst income = {\n  fill: 'bg-positive',\n  card: 'bg-positive/5 border-positive/25',\n  text: 'text-positive',\n}\n</script>\n\n<template>\n  <SectionHeading :tone=\"income\" label=\"Income\" :count=\"3\" />\n</template>\n"
+  },
+  {
+    "name": "SegmentedControl",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { SegmentedControl } from 'rei-kit'\n\nconst range = ref('week')\nconst ranges = [\n  { value: 'week', label: 'Week' },\n  { value: 'month', label: 'Month' },\n  { value: 'year', label: 'Year' },\n]\n</script>\n\n<template>\n  <SegmentedControl v-model=\"range\" :options=\"ranges\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { SegmentedControl } from 'rei-kit'\n\nconst range = ref('week')\nconst ranges = [\n  { value: 'week', label: 'Week' },\n  { value: 'month', label: 'Month' },\n  { value: 'year', label: 'Year' },\n]\n</script>\n\n<template>\n  <SegmentedControl v-model=\"range\" :options=\"ranges\" />\n</template>\n"
+  },
+  {
+    "name": "SettingsGroup",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseSwitch, SettingsGroup, SettingsRow } from 'rei-kit'\n\nconst reminders = ref(true)\n</script>\n\n<template>\n  <SettingsGroup title=\"Notifications\">\n    <SettingsRow label=\"Daily reminder\">\n      <BaseSwitch v-model=\"reminders\" label=\"Daily reminder\" label-hidden />\n    </SettingsRow>\n  </SettingsGroup>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseSwitch, SettingsGroup, SettingsRow } from 'rei-kit'\n\nconst reminders = ref(true)\n</script>\n\n<template>\n  <SettingsGroup title=\"Notifications\">\n    <SettingsRow label=\"Daily reminder\">\n      <BaseSwitch v-model=\"reminders\" label=\"Daily reminder\" label-hidden />\n    </SettingsRow>\n  </SettingsGroup>\n</template>\n"
+  },
+  {
+    "name": "SettingsRow",
+    "ts": "<script setup lang=\"ts\">\nimport { Languages } from 'lucide-vue-next'\nimport { SettingsGroup, SettingsRow } from 'rei-kit'\n\nfunction openLanguages() {\n  // …\n}\n</script>\n\n<template>\n  <SettingsGroup title=\"Account\">\n    <SettingsRow\n      label=\"Language\"\n      description=\"English\"\n      :icon=\"Languages\"\n      interactive\n      @click=\"openLanguages\"\n    />\n  </SettingsGroup>\n</template>\n",
+    "js": "<script setup>\nimport { Languages } from 'lucide-vue-next'\nimport { SettingsGroup, SettingsRow } from 'rei-kit'\n\nfunction openLanguages() {\n  // …\n}\n</script>\n\n<template>\n  <SettingsGroup title=\"Account\">\n    <SettingsRow\n      label=\"Language\"\n      description=\"English\"\n      :icon=\"Languages\"\n      interactive\n      @click=\"openLanguages\"\n    />\n  </SettingsGroup>\n</template>\n"
+  },
+  {
+    "name": "SkeletonList",
+    "ts": "<script setup lang=\"ts\">\nimport { SkeletonList } from 'rei-kit'\n</script>\n\n<template>\n  <SkeletonList :rows=\"4\" label=\"Loading entries\" />\n</template>\n",
+    "js": "<script setup>\nimport { SkeletonList } from 'rei-kit'\n</script>\n\n<template>\n  <SkeletonList :rows=\"4\" label=\"Loading entries\" />\n</template>\n"
+  },
+  {
+    "name": "StatCard",
+    "ts": "<script setup lang=\"ts\">\nimport { StatCard } from 'rei-kit'\n</script>\n\n<template>\n  <StatCard value=\"¥48,200\" label=\"This month\" trend=\"down\" />\n</template>\n",
+    "js": "<script setup>\nimport { StatCard } from 'rei-kit'\n</script>\n\n<template>\n  <StatCard value=\"¥48,200\" label=\"This month\" trend=\"down\" />\n</template>\n"
+  },
+  {
+    "name": "TabBar",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { House, Settings } from 'lucide-vue-next'\nimport { TabBar } from 'rei-kit'\n\nconst active = ref('home')\nconst tabs = [\n  { key: 'home', to: '/', label: 'Home', icon: House },\n  { key: 'settings', to: '/settings', label: 'Settings', icon: Settings },\n]\n</script>\n\n<template>\n  <TabBar :items=\"tabs\" :active=\"active\" label=\"Main\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { House, Settings } from 'lucide-vue-next'\nimport { TabBar } from 'rei-kit'\n\nconst active = ref('home')\nconst tabs = [\n  { key: 'home', to: '/', label: 'Home', icon: House },\n  { key: 'settings', to: '/settings', label: 'Settings', icon: Settings },\n]\n</script>\n\n<template>\n  <TabBar :items=\"tabs\" :active=\"active\" label=\"Main\" />\n</template>\n"
+  },
+  {
+    "name": "TabShell",
+    "ts": "<script setup lang=\"ts\">\nimport { RouterView } from 'vue-router'\nimport { TabShell } from 'rei-kit/app'\n</script>\n\n<template>\n  <TabShell>\n    <RouterView />\n\n    <template #aside>\n      <p>© 2026 My app</p>\n    </template>\n  </TabShell>\n</template>\n",
+    "js": "<script setup>\nimport { RouterView } from 'vue-router'\nimport { TabShell } from 'rei-kit/app'\n</script>\n\n<template>\n  <TabShell>\n    <RouterView />\n\n    <template #aside>\n      <p>© 2026 My app</p>\n    </template>\n  </TabShell>\n</template>\n"
+  },
+  {
+    "name": "TextRotate",
+    "ts": "<script setup lang=\"ts\">\nimport { TextRotate } from 'rei-kit/motion'\n</script>\n\n<template>\n  <h1>Build it <TextRotate :words=\"['glass', 'brutal', 'soft']\" /></h1>\n</template>\n",
+    "js": "<script setup>\nimport { TextRotate } from 'rei-kit/motion'\n</script>\n\n<template>\n  <h1>Build it <TextRotate :words=\"['glass', 'brutal', 'soft']\" /></h1>\n</template>\n"
+  },
+  {
+    "name": "ToastHost",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseButton, ToastHost, useToast } from 'rei-kit'\n\nconst toast = useToast()\n</script>\n\n<template>\n  <!-- Once, near the root of the app. -->\n  <ToastHost close-label=\"Close\" />\n\n  <BaseButton @click=\"toast.success('Saved')\">Save</BaseButton>\n</template>\n",
+    "js": "<script setup>\nimport { BaseButton, ToastHost, useToast } from 'rei-kit'\n\nconst toast = useToast()\n</script>\n\n<template>\n  <!-- Once, near the root of the app. -->\n  <ToastHost close-label=\"Close\" />\n\n  <BaseButton @click=\"toast.success('Saved')\">Save</BaseButton>\n</template>\n"
+  },
+  {
+    "name": "ToneDot",
+    "ts": "<script setup lang=\"ts\">\nimport { ToneDot } from 'rei-kit'\n</script>\n\n<template>\n  <ToneDot fill=\"bg-positive\" label=\"Income\" />\n</template>\n",
+    "js": "<script setup>\nimport { ToneDot } from 'rei-kit'\n</script>\n\n<template>\n  <ToneDot fill=\"bg-positive\" label=\"Income\" />\n</template>\n"
+  },
+  {
+    "name": "TourShell",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TourShell } from 'rei-kit/app'\n\nconst open = ref(true)\nconst step = ref(0)\n</script>\n\n<template>\n  <TourShell\n    v-model=\"open\"\n    :index=\"step\"\n    :total=\"3\"\n    dialog-label=\"Welcome tour\"\n    skip-label=\"Skip\"\n    back-label=\"Back\"\n    next-label=\"Next\"\n    last-label=\"Start\"\n    :step-label=\"(n) => `Step ${n}`\"\n    @next=\"step++\"\n    @back=\"step--\"\n    @dismiss=\"open = false\"\n  >\n    <template #default=\"{ index }\">\n      <h2>Step {{ index + 1 }}</h2>\n    </template>\n  </TourShell>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { TourShell } from 'rei-kit/app'\n\nconst open = ref(true)\nconst step = ref(0)\n</script>\n\n<template>\n  <TourShell\n    v-model=\"open\"\n    :index=\"step\"\n    :total=\"3\"\n    dialog-label=\"Welcome tour\"\n    skip-label=\"Skip\"\n    back-label=\"Back\"\n    next-label=\"Next\"\n    last-label=\"Start\"\n    :step-label=\"(n) => `Step ${n}`\"\n    @next=\"step++\"\n    @back=\"step--\"\n    @dismiss=\"open = false\"\n  >\n    <template #default=\"{ index }\">\n      <h2>Step {{ index + 1 }}</h2>\n    </template>\n  </TourShell>\n</template>\n"
+  },
+  {
+    "name": "TypeWriter",
+    "ts": "<script setup lang=\"ts\">\nimport { TypeWriter } from 'rei-kit/motion'\n</script>\n\n<template>\n  <TypeWriter :text=\"['Write it once.', 'Change the look.', 'Ship it.']\" />\n</template>\n",
+    "js": "<script setup>\nimport { TypeWriter } from 'rei-kit/motion'\n</script>\n\n<template>\n  <TypeWriter :text=\"['Write it once.', 'Change the look.', 'Ship it.']\" />\n</template>\n"
+  },
+  {
+    "name": "UpdatePrompt",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { UpdatePrompt } from 'rei-kit/pwa'\n\nconst needRefresh = ref(false)\n\nfunction reload() {\n  location.reload()\n}\n</script>\n\n<template>\n  <UpdatePrompt\n    :open=\"needRefresh\"\n    title=\"A new version is ready\"\n    body=\"Reload to get it.\"\n    action=\"Reload\"\n    dismiss-label=\"Later\"\n    @update=\"reload\"\n    @dismiss=\"needRefresh = false\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { UpdatePrompt } from 'rei-kit/pwa'\n\nconst needRefresh = ref(false)\n\nfunction reload() {\n  location.reload()\n}\n</script>\n\n<template>\n  <UpdatePrompt\n    :open=\"needRefresh\"\n    title=\"A new version is ready\"\n    body=\"Reload to get it.\"\n    action=\"Reload\"\n    dismiss-label=\"Later\"\n    @update=\"reload\"\n    @dismiss=\"needRefresh = false\"\n  />\n</template>\n"
+  }
+]

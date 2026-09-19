@@ -7,9 +7,11 @@ opening the source.
 **The exhaustive parts are generated, not written here.** Every component and
 every prop, with its type, default and the reason it exists, is in
 `showcase/props.generated.json` and live at
-[ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/). This
-file carries what cannot be read off a type: which part to reach for, and the
-mistakes that compile.
+[ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/). A
+working usage sample for every component is in `showcase/examples/<Name>.vue`
+— real files, type-checked, importing from the entry the component ships in;
+copy from there rather than guessing a prop. This file carries what cannot be
+read off a type: which part to reach for, and the mistakes that compile.
 
 ## What this is
 
@@ -322,6 +324,13 @@ Four checks hold that line, and each catches something the others cannot:
   very `document` a server lacks.
 - **Visual comparison** of the three apps before and after, because a lost focus
   ring or a heading that stopped growing passes every one of the above.
+
+A new component also needs its sample, `showcase/examples/<Name>.vue`.
+`examples.spec.ts` fails without one, and fails on a prop, model or event the
+component does not have, or a required prop left out — the type-check cannot
+see those, because Vue passes an unknown prop on as an attribute. The
+JavaScript version on the page is generated from it by
+`scripts/extract-examples.mjs`.
 
 If you change a prop name or drop an export, expect the consumer check to fail.
 That is the point.

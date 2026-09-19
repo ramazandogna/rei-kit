@@ -24,6 +24,18 @@ export default defineConfig({
   define: { __REI_KIT_VERSION__: JSON.stringify(version) },
   root: fileURLToPath(new URL('./showcase', import.meta.url)),
   plugins: [vue(), tailwindcss()],
+  /* The examples import from 'rei-kit' exactly as an app does, so what a
+     reader copies is what runs. Here that name points at the working tree.
+     Most specific first: 'rei-kit' alone would swallow 'rei-kit/web'. */
+  resolve: {
+    alias: [
+      ...['web', 'app', 'pwa', 'motion', 'supabase'].map((entry) => ({
+        find: `rei-kit/${entry}`,
+        replacement: fileURLToPath(new URL(`./src/${entry}/index.ts`, import.meta.url)),
+      })),
+      { find: /^rei-kit$/, replacement: fileURLToPath(new URL('./src/index.ts', import.meta.url)) },
+    ],
+  },
   /* Served from a repository subpath on GitHub Pages, so every asset URL has to
      carry the repository name. Absent, the page loads and every stylesheet and
      script 404s -- a white screen with a green build behind it. */

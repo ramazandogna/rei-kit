@@ -113,6 +113,7 @@ describe('the exports map', () => {
       './shell/web.css',
       './materials.css',
       './palettes.css',
+      './motion.css',
       './styles.css',
     ]) {
       expect(pkg.exports, `${entry} is not in the exports map`).toHaveProperty(entry)
@@ -133,6 +134,7 @@ describe('the presets', () => {
       `./shell/${kind}.css`,
       './materials.css',
       './palettes.css',
+      './motion.css',
       './styles.css',
     ])
     expect(css).not.toContain(`shell/${other}.css`)
@@ -148,5 +150,21 @@ describe('the presets', () => {
   it.each(Object.entries(presets))('%s leaves Tailwind itself to the app', (_, css) => {
     // An app that already imports tailwindcss would get all of it twice.
     expect(imports(css)).not.toContain('tailwindcss')
+  })
+})
+
+describe('motion.css', () => {
+  const motion = read('../styles/motion.css')
+
+  it('stops every animation it declares for a reader who asked for less', () => {
+    // Declared once here so no app has to remember `motion-safe:` — which
+    // only holds if a new animation cannot be added without its line below.
+    const declared = [...motion.matchAll(/--animate-([a-z-]+):/g)].map(([, name]) => name)
+    const stopped = motion.slice(motion.indexOf('prefers-reduced-motion'))
+
+    expect(declared.length).toBeGreaterThan(0)
+    for (const name of [...declared.map((n) => `animate-${n}`), 'text-shimmer']) {
+      expect(stopped, `${name} keeps moving under reduced motion`).toContain(`.${name}`)
+    }
   })
 })

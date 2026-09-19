@@ -137,7 +137,7 @@ function summary(source) {
 }
 
 const components = []
-for (const file of ['src/components', 'src/app', 'src/web', 'src/pwa'].flatMap(vueFiles)) {
+for (const file of ['src/components', 'src/app', 'src/web', 'src/pwa', 'src/motion'].flatMap(vueFiles)) {
   const source = readFileSync(join(ROOT, file), 'utf8')
   const block = propsBlock(source)
   const name = file.split('/').pop().replace('.vue', '')

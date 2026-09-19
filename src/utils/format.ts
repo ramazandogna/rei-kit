@@ -54,3 +54,36 @@ export function formatDate(date: Date, options: Intl.DateTimeFormatOptions): str
 
   return formatter.format(date)
 }
+
+const numberCache = new Map<string, Intl.NumberFormat>()
+
+/**
+ * Formats a number in the active locale, or in `tag` when one is given.
+ *
+ * The same cache and the same locale as `formatDate`, so a counter and the
+ * date beside it change language together.
+ *
+ * @param value - Number to format.
+ * @param options - Passed straight to `Intl.NumberFormat`: currency, percent, decimals.
+ * @param tag - A BCP 47 tag that overrides the active locale for this call.
+ *
+ * @example
+ * ```ts
+ * formatNumber(48200, { style: 'currency', currency: 'JPY' }) // '¥48,200'
+ * ```
+ */
+export function formatNumber(
+  value: number,
+  options: Intl.NumberFormatOptions = {},
+  tag: string = locale.value,
+): string {
+  const key = `${tag}:${JSON.stringify(options)}`
+
+  let formatter = numberCache.get(key)
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(tag, options)
+    numberCache.set(key, formatter)
+  }
+
+  return formatter.format(value)
+}

@@ -1,0 +1,119 @@
+/* rei-kit — motion utilities.
+ *
+ * Small loops and entrances for the things a page wants to draw the eye to:
+ *
+ *   animate-float        drifts up and down — a badge, an illustration
+ *   animate-pulse-soft   breathes — a live indicator, a call to action
+ *   animate-glow         a ring that swells and fades, in the primary colour
+ *   animate-wiggle       a small shake — "look here", once in a while
+ *   animate-pop          grows into place once — something that just arrived
+ *   text-shimmer         light passing across text, in the palette's colours
+ *
+ * Declared as theme animations, so Tailwind emits a keyframe only for the
+ * utilities an app actually uses. Colours come from the roles, so every one
+ * follows the palette. All of them stop for a reader who asked for less
+ * motion — here, once, rather than left to each app to remember
+ * `motion-safe:`. */
+@theme {
+  --animate-float: rk-float 3.2s ease-in-out infinite;
+  --animate-pulse-soft: rk-pulse-soft 2.4s ease-in-out infinite;
+  --animate-glow: rk-glow 2.4s ease-out infinite;
+  --animate-wiggle: rk-wiggle 2.8s ease-in-out infinite;
+  --animate-pop: rk-pop 340ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+
+  @keyframes rk-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes rk-pulse-soft {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.72;
+      transform: scale(0.97);
+    }
+  }
+
+  @keyframes rk-glow {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-primary) 45%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 12px color-mix(in oklab, var(--color-primary) 0%, transparent);
+    }
+  }
+
+  /* Still for most of the loop: a wiggle that never stops is noise. */
+  @keyframes rk-wiggle {
+    0%,
+    80%,
+    100% {
+      transform: rotate(0);
+    }
+    84% {
+      transform: rotate(-6deg);
+    }
+    88% {
+      transform: rotate(5deg);
+    }
+    92% {
+      transform: rotate(-3deg);
+    }
+    96% {
+      transform: rotate(2deg);
+    }
+  }
+
+  @keyframes rk-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes rk-shimmer {
+    to {
+      background-position: -200% 0;
+    }
+  }
+}
+
+/* Text painted with a band of light moving across it. The ink stays readable
+   the whole way: the band is the primary colour, not white. */
+@utility text-shimmer {
+  background: linear-gradient(
+      100deg,
+      var(--color-ink) 40%,
+      var(--color-primary) 50%,
+      var(--color-ink) 60%
+    )
+    0 0 / 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rk-shimmer 2.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-pulse-soft,
+  .animate-glow,
+  .animate-wiggle,
+  .animate-pop,
+  .text-shimmer {
+    animation: none;
+  }
+}

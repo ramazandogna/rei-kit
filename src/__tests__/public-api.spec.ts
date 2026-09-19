@@ -27,6 +27,7 @@ const PUBLIC_API = [
   'addDays',
   'eachDayOfYear',
   'formatDate',
+  'formatNumber',
   'fromDateKey',
   'lastNDays',
   'leadingBlanks',

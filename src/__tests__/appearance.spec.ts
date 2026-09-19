@@ -37,7 +37,7 @@ describe('no component carries a colour of its own', () => {
     'GoogleButton.vue': 'the Google mark',
   }
 
-  const files = ['src/components', 'src/app', 'src/web', 'src/pwa'].flatMap((dir) =>
+  const files = ['src/components', 'src/app', 'src/web', 'src/pwa', 'src/motion'].flatMap((dir) =>
     readdirSync(dir)
       .filter((f) => f.endsWith('.vue'))
       .map((f) => `${dir}/${f}`),
@@ -216,7 +216,7 @@ describe('depth reaches every component', () => {
        The brutalist buttons shipped flat for exactly this reason on the first
        try, while every card beside them had its hard offset. Only the runtime
        form -- `shadow-(--shadow-control)` -- reaches the material. */
-    const files = ['src/components', 'src/app', 'src/web', 'src/pwa'].flatMap((dir) =>
+    const files = ['src/components', 'src/app', 'src/web', 'src/pwa', 'src/motion'].flatMap((dir) =>
       readdirSync(dir)
         .filter((f) => f.endsWith('.vue'))
         .map((f) => read(`${dir}/${f}`)),
@@ -237,7 +237,7 @@ describe('motion', () => {
   it('lives in tokens rather than in components', () => {
     /* Ten durations and a cubic-bezier pasted into eight files is how a
        material could not have reached the motion at all. */
-    const files = ['src/components', 'src/app', 'src/web'].flatMap((dir) =>
+    const files = ['src/components', 'src/app', 'src/web', 'src/motion'].flatMap((dir) =>
       readdirSync(dir)
         .filter((f) => f.endsWith('.vue'))
         .map((f) => read(`${dir}/${f}`)),

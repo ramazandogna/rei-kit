@@ -147,7 +147,7 @@ describe('layers that trap focus', () => {
 })
 
 describe('focus you can see', () => {
-  const files = ['components', 'web', 'app', 'pwa'].flatMap((dir) =>
+  const files = ['components', 'web', 'app', 'pwa', 'motion'].flatMap((dir) =>
     readdirSync(`src/${dir}`)
       .filter((name) => name.endsWith('.vue'))
       .map((name) => ({

@@ -1,7 +1,7 @@
 {
   "name": "rei-kit",
   "version": "2.2.0",
-  "description": "One kit, every look. 53 accessible Vue 3 + Tailwind 4 components, four materials (quiet, glass, brutal, soft) and ten WCAG-checked palettes, each switched with one attribute.",
+  "description": "One kit, every look. 59 accessible Vue 3 + Tailwind 4 components, four materials (quiet, glass, brutal, soft) and ten WCAG-checked palettes, each switched with one attribute.",
   "keywords": [
     "vue",
     "vue3",
@@ -58,6 +58,7 @@
     "./materials/brutal.css": "./dist/materials/brutal.css",
     "./materials/soft.css": "./dist/materials/soft.css",
     "./palettes.css": "./dist/palettes.css",
+    "./motion.css": "./dist/motion.css",
     "./app": {
       "types": "./dist/app/index.d.ts",
       "import": "./dist/app.js"
@@ -69,6 +70,10 @@
     "./pwa": {
       "types": "./dist/pwa/index.d.ts",
       "import": "./dist/pwa.js"
+    },
+    "./motion": {
+      "types": "./dist/motion/index.d.ts",
+      "import": "./dist/motion.js"
     },
     "./supabase": {
       "types": "./dist/supabase/index.d.ts",

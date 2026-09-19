@@ -71,6 +71,9 @@ export default defineConfig({
         // Installing and updating. Reaches for a service worker, so a website
         // never imports it and the main barrel stays server-safe.
         pwa: fileURLToPath(new URL('./src/pwa/index.ts', import.meta.url)),
+        // Counters, rotating words, reveals. An app that animates nothing
+        // never downloads them.
+        motion: fileURLToPath(new URL('./src/motion/index.ts', import.meta.url)),
       },
       formats: ['es'],
       // Named so the import line reads as what it is — the compiled styles of

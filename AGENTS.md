@@ -13,7 +13,7 @@ mistakes that compile.
 
 ## What this is
 
-A Vue 3 + Tailwind 4 component kit. 53 components across five entry points,
+A Vue 3 + Tailwind 4 component kit. 59 components across six entry points,
 typed, tested, and themed by role rather than by colour — on three
 independent axes: palette, material and mode. Three apps run on it
 and no two resemble each other: [Hibi](https://github.com/ramazandogna/hibi), a
@@ -86,13 +86,14 @@ render unstyled.
 Import from the narrowest one. Each exists so an app never downloads what it
 does not use.
 
-| Entry              | What it is for                                    | Components                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rei-kit`          | What any app has                                  | `BaseAlert` `BaseAvatar` `BaseBadge` `BaseButton` `BaseCard` `BaseCheckbox` `BaseCombobox` `BaseInput` `BaseMenu` `BaseRadioGroup` `BaseSelect` `BaseSheet` `BaseSlider` `BaseSpinner` `BaseSwitch` `BaseTable` `BaseTextarea` `EmptyState` `ErrorBoundary` `FormField` `GoogleButton` `LocaleLinks` `PageContainer` `PageHeader` `PriceCard` `ProgressBar` `SectionHeading` `SegmentedControl` `SettingsGroup` `SettingsRow` `SkeletonList` `StatCard` `TabBar` `ToastHost` `ToneDot` |
-| `rei-kit/web`      | A wide site with a header and a mouse             | `BaseAccordion` `BaseBreadcrumb` `BaseDisclosure` `BaseModal` `BasePagination` `BaseTabs` `BaseTooltip` `NavLinks`                                                                                                                                                                                                                                                                                                                                                                     |
-| `rei-kit/app`      | A phone-shaped app with tabs and a sign-in screen | `AuthForm` `AuthShell` `FabButton` `LocaleSheet` `OfflineBanner` `TabShell` `TourShell`                                                                                                                                                                                                                                                                                                                                                                                                |
-| `rei-kit/pwa`      | Installing and updating                           | `InstallPrompt` `InstallSettings` `UpdatePrompt`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `rei-kit/supabase` | Optional; importing it is the opt-in              | none — `createSupabaseClient`, `setRememberMe`, `toAuthMessageKey`                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Entry              | What it is for                                              | Components                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rei-kit`          | What any app has                                            | `BaseAlert` `BaseAvatar` `BaseBadge` `BaseButton` `BaseCard` `BaseCheckbox` `BaseCombobox` `BaseInput` `BaseMenu` `BaseRadioGroup` `BaseSelect` `BaseSheet` `BaseSlider` `BaseSpinner` `BaseSwitch` `BaseTable` `BaseTextarea` `EmptyState` `ErrorBoundary` `FormField` `GoogleButton` `LocaleLinks` `PageContainer` `PageHeader` `PriceCard` `ProgressBar` `SectionHeading` `SegmentedControl` `SettingsGroup` `SettingsRow` `SkeletonList` `StatCard` `TabBar` `ToastHost` `ToneDot` |
+| `rei-kit/web`      | A wide site with a header and a mouse                       | `BaseAccordion` `BaseBreadcrumb` `BaseDisclosure` `BaseModal` `BasePagination` `BaseTabs` `BaseTooltip` `NavLinks`                                                                                                                                                                                                                                                                                                                                                                     |
+| `rei-kit/app`      | A phone-shaped app with tabs and a sign-in screen           | `AuthForm` `AuthShell` `FabButton` `LocaleSheet` `OfflineBanner` `TabShell` `TourShell`                                                                                                                                                                                                                                                                                                                                                                                                |
+| `rei-kit/pwa`      | Installing and updating                                     | `InstallPrompt` `InstallSettings` `UpdatePrompt`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `rei-kit/motion`   | Numbers that count, words that change, content that arrives | `NumberTicker` `CountUp` `TextRotate` `TypeWriter` `BaseReveal` `BaseMarquee`                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `rei-kit/supabase` | Optional; importing it is the opt-in                        | none — `createSupabaseClient`, `setRememberMe`, `toAuthMessageKey`                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 A test fails if a component ships without a row here, so this table cannot fall
 behind the package the way it once did.
@@ -117,6 +118,10 @@ looks almost right.
 - **`BaseAccordion` or `BaseDisclosure`.** The accordion owns the list. When
   the list is the app's — rows staggered as they scroll in, interleaved with
   anything else — use one disclosure per row.
+- **`NumberTicker` or `CountUp`.** A ticker rolls each digit like an
+  odometer, and suits a whole number that changes while you watch: a balance,
+  a count. `CountUp` passes through every value on the way and waits until it
+  is on screen. It suits a statistic on a landing page, and decimals.
 - **`ProgressBar` or `BaseSpinner`.** A bar is a promise about how long. When
   there is no amount to show, a spinner, not a bar that cannot move.
 - **`BaseTabs`, `TabBar` or `NavLinks`.** `BaseTabs` switches panels inside one
@@ -280,6 +285,11 @@ switch still reads correctly after it.
 `.slide-forward-*` / `.slide-backward-*` transition pairs that
 `createTabTransition().name` resolves to. `rei-kit/shell/web.css` is the wide
 equivalent. `tokens.css` adds `no-scrollbar`, `pb-safe` and `focus-ring`.
+
+`rei-kit/motion.css` (in both presets) adds `animate-float`,
+`animate-pulse-soft`, `animate-glow`, `animate-wiggle`, `animate-pop` and
+`text-shimmer`. All of them stop under `prefers-reduced-motion`, so there is no
+need to write `motion-safe:` in front of them.
 
 **Every control drawn by hand carries `focus-ring`** (or states its own
 `:focus-visible` ring), and an `sr-only` input hands its focus to what is

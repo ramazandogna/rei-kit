@@ -37,7 +37,7 @@ const JS_CASES = [
   {
     name: 'every component',
     budget: 28,
-    code: ['index', 'web', 'app', 'pwa']
+    code: ['index', 'web', 'app', 'pwa', 'motion']
       .map((entry) => `import * as ${entry} from '${dist(`${entry}.js`)}'\nconsole.log(${entry})`)
       .join('\n'),
   },

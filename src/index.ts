@@ -36,7 +36,7 @@ export {
 } from './utils/date'
 export type { WeekStart } from './utils/date'
 
-export { formatDate, setFormatLocale } from './utils/format'
+export { formatDate, formatNumber, setFormatLocale } from './utils/format'
 export { relativeDayLabel } from './utils/day-label'
 export type { DayLabels } from './utils/day-label'
 

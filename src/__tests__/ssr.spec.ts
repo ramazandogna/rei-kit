@@ -148,3 +148,29 @@ describe('server rendering', () => {
     expect(t('common.save')).toBe('Kaydet')
   })
 })
+
+describe('server rendering, rei-kit/motion', () => {
+  /* The finished state, always: a counter at zero, a sentence half typed or
+     a section at opacity 0 is what a prerendered page — and anyone reading
+     it before JavaScript runs — would be left with. */
+  it('renders every moving part at rest', async () => {
+    const { BaseMarquee, BaseReveal, CountUp, NumberTicker, TextRotate, TypeWriter } =
+      await import('../motion/index')
+
+    const ticker = await render(NumberTicker, { value: 1234, from: 0, locale: 'en-GB' })
+    expect(ticker).toContain('1,234')
+
+    const count = await render(CountUp, { value: 1500, locale: 'en-GB' })
+    expect(count.match(/1,500/g)).toHaveLength(2)
+
+    expect(await render(TextRotate, { words: ['glass', 'brutal'] })).toContain('glass')
+    expect(await render(TypeWriter, { text: ['Build it once.'] })).toMatch(
+      /aria-hidden="true"[^>]*>Build it once\.</,
+    )
+
+    const reveal = await render(BaseReveal, {})
+    expect(reveal).not.toContain('is-hidden')
+
+    expect(await render(BaseMarquee, {})).toContain('rk-marquee-track')
+  })
+})

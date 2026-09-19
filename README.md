@@ -1,6 +1,6 @@
 # rei-kit
 
-**One kit. Every look.** 53 accessible components for Vue 3 and Tailwind 4.
+**One kit. Every look.** 59 accessible components for Vue 3 and Tailwind 4.
 Change the **material** with one attribute and the **palette** with another —
 every component follows, and none of them knows your brand.
 
@@ -34,6 +34,7 @@ That line is the whole redesign. Three axes, each changed on its own:
 | **`rei-kit/web`**      | Wide-site parts: dialogs, tabs, tooltips, pagination, breadcrumbs              |
 | **`rei-kit/app`**      | Phone-app parts: the shell, the tab transition, the sign-in form               |
 | **`rei-kit/pwa`**      | Installing and updating                                                        |
+| **`rei-kit/motion`**   | Numbers that count and roll, words that rotate and type, content that arrives  |
 | **`rei-kit/supabase`** | An optional Supabase entry — auth errors, a remember-me client                 |
 
 Three apps run on it and no two resemble each other. Every component is typed,
@@ -86,7 +87,7 @@ styles included and Vue left out. Minified, gzip -9:
 
 | Kit                  |         JS |         CSS |       Total |
 | -------------------- | ---------: | ----------: | ----------: |
-| **rei-kit 2.2.0**    | **3.1 KB** | **14.5 KB** | **17.6 KB** |
+| **rei-kit 2.3.0**    | **3.1 KB** | **15.2 KB** | **18.4 KB** |
 | element-plus 2.14.6  |    27.3 KB |      6.0 KB |     33.3 KB |
 | naive-ui 2.45.3      |    51.2 KB |           — |     51.2 KB |
 | primevue 5.0.1       |    53.6 KB |           — |     53.6 KB |
@@ -111,7 +112,7 @@ Each claim here is enforced by something that fails, not by a promise.
 
 | Standard                                 | How it is held                                                                                                                                                                                             |
 | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Open for extension, closed for edits** | A new look is a token, a material or a palette — never an edit to a component. Materials and palettes restyle all 53 without touching one, and a test fails if a component holds a colour.                 |
+| **Open for extension, closed for edits** | A new look is a token, a material or a palette — never an edit to a component. Materials and palettes restyle all 59 without touching one, and a test fails if a component holds a colour.                 |
 | **Single responsibility**                | One part, one job. Label-and-error wiring lives in `FormField`, not in five inputs; taking the page behind a layer out of reach lives in one helper the modal, the sheet and the guide share.              |
 | **Depend on roles, not values**          | Components read `primary`, `surface`, `--shadow-card` — never a hex or a pixel shadow. An app's brand wins in both modes, tested.                                                                          |
 | **WAI-ARIA Authoring Practices**         | Menus, comboboxes, tabs, sliders, dialogs and accordions follow their APG pattern: arrows move, Tab leaves, Escape closes, focus returns. Behaviour tests drive each with the keyboard.                    |
@@ -123,11 +124,11 @@ Each claim here is enforced by something that fails, not by a promise.
 
 ## Status
 
-**v2.2.0 — three consumers.**
+**v2.3.0 — three consumers.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Components   | 53 (`AuthForm`, `BaseTable`, `BaseCombobox`, `BaseSlider`, `TabShell`, `BaseModal`, `BaseTabs`, `BaseTooltip`, `BasePagination`, `BaseBreadcrumb`, `BaseDisclosure`, `BaseAccordion`, `NavLinks`, `OfflineBanner`, `FabButton`, `BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseSwitch`, `BaseRadioGroup`, `BaseMenu`, `BaseAvatar`, `BaseSpinner`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
+| Components   | 59 (`AuthForm`, `BaseTable`, `BaseCombobox`, `BaseSlider`, `TabShell`, `BaseModal`, `BaseTabs`, `BaseTooltip`, `BasePagination`, `BaseBreadcrumb`, `BaseDisclosure`, `BaseAccordion`, `NavLinks`, `OfflineBanner`, `FabButton`, `BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseSwitch`, `BaseRadioGroup`, `BaseMenu`, `BaseAvatar`, `BaseSpinner`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
 | Composables  | 16 (`useToast`, `useTheme`, `useMaterial`, `usePalette`, `useToday`, `useMediaQuery`, `useInstall`, `watchInstallability`, `createTabTransition`, `useThemeSync`, `useVisualViewport`, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | Utilities    | 33 (`applyTheme`, `applyMaterial`, `applyPalette`, `MATERIALS`, `PALETTES`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/supabase`, `rei-kit/mobile.css`, `rei-kit/web.css`, and each stylesheet on its own                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -296,6 +297,39 @@ way in; each got the smallest nudge that clears the line.
 
 Palettes are generated from `src/palettes/palettes.source.json` by
 `pnpm palettes`; a test asserts the shipped CSS matches the source.
+
+### Motion
+
+`rei-kit/motion` is for the parts of a page that move on purpose:
+
+```vue
+<script setup lang="ts">
+import { CountUp, NumberTicker, TextRotate } from 'rei-kit/motion'
+</script>
+
+<template>
+  <NumberTicker :value="balance" :format="{ style: 'currency', currency: 'TRY' }" />
+  <CountUp :value="12480" />
+  <h1>Build it <TextRotate :words="['glass', 'brutal', 'soft']" /></h1>
+</template>
+```
+
+| Component      | What it does                                                    |
+| -------------- | --------------------------------------------------------------- |
+| `NumberTicker` | Rolls each digit into place, like an odometer or a note counter |
+| `CountUp`      | Counts through every value once it scrolls into view            |
+| `TextRotate`   | One word in a sentence that changes on its own                  |
+| `TypeWriter`   | Types a line out, and deletes it for the next                   |
+| `BaseReveal`   | Fades or rises into view on scroll; staggers with `:delay`      |
+| `BaseMarquee`  | An endless sideways row — logos, testimonials                   |
+
+The presets also bring `animate-float`, `animate-pulse-soft`, `animate-glow`,
+`animate-wiggle`, `animate-pop` and `text-shimmer`.
+
+Every one of them renders its finished state on a server and for anyone who
+has asked their system for less motion, reads only the final value to a
+screen reader, and stops while hovered if it moves on its own. Six
+components together add under 2 KB gzip.
 
 ### Colours
 

@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 import * as kit from '../index'
 import * as app from '../app/index'
 import * as web from '../web/index'
+import * as motion from '../motion/index'
 
 /**
  * The showcase's catalogue has to match the package.
@@ -36,7 +37,12 @@ function components(module: Record<string, unknown>): string[] {
 
 describe('the showcase catalogue', () => {
   it('covers every component the package exports', () => {
-    const exported = [...components(kit), ...components(app), ...components(web)].sort()
+    const exported = [
+      ...components(kit),
+      ...components(app),
+      ...components(web),
+      ...components(motion),
+    ].sort()
     const documented = catalogue.map((entry) => entry.name)
     const missing = exported.filter((name) => !documented.includes(name))
 
@@ -50,6 +56,7 @@ describe('the showcase catalogue', () => {
       ...components(kit),
       ...components(app),
       ...components(web),
+      ...components(motion),
       // The PWA entry reaches for a service worker, so it is not imported here.
       'InstallPrompt',
       'UpdatePrompt',
@@ -102,8 +109,28 @@ describe('the showcase catalogue', () => {
     expect(missing).toEqual([])
   })
 
+  it('states the component count the package actually has', () => {
+    /* "53" was written in five places, and the kit grew past it. A number a
+       reader sees on npm, in the README and in a link preview is a claim, so
+       it is checked like one. */
+    const stated = [
+      ['README.md', readFileSync('README.md', 'utf8')],
+      ['AGENTS.md', readFileSync('AGENTS.md', 'utf8')],
+      ['package.json', readFileSync('package.json', 'utf8')],
+      ['showcase/index.html', readFileSync('showcase/index.html', 'utf8')],
+    ].flatMap(([file, text]) =>
+      [...text!.matchAll(/\b(\d+) (?=accessible|components across)|Components +\| (\d+) \(/g)].map(
+        ([, a, b]) => [file, Number(a ?? b)],
+      ),
+    )
+
+    expect(stated.length).toBeGreaterThan(3)
+    const wrong = stated.filter(([, n]) => n !== catalogue.length)
+    expect(wrong).toEqual([])
+  })
+
   it('names the entry point each component is imported from', () => {
-    const ENTRIES = ['rei-kit', 'rei-kit/app', 'rei-kit/web', 'rei-kit/pwa']
+    const ENTRIES = ['rei-kit', 'rei-kit/app', 'rei-kit/web', 'rei-kit/pwa', 'rei-kit/motion']
     const wrong = catalogue.filter(
       (entry) => !ENTRIES.includes((entry as Entry & { entry: string }).entry),
     )

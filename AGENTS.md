@@ -14,7 +14,8 @@ mistakes that compile.
 ## What this is
 
 A Vue 3 + Tailwind 4 component kit. 53 components across five entry points,
-typed, tested, and themed by role rather than by colour. Three apps run on it
+typed, tested, and themed by role rather than by colour — on three
+independent axes: palette, material and mode. Three apps run on it
 and no two resemble each other: [Hibi](https://github.com/ramazandogna/hibi), a
 phone journal; [Kakei](https://github.com/ramazandogna/kakei), a phone ledger;
 and [Kakehashi](https://github.com/ramazandogna/kakehashi-nihongo), a
@@ -63,6 +64,8 @@ runtime), `@supabase/supabase-js` ^2 (`rei-kit/supabase`).
 @import 'tailwindcss';
 @import 'rei-kit/tokens.css'; /* roles, dark variant, measures, utilities */
 @import 'rei-kit/shell/mobile.css'; /* or shell/web.css — one, never both */
+@import 'rei-kit/materials.css'; /* optional: glass, brutal, soft */
+@import 'rei-kit/palettes.css'; /* optional: the ten palettes */
 @import 'rei-kit/styles.css'; /* compiled component styles */
 
 /* Tailwind only generates classes it has seen, and it does not read
@@ -128,20 +131,60 @@ looks almost right.
 
 Redefine values; never rename. Every component reads these.
 
-| Token                               | Role                          |
-| ----------------------------------- | ----------------------------- |
-| `primary`                           | main action, active state     |
-| `accent`                            | secondary emphasis            |
-| `positive` / `negative` / `warning` | semantic state                |
-| `canvas`                            | page ground                   |
-| `surface`                           | card ground                   |
-| `muted`                             | tinted fill, inactive segment |
-| `ink` / `ink-soft`                  | text, secondary text          |
-| `hair`                              | borders and dividers          |
+| Token                               | Role                                          |
+| ----------------------------------- | --------------------------------------------- |
+| `primary`                           | main action, active state                     |
+| `accent`                            | secondary emphasis                            |
+| `positive` / `negative` / `warning` | semantic state                                |
+| `on-primary` … `on-warning`         | text on each filled role — never `text-white` |
+| `canvas`                            | page ground                                   |
+| `surface`                           | card ground                                   |
+| `muted`                             | tinted fill, inactive segment                 |
+| `ink` / `ink-soft`                  | text, secondary text                          |
+| `hair`                              | borders and dividers                          |
 
 Radii: `--radius-cell` 3px, `--radius-card` 16px, `--radius-shell` 30px.
 Measures: `--measure-page` 75rem, `--measure-reading` 68ch.
+Depth: `--shadow-card`, `--shadow-raised`, `--shadow-overlay`,
+`--shadow-control`, `--shadow-control-pressed`.
+Motion: `--ease-standard`, `--ease-sheet`, `--duration-fast|base|slow|slower`.
 Dark mode is class-based: `.dark` on `<html>` — `useTheme` does it.
+
+**Write `text-on-primary`, never `text-white`, on a filled role.** White on the
+kit's own warning colour measured 2.3:1; a palette with a light primary sets its
+`on-primary` dark and every component follows.
+
+## Surfaces, materials and palettes
+
+Paint a surface with a surface utility, not with its parts. These are what a
+material redefines:
+
+| Utility           | For                                                  |
+| ----------------- | ---------------------------------------------------- |
+| `surface`         | a card on the page                                   |
+| `surface-raised`  | something lifted off it: a toast, a popover          |
+| `surface-overlay` | over the whole page: a dialog, a menu, a sheet       |
+| `control`         | something you type into or press that is not primary |
+| `canvas`          | the page itself — carries glass's backdrop           |
+
+`border border-hair bg-surface shadow-lg` looks the same in the quiet material
+and ignores every other one. That is the whole reason these exist.
+
+**Reach depth at runtime: `shadow-(--shadow-card)`, never `shadow-card`.**
+Tailwind builds a theme shadow's utility by inlining its value, so a
+`shadow-*` class is frozen at the quiet material's depth. The depth tokens are
+kept out of `@theme` for this reason — there is no `shadow-card` class to reach
+for — and a test fails if a component uses one.
+
+To lift one surface without a second shadow utility racing the first, set its
+hook: `[--surface-shadow:var(--shadow-raised)]`. `--surface-border-color`
+works the same way for a tinted edge.
+
+Choose a material or palette with an attribute on `<html>` or any element —
+`data-material="glass"`, `data-palette="nord"` — or at runtime with
+`useMaterial()` / `usePalette()`, which persist like `useTheme()`. No
+attribute is `quiet` and `rei`. The ten palettes are in `PALETTES`, each with
+a four-colour `swatch` for a picker.
 
 ## Utilities
 
@@ -177,6 +220,7 @@ every redirect through `toRedirectPath` for this reason.
 | Export                                   | Returns                                                                   |
 | ---------------------------------------- | ------------------------------------------------------------------------- |
 | `useTheme()` / `setThemeStorageKey(key)` | writable ref `'system'\|'light'\|'dark'`; assigning stores and applies it |
+| `useMaterial()` / `usePalette()`         | writable refs, persisted; assigning applies the attribute                 |
 | `useToday()`                             | readonly ref of today's key, refreshed at midnight and on tab focus       |
 | `useOnline()` / `useMediaQuery(query)`   | readonly boolean refs                                                     |
 | `useToast()`                             | `success` `info` `warning` `danger`; render one `ToastHost` per app       |

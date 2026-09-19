@@ -3,6 +3,113 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.0.0 — 2026-09-19
+
+**One kit, every look.** Materials and palettes: the whole appearance of the
+kit, changed with one attribute each, without a component knowing either
+word.
+
+A major because 1.0.0 promised that a minor would never change what a
+component renders for the same input, and this release does — deliberately,
+and listed in full under **Changed** below. Nothing is removed and nothing is
+renamed; most apps take it as a version bump and a look at the screenshots.
+
+### Added
+
+- **Materials** — `quiet` (the default), `glass`, `brutal` and `soft`, in
+  `rei-kit/materials.css`, chosen with `data-material` on any element or with
+  `useMaterial()`. A material redefines how a surface is made: its fill, its
+  edge, its depth, its blur and what pressing it does. They map onto the
+  movements people ask for by name — glass covers glassmorphism, the spatial
+  look and the frosted half of liquid glass; brutal is neo-brutalism; soft is
+  claymorphism and an accessible neumorphism — but they are values, not skins.
+
+  Glass does not refract. Real refraction needs a shader, and a kit that
+  promised it in CSS would be promising something it cannot keep on fifty
+  components at once. It falls back to solid where `backdrop-filter` is
+  missing and for readers who set `prefers-reduced-transparency`. Soft keeps a
+  real edge on every surface, because pure neumorphism relies on shadow alone
+  to find a boundary and fails every contrast rule there is.
+
+- **Palettes** — ten, each with a light and a dark mode, in
+  `rei-kit/palettes.css`, chosen with `data-palette` or `usePalette()`. Seven
+  are well-known open palettes by their official values: Nord, Dracula,
+  Catppuccin, Solarized, Gruvbox, Tokyo Night and Rosé Pine. Three are the
+  kit's own: Rei (the default), Sakura and Matcha.
+
+  Every one is generated from a single source file by
+  `scripts/build-palettes.mjs`, which chooses the text colour for each filled
+  role by measuring rather than by habit and checks every text pairing in both
+  modes against WCAG AA. Seven official values fell short on arrival — Nord's
+  primary, Solarized's violet, Tokyo Night's secondary text among them — and
+  each got the smallest nudge that clears the line. A palette that fails one
+  pairing does not ship, and a test holds that.
+
+- **The tokens that made both possible.** Depth (`--shadow-card`, `-raised`,
+  `-overlay`, `-control`, `-control-pressed`), motion (`--ease-standard`,
+  `--ease-sheet`, `--duration-fast|base|slow|slower`), and the five `on-*`
+  colours for text on a filled role.
+
+- **Surface utilities** — `surface`, `surface-raised`, `surface-overlay`,
+  `control` and `canvas`. The single place a component learns what it is made
+  of. Before these, every card wrote `border border-hair bg-surface shadow-lg`
+  out in full, which is exactly why a material could not have reached them.
+
+- **`useMaterial`, `usePalette`, `applyMaterial`, `applyPalette`, `MATERIALS`,
+  `PALETTES`** — the same shape as `useTheme`: persisted, applied on change,
+  shared by every caller.
+
+- **A showcase that proves it.** A live preview built from the kit's own
+  components beside the headline; a palette picker that shows each palette as
+  a circle cut into its four colours; the four materials side by side.
+
+### Changed
+
+What looks different with no attribute set at all, and how to keep the 1.x
+look if you need to.
+
+- **Filled buttons use the on-colour, not white.** White on the kit's own
+  `warning` measured 2.3:1 and failed on `positive` too, so those two now carry
+  dark text. Keep white with `--color-on-warning: #fff` — knowing it fails.
+- **Dark mode lightens the filled roles.** The light-mode primary stayed on in
+  dark mode and measured 2.3:1 against the dark surface: every link and focus
+  ring was below the line for a control. `primary`, `accent`, `negative` and
+  `warning` now have dark-mode values.
+  They are defaults at zero specificity: an app that sets its own roles keeps
+  them in both modes, exactly as in 1.x.
+- **`negative` is `#c9463b`**, from `#e05b4f`, so a destructive button reads
+  as one with white text on it.
+- **Cards carry a faint shadow** under the hairline edge, where they had none.
+  Keep them flat with `--shadow-card: none`.
+- **`StatCard` is a surface**, where it was an outline with no fill.
+- **`SectionHeading` is `w-fit`.** In a parent that was not a flex column its
+  `self-start` did nothing and the pill stretched across the page.
+- **Motion runs on tokens.** Sixty-one hard-coded durations and curves across
+  twenty-one files now read `--duration-*` and `--ease-*`; the values are the
+  same, and `prefers-reduced-motion` now zeroes them all in one place.
+- **Class names inside components changed** where a surface became a utility
+  (`bg-surface border border-hair` → `surface`). An app test asserting a
+  component's classes may need its expectation updated; nothing an app passes
+  in has changed.
+
+### Fixed
+
+- **`PriceCard` carried four hex values** — `#b8862c`, `#4a86a8` and two darker
+  shades — that could not follow any palette, and read `--shadow-card` and
+  `--shadow-lift`, which only one consumer had ever defined. Everywhere else
+  its shadow silently was not. It uses roles and the kit's own depth now.
+- **A test asserted those hex values**, which is to say it tested that the
+  component broke the kit's own rule. It asserts the roles now, and a new test
+  scans every component for a hex value.
+- **The Switch knob, the Slider thumb, the Fab and the Pagination current page**
+  hard-coded white. They read the on-colour or the surface now.
+- **The prop catalogue dropped multi-line union types**, so `BaseButton`'s
+  `variant` and `BaseInput`'s `type` were missing from the published
+  showcase.
+- **The showcase was never type-checked**, and passed a string where
+  `SectionHeading` wanted a tone object, so no heading on it had a tone. It is
+  in the gate and in CI now.
+
 ## 1.0.3 — 2026-09-13
 
 No code changes. This release exists to make the published provenance true

@@ -1,7 +1,7 @@
 {
   "name": "rei-kit",
-  "version": "1.0.3",
-  "description": "A Vue 3 and Tailwind 4 component kit: 53 accessible components, five entry points, and a theme an app rebrands by redefining eleven values.",
+  "version": "2.0.0",
+  "description": "One kit, every look. 53 accessible Vue 3 + Tailwind 4 components, four materials (quiet, glass, brutal, soft) and ten WCAG-checked palettes, each switched with one attribute.",
   "keywords": [
     "vue",
     "vue3",
@@ -15,7 +15,15 @@
     "a11y",
     "typescript",
     "pwa",
-    "supabase"
+    "supabase",
+    "themes",
+    "dark-mode",
+    "palettes",
+    "glassmorphism",
+    "neobrutalism",
+    "claymorphism",
+    "neumorphism",
+    "design-tokens"
   ],
   "license": "MIT",
   "author": "Ramazan Doğan",

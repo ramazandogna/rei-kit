@@ -18,27 +18,6 @@
  * theme variable Tailwind decided was unused would resolve to nothing there —
  * a shadow that silently is not, which is exactly how `PriceCard` shipped. */
 @theme static {
-  --color-primary: #26667f;
-  --color-accent: #124170;
-  --color-positive: #67c090;
-  --color-negative: #c9463b;
-  --color-warning: #d89a3e;
-
-  /* ---------------------------------------------------------------------
-     The ink that sits on a filled role.
-
-     Every filled button used to write `text-white`, which is right on a deep
-     teal and wrong on a pale green or an amber: white on the kit's own
-     `warning` measured 2.3:1 against the 4.5:1 a label needs. A palette that
-     picks a light primary sets its `on-primary` to something dark, and every
-     component follows without a component knowing why.
-     --------------------------------------------------------------------- */
-  --color-on-primary: #ffffff;
-  --color-on-accent: #ffffff;
-  --color-on-positive: #07141a;
-  --color-on-negative: #ffffff;
-  --color-on-warning: #07141a;
-
   --color-canvas: #f4faf8;
   --color-surface: #ffffff;
   --color-muted: #ddf4e7;
@@ -73,6 +52,90 @@
      --------------------------------------------------------------------- */
   --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   The filled roles, and the ink that sits on them.
+
+   Declared twice on purpose. `@theme reference` gives Tailwind the names, so
+   `bg-primary` and `text-on-primary` exist, without emitting a value. The
+   values come from the block below, at zero specificity inside the theme
+   layer — so anything an app states, in its own `@theme` or anywhere else,
+   wins in *both* modes.
+
+   That matters because the kit lightens these in the dark. Written as a plain
+   `.dark` rule, that lightening beat every app's own brand: an app that set
+   its primary in `@theme` switched to the dark mode and got Rei's blue. The
+   consumer checks of two apps caught it before it shipped.
+   --------------------------------------------------------------------------- */
+@theme reference {
+  --color-primary: #26667f;
+  --color-accent: #124170;
+  --color-positive: #67c090;
+  --color-negative: #c9463b;
+  --color-warning: #d89a3e;
+
+  --color-on-primary: #ffffff;
+  --color-on-accent: #ffffff;
+  --color-on-positive: #07141a;
+  --color-on-negative: #ffffff;
+  --color-on-warning: #07141a;
+}
+
+@layer theme {
+  :where(:root) {
+    --color-primary: #26667f;
+    --color-accent: #124170;
+    --color-positive: #67c090;
+    --color-negative: #c9463b;
+    --color-warning: #d89a3e;
+
+    --color-on-primary: #ffffff;
+    --color-on-accent: #ffffff;
+    --color-on-positive: #07141a;
+    --color-on-negative: #ffffff;
+    --color-on-warning: #07141a;
+  }
+
+  /* The filled roles lighten in the dark as well as the grounds darken. They
+     used not to: the light-mode primary on the dark surface measured 2.3:1,
+     so every link and focus ring in dark mode was below the line for a
+     control, and nothing but a measurement would have said so. */
+  :where(.dark) {
+    --color-primary: #5fb0c9;
+    --color-accent: #8cb8e0;
+    --color-negative: #f07a6f;
+    --color-warning: #e6ad58;
+
+    --color-on-primary: #07141a;
+    --color-on-accent: #07141a;
+    --color-on-positive: #07141a;
+    --color-on-negative: #07141a;
+    --color-on-warning: #07141a;
+  }
+
+  /* The on-colours follow their fill, whatever the fill turns out to be.
+     Black or white, whichever is further from the fill's lightness — so an
+     app that rebrands its primary and forgets `on-primary` gets readable text
+     instead of white on yellow.
+
+     A safety net, not a guarantee: across a hundred measured fills it never
+     falls below 3.9:1 and clears 4.5:1 on almost all of them. A palette sets
+     its on-colours explicitly, measured to WCAG AA, and so can an app. For the
+     kit's own colours it picks exactly what measurement picks. */
+  @supports (color: oklch(from red l c h)) {
+    :where(:root) {
+      --color-on-primary: oklch(from var(--color-primary) clamp(0, calc((0.6 - l) * 1000), 1) 0 0);
+      --color-on-accent: oklch(from var(--color-accent) clamp(0, calc((0.6 - l) * 1000), 1) 0 0);
+      --color-on-positive: oklch(
+        from var(--color-positive) clamp(0, calc((0.6 - l) * 1000), 1) 0 0
+      );
+      --color-on-negative: oklch(
+        from var(--color-negative) clamp(0, calc((0.6 - l) * 1000), 1) 0 0
+      );
+      --color-on-warning: oklch(from var(--color-warning) clamp(0, calc((0.6 - l) * 1000), 1) 0 0);
+    }
+  }
 }
 
 /* Material knobs that no utility is named after. Plain custom properties, so
@@ -146,20 +209,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .dark {
-  /* The filled roles lighten in the dark as well as the grounds darken. They
-     used not to: the light-mode primary on the dark surface measured 2.3:1,
-     so every link and focus ring in dark mode was below the line for a
-     control, and nothing but a measurement would have said so. */
-  --color-primary: #5fb0c9;
-  --color-accent: #8cb8e0;
-  --color-negative: #f07a6f;
-  --color-warning: #e6ad58;
-  --color-on-primary: #07141a;
-  --color-on-accent: #07141a;
-  --color-on-positive: #07141a;
-  --color-on-negative: #07141a;
-  --color-on-warning: #07141a;
-
   --color-canvas: #07141a;
   --color-surface: #102630;
   --color-muted: #12303a;

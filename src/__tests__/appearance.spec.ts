@@ -101,18 +101,41 @@ describe('palettes', () => {
     const tokens = read('src/styles/tokens.css')
     const rei = PALETTES.find((p) => p.name === 'rei')!
     const kebab = (k: string) => k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)
+    const block = (open: string) => {
+      const i = tokens.indexOf(open)
+      return tokens.slice(i, tokens.indexOf('}', i))
+    }
 
-    const [lightBlock, darkBlock] = [
-      tokens.slice(tokens.indexOf('@theme static'), tokens.indexOf(':root {')),
-      tokens.slice(tokens.indexOf('.dark {'), tokens.indexOf('/* Honouring')),
-    ]
-
+    // Light: the grounds live in @theme, the filled roles in the layer.
+    const light = block('@theme static {') + block(':where(:root) {')
     for (const [key, value] of Object.entries(rei.light)) {
-      expect(lightBlock).toContain(`--color-${kebab(key)}: ${value};`)
+      expect(light).toContain(`--color-${kebab(key)}: ${value};`)
     }
-    for (const key of ['primary', 'canvas', 'surface', 'ink', 'onPrimary'] as const) {
-      expect(darkBlock).toContain(`--color-${kebab(key)}: ${rei.dark[key]};`)
+
+    // Dark: grounds in .dark, filled roles in :where(.dark) — every role that
+    // differs from light has to be answered in one of them.
+    const dark = block('\n.dark {') + block(':where(.dark) {')
+    for (const [key, value] of Object.entries(rei.dark)) {
+      if (value === rei.light[key as keyof typeof rei.light]) continue
+      expect(dark).toContain(`--color-${kebab(key)}: ${value};`)
     }
+  })
+
+  it('let an app’s own brand win in both modes', () => {
+    /* The filled roles are declared at zero specificity inside the theme layer.
+       Written as a plain `.dark` rule they beat every app's @theme in the dark,
+       and an app that rebranded its primary switched to dark mode and got
+       Rei's blue — two consumers' own contract tests caught it pre-release. */
+    const tokens = read('src/styles/tokens.css')
+    const plainDark = tokens.slice(tokens.indexOf('\n.dark {'))
+    const plainDarkBlock = plainDark.slice(0, plainDark.indexOf('}'))
+
+    for (const role of ['primary', 'accent', 'positive', 'negative', 'warning']) {
+      expect(plainDarkBlock).not.toContain(`--color-${role}:`)
+      expect(plainDarkBlock).not.toContain(`--color-on-${role}:`)
+    }
+    expect(tokens).toContain('@theme reference {')
+    expect(tokens).toContain(':where(.dark) {')
   })
 
   it('switch by attribute, and the default removes it', () => {

@@ -60,6 +60,59 @@ without.
 
 ---
 
+## 2.0.0
+
+**You gain the whole look of the kit as two attributes.**
+
+```html
+<html data-material="glass" data-palette="nord"></html>
+```
+
+```css
+@import 'rei-kit/tokens.css';
+@import 'rei-kit/materials.css'; /* quiet · glass · brutal · soft */
+@import 'rei-kit/palettes.css'; /* ten palettes, light and dark */
+@import 'rei-kit/styles.css';
+```
+
+```ts
+import { useMaterial, usePalette } from 'rei-kit'
+
+useMaterial().value = 'brutal'
+usePalette().value = 'catppuccin'
+```
+
+Four materials change what surfaces are made of — frosted glass, hard-edged
+brutalism, soft raised clay, or the quiet default. Ten palettes change the
+colour: Nord, Dracula, Catppuccin, Solarized, Gruvbox, Tokyo Night, Rosé Pine,
+and the kit's own Rei, Sakura and Matcha. Every palette's text pairings are
+measured against WCAG AA in both modes before it ships.
+[Try them live →](https://ramazandogna.github.io/rei-kit/)
+
+**Glass needs something behind it.** Put your page on the `canvas` utility —
+it carries the material's backdrop.
+
+**Paint surfaces with the surface utilities** — `surface`, `surface-raised`,
+`surface-overlay`, `control` — and reach depth as `shadow-(--shadow-card)`.
+A hand-written `border bg-surface shadow-lg` stays quiet whatever the material
+is.
+
+**Action required — a short look, not a migration.** Nothing is removed or
+renamed, but the default look moved, which is why this is a major:
+
+- `warning` and `positive` buttons have dark text (white failed contrast)
+- dark mode has a lighter `primary`, `accent`, `negative` and `warning`
+- `negative` is a shade deeper, cards have a faint shadow, `StatCard` has a fill
+- an app test that asserts a kit component's exact classes may need updating
+
+To keep a 1.x value, override the token: `--shadow-card: none`,
+`--color-on-warning: #fff`, and so on.
+
+**To take it:** `pnpm add rei-kit@^2.0.0`. A `^1` range will not move on its
+own — that is semver doing its job.
+
+---
+
 ## 1.0.3
 
 **Nothing changes in the package.** The `v1.0.2` tag was rewritten after release,

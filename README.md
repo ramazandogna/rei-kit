@@ -1,23 +1,30 @@
 # rei-kit
 
-**A Vue 3 and Tailwind 4 component kit.** 53 components, five entry points, and
-a theme an app rebrands by redefining eleven values.
+**One kit. Every look.** 53 accessible components for Vue 3 and Tailwind 4.
+Change the **material** with one attribute and the **palette** with another —
+every component follows, and none of them knows your brand.
 
 [![npm](https://img.shields.io/npm/v/rei-kit?color=%23227c70&label=npm)](https://www.npmjs.com/package/rei-kit)
 [![license](https://img.shields.io/npm/l/rei-kit?color=%23227c70)](./LICENSE)
 [![showcase](https://img.shields.io/badge/showcase-live-%23227c70)](https://ramazandogna.github.io/rei-kit/)
 
-**[See every component →](https://ramazandogna.github.io/rei-kit/)**
+**[Try every material and palette live →](https://ramazandogna.github.io/rei-kit/)**
 
 ```sh
 pnpm add rei-kit
 ```
 
-```vue
-<script setup lang="ts">
-import { BaseButton, BaseModal, useToast } from 'rei-kit'
-</script>
+```html
+<html data-material="glass" data-palette="nord" class="dark"></html>
 ```
+
+That line is the whole redesign. Three axes, each changed on its own:
+
+|              |                                                                                                          |
+| ------------ | -------------------------------------------------------------------------------------------------------- |
+| **Material** | `quiet` · `glass` · `brutal` · `soft` — what a surface is made of: its fill, edge, depth, blur and press |
+| **Palette**  | 10 built in — Nord, Dracula, Catppuccin, Solarized, Gruvbox, Tokyo Night, Rosé Pine, Rei, Sakura, Matcha |
+| **Mode**     | light and dark, every palette measured against WCAG AA in both                                           |
 
 零 — the layer everything else starts from.
 
@@ -73,14 +80,14 @@ the app, and not a matter of taste.
 
 ## Status
 
-**v1.0.3 — three consumers.**
+**v2.0.0 — three consumers.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Components   | 53 (`AuthForm`, `BaseTable`, `BaseCombobox`, `BaseSlider`, `TabShell`, `BaseModal`, `BaseTabs`, `BaseTooltip`, `BasePagination`, `BaseBreadcrumb`, `BaseDisclosure`, `BaseAccordion`, `NavLinks`, `OfflineBanner`, `FabButton`, `BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseSwitch`, `BaseRadioGroup`, `BaseMenu`, `BaseAvatar`, `BaseSpinner`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
-| Composables  | 14 (`useToast`, `useTheme`, `useToday`, `useMediaQuery`, `useInstall`, `watchInstallability`, `createTabTransition`, `useThemeSync`, `useVisualViewport`, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| Utilities    | 27 (`applyTheme`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/shell/mobile.css`, `rei-kit/shell/web.css`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Composables  | 16 (`useToast`, `useTheme`, `useMaterial`, `usePalette`, `useToday`, `useMediaQuery`, `useInstall`, `watchInstallability`, `createTabTransition`, `useThemeSync`, `useVisualViewport`, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Utilities    | 33 (`applyTheme`, `applyMaterial`, `applyPalette`, `MATERIALS`, `PALETTES`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/supabase`, `rei-kit/shell/*.css`, `rei-kit/materials.css`, `rei-kit/palettes.css`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 | Consumers | [Hibi](https://github.com/ramazandogna/hibi) · [Kakei](https://github.com/ramazandogna/kakei) · [Kakehashi](https://github.com/ramazandogna/kakehashi-nihongo) |
 
@@ -128,13 +135,16 @@ import { createSupabaseClient } from 'rei-kit/supabase'
 
 ### Wiring the styles
 
-Four lines, and every one is load-bearing:
+Four lines, and every one is load-bearing — plus two optional ones for the
+materials and palettes:
 
 ```css
 /* your app's main.css */
 @import 'tailwindcss';
-@import 'rei-kit/tokens.css'; /* colour roles, the dark variant, measures, utilities */
+@import 'rei-kit/tokens.css'; /* colour roles, depth, motion, the dark variant */
 @import 'rei-kit/shell/mobile.css'; /* or shell/web.css — see The shell, below */
+@import 'rei-kit/materials.css'; /* optional: glass, brutal, soft */
+@import 'rei-kit/palettes.css'; /* optional: the ten palettes */
 @import 'rei-kit/styles.css'; /* compiled component styles */
 
 /* Tailwind generates a utility only where it has seen the class, and it does
@@ -155,10 +165,82 @@ That test exists because the failure is real: Hibi shipped with the tab bar
 invisible once, and separately spent three versions restating `tokens.css`
 locally instead of importing it, which nothing noticed.
 
+### Materials
+
+A material is how a surface is made — its fill, its edge, its depth, how it
+blurs what is behind it and what pressing it does. It is independent of
+colour, so any material works in any palette.
+
+| Material | Closest to                              | What changes                                                                      |
+| -------- | --------------------------------------- | --------------------------------------------------------------------------------- |
+| `quiet`  | minimalism                              | The default. Hairline edges, tinted fills, depth you barely notice.               |
+| `glass`  | glassmorphism, spatial UI, liquid glass | Frosted, translucent surfaces lit along the rim, over a page with colour to blur. |
+| `brutal` | neo-brutalism                           | 2px ink borders, hard offset shadows, square corners. Buttons press into them.    |
+| `soft`   | claymorphism, neumorphism               | Rounded, raised, lit from above, with a little spring — and a real edge kept.     |
+
+```html
+<html data-material="brutal"></html>
+```
+
+```ts
+import { useMaterial } from 'rei-kit'
+
+const material = useMaterial() // persisted, like useTheme
+material.value = 'glass'
+```
+
+The attribute works on any element, so a region can differ from the page.
+`quiet` is the absence of the attribute; to restore it inside another
+material, set `data-material="quiet"` on the region.
+
+**Glass needs something to see through.** Put the page on the `canvas`
+utility, which carries the material's backdrop — a frosted panel over flat
+white is a grey panel. It falls back to solid where `backdrop-filter` is
+unsupported and for readers who set `prefers-reduced-transparency`.
+
+**Depth is read at runtime, so reach it at runtime.** Use the surface
+utilities — `surface`, `surface-raised`, `surface-overlay`, `control` — or
+`shadow-(--shadow-card)`. There is deliberately no `shadow-card` utility:
+Tailwind builds a theme shadow's utility by inlining its value, which would
+freeze it at the quiet material's depth.
+
+### Palettes
+
+Ten palettes, each with a light and a dark mode. Seven are well-known open
+palettes by their official values; three are the kit's own.
+
+| Palette      | By                | Palette       | By        |
+| ------------ | ----------------- | ------------- | --------- |
+| `rei`        | rei-kit (default) | `gruvbox`     | morhetz   |
+| `nord`       | Arctic Ice Studio | `tokyo-night` | enkia     |
+| `dracula`    | Dracula Theme     | `rose-pine`   | Rosé Pine |
+| `catppuccin` | Catppuccin        | `sakura`      | rei-kit   |
+| `solarized`  | Ethan Schoonover  | `matcha`      | rei-kit   |
+
+```ts
+import { PALETTES, usePalette } from 'rei-kit'
+
+const palette = usePalette()
+palette.value = 'catppuccin'
+
+PALETTES.map((p) => p.swatch) // four colours each, for a picker
+```
+
+**Every palette is measured before it ships.** The text colour on each
+filled role — `on-primary`, `on-warning` and the rest — is chosen by contrast
+rather than by habit, so Solarized's yellow gets dark text and its blue gets
+white. Every text pairing in both modes is checked against WCAG AA, and a
+palette that fails one does not ship. Seven official values fell short on the
+way in; each got the smallest nudge that clears the line.
+
+Palettes are generated from `src/palettes/palettes.source.json` by
+`pnpm palettes`; a test asserts the shipped CSS matches the source.
+
 ### Colours
 
-`tokens.css` defines all eleven roles, a `.dark` block for each surface, and
-the `dark` variant. A new app rebrands by overriding values, never by renaming:
+`tokens.css` defines all eleven roles, the five `on-*` colours that sit on a
+filled role, a `.dark` block for each, and the `dark` variant. A new app
+rebrands by overriding values, never by renaming — or by choosing a palette:
 
 ```css
 @theme {
@@ -173,6 +255,9 @@ the `dark` variant. A new app rebrands by overriding values, never by renaming:
   --color-ink: #17132b; /* text */
   --color-ink-soft: #6a6484; /* secondary text */
   --color-hair: #e8e4f2; /* rule */
+
+  /* the text on a filled role — set it dark when the role is light */
+  --color-on-primary: #ffffff;
 }
 ```
 

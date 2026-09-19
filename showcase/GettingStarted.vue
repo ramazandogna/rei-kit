@@ -136,6 +136,15 @@ ${SCRIPT_END}
 
 const USERS_JS = USERS_TS.replace('<script setup lang="ts">', '<script setup>')
 
+/* Each tab pair shares the height of its longer sample, so switching tabs
+   swaps the code without moving anything below it. */
+const lineCount = (...samples: string[]) => Math.max(...samples.map((s) => s.split('\n').length))
+const COLOUR_LINES = lineCount(
+  `<html data-palette="rei">\n\n<!-- or at runtime, remembered per device:\n     usePalette().value = 'rei' -->`,
+  BRAND,
+)
+const MATERIAL_LINES = lineCount(USERS_TS)
+
 const pie = (swatch: readonly string[]) =>
   `conic-gradient(from -45deg, ${swatch[0]} 0 25%, ${swatch[1]} 0 50%, ${swatch[2]} 0 75%, ${swatch[3]} 0)`
 </script>
@@ -280,8 +289,9 @@ const pie = (swatch: readonly string[]) =>
             :code="paletteCode"
             file="index.html"
             lang="html"
+            :lines="COLOUR_LINES"
           />
-          <CodeBlock v-else :code="BRAND" file="src/style.css" lang="css" />
+          <CodeBlock v-else :code="BRAND" file="src/style.css" lang="css" :lines="COLOUR_LINES" />
         </div>
       </div>
 
@@ -320,8 +330,15 @@ const pie = (swatch: readonly string[]) =>
             :code="materialCode"
             file="index.html"
             lang="html"
+            :lines="MATERIAL_LINES"
           />
-          <CodeBlock v-else :code="USERS_TS" :js="USERS_JS" file="Settings.vue" />
+          <CodeBlock
+            v-else
+            :code="USERS_TS"
+            :js="USERS_JS"
+            file="Settings.vue"
+            :lines="MATERIAL_LINES"
+          />
         </div>
       </div>
     </div>

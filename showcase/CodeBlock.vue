@@ -17,6 +17,7 @@ const {
   js = undefined,
   lang = 'vue',
   file = undefined,
+  lines = undefined,
 } = defineProps<{
   code: string
   /** The same sample in JavaScript. Given, the block offers the switch. */
@@ -25,6 +26,11 @@ const {
   lang?: string
   /** The file this goes in, shown instead of the language. */
   file?: string | undefined
+  /**
+   * A fixed height, in lines. For blocks that swap their code in place —
+   * behind a tab — so the page under them does not jump with every switch.
+   */
+  lines?: number | undefined
 }>()
 
 const shown = computed(() => (js !== undefined && codeLanguage.value === 'js' ? js : code))
@@ -59,7 +65,10 @@ async function copy() {
         </button>
       </div>
     </div>
-    <pre class="cb-pre"><code>{{ shown }}</code></pre>
+    <pre
+      class="cb-pre"
+      :style="lines ? { height: `calc(${lines} * 1.6em + 1.75rem)` } : undefined"
+    ><code>{{ shown }}</code></pre>
   </div>
 </template>
 

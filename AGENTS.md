@@ -4,13 +4,21 @@ Everything an agent needs to build a screen with this package. Hand this file
 over at the start of a project; it is written to be read once and used without
 opening the source.
 
+**The exhaustive parts are generated, not written here.** Every component and
+every prop, with its type, default and the reason it exists, is in
+`showcase/props.generated.json` and live at
+[ramazandogna.github.io/rei-kit](https://ramazandogna.github.io/rei-kit/). This
+file carries what cannot be read off a type: which part to reach for, and the
+mistakes that compile.
+
 ## What this is
 
-A Vue 3 + Tailwind 4 layer: twenty-two components, twenty utilities, eleven
-composables, an i18n runtime and an optional Supabase entry. Extracted from
-[Hibi](https://github.com/ramazandogna/hibi); it now has three consumers —
-Hibi, [Kakei](https://github.com/ramazandogna/kakei) and
-[Kakehashi](https://github.com/ramazandogna/kakehashi-nihongo).
+A Vue 3 + Tailwind 4 component kit. 53 components across five entry points,
+typed, tested, and themed by role rather than by colour. Three apps run on it
+and no two resemble each other: [Hibi](https://github.com/ramazandogna/hibi), a
+phone journal; [Kakei](https://github.com/ramazandogna/kakei), a phone ledger;
+and [Kakehashi](https://github.com/ramazandogna/kakehashi-nihongo), a
+prerendered course site.
 
 ## What gets to be in here
 
@@ -47,14 +55,19 @@ pnpm add rei-kit
 ```
 
 Peers the app supplies: `vue` ^3.5, `tailwindcss` ^4, `lucide-vue-next` ^1.
-Optional: `vue-i18n` ^11 (only for the i18n runtime),
-`@supabase/supabase-js` ^2 (only for `rei-kit/supabase`).
+Optional: `vue-router` ^5 (anything that navigates), `vue-i18n` ^11 (the i18n
+runtime), `@supabase/supabase-js` ^2 (`rei-kit/supabase`).
 
 ```css
 /* src/assets/main.css */
 @import 'tailwindcss';
-@import 'rei-kit/tokens.css'; /* Tailwind source: tokens + utilities */
+@import 'rei-kit/tokens.css'; /* roles, dark variant, measures, utilities */
+@import 'rei-kit/shell/mobile.css'; /* or shell/web.css — one, never both */
 @import 'rei-kit/styles.css'; /* compiled component styles */
+
+/* Tailwind only generates classes it has seen, and it does not read
+   node_modules on its own. Adjust the depth to where this file sits. */
+@source '../../node_modules/rei-kit/dist';
 
 /* the whole rebrand */
 @theme {
@@ -64,8 +77,52 @@ Optional: `vue-i18n` ^11 (only for the i18n runtime),
 }
 ```
 
-Import `styles.css` or scoped component styles silently do nothing — sheet
-transitions in particular will just not animate.
+**Every one of those lines fails silently when missing.** The build is green,
+the components mount, and they render unstyled — or, without `styles.css`,
+scoped transitions simply do not animate. Nothing type-checks CSS imports, so
+an app should have a test that reads its own stylesheet and asserts them.
+
+## Entry points
+
+Import from the narrowest one. Each exists so an app never downloads what it
+does not use.
+
+| Entry              | What it is for                                    | Components                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rei-kit`          | What any app has                                  | `BaseAlert` `BaseAvatar` `BaseBadge` `BaseButton` `BaseCard` `BaseCheckbox` `BaseCombobox` `BaseInput` `BaseMenu` `BaseRadioGroup` `BaseSelect` `BaseSheet` `BaseSlider` `BaseSpinner` `BaseSwitch` `BaseTable` `BaseTextarea` `EmptyState` `ErrorBoundary` `FormField` `GoogleButton` `LocaleLinks` `PageContainer` `PageHeader` `PriceCard` `ProgressBar` `SectionHeading` `SegmentedControl` `SettingsGroup` `SettingsRow` `SkeletonList` `StatCard` `TabBar` `ToastHost` `ToneDot` |
+| `rei-kit/web`      | A wide site with a header and a mouse             | `BaseAccordion` `BaseBreadcrumb` `BaseDisclosure` `BaseModal` `BasePagination` `BaseTabs` `BaseTooltip` `NavLinks`                                                                                                                                                                                                                                                                                                                                                                     |
+| `rei-kit/app`      | A phone-shaped app with tabs and a sign-in screen | `AuthForm` `AuthShell` `FabButton` `LocaleSheet` `OfflineBanner` `TabShell` `TourShell`                                                                                                                                                                                                                                                                                                                                                                                                |
+| `rei-kit/pwa`      | Installing and updating                           | `InstallPrompt` `InstallSettings` `UpdatePrompt`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `rei-kit/supabase` | Optional; importing it is the opt-in              | none — `createSupabaseClient`, `setRememberMe`, `toAuthMessageKey`                                                                                                                                                                                                                                                                                                                                                                                                                     |
+
+A test fails if a component ships without a row here, so this table cannot fall
+behind the package the way it once did.
+
+## Which one to reach for
+
+The kit has near-neighbours on purpose. Picking the wrong one compiles and
+looks almost right.
+
+- **`BaseModal` or `BaseSheet`.** A modal arrives from nowhere in the middle of
+  what you were reading and is dismissed by leaving it. A sheet arrives from
+  the bottom edge, belongs to a thumb, and is pinned to the 430px shell column
+  — so on a desktop it is narrow, and that is correct.
+- **`BaseMenu` or `BaseModal`.** A short list of actions is a menu: arrows move,
+  Tab _leaves_. A dialog traps Tab. Getting that backwards traps somebody in a
+  list of links.
+- **`BaseSelect` or `BaseCombobox`.** Up to a few dozen options, the native
+  select — it opens the platform's own picker, which on a phone no web control
+  matches. Past that, when reading the list is the problem, the combobox.
+- **`BaseCheckbox` or `BaseSwitch`.** A checkbox states an intention something
+  else commits; a switch is the commit, with no Save after it.
+- **`BaseAccordion` or `BaseDisclosure`.** The accordion owns the list. When
+  the list is the app's — rows staggered as they scroll in, interleaved with
+  anything else — use one disclosure per row.
+- **`ProgressBar` or `BaseSpinner`.** A bar is a promise about how long. When
+  there is no amount to show, a spinner, not a bar that cannot move.
+- **`BaseTabs`, `TabBar` or `NavLinks`.** `BaseTabs` switches panels inside one
+  page and leaves no history. `TabBar` and `NavLinks` navigate, and share one
+  item shape so moving between a bottom bar and a top one is a component swap.
 
 ## Tokens
 
@@ -83,71 +140,56 @@ Redefine values; never rename. Every component reads these.
 | `hair`                              | borders and dividers          |
 
 Radii: `--radius-cell` 3px, `--radius-card` 16px, `--radius-shell` 30px.
-Dark mode is class-based: put `.dark` on `<html>` — `useTheme` does it.
-
-## Components
-
-`v-model` marks two-way binding. All are named exports from `rei-kit`.
-
-| Component          | Props                                                                                        | Notes                                                                                                                                                          |
-| ------------------ | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `BaseButton`       | `variant` `'primary'\|'ghost'\|'danger'`, `size` `'sm'\|'md'`, `loading`, `disabled`, `type` | Default slot is the label                                                                                                                                      |
-| `BaseInput`        | `label`\*, `error`, `hint`, `labelHidden`, `type`; `v-model` string                          | `labelHidden` keeps the accessible name when the row already titles it                                                                                         |
-| `BaseSheet`        | `title`\*, `subtitle`, `closeLabel`; `v-model` boolean                                       | Teleports to `#sheet-root` — add `<div id="sheet-root">` beside `#app` in index.html. Traps focus with `inert`, sizes to `visualViewport` for the iOS keyboard |
-| `EmptyState`       | `title`\*, `description`; slots `icon`, `action`                                             |                                                                                                                                                                |
-| `PageHeader`       | slots `left`, `title`, `right`                                                               | Fixed three-column grid so titles stay centred                                                                                                                 |
-| `SectionHeading`   | `tone`\* `Tone`, `label`\*, `count`                                                          | `count` hidden when 0                                                                                                                                          |
-| `SegmentedControl` | `options`\* `{value,label}[]`; `v-model`                                                     | Radio inputs: arrow keys and "one of N" for free                                                                                                               |
-| `SettingsGroup`    | `title`\* ; default slot                                                                     | Card with hairline-divided rows                                                                                                                                |
-| `SettingsRow`      | `label`\*, `description`, `icon`, `interactive`, `stacked`                                   | `interactive` renders a button with a chevron; `stacked` puts the control on its own line                                                                      |
-| `SkeletonList`     | `rows`, `rowHeight`, `label`                                                                 |                                                                                                                                                                |
-| `StatCard`         | `value`\*, `label`\*, `trend` `'up'\|'down'\|'flat'\|null`                                   |                                                                                                                                                                |
-| `ToneDot`          | `fill`\* class, `label`                                                                      |                                                                                                                                                                |
-| `LocaleLinks`      | `locales`\*, `labels`\* endonyms, `label`; `v-model`                                         | List each language in its own language                                                                                                                         |
-
-`Tone` is `{ fill, card, text }` — three class strings, e.g.
-`{ fill: 'bg-positive', card: 'bg-positive/5 border-positive/25', text: 'text-positive' }`.
-Define one per category in the app and pass it in.
+Measures: `--measure-page` 75rem, `--measure-reading` 68ch.
+Dark mode is class-based: `.dark` on `<html>` — `useTheme` does it.
 
 ## Utilities
 
 Pure, no Vue, no clock of their own.
 
-| Export                                                      | Signature                                                 |
-| ----------------------------------------------------------- | --------------------------------------------------------- |
-| `toDateKey(date)` / `fromDateKey(key)`                      | `Date` ⇄ `'YYYY-MM-DD'`, always local                     |
-| `todayKey()`                                                | today as a key                                            |
-| `addDays(key, n)`                                           |                                                           |
-| `lastNDays(count, today?)`                                  | oldest first                                              |
-| `startOfWeek(key, weekStartsOn)`                            | `WeekStart` is `0` Sunday, `1` Monday                     |
-| `eachDayOfYear(year)` / `leadingBlanks(key, weekStartsOn)`  | calendar grids                                            |
-| `formatDate(date, Intl options)`                            | follows the active locale                                 |
-| `setFormatLocale(tag)`                                      | the i18n runtime calls this for you                       |
-| `relativeDayLabel(key, today, { today, yesterday })`        | else the weekday                                          |
-| `downloadJson(data, filename)`                              |                                                           |
-| `safeRedirect(queryValue)`                                  | same-origin paths only; rejects `//host`                  |
-| `tapFeedback(ms?)`                                          | vibrate, safely no-op on iOS                              |
-| `isInstalled()` / `needsIosInstall()` / `isApplePortable()` | install prompts                                           |
-| `AppError` / `toAppError` / `registerErrorMapper`           | `kind` is `'conflict'\|'not-found'\|'network'\|'unknown'` |
+| Export                                                        | Signature                                                           |
+| ------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `toDateKey(date)` / `fromDateKey(key)`                        | `Date` ⇄ `'YYYY-MM-DD'`, always local                               |
+| `todayKey()` / `addDays(key, n)` / `lastNDays(count, today?)` | oldest first                                                        |
+| `startOfWeek(key, weekStartsOn)`                              | `WeekStart` is `0` Sunday, `1` Monday                               |
+| `eachDayOfYear(year)` / `leadingBlanks(key, weekStartsOn)`    | calendar grids                                                      |
+| `formatDate(date, Intl options)` / `setFormatLocale(tag)`     | follows the active locale; the i18n runtime sets it for you         |
+| `relativeDayLabel(key, today, { today, yesterday })`          | else the weekday                                                    |
+| `safeRedirect(queryValue)`                                    | same-origin paths only; rejects `//host`                            |
+| `toRedirectPath(fullPath)`                                    | drops the URL fragment before it becomes a query parameter          |
+| `downloadJson(data, filename)` / `tapFeedback(ms?)`           | `tapFeedback` is a safe no-op on iOS                                |
+| `isInstalled()` / `needsIosInstall()` / `isApplePortable()`   | install prompts                                                     |
+| `AppError` / `toAppError` / `registerErrorMapper`             | `kind` is `'conflict'\|'not-found'\|'network'\|'denied'\|'unknown'` |
+| `ensureSheetRoot()`                                           | `BaseSheet` calls it; exported for mounting the root earlier        |
 
 **Never use `toISOString()` for a date key.** It is UTC, so a late-evening
 entry lands on tomorrow for anyone east of Greenwich. That is what
 `toDateKey` exists to prevent.
 
+**Never put `to.fullPath` straight into a `?redirect=`.** Supabase's implicit
+OAuth flow returns the access and refresh tokens in the URL fragment. A
+fragment never reaches a server; copied into a query parameter it does, on the
+very next request, into access logs and `Referer`. `createAuthGuard` routes
+every redirect through `toRedirectPath` for this reason.
+
 ## Composables
 
-| Export                         | Returns                                                                   |
-| ------------------------------ | ------------------------------------------------------------------------- |
-| `useTheme()`                   | writable ref `'system'\|'light'\|'dark'`; assigning stores and applies it |
-| `setThemeStorageKey(key)`      | call once at startup; safe in any order                                   |
-| `useToday()`                   | readonly ref of today's key, refreshed at midnight and on tab focus       |
-| `useOnline()`                  | readonly boolean ref                                                      |
-| `useDebouncedCallback(fn, ms)` | `{ run, cancel }`                                                         |
-| `useDragScroll(elRef)`         | `{ didDrag }` — pointer-driven horizontal scrolling                       |
-| `useVisualViewport()`          | `{ height, offsetTop } \| null`, for keyboard-aware sheets                |
+| Export                                   | Returns                                                                   |
+| ---------------------------------------- | ------------------------------------------------------------------------- |
+| `useTheme()` / `setThemeStorageKey(key)` | writable ref `'system'\|'light'\|'dark'`; assigning stores and applies it |
+| `useToday()`                             | readonly ref of today's key, refreshed at midnight and on tab focus       |
+| `useOnline()` / `useMediaQuery(query)`   | readonly boolean refs                                                     |
+| `useToast()`                             | `success` `info` `warning` `danger`; render one `ToastHost` per app       |
+| `useDebouncedCallback(fn, ms)`           | `{ run, cancel }`                                                         |
+| `useDragScroll(elRef)`                   | `{ didDrag }` — pointer-driven horizontal scrolling                       |
+| `useVisualViewport()`                    | `{ height, offsetTop } \| null`, for keyboard-aware sheets                |
 
 `useToday()` exists because `todayKey()` called in `setup` freezes: an app left
 open overnight keeps writing to yesterday.
+
+`rei-kit/app` adds `createTabTransition`, `useThemeSync`, `createAuthGuard`,
+`createTitleGuard`, `createQueryDefaults`, `createWriteReport` and
+`fieldErrors`. `rei-kit/pwa` adds `useInstall` and `useSnooze`.
 
 ## i18n
 
@@ -171,6 +213,10 @@ values: `@` starts a linked message and `|` separates plurals, so an email
 placeholder must be written `"you{'@'}example.com"`. Compilation is lazy, so
 this only fails at runtime — worth a test that calls `t()` on every key.
 
+**The kit has no language of its own.** Every visible string is a required
+prop. A component with an English default would ship English into an app that
+has none, and it would do it silently.
+
 ## Supabase (optional)
 
 ```ts
@@ -180,31 +226,47 @@ export const supabase = createSupabaseClient<Database>(url, anonKey)
 ```
 
 Importing this entry also registers the Postgres error mapping, so `toAppError`
-starts returning `'conflict'` for 23505 and `'not-found'` for PGRST116.
-`setRememberMe(false)` moves the session to `sessionStorage` so it dies with
-the tab.
-
-## Changing this package without breaking an app
-
-Consumers pin `^0.x`, so a minor release upgrades nobody — apps opt in. Two
-tests back that up: `public-api.spec.ts` names every export, because the kit
-compiles fine without one nothing here calls; and `consumer.yml` packs the real
-tarball, installs it into **all three** consumers and runs each one's whole
-gate, which is the only check that imports this package the way an app does.
-Kakehashi's build is `vite-ssg build`, so that job is also the real prerender —
-`ssr.spec.ts` cannot stand in for it, because jsdom supplies the very
-`document` a server lacks.
-
-The mirror-image hazard is worth knowing: because `^0.x` never crosses a minor,
-an app that never asks never moves. Hibi and Kakei sat two minors behind for
-that reason. `PATCHNOTES.md` exists to make taking a release a short read.
-
-If you change a prop name or drop an export, expect the consumer check to fail.
-That is the point.
+returns `'conflict'` for 23505, `'not-found'` for PGRST116 and `'denied'` for
+42501 and an expired token. `setRememberMe(false)` moves the session to
+`sessionStorage` so it dies with the tab. `toAuthMessageKey(error)` returns a
+message key rather than a sentence, so an error stored before a language
+switch still reads correctly after it.
 
 ## Shell layout
 
-`tokens.css` ships opt-in classes for a phone-shaped app: `.shell-frame`
-(430px column, full height), `.page-slide` and `.page-auth` (scroll container
-with the right bottom clearance), and the `.slide-forward-*` /
-`.slide-backward-*` transition pairs. Utilities: `no-scrollbar`, `pb-safe`.
+`rei-kit/shell/mobile.css` ships opt-in classes for a phone-shaped app:
+`.shell-frame` (430px column, full height), `.page-slide` and `.page-auth`
+(scroll container with the right bottom clearance), and the
+`.slide-forward-*` / `.slide-backward-*` transition pairs that
+`createTabTransition().name` resolves to. `rei-kit/shell/web.css` is the wide
+equivalent. `tokens.css` adds `no-scrollbar` and `pb-safe`.
+
+`BaseSheet` teleports to `#sheet-root` so the app behind it can be made
+`inert`. It creates that node if the page has none; an app that declares one
+keeps it.
+
+## Changing this package without breaking an app
+
+Since 1.0.0, a minor adds and a patch fixes. Neither removes an export,
+renames a prop, or changes what a component renders for the same input. A
+breaking change waits for the next major and arrives with its reason in
+`CHANGELOG.md`.
+
+Four checks hold that line, and each catches something the others cannot:
+
+- **`public-api.spec.ts`** names every export. The kit compiles fine without an
+  export nothing inside it calls, so removing one would otherwise pass.
+- **`showcase-catalogue.spec.ts`** regenerates the prop catalogue and asserts it
+  matches the exports in both directions, that every component has a
+  description, that every component is mounted by a behaviour test, and that
+  every component has a row in this file.
+- **`consumer.yml`** packs the real tarball, installs it into all three apps and
+  runs each one's whole gate — the only check that imports the package the way
+  an app does. Kakehashi's build is `vite-ssg build`, so this is also the real
+  prerender; `ssr.spec.ts` cannot stand in for it, because jsdom supplies the
+  very `document` a server lacks.
+- **Visual comparison** of the three apps before and after, because a lost focus
+  ring or a heading that stopped growing passes every one of the above.
+
+If you change a prop name or drop an export, expect the consumer check to fail.
+That is the point.

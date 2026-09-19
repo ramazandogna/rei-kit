@@ -89,6 +89,19 @@ describe('the showcase catalogue', () => {
     expect(unmounted).toEqual([])
   })
 
+  it('lists every component in AGENTS.md', () => {
+    /* It said "twenty-two components" for thirty-one releases, and told
+       assistants to add a DOM node the kit had learned to create itself.
+       A file written for tools is read by tools, which do not notice it is
+       stale -- they just write the wrong code with confidence. */
+    const agents = readFileSync('AGENTS.md', 'utf8')
+    const missing = catalogue
+      .map((entry) => entry.name)
+      .filter((name) => !agents.includes(`\`${name}\``))
+
+    expect(missing).toEqual([])
+  })
+
   it('names the entry point each component is imported from', () => {
     const ENTRIES = ['rei-kit', 'rei-kit/app', 'rei-kit/web', 'rei-kit/pwa']
     const wrong = catalogue.filter(

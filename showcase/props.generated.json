@@ -186,6 +186,13 @@
         "default": "'button'"
       },
       {
+        "name": "variant",
+        "required": false,
+        "type": "'primary' | 'secondary' | 'ghost' | 'quiet' | 'destructive' | 'row' | 'danger' | 'positive' | 'warning' | 'accent' | 'link' | 'unstyled'",
+        "description": "`link` is a real action that should read as text — \"clear this note\", \"remove\", \"change category\". It has no surface at all, so it also has no height and no padding: giving it either would make it a ghost button, which is a different thing and was already here.",
+        "default": "'primary'"
+      },
+      {
         "name": "size",
         "required": false,
         "type": "'xs' | 'sm' | 'md' | 'lg'",
@@ -436,6 +443,13 @@
         "type": "boolean",
         "description": "Hides the label visually but keeps it for assistive tech. For fields whose surrounding row already names them — dropping the label entirely would leave the input with no accessible name at all.",
         "default": "false"
+      },
+      {
+        "name": "type",
+        "required": false,
+        "type": "'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url' | 'date' | 'time' | 'datetime-local'",
+        "description": "Every type a text field can be, because the ones missing were the ones apps needed: `date` and `search` were hand-written three times each and `url` twice, in files that already imported this component.",
+        "default": "'text'"
       },
       {
         "name": "size",

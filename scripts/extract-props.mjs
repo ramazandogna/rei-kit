@@ -60,14 +60,20 @@ function defaults(source) {
  * function signature is not cut in half at its first comma.
  */
 function entries(block) {
-  const lines = block.split('\n')
+  const lines = block.split('\n').map((l) => l.trim())
   const out = []
   let comment = []
   let buffer = ''
   let depth = 0
 
-  for (const raw of lines) {
-    const line = raw.trim()
+  /** The next line that is not blank, for deciding whether a type continues. */
+  const peek = (from) => {
+    for (let j = from; j < lines.length; j++) if (lines[j] !== '') return lines[j]
+    return ''
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
     if (line === '') continue
 
     if (buffer === '' && (line.startsWith('/*') || line.startsWith('*') || line.startsWith('//'))) {
@@ -84,12 +90,22 @@ function entries(block) {
 
     if (depth > 0) continue
 
+    /* A union written one member per line starts on the line *after* the name,
+       so "variant?:" alone is not a finished prop, and neither is any line
+       followed by one beginning with "|". Missing this dropped BaseButton's
+       `variant` -- its most important prop -- from the published docs. */
+    if (/:\s*$/.test(buffer) || peek(i + 1).startsWith('|')) continue
+
     const match = buffer.match(/^(\w+)(\?)?:\s*(.+?)$/)
     if (match) {
       out.push({
         name: match[1],
         required: !match[2],
-        type: match[3].replace(/\s*\|\s*undefined\s*$/, '').trim(),
+        type: match[3]
+          .replace(/^\|\s*/, '')
+          .replace(/\s*\|\s*undefined\s*$/, '')
+          .replace(/\s+/g, ' ')
+          .trim(),
         description: comment.join(' '),
       })
     }

@@ -25,6 +25,7 @@ import catalogue from './props.generated.json'
 const SECTIONS = [
   { id: 'axes', label: 'Themes: materials & palettes' },
   { id: 'aksiyon', label: 'Action' },
+  { id: 'hareket', label: 'Motion' },
   { id: 'yuzey', label: 'Surfaces' },
   { id: 'geri-bildirim', label: 'Status and feedback' },
   { id: 'ilerleme', label: 'Progress' },
@@ -43,7 +44,7 @@ const SECTIONS = [
   { id: 'api', label: 'All props' },
 ]
 
-const ENTRY_ORDER = ['rei-kit', 'rei-kit/web', 'rei-kit/app', 'rei-kit/pwa']
+const ENTRY_ORDER = ['rei-kit', 'rei-kit/web', 'rei-kit/app', 'rei-kit/pwa', 'rei-kit/motion']
 
 const query = ref('')
 const active = ref('')

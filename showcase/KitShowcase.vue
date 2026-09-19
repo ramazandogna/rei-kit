@@ -7,6 +7,7 @@ import AppearanceBar from './AppearanceBar.vue'
 import AxesSection from './AxesSection.vue'
 import GalleryExtra from './GalleryExtra.vue'
 import HeroSection from './HeroSection.vue'
+import MotionSection from './MotionSection.vue'
 import SideNav from './SideNav.vue'
 
 import {
@@ -144,6 +145,8 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
               </div>
             </BaseCard>
           </section>
+
+          <MotionSection />
 
           <section id="yuzey" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Surfaces" />

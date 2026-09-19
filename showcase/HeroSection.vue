@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import { NumberTicker } from '../src/motion/index'
+import catalogue from './props.generated.json'
 import {
   BaseAvatar,
   BaseBadge,
   BaseButton,
   BaseSwitch,
+  MATERIALS,
+  PALETTES,
   ProgressBar,
   StatCard,
   VERSION,
@@ -58,9 +62,9 @@ const TAGLINE: Record<string, string> = {
       </h1>
 
       <p class="hero-lead">
-        53 accessible components for Vue 3 and Tailwind 4. Change the <strong>material</strong> with
-        one attribute, the <strong>palette</strong> with another — every component follows, and none
-        of them knows your brand.
+        {{ catalogue.length }} accessible components for Vue 3 and Tailwind 4. Change the
+        <strong>material</strong> with one attribute, the <strong>palette</strong> with another —
+        every component follows, and none of them knows your brand.
       </p>
 
       <div class="hero-actions">
@@ -74,9 +78,16 @@ const TAGLINE: Record<string, string> = {
       </div>
 
       <ul class="hero-facts">
-        <li><strong>53</strong> components</li>
-        <li><strong>4</strong> materials</li>
-        <li><strong>10</strong> palettes</li>
+        <!-- Counted, not typed: the numbers come from the package itself. -->
+        <li>
+          <strong><NumberTicker :value="catalogue.length" :from="0" /></strong> components
+        </li>
+        <li>
+          <strong><NumberTicker :value="MATERIALS.length" :from="0" /></strong> materials
+        </li>
+        <li>
+          <strong><NumberTicker :value="PALETTES.length" :from="0" /></strong> palettes
+        </li>
         <li><strong>WCAG AA</strong> in every one</li>
       </ul>
     </div>

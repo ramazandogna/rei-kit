@@ -16,6 +16,7 @@
    same two lines an app adds to do the same. */
 @import '../src/styles/materials.css';
 @import '../src/styles/palettes.css';
+@import '../src/styles/motion.css';
 
 @source '../src';
 

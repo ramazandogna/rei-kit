@@ -468,6 +468,48 @@
     ]
   },
   {
+    "name": "BaseMarquee",
+    "entry": "rei-kit/motion",
+    "summary": "A row that scrolls sideways without end: logos, testimonials, a ticker.",
+    "props": [
+      {
+        "name": "duration",
+        "required": false,
+        "type": "number",
+        "description": "Seconds for one full pass. Longer is slower; the speed does not change with the content's length.",
+        "default": "30"
+      },
+      {
+        "name": "reverse",
+        "required": false,
+        "type": "boolean",
+        "description": "Move left to right instead.",
+        "default": "false"
+      },
+      {
+        "name": "paused",
+        "required": false,
+        "type": "boolean",
+        "description": "Holds it still.",
+        "default": "false"
+      },
+      {
+        "name": "fade",
+        "required": false,
+        "type": "boolean",
+        "description": "Fade the content out at both edges instead of cutting it.",
+        "default": "true"
+      },
+      {
+        "name": "gap",
+        "required": false,
+        "type": "string",
+        "description": "Space between items, and between the end of one pass and the start of the next. Any CSS length.",
+        "default": "'2rem'"
+      }
+    ]
+  },
+  {
     "name": "BaseMenu",
     "entry": "rei-kit",
     "summary": "A list of actions behind one control.",
@@ -611,6 +653,41 @@
         "type": "boolean",
         "description": "",
         "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "BaseReveal",
+    "entry": "rei-kit/motion",
+    "summary": "Content that fades or rises into place as it scrolls into view.",
+    "props": [
+      {
+        "name": "effect",
+        "required": false,
+        "type": "'fade' | 'rise' | 'scale'",
+        "description": "How it arrives: fading in, rising a little as it does, or growing to size.",
+        "default": "'rise'"
+      },
+      {
+        "name": "delay",
+        "required": false,
+        "type": "number",
+        "description": "Milliseconds to wait once it is in view — the stagger in a list.",
+        "default": "0"
+      },
+      {
+        "name": "once",
+        "required": false,
+        "type": "boolean",
+        "description": "Reveal once and stay. Off, it hides again each time it leaves the screen.",
+        "default": "true"
+      },
+      {
+        "name": "as",
+        "required": false,
+        "type": "string",
+        "description": "The element to render.",
+        "default": "'div'"
       }
     ]
   },
@@ -965,6 +1042,48 @@
     ]
   },
   {
+    "name": "CountUp",
+    "entry": "rei-kit/motion",
+    "summary": "A number that counts up to its value once it scrolls into view.",
+    "props": [
+      {
+        "name": "value",
+        "required": true,
+        "type": "number",
+        "description": "The number to count to. Change it and it counts on from where it is.",
+        "default": ""
+      },
+      {
+        "name": "from",
+        "required": false,
+        "type": "number",
+        "description": "Where the first count starts.",
+        "default": "0"
+      },
+      {
+        "name": "duration",
+        "required": false,
+        "type": "number",
+        "description": "How long a count takes, in milliseconds.",
+        "default": "1600"
+      },
+      {
+        "name": "format",
+        "required": false,
+        "type": "Intl.NumberFormatOptions",
+        "description": "Passed to `Intl.NumberFormat`. Set `maximumFractionDigits` to count in decimals.",
+        "default": "undefined"
+      },
+      {
+        "name": "locale",
+        "required": false,
+        "type": "string",
+        "description": "A BCP 47 tag. Unset, the kit's active formatting locale.",
+        "default": "undefined"
+      }
+    ]
+  },
+  {
     "name": "EmptyState",
     "entry": "rei-kit",
     "summary": "A list with nothing in it yet, said kindly.",
@@ -1283,6 +1402,41 @@
         "type": "string",
         "description": "Accessible name for the navigation landmark.",
         "default": "''"
+      }
+    ]
+  },
+  {
+    "name": "NumberTicker",
+    "entry": "rei-kit/motion",
+    "summary": "A number whose digits roll to their new value, like an odometer or a note counter.",
+    "props": [
+      {
+        "name": "value",
+        "required": true,
+        "type": "number",
+        "description": "The number to show. Change it and the digits roll to the new one.",
+        "default": ""
+      },
+      {
+        "name": "from",
+        "required": false,
+        "type": "number",
+        "description": "Where the digits start when the component mounts, so a count can roll up as the page opens. Unset, the first frame is already the value.",
+        "default": "undefined"
+      },
+      {
+        "name": "format",
+        "required": false,
+        "type": "Intl.NumberFormatOptions",
+        "description": "Passed to `Intl.NumberFormat`: `{ style: 'currency', currency: 'TRY' }`, decimals, grouping.",
+        "default": "undefined"
+      },
+      {
+        "name": "locale",
+        "required": false,
+        "type": "string",
+        "description": "A BCP 47 tag. Unset, the kit's active formatting locale.",
+        "default": "undefined"
       }
     ]
   },
@@ -1636,6 +1790,34 @@
     "props": []
   },
   {
+    "name": "TextRotate",
+    "entry": "rei-kit/motion",
+    "summary": "One word in a sentence that changes on its own: \"Build it *glass*\", then *brutal*, then *soft*.",
+    "props": [
+      {
+        "name": "words",
+        "required": true,
+        "type": "readonly string[]",
+        "description": "The words, in order. The first is the one a server and a still page show.",
+        "default": ""
+      },
+      {
+        "name": "interval",
+        "required": false,
+        "type": "number",
+        "description": "How long each word stays, in milliseconds.",
+        "default": "2400"
+      },
+      {
+        "name": "paused",
+        "required": false,
+        "type": "boolean",
+        "description": "Holds the current word. For a pause button, or a section out of view.",
+        "default": "false"
+      }
+    ]
+  },
+  {
     "name": "ToastHost",
     "entry": "rei-kit",
     "summary": "Where the toasts land. One of these, at the app root.",
@@ -1744,6 +1926,62 @@
         "type": "string",
         "description": "Where the dialog goes. A phone shell clips its children, so the guide has to leave the tree to cover the tab bar and the header alike.",
         "default": "'body'"
+      }
+    ]
+  },
+  {
+    "name": "TypeWriter",
+    "entry": "rei-kit/motion",
+    "summary": "Text that types itself out, and — given several lines — deletes each one and types the next.",
+    "props": [
+      {
+        "name": "text",
+        "required": true,
+        "type": "string | readonly string[]",
+        "description": "One line to type, or several to type in turn.",
+        "default": ""
+      },
+      {
+        "name": "speed",
+        "required": false,
+        "type": "number",
+        "description": "Milliseconds per character typed.",
+        "default": "45"
+      },
+      {
+        "name": "deleteSpeed",
+        "required": false,
+        "type": "number",
+        "description": "Milliseconds per character deleted.",
+        "default": "25"
+      },
+      {
+        "name": "hold",
+        "required": false,
+        "type": "number",
+        "description": "How long a finished line stays before it is deleted, in milliseconds.",
+        "default": "1800"
+      },
+      {
+        "name": "loop",
+        "required": false,
+        "type": "boolean",
+        "description": "With several lines, start again after the last. With one, it is typed once.",
+        "default": "true"
+      },
+      {
+        "name": "cursor",
+        "required": false,
+        "type": "boolean",
+        "description": "Show a blinking caret after the text.",
+        "default": "true"
+      },
+      {
+        "name": "paused",
+        "required": false,
+        "type": "boolean",
+        "description": "Stops where it is.",
+        "default": "false"
       }
     ]
   },

@@ -60,6 +60,14 @@ without.
 
 ---
 
+## 2.3.1
+
+**You gain a copyable sample for every component**, in TypeScript and
+JavaScript, on the [showcase](https://ramazandogna.github.io/rei-kit/#api). The
+showcase also has a step-by-step Get started guide.
+
+**Action required:** none. Documentation only.
+
 ## 2.3.0
 
 **You gain `rei-kit/motion`: counters, rotating words, reveals and a marquee.**

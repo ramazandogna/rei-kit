@@ -3,6 +3,41 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.3.1 — 2026-09-19
+
+**Documentation you can copy from.** No change to what the package renders
+or exports.
+
+### Added
+
+- **A working sample for every component**, in TypeScript and JavaScript.
+  The samples are real files in `showcase/examples/`, type-checked with the
+  showcase and importing from the entry each component ships in, so what a
+  reader copies compiles. The JavaScript is generated from them with Node's
+  own type stripping, not kept by hand. `examples.spec.ts` fails on a
+  component without a sample, on a prop, model or event it does not have, on
+  a required prop left out, and on a JavaScript version that still has a
+  type in it. The type-check alone lets an unknown prop through, because Vue
+  passes it on as an attribute.
+- **Get started** on the showcase, in the order a person does it: a Vue app,
+  Tailwind, the kit, two lines of CSS, a component. The requirements come
+  from the package's own peer ranges. Commands follow the package manager you
+  pick, and samples switch between TypeScript and JavaScript. Colour has two
+  paths: pick one of the ten palettes, or bring your own brand. Material also
+  has two: decide once, or let your users choose.
+- The hero's small version line is now a readable **Runs on** strip, with
+  versions read from `peerDependencies`. The showcase also gets a footer with
+  where to go next, and a credit pinned to the foot of the menu.
+- The README's install section is the same five steps.
+
+### Found on the way
+
+Under vue-tsc's `strictTemplates`, `@click` and `aria-label` on `BaseButton`
+and the model types of `BaseInput`, `BaseTextarea` and `BaseRadioGroup`
+report errors. The kit's templates type-check under the default settings
+this repository uses. Tightening those types is recorded for a later
+release.
+
 ## 2.3.0 — 2026-09-19
 
 **`rei-kit/motion`** — numbers that count, words that change, content that

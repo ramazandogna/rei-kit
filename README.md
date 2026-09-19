@@ -87,7 +87,7 @@ styles included and Vue left out. Minified, gzip -9:
 
 | Kit                  |         JS |         CSS |       Total |
 | -------------------- | ---------: | ----------: | ----------: |
-| **rei-kit 2.3.0**    | **3.1 KB** | **15.2 KB** | **18.4 KB** |
+| **rei-kit 2.3.1**    | **3.1 KB** | **15.2 KB** | **18.4 KB** |
 | element-plus 2.14.6  |    27.3 KB |      6.0 KB |     33.3 KB |
 | naive-ui 2.45.3      |    51.2 KB |           — |     51.2 KB |
 | primevue 5.0.1       |    53.6 KB |           — |     53.6 KB |
@@ -124,7 +124,7 @@ Each claim here is enforced by something that fails, not by a promise.
 
 ## Status
 
-**v2.3.0 — three consumers.**
+**v2.3.1 — three consumers.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -140,9 +140,71 @@ the package's promise written down.
 
 ## Install
 
+rei-kit is the third thing you install, after a Vue app and Tailwind CSS.
+From an empty folder:
+
+**1. A Vue app** — skip this if you have one. `vue-ts` for TypeScript, `vue`
+for JavaScript.
+
 ```sh
-pnpm add rei-kit
+pnpm create vite my-app --template vue-ts
 ```
+
+**2. Tailwind CSS 4**, with its Vite plugin:
+
+```sh
+pnpm add -D tailwindcss @tailwindcss/vite
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [vue(), tailwindcss()],
+})
+```
+
+**3. rei-kit**, with the icon set a few components draw with:
+
+```sh
+pnpm add rei-kit lucide-vue-next
+```
+
+**4. The styles** — replace your stylesheet's contents with two lines (more
+under [Wiring the styles](#wiring-the-styles)):
+
+```css
+@import 'tailwindcss';
+@import 'rei-kit/mobile.css'; /* or rei-kit/web.css for a site */
+```
+
+**5. A component:**
+
+```vue
+<script setup lang="ts">
+import { BaseButton, useToast, ToastHost } from 'rei-kit'
+
+const toast = useToast()
+</script>
+
+<template>
+  <BaseButton @click="toast.success('Saved')">Save</BaseButton>
+  <ToastHost close-label="Close" />
+</template>
+```
+
+**TypeScript or JavaScript.** The package ships its own declarations, so
+TypeScript gets autocomplete and checking with no `@types` package, and every
+prop's type shows in the editor. In JavaScript the same code works — drop
+`lang="ts"`. [Every component has a copyable sample in both](https://ramazandogna.github.io/rei-kit/#api).
+
+**Runs on** Vue 3.5+, Tailwind CSS 4, Vite 5.2+ (or any bundler Tailwind 4
+supports), and the browsers Tailwind 4 targets: Safari 16.4+, Chrome 111+,
+Firefox 128+. Server rendering and prerendering work — nothing touches the
+browser on import.
 
 Everything the kit expects from the app is a peer dependency, so the app's copy
 is the only copy:
@@ -486,6 +548,12 @@ git push --follow-tags
 
 Then write the release into `PATCHNOTES.md` — what a consumer gains, and what
 they have to do to take it.
+
+## Author
+
+Made by **Ramazan Doğan** — [github.com/ramazandogna](https://github.com/ramazandogna),
+doganrmzn40 [ at ] gmail.com. Issues and ideas are welcome on
+[GitHub](https://github.com/ramazandogna/rei-kit/issues).
 
 ## License
 

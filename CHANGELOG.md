@@ -3,6 +3,51 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.3.0 — 2026-09-19
+
+**`rei-kit/motion`** — numbers that count, words that change, content that
+arrives.
+
+### Added
+
+- **`NumberTicker`** rolls each digit to its value, like an odometer. Digit
+  positions are counted from the right, so the units stay the units when the
+  number grows a digit, and a separator stays where it was. Formatting is
+  `Intl.NumberFormat`, so currency, grouping and decimals follow the locale.
+  `from` rolls up from a start value when the component mounts.
+- **`CountUp`** counts through every value with an ease-out, and only starts
+  once it is on screen, so a figure below the fold has not finished before
+  anyone sees it.
+- **`TextRotate`** swaps one word in a sentence on an interval, and
+  **`TypeWriter`** types a line, holds it and deletes it for the next. Both
+  stop while hovered or focused and on `paused`. Content that moves on its
+  own for more than five seconds needs a way to stop it (WCAG 2.2.2).
+- **`BaseReveal`** fades, rises or grows into view on scroll. It is visible
+  until it has mounted and found itself below the fold, so a prerendered page,
+  or one read without JavaScript, never keeps content at zero opacity.
+- **`BaseMarquee`** scrolls a row without end, with no measuring: the content
+  is rendered twice and the track moves by exactly one copy. The copy is
+  `inert` and hidden from assistive tech.
+- **`rei-kit/motion.css`**, in both presets: `animate-float`,
+  `animate-pulse-soft`, `animate-glow`, `animate-wiggle`, `animate-pop` and
+  `text-shimmer`. They are theme animations, so an app pays only for the
+  ones it uses, and all of them stop under reduced motion here, once. A test
+  fails if a new animation is added without that line.
+- **`formatNumber`** — `Intl.NumberFormat` with the same cache and the same
+  active locale as `formatDate`.
+
+Every motion part renders its finished state on a server and under
+`prefers-reduced-motion`, and a screen reader hears only the final value,
+never a digit mid-roll or a word half typed. Server rendering is tested in
+node, each part is tested both moving and still, and the six add 1.9 KB gzip
+to an app that uses all of them.
+
+### Changed
+
+- The component count stated in the README, AGENTS.md, the npm description
+  and the showcase's link preview is checked against the package by a test.
+  It said 53 in five places.
+
 ## 2.2.0 — 2026-09-19
 
 **Two lines to install.**

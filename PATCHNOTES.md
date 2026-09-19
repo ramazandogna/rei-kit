@@ -60,6 +60,37 @@ without.
 
 ---
 
+## 2.3.0
+
+**You gain `rei-kit/motion`: counters, rotating words, reveals and a marquee.**
+
+```vue
+<script setup lang="ts">
+import {
+  NumberTicker,
+  CountUp,
+  TextRotate,
+  TypeWriter,
+  BaseReveal,
+  BaseMarquee,
+} from 'rei-kit/motion'
+</script>
+```
+
+- `NumberTicker` rolls digits like a note counter; `CountUp` counts up once
+  it is on screen.
+- `TextRotate` and `TypeWriter` animate a word or a line.
+- `BaseReveal` animates content in on scroll; `BaseMarquee` scrolls a row
+  without end.
+- New utilities: `animate-float`, `animate-pulse-soft`, `animate-glow`,
+  `animate-wiggle`, `animate-pop`, `text-shimmer`.
+
+All of them stand still for readers who ask for less motion, and render
+their final state on a server.
+
+**Action required:** none. On the presets the utilities are already there.
+On the individual imports, add `@import 'rei-kit/motion.css';` to use them.
+
 ## 2.2.0
 
 **You gain a two-line install.**

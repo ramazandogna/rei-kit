@@ -69,6 +69,10 @@ const toast = useToast()
 const TONES = ['info', 'success', 'warning', 'danger'] as const
 const BADGES = ['neutral', 'primary', 'success', 'warning', 'danger'] as const
 
+/* The release line, not the patch: "v2.3" is what a reader compares against
+   their lockfile. The exact version is in the footer and on hover. */
+const SERIES = VERSION.split('.').slice(0, 2).join('.')
+
 const percent = computed(() => Math.round((progress.value / 28) * 100))
 </script>
 
@@ -81,7 +85,9 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
         <a href="#top" class="flex items-center gap-2.5 whitespace-nowrap">
           <span class="sc-logo" aria-hidden="true">零</span>
           <span class="text-ink text-sm font-semibold tracking-tight">rei-kit</span>
-          <span class="text-ink-soft hidden text-xs tabular-nums sm:inline">v{{ VERSION }}</span>
+          <span class="text-ink-soft hidden text-xs tabular-nums sm:inline" :title="`v${VERSION}`"
+            >v{{ SERIES }}</span
+          >
         </a>
 
         <nav class="hidden items-center gap-4 text-xs md:flex" aria-label="Project">

@@ -22,19 +22,42 @@
 
 /* Anything the menu jumps to stops below the sticky header rather than under
    it. Without this the heading you asked for is the one thing you cannot see. */
+/* A safety net, not the fix: each grid on the page is sized to the page. This
+   only keeps one future mistake from turning into a sideways-scrolling phone.
+   `clip`, not `hidden`, so the sticky header and menu keep working. */
+html,
+body {
+  overflow-x: clip;
+}
+
 [id] {
-  scroll-margin-top: 5.5rem;
+  scroll-margin-top: 1.5rem;
+}
+
+@media (min-width: 48rem) {
+  [id] {
+    scroll-margin-top: 5.5rem;
+  }
 }
 
 /* The header is a raised surface like any other, so it turns to glass, grows a
    hard shadow or puffs up with the material — the first thing on the page to
    show what the picker does. */
 .sc-header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 40;
   border-width: 0 0 var(--surface-border-width) 0;
   border-radius: 0;
+}
+
+/* Sticky only where it fits on one line. On a phone the appearance controls
+   wrap it to two, and a hundred pixels of header pinned over a 844px screen
+   is a page that covers its own headings. */
+@media (min-width: 48rem) {
+  .sc-header {
+    position: sticky;
+    top: 0;
+  }
 }
 
 .sc-logo {

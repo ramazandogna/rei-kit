@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import AuthorCredit from './AuthorCredit.vue'
+import { MOTION_PARTS } from './motion-parts'
 import catalogue from './props.generated.json'
 
 /**
@@ -28,6 +29,7 @@ const SECTIONS = [
   { id: 'axes', label: 'Themes: materials & palettes' },
   { id: 'aksiyon', label: 'Action' },
   { id: 'hareket', label: 'Motion' },
+  ...MOTION_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
   { id: 'yuzey', label: 'Surfaces' },
   { id: 'geri-bildirim', label: 'Status and feedback' },
   { id: 'ilerleme', label: 'Progress' },
@@ -192,18 +194,21 @@ function go(id: string) {
   <div v-if="open" class="sc-nav-scrim" @click="open = false" />
 
   <nav class="sc-nav" :class="{ 'is-open': open }" aria-label="Components">
-    <div class="sc-nav-inner">
-      <label class="sc-nav-search">
-        <span class="sr-only">Search components</span>
-        <input
-          v-model="query"
-          type="search"
-          placeholder="Search components…"
-          autocomplete="off"
-          class="sc-nav-input"
-        />
-      </label>
+    <!-- Above the list rather than stuck to the top of it. Sticky inside the
+         scroller, it needed an opaque ground to hide what slid under it, and
+         over glass's coloured page that ground showed as a hard-edged slab. -->
+    <label class="sc-nav-search">
+      <span class="sr-only">Search components</span>
+      <input
+        v-model="query"
+        type="search"
+        placeholder="Search components…"
+        autocomplete="off"
+        class="sc-nav-input control"
+      />
+    </label>
 
+    <div class="sc-nav-inner">
       <p v-if="query" class="sc-nav-count" role="status">
         {{ found }} components · {{ sections.length }} sections
       </p>
@@ -215,7 +220,7 @@ function go(id: string) {
             <a
               :href="`#${section.id}`"
               class="sc-nav-link"
-              :class="{ 'is-active': active === section.id }"
+              :class="{ 'is-active': active === section.id, 'is-sub': 'sub' in section }"
               :aria-current="active === section.id ? 'true' : undefined"
               @click.prevent="go(section.id)"
             >
@@ -278,20 +283,15 @@ function go(id: string) {
 
 .sc-nav-search {
   display: block;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  padding-bottom: 0.5rem;
-  background: var(--color-canvas);
+  flex-shrink: 0;
+  padding: 0 0.5rem 0.5rem 0;
 }
 
 .sc-nav-input {
   width: 100%;
   height: 2.25rem;
-  border-radius: var(--radius-cell);
-  border: 1px solid var(--color-hair);
-  background: var(--color-surface);
-  padding: 0 0.625rem;
+  border-radius: var(--radius-card);
+  padding: 0 0.75rem;
   font-size: 0.8125rem;
   color: var(--color-ink);
 }
@@ -335,6 +335,14 @@ function go(id: string) {
   transition:
     color 140ms ease,
     background-color 140ms ease;
+}
+
+.sc-nav-link.is-sub {
+  margin-left: 0.75rem;
+  border-left: 1px solid var(--color-hair);
+  border-radius: 0 var(--radius-cell) var(--radius-cell) 0;
+  padding-left: 0.625rem;
+  font-size: 0.75rem;
 }
 
 .sc-nav-link.is-mono {
@@ -458,12 +466,19 @@ function go(id: string) {
     transform: translateX(0);
   }
 
+  /* The height stated rather than implied by top and bottom: the sticky
+     column's `align-self: start` also applies to a fixed box in current
+     browsers, and shrank the drawer to its content — sixty links tall, with
+     the pinned credit three thousand pixels down. */
   .sc-nav {
+    height: 100dvh;
     max-height: none;
+    align-self: stretch;
   }
 
   /* Off screen and unreachable, not merely invisible: a closed drawer must not
      hand a Tab press to links nobody can see. */
+  .sc-nav:not(.is-open) .sc-nav-search,
   .sc-nav:not(.is-open) .sc-nav-inner,
   .sc-nav:not(.is-open) .sc-nav-credit {
     visibility: hidden;

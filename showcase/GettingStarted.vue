@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
-import { PALETTES, SectionHeading, usePalette } from '../src/index'
+import {
+  MATERIALS,
+  PALETTES,
+  SectionHeading,
+  SegmentedControl,
+  useMaterial,
+  usePalette,
+} from '../src/index'
 import pkg from '../package.json'
 import CodeBlock from './CodeBlock.vue'
 import InstallCommand from './InstallCommand.vue'
@@ -83,48 +90,51 @@ ${SCRIPT_END}
 const FIRST_JS = FIRST_TS.replace('<script setup lang="ts">', '<script setup>')
 
 const palette = usePalette()
-const paletteLine = computed(() => `<html data-palette="${palette.value}">`)
+const material = useMaterial()
 
-const CUSTOM = `@import 'tailwindcss';
-@import 'rei-kit/mobile.css';
+const COLOUR_WAYS = [
+  { value: 'palette', label: 'A palette' },
+  { value: 'brand', label: 'Your brand' },
+] as const
+const MATERIAL_WAYS = [
+  { value: 'once', label: 'Decide once' },
+  { value: 'users', label: 'Let users choose' },
+] as const
 
-/* Your brand. Text on each filled colour is chosen for you,
-   black or white, whichever reads — set on-* yourself to override. */
+const colourWay = ref<'palette' | 'brand'>('palette')
+const materialWay = ref<'once' | 'users'>('once')
+
+const paletteCode = computed(
+  () => `<html data-palette="${palette.value}">
+
+<!-- or at runtime, remembered per device:
+     usePalette().value = '${palette.value}' -->`,
+)
+
+const BRAND = `/* after the two imports */
 @theme {
   --color-primary: #6b4de6;
   --color-accent: #3b2f8f;
-  --color-positive: #2fa36b;
-  --color-negative: #d1453b;
-  --color-warning: #d89a3e;
 }
 
-/* Its dark-mode values, after the import so they win. */
 .dark {
   --color-primary: #a18cf5;
 }`
 
-const PICK_ONCE = `<!-- index.html — one attribute each, on <html> or on any element -->
-<html data-palette="nord" data-material="glass">`
+const materialCode = computed(() => `<html data-material="${material.value}">`)
 
-const PICK_AT_RUNTIME_TS = `<script setup lang="ts">
-import { MATERIALS, PALETTES, SegmentedControl, useMaterial, usePalette } from 'rei-kit'
+const USERS_TS = `<script setup lang="ts">
+import { MATERIALS, SegmentedControl, useMaterial } from 'rei-kit'
 
-// Both persist per device, like useTheme().
-const material = useMaterial()
-const palette = usePalette()
-
-const materials = MATERIALS.map((value) => ({ value, label: value }))
+const material = useMaterial() // remembered per device
+const options = MATERIALS.map((value) => ({ value, label: value }))
 ${SCRIPT_END}
 
 <template>
-  <SegmentedControl v-model="material" :options="materials" />
-
-  <select v-model="palette">
-    <option v-for="p in PALETTES" :key="p.name" :value="p.name">{{ p.label }}</option>
-  </select>
+  <SegmentedControl v-model="material" :options="options" />
 </template>`
 
-const PICK_AT_RUNTIME_JS = PICK_AT_RUNTIME_TS.replace('<script setup lang="ts">', '<script setup>')
+const USERS_JS = USERS_TS.replace('<script setup lang="ts">', '<script setup>')
 
 const pie = (swatch: readonly string[]) =>
   `conic-gradient(from -45deg, ${swatch[0]} 0 25%, ${swatch[1]} 0 50%, ${swatch[2]} 0 75%, ${swatch[3]} 0)`
@@ -229,20 +239,25 @@ const pie = (swatch: readonly string[]) =>
       </li>
     </ol>
 
-    <!-- Colour -->
-    <div class="gs-make">
+    <!-- Make it yours -->
+    <div id="make-it-yours" class="mk">
       <div class="gs-intro">
-        <h3 class="gs-title-sm">Make it yours: colour</h3>
+        <h3 class="mk-title">Make it yours — without touching a component.</h3>
         <p class="gs-lead">
-          Pick one of the ten palettes — each measured against WCAG AA in light and dark — or bring
-          your own brand colours. Both are CSS; no component changes.
+          Two decisions, each a line of CSS or one attribute: the colours, and what the surfaces are
+          made of. Try them here — this page follows.
         </p>
       </div>
 
-      <div class="gs-two">
-        <div class="surface rounded-card p-5">
-          <h4 class="gs-h4">A. Choose a palette</h4>
-          <p class="text-ink-soft mt-1 text-sm">Click one — this page switches to it.</p>
+      <!-- Colour -->
+      <div class="mk-row">
+        <div class="mk-panel surface">
+          <p class="mk-kicker">Colour</p>
+          <h4 class="mk-name">Pick a palette, or bring your brand</h4>
+          <p class="mk-text">
+            Ten palettes, each measured against WCAG AA in light and dark. Or set your own colours;
+            the text on each filled colour is picked for you.
+          </p>
           <div class="gs-swatches">
             <button
               v-for="p in PALETTES"
@@ -250,41 +265,63 @@ const pie = (swatch: readonly string[]) =>
               type="button"
               class="gs-swatch focus-ring"
               :aria-pressed="palette === p.name"
-              :title="p.label"
               @click="palette = p.name"
             >
               <span class="gs-pie" :style="{ background: pie(p.swatch) }" aria-hidden="true" />
-              <span class="text-ink text-xs">{{ p.label }}</span>
+              <span class="text-ink truncate text-xs">{{ p.label }}</span>
             </button>
           </div>
-          <CodeBlock class="mt-4" :code="paletteLine" lang="html" />
         </div>
 
-        <div>
-          <h4 class="gs-h4 mb-2">B. Bring your own colours</h4>
-          <CodeBlock :code="CUSTOM" file="src/style.css" lang="css" />
+        <div class="mk-code">
+          <SegmentedControl v-model="colourWay" :options="COLOUR_WAYS" />
+          <CodeBlock
+            v-if="colourWay === 'palette'"
+            :code="paletteCode"
+            file="index.html"
+            lang="html"
+          />
+          <CodeBlock v-else :code="BRAND" file="src/style.css" lang="css" />
         </div>
       </div>
-    </div>
 
-    <!-- Material -->
-    <div class="gs-make">
-      <div class="gs-intro">
-        <h3 class="gs-title-sm">Make it yours: material</h3>
-        <p class="gs-lead">
-          Quiet, glass, brutal or soft — what every surface is made of. Decide it once, or let the
-          people using your app decide, the way Hibi and Kakei do in their settings.
-        </p>
-      </div>
-
-      <div class="gs-two">
-        <div>
-          <h4 class="gs-h4 mb-2">Decide once</h4>
-          <CodeBlock :code="PICK_ONCE" lang="html" />
+      <!-- Material -->
+      <div class="mk-row">
+        <div class="mk-panel surface">
+          <p class="mk-kicker">Material</p>
+          <h4 class="mk-name">Decide it once, or let your users choose</h4>
+          <p class="mk-text">
+            What every surface is made of. Hibi and Kakei put the choice in their settings; one line
+            of code does it.
+          </p>
+          <div class="mk-materials">
+            <button
+              v-for="m in MATERIALS"
+              :key="m"
+              type="button"
+              class="mk-material canvas focus-ring"
+              :data-material="m"
+              :aria-pressed="material === m"
+              @click="material = m"
+            >
+              <span class="mk-material-card surface">
+                <span class="mk-material-bar bg-primary" />
+                <span class="mk-material-line" />
+              </span>
+              <span class="text-ink text-xs font-medium capitalize">{{ m }}</span>
+            </button>
+          </div>
         </div>
-        <div>
-          <h4 class="gs-h4 mb-2">Let your users choose</h4>
-          <CodeBlock :code="PICK_AT_RUNTIME_TS" :js="PICK_AT_RUNTIME_JS" file="Settings.vue" />
+
+        <div class="mk-code">
+          <SegmentedControl v-model="materialWay" :options="MATERIAL_WAYS" />
+          <CodeBlock
+            v-if="materialWay === 'once'"
+            :code="materialCode"
+            file="index.html"
+            lang="html"
+          />
+          <CodeBlock v-else :code="USERS_TS" :js="USERS_JS" file="Settings.vue" />
         </div>
       </div>
     </div>
@@ -344,18 +381,19 @@ const pie = (swatch: readonly string[]) =>
 .gs-req {
   margin-top: 2rem;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 
 @media (min-width: 56rem) {
   .gs-req {
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   }
 }
 
 .gs-row {
   display: grid;
-  grid-template-columns: 8.5rem 1fr;
+  grid-template-columns: 7rem minmax(0, 1fr);
   column-gap: 1rem;
 }
 
@@ -366,12 +404,14 @@ const pie = (swatch: readonly string[]) =>
 .gs-steps {
   margin-top: 2.5rem;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.75rem;
   counter-reset: step;
 }
 
 .gs-step {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.875rem;
   counter-increment: step;
 }
@@ -413,27 +453,116 @@ const pie = (swatch: readonly string[]) =>
   color: var(--color-ink-soft);
 }
 
-.gs-make {
-  margin-top: 3.5rem;
+.mk {
+  margin-top: 4rem;
 }
 
-.gs-two {
-  margin-top: 1.25rem;
+.mk-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
+/* A picker you use and the line it writes, side by side from a laptop up. */
+.mk-row {
+  margin-top: 1.5rem;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   align-items: start;
 }
 
 @media (min-width: 56rem) {
-  .gs-two {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  .mk-row {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   }
+}
+
+.mk-panel {
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+}
+
+.mk-kicker {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.mk-name {
+  margin-top: 0.375rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.mk-text {
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+}
+
+.mk-code {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.mk-materials {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+/* Each tile is a tiny page in its own material, so all four sit side by side
+   whatever the page itself is set to. */
+.mk-material {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  border-radius: calc(var(--radius-card) + 4px);
+  padding: 0.625rem 0.5rem;
+  background-attachment: scroll;
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.mk-material:hover {
+  transform: translateY(-2px);
+}
+
+.mk-material[aria-pressed='true'] {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.mk-material-card {
+  display: grid;
+  width: 100%;
+  gap: 0.375rem;
+  border-radius: var(--radius-card);
+  padding: 0.5rem;
+}
+
+.mk-material-bar {
+  height: 0.5rem;
+  width: 60%;
+  border-radius: 9999px;
+}
+
+.mk-material-line {
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: var(--color-muted);
 }
 
 .gs-swatches {
   margin-top: 1rem;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
   gap: 0.5rem;
 }
 

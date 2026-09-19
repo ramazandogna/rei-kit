@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { copyToClipboard } from './clipboard'
 import { ref } from 'vue'
 
 import { NumberTicker } from '../src/motion/index'
@@ -32,13 +33,9 @@ const reminder = ref(true)
 const copied = ref(false)
 
 async function copyInstall() {
-  try {
-    await navigator.clipboard.writeText('pnpm add rei-kit')
-    copied.value = true
-    setTimeout(() => (copied.value = false), 1600)
-  } catch {
-    // Clipboard refused — the command is on screen either way.
-  }
+  if (!(await copyToClipboard('pnpm add rei-kit'))) return
+  copied.value = true
+  setTimeout(() => (copied.value = false), 1600)
 }
 
 /* What a reader checks before anything else: will it run in my project. Read
@@ -77,7 +74,10 @@ const TAGLINE: Record<string, string> = {
 
       <h1 class="hero-title">
         One kit.
-        <span class="hero-accent">Every look.</span>
+        <span
+          class="hero-accent text-shimmer [--shimmer-band:var(--color-accent)] [--shimmer-base:var(--color-primary)]"
+          >Every look.</span
+        >
       </h1>
 
       <p class="hero-lead">
@@ -168,6 +168,7 @@ const TAGLINE: Record<string, string> = {
 <style scoped>
 .hero {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 3rem;
   align-items: center;
   padding: 3.5rem 0 1rem;
@@ -175,7 +176,7 @@ const TAGLINE: Record<string, string> = {
 
 @media (min-width: 64rem) {
   .hero {
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     gap: 4rem;
     padding-top: 5rem;
   }
@@ -269,12 +270,10 @@ const TAGLINE: Record<string, string> = {
   color: var(--color-ink);
 }
 
+/* The kit's own text-shimmer, in the brand: the headline is the first place
+   a reader sees what motion.css does. */
 .hero-accent {
   display: block;
-  background: linear-gradient(100deg, var(--color-primary), var(--color-accent));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 .hero-lead {

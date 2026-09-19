@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { copyToClipboard } from './clipboard'
 import { computed, ref } from 'vue'
 
 import { codeLanguage } from './preferences'
@@ -30,13 +31,9 @@ const shown = computed(() => (js !== undefined && codeLanguage.value === 'js' ? 
 const copied = ref(false)
 
 async function copy() {
-  try {
-    await navigator.clipboard.writeText(shown.value)
-    copied.value = true
-    setTimeout(() => (copied.value = false), 1600)
-  } catch {
-    // Clipboard refused: the code is on screen and selectable either way.
-  }
+  if (!(await copyToClipboard(shown.value))) return
+  copied.value = true
+  setTimeout(() => (copied.value = false), 1600)
 }
 </script>
 

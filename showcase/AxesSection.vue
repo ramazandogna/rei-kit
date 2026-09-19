@@ -219,7 +219,7 @@ material.value = '<b>{{ material }}</b>'</code></pre>
   margin-top: 1rem;
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
 }
 
 /* Each tile is its own little page: the `canvas` utility gives glass its
@@ -271,7 +271,7 @@ material.value = '<b>{{ material }}</b>'</code></pre>
   margin-top: 1rem;
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
 }
 
 /* Each palette card carries its own `data-palette`, so its colours are the
@@ -334,12 +334,13 @@ material.value = '<b>{{ material }}</b>'</code></pre>
 .axes-live {
   margin-top: 1rem;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 
 @media (min-width: 56rem) {
   .axes-live {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
 

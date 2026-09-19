@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { copyToClipboard } from './clipboard'
 import { computed, ref } from 'vue'
 
 import { PACKAGE_MANAGERS, command, packageManager } from './preferences'
@@ -17,13 +18,9 @@ const text = computed(() => command(kind, args, packageManager.value))
 const copied = ref(false)
 
 async function copy() {
-  try {
-    await navigator.clipboard.writeText(text.value)
-    copied.value = true
-    setTimeout(() => (copied.value = false), 1600)
-  } catch {
-    // Clipboard refused: the command is on screen either way.
-  }
+  if (!(await copyToClipboard(text.value))) return
+  copied.value = true
+  setTimeout(() => (copied.value = false), 1600)
 }
 </script>
 

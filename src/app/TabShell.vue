@@ -83,6 +83,8 @@ defineSlots<{
   align-items: center;
   justify-content: center;
   background-color: var(--color-canvas);
+  /* The lattice sits on top of whatever the material puts behind the page —
+     glass needs colour to blur, and it is this layer that supplies it. */
   background-image:
     repeating-linear-gradient(
       45deg,
@@ -103,7 +105,8 @@ defineSlots<{
         )
         0 1px,
       transparent 1px 56px
-    );
+    ),
+    var(--canvas-backdrop);
 }
 
 .rk-screen-aside {
@@ -131,16 +134,16 @@ defineSlots<{
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--color-surface);
+  background: color-mix(in oklab, var(--color-surface) var(--surface-opacity), transparent);
+  backdrop-filter: var(--surface-backdrop);
+  -webkit-backdrop-filter: var(--surface-backdrop);
 }
 
 @media (min-width: 48rem) {
   .rk-shell {
-    border: 1px solid var(--color-hair);
+    border: var(--surface-border-width) solid var(--surface-border-color);
     border-radius: var(--radius-shell);
-    box-shadow:
-      0 20px 25px -5px rgb(0 0 0 / 0.1),
-      0 8px 10px -6px rgb(0 0 0 / 0.1);
+    box-shadow: var(--shadow-overlay);
   }
 }
 </style>

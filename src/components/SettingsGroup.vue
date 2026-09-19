@@ -15,7 +15,7 @@ defineProps<{ title: string }>()
 
     <!-- One card per group, rows divided by hairlines. Loose fields floating on
          the page gave no sense of what belonged with what. -->
-    <div class="border-hair bg-surface rounded-card divide-hair divide-y overflow-hidden border">
+    <div class="surface rounded-card divide-hair divide-y overflow-hidden">
       <slot />
     </div>
   </section>

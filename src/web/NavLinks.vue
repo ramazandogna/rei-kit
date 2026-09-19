@@ -78,7 +78,7 @@ const {
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   color: var(--color-ink-soft);
-  transition: color 150ms;
+  transition: color var(--duration-fast);
 }
 
 .rk-nav-link:hover {
@@ -104,7 +104,7 @@ const {
   background: var(--color-primary);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 300ms;
+  transition: transform var(--duration-slow);
 }
 
 .rk-nav-link.is-active .rk-nav-rule {

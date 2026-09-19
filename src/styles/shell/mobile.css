@@ -47,9 +47,9 @@
     will-change: transform, opacity;
     /* iOS sheet curve: quick take-off, long soft landing. */
     transition:
-      transform 340ms cubic-bezier(0.32, 0.72, 0, 1),
-      opacity 340ms cubic-bezier(0.32, 0.72, 0, 1),
-      filter 340ms cubic-bezier(0.32, 0.72, 0, 1);
+      transform var(--duration-slow) var(--ease-sheet),
+      opacity var(--duration-slow) var(--ease-sheet),
+      filter var(--duration-slow) var(--ease-sheet);
   }
 
   /* The incoming screen travels the full width; the outgoing one moves a
@@ -101,15 +101,15 @@
 .tour-forward-enter-active,
 .tour-backward-enter-active {
   transition:
-    opacity 260ms ease-out,
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--duration-slow) ease-out,
+    transform var(--duration-slow) var(--ease-standard);
 }
 
 .tour-forward-leave-active,
 .tour-backward-leave-active {
   transition:
-    opacity 130ms ease-in,
-    transform 130ms ease-in;
+    opacity var(--duration-fast) ease-in,
+    transform var(--duration-fast) ease-in;
 }
 
 .tour-forward-enter-from {

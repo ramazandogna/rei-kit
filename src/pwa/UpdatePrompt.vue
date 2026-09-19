@@ -102,7 +102,7 @@ defineEmits<{ update: []; dismiss: [] }>()
   border-width: 1px;
   padding: 0.75rem;
   backdrop-filter: blur(12px);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  box-shadow: var(--shadow-overlay);
   transform: translateX(-50%);
   bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
 }
@@ -122,8 +122,8 @@ defineEmits<{ update: []; dismiss: [] }>()
 .update-enter-active,
 .update-leave-active {
   transition:
-    opacity 250ms ease,
-    transform 250ms cubic-bezier(0.32, 0.72, 0, 1);
+    opacity var(--duration-slow) ease,
+    transform var(--duration-slow) var(--ease-sheet);
 }
 
 .update-enter-from,

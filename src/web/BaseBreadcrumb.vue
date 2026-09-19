@@ -59,7 +59,7 @@ const { items, label = '' } = defineProps<{
 
 .rk-crumb-link {
   color: var(--color-ink-soft);
-  transition: color 150ms;
+  transition: color var(--duration-fast);
 }
 
 .rk-crumb-link:hover {

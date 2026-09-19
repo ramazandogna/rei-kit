@@ -1,0 +1,104 @@
+/* rei-kit material: glass.
+ *
+ * Surfaces you can see through, over a page that has colour to see. Covers
+ * what gets called glassmorphism, and the frosted, lit-edge look that spatial
+ * interfaces and Apple's liquid glass made familiar. It does not refract: real
+ * refraction needs a shader, and a kit that promised it in CSS would be
+ * promising something it cannot keep on every component at once.
+ *
+ * Put the page on the `canvas` utility, or there is nothing behind the glass
+ * to blur — a frosted panel over flat white is a grey panel.
+ *
+ * One cost worth knowing: a surface with a backdrop filter becomes the
+ * containing block for its `position: fixed` descendants. The kit's own
+ * overlays teleport out of the tree, so they are unaffected; an app that
+ * positions something fixed *inside* a glass card will see it pinned to the
+ * card instead of the viewport. */
+[data-material='glass'] {
+  --surface-opacity: 56%;
+  --control-opacity: 42%;
+  --surface-backdrop: blur(20px) saturate(1.6);
+  --surface-border-color: color-mix(in oklab, #ffffff 60%, transparent);
+
+  --radius-cell: 10px;
+  --radius-card: 22px;
+  --radius-shell: 36px;
+
+  /* The lit edge along the top is what separates glass from a translucent
+     rectangle: light catching the rim. */
+  --shadow-card:
+    inset 0 1px 0 rgb(255 255 255 / 0.6),
+    0 8px 24px -12px color-mix(in oklab, var(--shadow-color) 22%, transparent);
+  --shadow-raised:
+    inset 0 1px 0 rgb(255 255 255 / 0.65),
+    0 18px 40px -16px color-mix(in oklab, var(--shadow-color) 30%, transparent);
+  --shadow-overlay:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 32px 64px -20px color-mix(in oklab, var(--shadow-color) 42%, transparent);
+  --shadow-control:
+    inset 0 1px 0 rgb(255 255 255 / 0.55),
+    0 2px 8px -3px color-mix(in oklab, var(--shadow-color) 14%, transparent);
+
+  /* What there is to see through. Built from the palette's own roles, so a
+     glass app in a violet palette glows violet without a separate file. */
+  --canvas-backdrop:
+    radial-gradient(
+      60% 50% at 12% 8%,
+      color-mix(in oklab, var(--color-primary) 40%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      50% 45% at 88% 18%,
+      color-mix(in oklab, var(--color-accent) 34%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      55% 50% at 72% 92%,
+      color-mix(in oklab, var(--color-positive) 28%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 40% at 8% 88%,
+      color-mix(in oklab, var(--color-warning) 22%, transparent),
+      transparent 70%
+    );
+
+  --ease-standard: cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.dark[data-material='glass'],
+.dark [data-material='glass'] {
+  --surface-opacity: 40%;
+  --control-opacity: 28%;
+  --surface-border-color: color-mix(in oklab, #ffffff 14%, transparent);
+
+  --shadow-card:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 8px 24px -12px color-mix(in oklab, var(--shadow-color) 60%, transparent);
+  --shadow-raised:
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 18px 40px -16px color-mix(in oklab, var(--shadow-color) 70%, transparent);
+  --shadow-overlay:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    0 32px 64px -20px color-mix(in oklab, var(--shadow-color) 80%, transparent);
+  --shadow-control: inset 0 1px 0 rgb(255 255 255 / 0.07);
+}
+
+/* No backdrop filter to be had: an almost-solid surface reads correctly, a
+   translucent one without the blur reads as a rendering fault. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  [data-material='glass'] {
+    --surface-opacity: 94%;
+    --control-opacity: 94%;
+  }
+}
+
+/* A reader who asked for less transparency gets none, and the page stays
+   legible — the backdrop colours remain, the see-through goes. */
+@media (prefers-reduced-transparency: reduce) {
+  [data-material='glass'] {
+    --surface-opacity: 100%;
+    --control-opacity: 100%;
+    --surface-backdrop: none;
+  }
+}

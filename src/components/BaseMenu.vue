@@ -167,7 +167,14 @@ onBeforeUnmount(() => {
       <slot name="trigger" :open="open" />
     </button>
 
-    <div v-if="open" :id="id" ref="panel" class="rk-menu-panel" :class="`is-${align}`" role="menu">
+    <div
+      v-if="open"
+      :id="id"
+      ref="panel"
+      class="rk-menu-panel surface-overlay"
+      :class="`is-${align}`"
+      role="menu"
+    >
       <slot />
     </div>
   </div>
@@ -196,10 +203,7 @@ onBeforeUnmount(() => {
   min-width: 12rem;
   overflow: hidden;
   border-radius: var(--radius-card);
-  border: 1px solid color-mix(in srgb, var(--color-hair) 70%, transparent);
-  background: var(--color-surface);
   padding: 0.375rem;
-  box-shadow: 0 10px 24px -8px rgb(0 0 0 / 0.25);
 }
 
 .rk-menu-panel.is-end {
@@ -220,7 +224,7 @@ onBeforeUnmount(() => {
   text-align: left;
   font-size: 0.875rem;
   color: var(--color-ink);
-  transition: background-color 150ms;
+  transition: background-color var(--duration-fast);
 }
 
 .rk-menu-panel :deep([role='menuitem']:hover) {

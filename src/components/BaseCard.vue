@@ -61,10 +61,10 @@ const HEAD = {
 <template>
   <component
     :is="as"
-    class="border-hair bg-surface rounded-card border"
+    class="surface rounded-card"
     :class="[
       interactive
-        ? 'transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm'
+        ? 'ease-standard transition-[transform,box-shadow] duration-(--duration-slow) hover:-translate-y-0.5 hover:[--surface-shadow:var(--shadow-raised)] active:translate-y-0 active:[--surface-shadow:var(--shadow-card)]'
         : '',
       $slots.head || $slots.foot ? '' : BODY[padding],
     ]"

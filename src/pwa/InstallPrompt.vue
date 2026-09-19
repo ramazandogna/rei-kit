@@ -101,8 +101,8 @@ async function install() {
 .install-enter-active,
 .install-leave-active {
   transition:
-    opacity 200ms ease,
-    transform 200ms ease;
+    opacity var(--duration-base) ease,
+    transform var(--duration-base) ease;
 }
 
 .install-enter-from,

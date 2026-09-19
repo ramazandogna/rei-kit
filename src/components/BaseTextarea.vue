@@ -64,7 +64,7 @@ const model = defineModel<string | undefined>()
         :class="[
           variant === 'unstyled'
             ? ''
-            : 'border-hair bg-surface text-ink rounded-card focus-visible:outline-primary resize-y border px-3 py-2 leading-relaxed focus-visible:outline-2 focus-visible:outline-offset-1',
+            : 'control text-ink rounded-card focus-visible:outline-primary resize-y px-3 py-2 leading-relaxed focus-visible:outline-2 focus-visible:outline-offset-1',
           'text-base',
           variant !== 'unstyled' && invalid ? 'border-negative' : '',
         ]"

@@ -12,6 +12,17 @@ import * as kit from '../index'
  */
 const PUBLIC_API = [
   'VERSION',
+  // appearance
+  'MATERIALS',
+  'PALETTES',
+  'applyMaterial',
+  'applyPalette',
+  'isMaterial',
+  'isPaletteName',
+  'setMaterialStorageKey',
+  'setPaletteStorageKey',
+  'useMaterial',
+  'usePalette',
   // utils
   'addDays',
   'eachDayOfYear',

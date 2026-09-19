@@ -43,8 +43,12 @@ describe('PriceCard', () => {
     const cool = mount(PriceCard, { props: { ...base, tone: 'cool' } }).html()
 
     expect(warm).not.toBe(cool)
-    expect(warm).toContain('b8862c')
-    expect(cool).toContain('4a86a8')
+    // Roles, not hex values: the tones follow whatever palette the app is in.
+    // This used to assert the hex was present -- which is to say, it tested
+    // that the component broke the kit's own rule.
+    expect(warm).toContain('--color-warning')
+    expect(cool).toContain('--color-accent')
+    expect(warm + cool).not.toMatch(/#[0-9a-f]{6}/i)
   })
 
   it('leaves the action to the consumer', () => {

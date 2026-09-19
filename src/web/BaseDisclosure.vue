@@ -106,7 +106,7 @@ const id = useId()
   gap: 1.5rem;
   padding: 1.25rem 0;
   text-align: left;
-  transition: color 150ms;
+  transition: color var(--duration-fast);
 }
 
 .rk-disclosure-control:hover {
@@ -142,7 +142,7 @@ const id = useId()
 
 .rk-disclosure-turn {
   transform: rotate(90deg);
-  transition: transform 420ms ease-out;
+  transition: transform var(--duration-slower) ease-out;
 }
 
 .rk-disclosure-turn.is-open {
@@ -154,7 +154,7 @@ const id = useId()
 .rk-disclosure-panel {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 420ms ease-out;
+  transition: grid-template-rows var(--duration-slower) ease-out;
 }
 
 .rk-disclosure-panel.is-open {
@@ -171,7 +171,7 @@ const id = useId()
   color: var(--color-ink-soft);
   line-height: 1.625;
   opacity: 0;
-  transition: opacity 300ms;
+  transition: opacity var(--duration-slow);
 }
 
 .rk-disclosure-body.is-open {

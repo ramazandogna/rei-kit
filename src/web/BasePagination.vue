@@ -136,8 +136,8 @@ const go = (next: number) => {
   font-size: 0.875rem;
   color: var(--color-ink-soft);
   transition:
-    background-color 150ms,
-    color 150ms;
+    background-color var(--duration-fast),
+    color var(--duration-fast);
 }
 
 .rk-pager-step:hover:not(:disabled),
@@ -159,7 +159,7 @@ const go = (next: number) => {
 
 .rk-pager-page.is-active {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-primary);
   font-weight: 500;
 }
 

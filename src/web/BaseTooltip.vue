@@ -75,7 +75,7 @@ const id = useId()
   /* Out of the hit area while hidden, or it would swallow the pointer on its
      way to the control it describes. */
   pointer-events: none;
-  transition: opacity 150ms ease;
+  transition: opacity var(--duration-fast) ease;
 }
 
 .rk-tip-bubble.is-top {

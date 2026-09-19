@@ -125,7 +125,7 @@ function onKeydown(event: KeyboardEvent) {
   padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
   color: var(--color-ink-soft);
-  transition: color 150ms;
+  transition: color var(--duration-fast);
 }
 
 .rk-tab:hover {

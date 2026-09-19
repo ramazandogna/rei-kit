@@ -65,7 +65,17 @@ const {
 }
 
 .tab-bar-inner {
-  @apply border-hair bg-surface/85 flex items-center justify-between gap-1 border p-1.5 shadow-lg backdrop-blur-md;
+  /* A raised surface that is always a little translucent: it floats over the
+     content it navigates, and a solid bar would read as a wall at the bottom of
+     the page. The material decides how much — glass makes it far more so. */
+  @apply surface-raised flex items-center justify-between gap-1 p-1.5;
+  background-color: color-mix(
+    in oklab,
+    var(--color-surface) min(var(--surface-opacity), 88%),
+    transparent
+  );
+  backdrop-filter: var(--surface-backdrop, blur(12px));
+  -webkit-backdrop-filter: var(--surface-backdrop, blur(12px));
   border-radius: var(--radius-shell);
 }
 
@@ -74,7 +84,7 @@ const {
   border-radius: calc(var(--radius-shell) - 6px);
   /* Only the icon reacts to a press. Scaling the whole link drags the label and
      the pill with it, which reads as the bar wobbling. */
-  transition: color 200ms ease;
+  transition: color var(--duration-base) ease;
 }
 
 .tab-link:hover {
@@ -84,7 +94,7 @@ const {
 /* The pill sits behind the icon rather than the link, so the active tab grows a
    marker instead of the row changing shape. */
 .tab-icon-slot {
-  @apply flex h-7 w-12 items-center justify-center rounded-full transition-all duration-200 ease-out;
+  @apply flex h-7 w-12 items-center justify-center rounded-full transition-all duration-(--duration-base) ease-out;
 }
 
 .tab-link:active .tab-icon-slot {
@@ -100,7 +110,7 @@ const {
 }
 
 .tab-icon {
-  @apply size-[18px] stroke-2 transition-transform duration-200;
+  @apply size-[18px] stroke-2 transition-transform duration-(--duration-base);
 }
 
 .is-active .tab-icon {

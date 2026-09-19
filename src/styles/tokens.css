@@ -1,13 +1,43 @@
 /* rei-kit design tokens.
  *
  * Semantic names on purpose. An app renames nothing to rebrand: it redefines
- * these values, and every component follows. */
-@theme {
+ * these values, and every component follows.
+ *
+ * Three axes, each changed independently:
+ *
+ *   colour    — the eleven roles below; a palette redefines them
+ *   material  — how a surface is made: its fill, edge, depth and blur
+ *   motion    — how long things take and how they arrive
+ *
+ * A material (`rei-kit/materials.css`) changes the second without touching the
+ * first, which is how one app can be glass in one palette and brutalist in
+ * another without a component knowing either word.
+ *
+ * `static` so every variable is emitted whether or not a utility uses it.
+ * Components read many of these through `var()` in their own styles, and a
+ * theme variable Tailwind decided was unused would resolve to nothing there —
+ * a shadow that silently is not, which is exactly how `PriceCard` shipped. */
+@theme static {
   --color-primary: #26667f;
   --color-accent: #124170;
   --color-positive: #67c090;
-  --color-negative: #e05b4f;
+  --color-negative: #c9463b;
   --color-warning: #d89a3e;
+
+  /* ---------------------------------------------------------------------
+     The ink that sits on a filled role.
+
+     Every filled button used to write `text-white`, which is right on a deep
+     teal and wrong on a pale green or an amber: white on the kit's own
+     `warning` measured 2.3:1 against the 4.5:1 a label needs. A palette that
+     picks a light primary sets its `on-primary` to something dark, and every
+     component follows without a component knowing why.
+     --------------------------------------------------------------------- */
+  --color-on-primary: #ffffff;
+  --color-on-accent: #ffffff;
+  --color-on-positive: #07141a;
+  --color-on-negative: #ffffff;
+  --color-on-warning: #07141a;
 
   --color-canvas: #f4faf8;
   --color-surface: #ffffff;
@@ -32,6 +62,75 @@
   --radius-card: 16px;
   --radius-shell: 30px;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+  /* ---------------------------------------------------------------------
+     Depth.
+
+     Four levels, named for what sits at them rather than for how big the
+     blur is: a card on the page, something lifted off it, a layer over the
+     whole page, and a control you can press. A material redefines all four,
+     which is how "a soft shadow" becomes "a hard offset" or "a raised puff"
+     across fifty components at once.
+
+     `--shadow-color` rather than a hex inside each shadow, so dark mode
+     changes one value instead of twelve.
+     --------------------------------------------------------------------- */
+  --shadow-card:
+    0 1px 2px color-mix(in oklab, var(--shadow-color) 4%, transparent),
+    0 2px 8px -2px color-mix(in oklab, var(--shadow-color) 6%, transparent);
+  --shadow-raised:
+    0 1px 2px color-mix(in oklab, var(--shadow-color) 6%, transparent),
+    0 12px 28px -10px color-mix(in oklab, var(--shadow-color) 18%, transparent);
+  --shadow-overlay:
+    0 4px 12px -4px color-mix(in oklab, var(--shadow-color) 10%, transparent),
+    0 24px 48px -16px color-mix(in oklab, var(--shadow-color) 28%, transparent);
+  --shadow-control: 0 1px 2px color-mix(in oklab, var(--shadow-color) 5%, transparent);
+  --shadow-control-pressed: none;
+
+  /* ---------------------------------------------------------------------
+     Motion.
+
+     Two curves and four durations, where there had been ten durations and a
+     cubic-bezier pasted into eight files. `sheet` is the iOS sheet curve:
+     quick take-off, long soft landing. `standard` is for everything that is
+     not arriving from an edge.
+     --------------------------------------------------------------------- */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Material knobs that no utility is named after. Plain custom properties, so
+   a material or an app can set them on any element and the subtree follows. */
+:root {
+  --shadow-color: #0f2229;
+
+  /* How much of the surface colour a surface keeps. Below 100% it lets the
+     page through, which is what glass is. */
+  --surface-opacity: 100%;
+  /* `none`, not `blur(0)`. Any backdrop-filter at all — zero included — makes
+     the element the containing block for its `position: fixed` descendants, so
+     a menu opened inside a card would position itself against the card. Only
+     a material that actually blurs pays that cost. */
+  --surface-backdrop: none;
+  --surface-border-width: 1px;
+  --surface-border-color: var(--color-hair);
+
+  --control-opacity: 100%;
+  --control-border-width: 1px;
+
+  /* The page behind everything. A material that needs something to blur puts
+     it here; the quiet one needs nothing. */
+  --canvas-backdrop: none;
+
+  /* What pressing a control does to it. A shrink by default; a material that
+     draws hard offset shadows presses *into* them instead. */
+  --press-scale: 0.97;
+  --press-offset: 0px;
+
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 340ms;
+  --duration-slower: 420ms;
 }
 
 /* Class-based rather than media-based: the app decides, and a user preference
@@ -39,18 +138,108 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .dark {
+  /* The filled roles lighten in the dark as well as the grounds darken. They
+     used not to: the light-mode primary on the dark surface measured 2.3:1,
+     so every link and focus ring in dark mode was below the line for a
+     control, and nothing but a measurement would have said so. */
+  --color-primary: #5fb0c9;
+  --color-accent: #8cb8e0;
+  --color-negative: #f07a6f;
+  --color-warning: #e6ad58;
+  --color-on-primary: #07141a;
+  --color-on-accent: #07141a;
+  --color-on-positive: #07141a;
+  --color-on-negative: #07141a;
+  --color-on-warning: #07141a;
+
   --color-canvas: #07141a;
   --color-surface: #102630;
   --color-muted: #12303a;
   --color-ink: #e6f0ee;
   --color-ink-soft: #8fa8b2;
   --color-hair: #1c3945;
+
+  /* A shadow cast by a light ink would glow. Depth on a dark page is always
+     cast by black. */
+  --shadow-color: #000000;
 }
+
+/* Honouring the two preferences that say "less of this" — for every material
+   at once, so no material can forget to. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+    --press-scale: 1;
+  }
+}
+
 /* rei-kit utilities.
  *
  * Declared with @utility rather than @layer utilities so an app can also reach
  * them from @apply inside a component's own styles — @layer classes cannot be
  * applied that way, which is a mistake worth only making once. */
+
+/* ---------------------------------------------------------------------------
+   Surfaces.
+
+   The one place a component learns what it is made of. Before these, every
+   card wrote `border border-hair bg-surface shadow-…` out in full, which is
+   how a material could not have reached them: there was no single thing to
+   redefine. Now a card says `surface` and the material says what that means.
+   --------------------------------------------------------------------------- */
+@utility surface {
+  background-color: color-mix(in oklab, var(--color-surface) var(--surface-opacity), transparent);
+  border: var(--surface-border-width) solid var(--surface-border-color);
+  /* `--surface-shadow` lets one card be lifted — a recommended plan, a hovered
+     tile — without a second shadow utility racing this one for the same
+     property. Unset, it is the card depth. */
+  box-shadow: var(--surface-shadow, var(--shadow-card));
+  backdrop-filter: var(--surface-backdrop);
+  -webkit-backdrop-filter: var(--surface-backdrop);
+}
+
+/* Lifted off the page: a toast, a popover, a card that is the point. */
+@utility surface-raised {
+  background-color: color-mix(in oklab, var(--color-surface) var(--surface-opacity), transparent);
+  border: var(--surface-border-width) solid var(--surface-border-color);
+  box-shadow: var(--shadow-raised);
+  backdrop-filter: var(--surface-backdrop);
+  -webkit-backdrop-filter: var(--surface-backdrop);
+}
+
+/* Over the whole page: a dialog, a menu, a sheet. Always more opaque than a
+   card, because what is behind it is exactly what the reader has been asked
+   to stop looking at. */
+@utility surface-overlay {
+  background-color: color-mix(
+    in oklab,
+    var(--color-surface) calc(var(--surface-opacity) + (100% - var(--surface-opacity)) / 2),
+    transparent
+  );
+  border: var(--surface-border-width) solid var(--surface-border-color);
+  box-shadow: var(--shadow-overlay);
+  backdrop-filter: var(--surface-backdrop);
+  -webkit-backdrop-filter: var(--surface-backdrop);
+}
+
+/* Something you type into or press that is not the main action. */
+@utility control {
+  background-color: color-mix(in oklab, var(--color-surface) var(--control-opacity), transparent);
+  border: var(--control-border-width) solid var(--surface-border-color);
+  box-shadow: var(--shadow-control);
+  backdrop-filter: var(--surface-backdrop);
+  -webkit-backdrop-filter: var(--surface-backdrop);
+}
+
+/* The page itself. Put it on the element that fills the viewport. */
+@utility canvas {
+  background-color: var(--color-canvas);
+  background-image: var(--canvas-backdrop);
+  background-attachment: fixed;
+}
 
 /* Scrolling stays, the bar goes. On a narrow column a visible track reads as a
    stray line rather than as a control. */

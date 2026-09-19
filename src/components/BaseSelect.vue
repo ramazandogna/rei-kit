@@ -89,7 +89,7 @@ const model = defineModel<T | undefined>()
           :class="[
             variant === 'unstyled'
               ? ''
-              : 'border-hair bg-surface text-ink rounded-card focus-visible:outline-primary border py-0 pr-10 pl-3 focus-visible:outline-2 focus-visible:outline-offset-1',
+              : 'control text-ink rounded-card focus-visible:outline-primary py-0 pr-10 pl-3 focus-visible:outline-2 focus-visible:outline-offset-1',
             variant === 'unstyled' ? '' : SIZE_CLASS[size],
             variant !== 'unstyled' && invalid ? 'border-negative' : '',
           ]"

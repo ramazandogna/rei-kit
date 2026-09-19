@@ -77,7 +77,7 @@ const TONE_CLASS = {
         <div
           v-for="toast in toasts"
           :key="toast.id"
-          class="border-hair bg-surface text-ink rounded-card pointer-events-auto flex w-full max-w-sm items-start gap-3 border p-3 shadow-lg"
+          class="surface-raised text-ink rounded-card pointer-events-auto flex w-full max-w-sm items-start gap-3 p-3"
           @mouseenter="pause(toast.id)"
           @mouseleave="resume(toast.id)"
           @focusin="pause(toast.id)"
@@ -115,8 +115,8 @@ const TONE_CLASS = {
 .toast-enter-active,
 .toast-leave-active {
   transition:
-    opacity 200ms ease-out,
-    transform 200ms ease-out;
+    opacity var(--duration-base) ease-out,
+    transform var(--duration-base) ease-out;
 }
 
 .toast-enter-from,

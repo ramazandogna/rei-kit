@@ -69,17 +69,19 @@ function press() {
   border-radius: 9999px;
   padding-left: 1rem;
   padding-right: 1.25rem;
-  color: #fff;
+  color: var(--color-on-primary);
   background: var(--color-primary);
-  transition: transform 150ms;
-  /* A ring in the canvas colour separates it from whatever scrolls behind. */
+  transition: transform var(--duration-fast);
+  /* A ring in the canvas colour separates it from whatever scrolls behind; the
+     depth under it is the material's, so a brutalist app gets a hard offset
+     and a soft one gets a puff without this file knowing either. */
   box-shadow:
     0 0 0 4px var(--color-canvas),
-    0 10px 24px -8px color-mix(in srgb, var(--color-primary) 60%, transparent);
+    var(--shadow-raised);
 }
 
 .rk-fab:active {
-  transform: scale(0.95);
+  transform: translate(var(--press-offset), var(--press-offset)) scale(var(--press-scale));
 }
 
 /* The ring is not decoration. This button was a `BaseButton variant="unstyled"`

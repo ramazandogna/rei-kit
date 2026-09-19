@@ -41,6 +41,19 @@ export { relativeDayLabel } from './utils/day-label'
 export type { DayLabels } from './utils/day-label'
 
 export { downloadJson } from './utils/download'
+export {
+  MATERIALS,
+  PALETTES,
+  applyMaterial,
+  applyPalette,
+  isMaterial,
+  isPaletteName,
+  setMaterialStorageKey,
+  setPaletteStorageKey,
+  useMaterial,
+  usePalette,
+} from './utils/appearance'
+export type { Material, Palette, PaletteName, PaletteRoles } from './utils/appearance'
 export { ensureSheetRoot, SHEET_ROOT_ID } from './utils/sheet-root'
 export { safeRedirect, toRedirectPath } from './utils/redirect'
 export type { QueryValue } from './utils/redirect'

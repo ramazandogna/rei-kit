@@ -26,7 +26,7 @@ const emit = defineEmits<{ click: [] }>()
   <button
     type="button"
     :disabled="disabled"
-    class="border-hair bg-surface text-ink rounded-card hover:bg-muted flex h-11 w-full items-center justify-center gap-2 border text-sm font-medium transition-colors active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+    class="control text-ink rounded-card hover:bg-muted flex h-11 w-full items-center justify-center gap-2 text-sm font-medium transition-colors duration-(--duration-fast) active:scale-(--press-scale) disabled:pointer-events-none disabled:opacity-50"
     @click="emit('click')"
   >
     <!-- Google asks for its own mark, so it is inlined rather than themed. -->

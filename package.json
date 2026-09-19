@@ -43,6 +43,11 @@
     "./shell/mobile.css": "./dist/shell/mobile.css",
     "./shell/web.css": "./dist/shell/web.css",
     "./styles.css": "./dist/styles.css",
+    "./materials.css": "./dist/materials.css",
+    "./materials/glass.css": "./dist/materials/glass.css",
+    "./materials/brutal.css": "./dist/materials/brutal.css",
+    "./materials/soft.css": "./dist/materials/soft.css",
+    "./palettes.css": "./dist/palettes.css",
     "./app": {
       "types": "./dist/app/index.d.ts",
       "import": "./dist/app.js"
@@ -82,7 +87,9 @@
     "check:lint:oxlint": "oxlint .",
     "check:lint:eslint": "eslint .",
     "format": "prettier --write src/ showcase/",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "palettes": "node scripts/build-palettes.mjs",
+    "palettes:check": "node scripts/build-palettes.mjs --check"
   },
   "peerDependencies": {
     "@supabase/supabase-js": "^2.0.0",

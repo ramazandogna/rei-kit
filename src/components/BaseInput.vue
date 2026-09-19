@@ -92,7 +92,7 @@ const model = defineModel<string | number | undefined>()
         :class="[
           variant === 'unstyled'
             ? ''
-            : 'border-hair bg-surface text-ink rounded-card focus-visible:outline-primary border px-3 focus-visible:outline-2 focus-visible:outline-offset-1',
+            : 'control text-ink rounded-card focus-visible:outline-primary px-3 focus-visible:outline-2 focus-visible:outline-offset-1',
           variant === 'unstyled' ? 'text-base' : CONTROL_CLASS,
           variant !== 'unstyled' && invalid ? 'border-negative' : '',
         ]"

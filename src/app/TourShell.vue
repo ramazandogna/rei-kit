@@ -158,7 +158,7 @@ function onKeydown(event: KeyboardEvent) {
                 @click="$emit('goTo', position - 1)"
               >
                 <span
-                  class="h-1 w-full rounded-full transition-colors duration-300"
+                  class="h-1 w-full rounded-full transition-colors duration-(--duration-slow)"
                   :class="
                     position - 1 <= index ? 'bg-primary' : 'bg-hair group-hover:bg-ink-soft/40'
                   "
@@ -194,7 +194,7 @@ function onKeydown(event: KeyboardEvent) {
    `rei-kit/shell/mobile.css` where the caller's slide can actually see them. */
 .tour-enter-active,
 .tour-leave-active {
-  transition: opacity 220ms ease;
+  transition: opacity var(--duration-base) ease;
 }
 
 .tour-enter-from,

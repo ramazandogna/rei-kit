@@ -1,0 +1,32 @@
+/* rei-kit material: brutal.
+ *
+ * Hard edges, hard shadows, no rounding and no apology. The shadow is drawn in
+ * the ink colour rather than cast by a light, which is what makes it read as
+ * printed rather than lit — and it inverts with the theme for free, because in
+ * dark mode the ink is the light colour.
+ *
+ * Pressing a control moves it *into* its own shadow and drops the shadow, so
+ * a press looks like a press rather than a shrink. */
+[data-material='brutal'] {
+  --surface-border-width: 2px;
+  --control-border-width: 2px;
+  --surface-border-color: var(--color-ink);
+
+  --radius-cell: 0px;
+  --radius-card: 0px;
+  --radius-shell: 0px;
+
+  --shadow-card: 4px 4px 0 var(--color-ink);
+  --shadow-raised: 6px 6px 0 var(--color-ink);
+  --shadow-overlay: 10px 10px 0 var(--color-ink);
+  --shadow-control: 3px 3px 0 var(--color-ink);
+  --shadow-control-pressed: 0 0 0 var(--color-ink);
+
+  --press-scale: 1;
+  --press-offset: 3px;
+
+  /* Snappy rather than smooth: a brutalist interface does not glide. */
+  --ease-standard: cubic-bezier(0.7, 0, 0.3, 1);
+  --duration-fast: 90ms;
+  --duration-base: 120ms;
+}

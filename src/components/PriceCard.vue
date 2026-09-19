@@ -42,21 +42,29 @@ const {
   recommended?: boolean | undefined
 }>()
 
+/* Roles, not hex values. This used to carry `#b8862c` and `#4a86a8` with
+   hand-picked darker shades for text, which is the one thing the kit's rules
+   forbid: a colour in a component cannot follow a palette, so a pricing table
+   stayed amber and blue whatever the app had rebranded to.
+
+   The ring is handed to the surface as a variable rather than set as a
+   `border-color` class. The surface draws its own border, and two utilities
+   setting the same property would be decided by stylesheet order. */
 const TONE = {
   neutral: {
-    ring: 'border-hair/70',
+    ring: '',
     soft: 'bg-muted text-ink-soft',
     icon: 'bg-primary/10 text-primary',
   },
   warm: {
-    ring: 'border-[color-mix(in_oklab,#b8862c_35%,transparent)]',
-    soft: 'bg-[color-mix(in_oklab,#b8862c_14%,transparent)] text-[#8a6318] dark:text-[#d9ad5c]',
-    icon: 'bg-[color-mix(in_oklab,#b8862c_16%,transparent)] text-[#8a6318] dark:text-[#d9ad5c]',
+    ring: '[--surface-border-color:color-mix(in_oklab,var(--color-warning)_40%,transparent)]',
+    soft: 'bg-warning/15 text-ink',
+    icon: 'bg-warning/15 text-warning',
   },
   cool: {
-    ring: 'border-[color-mix(in_oklab,#4a86a8_38%,transparent)]',
-    soft: 'bg-[color-mix(in_oklab,#4a86a8_14%,transparent)] text-[#2f6079] dark:text-[#8fc6de]',
-    icon: 'bg-[color-mix(in_oklab,#4a86a8_16%,transparent)] text-[#2f6079] dark:text-[#8fc6de]',
+    ring: '[--surface-border-color:color-mix(in_oklab,var(--color-accent)_38%,transparent)]',
+    soft: 'bg-accent/12 text-ink',
+    icon: 'bg-accent/12 text-accent',
   },
 } as const
 
@@ -65,14 +73,17 @@ const palette = computed(() => TONE[tone])
 
 <template>
   <article
-    class="bg-surface rounded-card relative flex h-full flex-col border p-7 shadow-[var(--shadow-card)] transition-[border-color,box-shadow,transform] duration-[420ms] hover:border-[color-mix(in_oklab,var(--color-primary)_60%,transparent)] hover:shadow-[var(--shadow-lift)] sm:p-8"
-    :class="[palette.ring, recommended ? 'shadow-[var(--shadow-lift)]' : 'hover:-translate-y-0.5']"
+    class="surface rounded-card ease-standard relative flex h-full flex-col p-7 transition-[border-color,box-shadow,transform] duration-(--duration-slower) hover:[--surface-border-color:color-mix(in_oklab,var(--color-primary)_60%,transparent)] hover:[--surface-shadow:var(--shadow-raised)] sm:p-8"
+    :class="[
+      palette.ring,
+      recommended ? '[--surface-shadow:var(--shadow-raised)]' : 'hover:-translate-y-0.5',
+    ]"
   >
     <!-- On the edge rather than inside, so it cannot be mistaken for one of
          the plan's own features. -->
     <span
       v-if="badge && recommended"
-      class="bg-primary rounded-cell absolute -top-3 left-7 px-3 py-1 text-[0.7rem] font-semibold text-white"
+      class="bg-primary rounded-cell text-on-primary absolute -top-3 left-7 px-3 py-1 text-[0.7rem] font-semibold"
     >
       {{ badge }}
     </span>

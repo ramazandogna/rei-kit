@@ -50,14 +50,14 @@
    considered. */
 .page-enter-active {
   transition:
-    opacity 260ms ease-out,
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--duration-slow) ease-out,
+    transform var(--duration-slow) var(--ease-standard);
 }
 
 .page-leave-active {
   transition:
-    opacity 130ms ease-in,
-    transform 130ms ease-in;
+    opacity var(--duration-fast) ease-in,
+    transform var(--duration-fast) ease-in;
 }
 
 .page-enter-from {

@@ -45,15 +45,15 @@ const isOnline = useOnline()
   font-weight: 500;
   color: var(--color-ink);
   background: color-mix(in srgb, var(--color-warning) 90%, transparent);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  box-shadow: var(--shadow-raised);
   backdrop-filter: blur(4px);
 }
 
 .rk-offline-enter-active,
 .rk-offline-leave-active {
   transition:
-    opacity 200ms ease,
-    transform 200ms cubic-bezier(0.32, 0.72, 0, 1);
+    opacity var(--duration-base) ease,
+    transform var(--duration-base) var(--ease-sheet);
 }
 
 .rk-offline-enter-from,

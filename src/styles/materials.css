@@ -1,0 +1,14 @@
+/* rei-kit materials, all of them.
+ *
+ * Import this after `tokens.css` and choose one with an attribute:
+ *
+ *   <html data-material="glass">
+ *
+ * or at runtime with `applyMaterial('glass')` / `useMaterial()`. No attribute
+ * is the quiet material the kit ships by default.
+ *
+ * An app that only ever wants one can import that file alone —
+ * `rei-kit/materials/glass.css` — and set the attribute once. */
+@import './materials/glass.css';
+@import './materials/brutal.css';
+@import './materials/soft.css';

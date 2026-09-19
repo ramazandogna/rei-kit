@@ -447,7 +447,9 @@ describe('the hover it was not animating', () => {
     // the three apps; this component was the one thing not following it.
     const classes = mount(BaseButton).classes().join(' ')
 
-    expect(classes).toContain('transition-[transform,color,background-color,border-color]')
+    // The list grew to include the material's depth and press, but colour has
+    // to stay in it -- that was the whole point of this test.
+    expect(classes).toMatch(/transition-\[[^\]]*\bcolor\b[^\]]*background-color/)
   })
 
   it('still imposes no transition on an unstyled button', () => {
@@ -560,10 +562,12 @@ describe('the shapes the apps were painting by hand', () => {
 
   it('does not let a row flinch when pressed', () => {
     // Scaling a full-width line looks like the list itself moved.
+    // The press is the material's now (`--press-scale`), but a row still opts
+    // out of it entirely.
     expect(mount(BaseButton, { props: { variant: 'row' } }).classes()).not.toContain(
-      'active:scale-95',
+      'active:scale-(--press-scale)',
     )
-    expect(mount(BaseButton).classes()).toContain('active:scale-95')
+    expect(mount(BaseButton).classes()).toContain('active:scale-(--press-scale)')
   })
 
   it('already had the chip, and nobody had noticed', () => {
@@ -573,7 +577,8 @@ describe('the shapes the apps were painting by hand', () => {
 
     expect(chip.classes()).toContain('rounded-full')
     expect(chip.classes()).toContain('text-xs')
-    expect(chip.classes().join(' ')).toContain('bg-surface')
+    // A control surface since 1.1.0, so the material decides its fill and edge.
+    expect(chip.classes()).toContain('control')
     expect(chip.classes().join(' ')).toContain('hover:bg-muted')
   })
 })

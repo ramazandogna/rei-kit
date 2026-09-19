@@ -108,7 +108,7 @@ onUnmounted(() => {
             aria-modal="true"
             :aria-label="title"
             tabindex="-1"
-            class="sheet-panel bg-surface relative flex max-h-[94%] min-h-[56dvh] flex-col rounded-t-[28px] shadow-2xl outline-none"
+            class="sheet-panel surface-overlay relative flex max-h-[94%] min-h-[56dvh] flex-col rounded-t-[28px] outline-none"
           >
             <div class="flex shrink-0 justify-center pt-3" aria-hidden="true">
               <span class="bg-hair h-1.5 w-10 rounded-full" />
@@ -151,7 +151,7 @@ onUnmounted(() => {
 <style scoped>
 .sheet-enter-active,
 .sheet-leave-active {
-  transition: opacity 200ms ease;
+  transition: opacity var(--duration-base) ease;
 }
 .sheet-enter-from,
 .sheet-leave-to {
@@ -162,7 +162,7 @@ onUnmounted(() => {
    sheet read as rising rather than appearing. */
 .sheet-enter-active .sheet-panel,
 .sheet-leave-active .sheet-panel {
-  transition: transform 280ms cubic-bezier(0.32, 0.72, 0, 1);
+  transition: transform var(--duration-slow) var(--ease-sheet);
 }
 .sheet-enter-from .sheet-panel,
 .sheet-leave-to .sheet-panel {

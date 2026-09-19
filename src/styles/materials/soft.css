@@ -1,0 +1,57 @@
+/* rei-kit material: soft.
+ *
+ * Rounded, raised and a little squashy — the family that neumorphism and
+ * claymorphism belong to. Surfaces are lit from above: a highlight along the
+ * top edge, a gentle shade along the bottom, and a soft shadow under the whole
+ * thing, so each card sits on the page like something you could pick up.
+ *
+ * Accessible where the look usually is not. Pure neumorphism draws surfaces in
+ * the page colour and relies on shadow alone to find their edges, which fails
+ * every contrast rule there is. Here a surface keeps its own colour and a
+ * faint edge, so the depth is decoration and never the only boundary.
+ *
+ * Pressing sinks a control into the surface instead of shrinking it. */
+[data-material='soft'] {
+  --surface-border-color: color-mix(in oklab, var(--color-hair) 55%, transparent);
+
+  --radius-cell: 14px;
+  --radius-card: 26px;
+  --radius-shell: 42px;
+
+  --shadow-card:
+    inset 0 2px 1px rgb(255 255 255 / 0.75),
+    inset 0 -3px 8px color-mix(in oklab, var(--shadow-color) 5%, transparent),
+    0 10px 24px -10px color-mix(in oklab, var(--shadow-color) 20%, transparent);
+  --shadow-raised:
+    inset 0 2px 1px rgb(255 255 255 / 0.8),
+    inset 0 -4px 10px color-mix(in oklab, var(--shadow-color) 6%, transparent),
+    0 18px 36px -14px color-mix(in oklab, var(--shadow-color) 28%, transparent);
+  --shadow-overlay:
+    inset 0 2px 1px rgb(255 255 255 / 0.8),
+    0 30px 60px -20px color-mix(in oklab, var(--shadow-color) 38%, transparent);
+  --shadow-control:
+    inset 0 1px 1px rgb(255 255 255 / 0.6),
+    inset 0 -2px 4px color-mix(in oklab, var(--shadow-color) 8%, transparent),
+    0 4px 10px -4px color-mix(in oklab, var(--shadow-color) 18%, transparent);
+  --shadow-control-pressed: inset 0 3px 6px
+    color-mix(in oklab, var(--shadow-color) 20%, transparent);
+
+  --press-scale: 0.98;
+
+  /* A small overshoot: things arrive with a little give, which is the whole
+     personality of this material. */
+  --ease-standard: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dark[data-material='soft'],
+.dark [data-material='soft'] {
+  --shadow-card:
+    inset 0 1px 1px rgb(255 255 255 / 0.07), inset 0 -3px 8px rgb(0 0 0 / 0.25),
+    0 10px 24px -10px rgb(0 0 0 / 0.6);
+  --shadow-raised:
+    inset 0 1px 1px rgb(255 255 255 / 0.08), inset 0 -4px 10px rgb(0 0 0 / 0.3),
+    0 18px 36px -14px rgb(0 0 0 / 0.7);
+  --shadow-overlay: inset 0 1px 1px rgb(255 255 255 / 0.08), 0 30px 60px -20px rgb(0 0 0 / 0.8);
+  --shadow-control: inset 0 1px 1px rgb(255 255 255 / 0.06), inset 0 -2px 4px rgb(0 0 0 / 0.3);
+  --shadow-control-pressed: inset 0 3px 6px rgb(0 0 0 / 0.45);
+}

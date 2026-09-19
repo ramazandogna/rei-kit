@@ -147,9 +147,9 @@ const filled = computed(() => {
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 9999px;
-  background: #fff;
+  background: var(--color-surface);
   border: 2px solid var(--color-primary);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+  box-shadow: var(--shadow-control);
 }
 
 .rk-slider-input::-moz-range-thumb {
@@ -157,8 +157,8 @@ const filled = computed(() => {
   height: 1.25rem;
   border: 2px solid var(--color-primary);
   border-radius: 9999px;
-  background: #fff;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-control);
 }
 
 .rk-slider-input:focus-visible::-webkit-slider-thumb {

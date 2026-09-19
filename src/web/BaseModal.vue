@@ -136,7 +136,7 @@ onBeforeUnmount(() => {
       >
         <div
           ref="panel"
-          class="rk-modal-panel"
+          class="rk-modal-panel surface-overlay"
           :role="tone === 'alert' ? 'alertdialog' : 'dialog'"
           aria-modal="true"
           :aria-label="title"
@@ -185,9 +185,7 @@ onBeforeUnmount(() => {
   max-height: 85vh;
   overflow-y: auto;
   border-radius: var(--radius-card);
-  background: var(--color-surface);
   padding: 1.5rem;
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2);
 }
 
 .rk-modal-panel:focus {
@@ -215,7 +213,7 @@ onBeforeUnmount(() => {
   height: 2rem;
   border-radius: 9999px;
   color: var(--color-ink-soft);
-  transition: background-color 150ms;
+  transition: background-color var(--duration-fast);
 }
 
 .rk-modal-close:hover {
@@ -248,14 +246,14 @@ onBeforeUnmount(() => {
 
 .rk-modal-enter-active,
 .rk-modal-leave-active {
-  transition: opacity 180ms ease;
+  transition: opacity var(--duration-base) ease;
 }
 
 .rk-modal-enter-active .rk-modal-panel,
 .rk-modal-leave-active .rk-modal-panel {
   transition:
-    transform 180ms cubic-bezier(0.32, 0.72, 0, 1),
-    opacity 180ms ease;
+    transform var(--duration-base) var(--ease-sheet),
+    opacity var(--duration-base) ease;
 }
 
 .rk-modal-enter-from,
@@ -273,7 +271,7 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .rk-modal-enter-active .rk-modal-panel,
   .rk-modal-leave-active .rk-modal-panel {
-    transition: opacity 180ms ease;
+    transition: opacity var(--duration-base) ease;
     transform: none;
   }
 

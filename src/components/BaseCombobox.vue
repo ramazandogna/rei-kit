@@ -187,7 +187,7 @@ onBeforeUnmount(() => {
         v-model="text"
         type="text"
         role="combobox"
-        class="rk-combo-input"
+        class="rk-combo-input control"
         autocomplete="off"
         :placeholder="placeholder"
         :disabled="disabled"
@@ -218,7 +218,7 @@ onBeforeUnmount(() => {
       :id="listId"
       ref="list"
       role="listbox"
-      class="rk-combo-list"
+      class="rk-combo-list surface-overlay"
       :aria-label="label"
     >
       <li
@@ -272,8 +272,6 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 2.75rem;
   border-radius: var(--radius-card);
-  border: 1px solid var(--color-hair);
-  background: var(--color-surface);
   padding: 0 2rem 0 0.75rem;
   font-size: 1rem;
   color: var(--color-ink);
@@ -303,10 +301,7 @@ onBeforeUnmount(() => {
   width: 100%;
   overflow-y: auto;
   border-radius: var(--radius-card);
-  border: 1px solid var(--color-hair);
-  background: var(--color-surface);
   padding: 0.25rem;
-  box-shadow: 0 10px 24px -8px rgb(0 0 0 / 0.25);
 }
 
 .rk-combo-option {

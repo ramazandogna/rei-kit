@@ -3,6 +3,18 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.4.1 — 2026-09-19
+
+### Fixed
+
+- **`BaseReveal` did nothing for content already on screen.** It hid only
+  what it found below the fold, so anything in view when it mounted simply
+  appeared — including every item of a list re-mounted to replay it. Content
+  in view now arrives too: it is hidden before the first paint and revealed
+  a frame after the observer reports it. A server render and a page read
+  without JavaScript still show everything, and readers who asked for less
+  motion are never hidden from.
+
 ## 2.4.0 — 2026-09-19
 
 **Clean under the strictest template checks, and a headline effect you can

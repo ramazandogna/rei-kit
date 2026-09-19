@@ -60,6 +60,11 @@ without.
 
 ---
 
+## 2.4.1
+
+**You gain a `BaseReveal` that animates what is already on screen**, on
+load and when a list re-mounts. Nothing to change.
+
 ## 2.4.0
 
 **You gain a kit that is clean under vue-tsc's `strictTemplates`**, and a

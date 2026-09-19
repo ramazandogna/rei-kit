@@ -39,3 +39,5 @@ jobs:
         run: pnpm test:ci
       - name: Build
         run: pnpm build-only
+      - name: Size budget
+        run: pnpm size

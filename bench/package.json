@@ -1,0 +1,22 @@
+{
+  "name": "rei-kit-bench",
+  "private": true,
+  "type": "module",
+  "description": "The same three components, bundled with each kit the way its docs set it up.",
+  "scripts": {
+    "bench": "node run.mjs"
+  },
+  "devDependencies": {
+    "@primeuix/themes": "3.0.1",
+    "@tailwindcss/vite": "4.3.3",
+    "ant-design-vue": "4.2.6",
+    "element-plus": "2.14.6",
+    "naive-ui": "2.45.3",
+    "primevue": "5.0.1",
+    "rei-kit": "file:..",
+    "tailwindcss": "4.3.3",
+    "vite": "8.3.0",
+    "vue": "3.5.43",
+    "vuetify": "4.2.1"
+  }
+}

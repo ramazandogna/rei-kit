@@ -1,0 +1,6 @@
+/* What an app's main.css holds — see the install guide. */
+@import 'tailwindcss';
+@import 'rei-kit/tokens.css';
+@import 'rei-kit/shell/mobile.css';
+@import 'rei-kit/styles.css';
+@source './node_modules/rei-kit/dist';

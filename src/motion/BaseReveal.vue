@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 
-import { prefersReducedMotion, watchVisibility } from './environment'
+import { nextFrame, prefersReducedMotion, watchVisibility } from './environment'
 
 /**
  * Content that fades or rises into place as it scrolls into view.
  *
- * Visible by default and hidden only once it has mounted and found itself
- * below the fold, so a page rendered on a server, or read without
+ * Visible in the markup, and hidden only once it has mounted in a browser
+ * that will reveal it again, so a page rendered on a server, or read without
  * JavaScript, never has content stuck at zero opacity. For a reader who
  * asked for less motion it is never hidden at all.
+ *
+ * Content already on screen when it mounts arrives too. It used to be shown
+ * as it was, which read as nothing happening — and made a re-mounted list
+ * (a "replay") look broken.
  *
  * For a staggered list, give each item a growing `delay`:
  * `:delay="index * 60"`.
@@ -39,20 +43,33 @@ const root = useTemplateRef<HTMLElement>('root')
 const hidden = ref(false)
 
 let stop: (() => void) | null = null
+let cancelFrame: (() => void) | null = null
 
 onMounted(() => {
   if (prefersReducedMotion() || !root.value) return
 
+  // Hidden before the first paint, then revealed a frame after the observer
+  // says so: without a painted hidden frame there is nothing to transition
+  // from, and content in view would simply appear.
+  hidden.value = true
   stop = watchVisibility(root.value, (visible) => {
-    hidden.value = !visible
-    if (visible && once) {
+    cancelFrame?.()
+    if (!visible) {
+      hidden.value = true
+      return
+    }
+    cancelFrame = nextFrame(() => (hidden.value = false))
+    if (once) {
       stop?.()
       stop = null
     }
   })
 })
 
-onBeforeUnmount(() => stop?.())
+onBeforeUnmount(() => {
+  stop?.()
+  cancelFrame?.()
+})
 </script>
 
 <template>

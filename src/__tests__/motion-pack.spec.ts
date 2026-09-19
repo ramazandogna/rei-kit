@@ -292,11 +292,30 @@ describe('BaseReveal', () => {
     expect(wrapper.attributes('style')).toContain('--rk-reveal-delay: 120ms')
 
     show(true)
+    vi.advanceTimersByTime(20)
     await nextTick()
     expect(wrapper.classes()).not.toContain('is-hidden')
 
     // Once, by default: leaving again does not hide it.
     show(false)
+    await nextTick()
+    expect(wrapper.classes()).not.toContain('is-hidden')
+  })
+
+  it('arrives even when it mounts already on screen', async () => {
+    // A re-mounted list — a replay — used to show at once, as if nothing
+    // had happened. It is hidden for a painted frame, then revealed.
+    allowMotion()
+    const show = stubVisibility()
+    const wrapper = mount(BaseReveal, { slots: { default: 'Hello' } })
+    await nextTick()
+    expect(wrapper.classes()).toContain('is-hidden')
+
+    show(true)
+    await nextTick()
+    expect(wrapper.classes()).toContain('is-hidden')
+
+    vi.advanceTimersByTime(20)
     await nextTick()
     expect(wrapper.classes()).not.toContain('is-hidden')
   })

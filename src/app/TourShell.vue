@@ -2,6 +2,7 @@
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 
 import BaseButton from '../components/BaseButton.vue'
+import { inertOutside } from '../utils/inert'
 
 /**
  * The frame an onboarding guide runs inside.
@@ -60,6 +61,8 @@ const open = defineModel<boolean>({ required: true })
 const emit = defineEmits<{ next: []; back: []; dismiss: []; goTo: [position: number] }>()
 
 const dialog = ref<HTMLElement | null>(null)
+/** Gives the page back; set while the guide is open. */
+let releaseInert: (() => void) | null = null
 
 /** Direction, so a jump backwards still animates backwards. */
 const transitionName = ref('tour-forward')
@@ -80,18 +83,18 @@ watch(
   async (isOpen) => {
     if (typeof document === 'undefined') return
 
-    document.getElementById('app')?.toggleAttribute('inert', isOpen)
+    releaseInert?.()
+    releaseInert = null
     if (!isOpen) return
 
     await nextTick()
+    if (dialog.value) releaseInert = inertOutside(dialog.value)
     dialog.value?.focus()
   },
   { immediate: true },
 )
 
-onUnmounted(() => {
-  if (typeof document !== 'undefined') document.getElementById('app')?.removeAttribute('inert')
-})
+onUnmounted(() => releaseInert?.())
 
 function onKeydown(event: KeyboardEvent) {
   if (event.key === 'ArrowRight') emit('next')

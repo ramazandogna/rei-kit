@@ -283,7 +283,12 @@ switch still reads correctly after it.
 (scroll container with the right bottom clearance), and the
 `.slide-forward-*` / `.slide-backward-*` transition pairs that
 `createTabTransition().name` resolves to. `rei-kit/shell/web.css` is the wide
-equivalent. `tokens.css` adds `no-scrollbar` and `pb-safe`.
+equivalent. `tokens.css` adds `no-scrollbar`, `pb-safe` and `focus-ring`.
+
+**Every control drawn by hand carries `focus-ring`** (or states its own
+`:focus-visible` ring), and an `sr-only` input hands its focus to what is
+visible with `peer` / `peer-focus-visible:`. A test reads every component for
+both, because a missing ring compiles, renders and passes every other check.
 
 `BaseSheet` teleports to `#sheet-root` so the app behind it can be made
 `inert`. It creates that node if the page has none; an app that declares one

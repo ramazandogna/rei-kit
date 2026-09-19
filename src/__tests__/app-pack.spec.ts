@@ -184,7 +184,7 @@ describe('TourShell', () => {
     stepLabel: (n: number) => `${n}. adım`,
   }
 
-  it('takes the app behind it out of reach while it is open', () => {
+  it('takes the app behind it out of reach while it is open', async () => {
     // Without `inert`, Tab walks into a screen the reader cannot see. Both
     // apps had written this, and both had to remember to undo it.
     const app = document.createElement('div')
@@ -192,6 +192,8 @@ describe('TourShell', () => {
     document.body.append(app)
 
     const wrapper = mount(TourShell, { props, attachTo: document.body })
+    await nextTick()
+    await nextTick()
 
     expect(app.hasAttribute('inert')).toBe(true)
 

@@ -33,7 +33,7 @@ const preference = defineModel<'system' | L>({ required: true })
       :key="locale"
       type="button"
       :lang="locale"
-      class="rounded-full px-2.5 py-1.5 text-xs transition-colors"
+      class="focus-ring rounded-full px-2.5 py-1.5 text-xs transition-colors"
       :class="
         preference === locale ? 'bg-muted text-ink font-semibold' : 'text-ink-soft hover:text-ink'
       "

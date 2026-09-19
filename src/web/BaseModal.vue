@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
 
+import { inertOutside } from '../utils/inert'
+
 /**
  * A dialog that arrives from nowhere.
  *
@@ -65,6 +67,8 @@ defineSlots<{
 const panel = ref<HTMLElement | null>(null)
 /** Who had focus before this opened, so it can be given back. */
 let restoreTo: HTMLElement | null = null
+/** Gives the page behind back; set while open. */
+let releaseInert: (() => void) | null = null
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -108,11 +112,17 @@ watch(open, async (isOpen) => {
     restoreTo = document.activeElement as HTMLElement | null
     document.body.style.overflow = 'hidden'
     await nextTick()
+    // The Tab wrap above keeps focus cycling; `inert` is what also stops a
+    // screen reader's virtual cursor, which walks past keydown handlers.
+    if (panel.value) releaseInert = inertOutside(panel.value)
     // The panel itself when it holds nothing focusable, so focus is at least
     // inside the dialog rather than behind it.
     ;(focusable()[0] ?? panel.value)?.focus()
   } else {
     document.body.style.overflow = ''
+    // Before focus goes back: an inert element cannot take it.
+    releaseInert?.()
+    releaseInert = null
     restoreTo?.focus()
     restoreTo = null
   }
@@ -122,6 +132,7 @@ watch(open, async (isOpen) => {
 // with nothing on screen to explain why.
 onBeforeUnmount(() => {
   if (open.value) document.body.style.overflow = ''
+  releaseInert?.()
 })
 </script>
 

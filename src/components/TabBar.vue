@@ -80,7 +80,7 @@ const {
 }
 
 .tab-link {
-  @apply text-ink-soft flex min-h-[52px] flex-1 cursor-pointer flex-col items-center justify-center gap-1 py-1.5;
+  @apply text-ink-soft focus-ring flex min-h-[52px] flex-1 cursor-pointer flex-col items-center justify-center gap-1 py-1.5;
   border-radius: calc(var(--radius-shell) - 6px);
   /* Only the icon reacts to a press. Scaling the whole link drags the label and
      the pill with it, which reads as the bar wobbling. */

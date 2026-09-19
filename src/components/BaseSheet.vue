@@ -4,6 +4,7 @@ import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 import { X } from 'lucide-vue-next'
 
 import { useVisualViewport } from '../composables/use-visual-viewport'
+import { inertOutside } from '../utils/inert'
 import { ensureSheetRoot } from '../utils/sheet-root'
 
 const open = defineModel<boolean>({ required: true })
@@ -62,21 +63,24 @@ watch(open, async (isOpen) => {
     panel.value?.focus()
   } else {
     window.removeEventListener('keydown', onKeydown)
+    // Released before focus is handed back: an inert element cannot take
+    // focus, so the other order quietly dropped it on the body.
+    setBackgroundInert(false)
     lastFocused?.focus()
     lastFocused = null
-    setBackgroundInert(false)
   }
 })
 
-/**
- * `inert` takes the whole app out of tab order and pointer events while the
- * sheet is open — a real focus trap without keydown bookkeeping.
- *
- * The sheet itself is teleported to `#sheet-root`, a sibling of `#app`, so it
- * stays interactive.
- */
+/* The whole page but the sheet root goes inert while this is open. Held per
+   sheet, so the unmount below can only release what this sheet took. */
+let releaseInert: (() => void) | null = null
+
 function setBackgroundInert(isInert: boolean) {
-  document.getElementById('app')?.toggleAttribute('inert', isInert)
+  releaseInert?.()
+  releaseInert = null
+
+  const root = isInert ? document.querySelector(sheetRoot) : null
+  if (root) releaseInert = inertOutside(root)
 }
 
 onUnmounted(() => {

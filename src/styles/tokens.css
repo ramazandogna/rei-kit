@@ -298,6 +298,20 @@
   background-attachment: fixed;
 }
 
+/* The keyboard focus ring, in one place.
+
+   Every raw control the kit renders carries this or states its own ring. A
+   control without one is invisible to anyone moving through the page with
+   Tab — `SegmentedControl` shipped that way, its real input hidden and its
+   visible pill never told it had focus. Only `:focus-visible`, so a mouse
+   click draws nothing. */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
 /* Scrolling stays, the bar goes. On a narrow column a visible track reads as a
    stray line rather than as a control. */
 @utility no-scrollbar {

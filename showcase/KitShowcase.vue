@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { NEUTRAL } from './tones'
 import { computed, ref } from 'vue'
+import { Bold, Italic, LayoutGrid, List, Underline } from 'lucide-vue-next'
 
 import ApiReference from './ApiReference.vue'
 import AppearanceBar from './AppearanceBar.vue'
@@ -33,7 +34,11 @@ import {
   SkeletonList,
   StatCard,
   ToastHost,
+  ToggleGroup,
   ToneDot,
+  CircularProgress,
+  NumberInput,
+  PinInput,
   VERSION,
   useToast,
 } from '../src/index'
@@ -65,6 +70,27 @@ const note = ref('')
 const themeChoice = ref('system')
 const remember = ref(false)
 const toast = useToast()
+
+const guests = ref<number | undefined>(2)
+const code = ref('')
+const marks = ref<string[]>(['bold'])
+const view = ref<string | undefined>('list')
+const MARKS = [
+  { value: 'bold', label: 'Bold', icon: Bold, iconOnly: true },
+  { value: 'italic', label: 'Italic', icon: Italic, iconOnly: true },
+  { value: 'underline', label: 'Underline', icon: Underline, iconOnly: true },
+]
+const VIEWS = [
+  { value: 'list', label: 'List', icon: List },
+  { value: 'grid', label: 'Grid', icon: LayoutGrid },
+]
+
+/* Acts first and lets the reader take it back — kinder than "are you sure". */
+function deleteWithUndo() {
+  toast.success('Entry deleted', {
+    action: { label: 'Undo', onClick: () => toast.info('Entry restored') },
+  })
+}
 
 const TONES = ['info', 'success', 'warning', 'danger'] as const
 const BADGES = ['neutral', 'primary', 'success', 'warning', 'danger'] as const
@@ -216,9 +242,9 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             <BaseCard class="mt-5">
               <div class="flex items-baseline justify-between">
                 <span class="text-sm">{{ progress }} / 28 days</span>
-                <span class="text-ink-soft text-sm tabular-nums">%{{ percent }}</span>
+                <span class="text-ink-soft text-sm tabular-nums">{{ percent }}%</span>
               </div>
-              <ProgressBar :value="progress" :max="28" label="Kurs ilerlemesi" class="mt-3" />
+              <ProgressBar :value="progress" :max="28" label="Course progress" class="mt-3" />
 
               <input
                 v-model.number="progress"
@@ -230,10 +256,29 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
               />
             </BaseCard>
 
+            <BaseCard class="mt-4">
+              <p class="text-ink-soft text-xs">
+                <code class="text-xs">CircularProgress</code> — the same promise as a ring, for a
+                small space. Without a value it turns instead.
+              </p>
+              <div class="mt-3 flex items-center gap-5">
+                <CircularProgress
+                  :value="progress"
+                  :max="28"
+                  label="Course progress"
+                  size="lg"
+                  show-value
+                />
+                <CircularProgress :value="72" label="Upload" tone="positive" show-value />
+                <CircularProgress :value="18" label="Storage" tone="warning" size="sm" />
+                <CircularProgress label="Syncing" />
+              </div>
+            </BaseCard>
+
             <div class="mt-4 flex gap-3">
               <StatCard value="28" label="Days" />
               <StatCard value="113" label="Kanji" trend="up" />
-              <StatCard value="690" label="Kelime" trend="flat" />
+              <StatCard value="690" label="Words" trend="flat" />
             </div>
           </section>
 
@@ -248,16 +293,19 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
 
             <div class="mt-5 flex flex-wrap gap-2">
               <BaseButton size="sm" variant="secondary" @click="toast.info('Exporting…')">
-                Bilgi
+                Info
               </BaseButton>
-              <BaseButton size="sm" variant="secondary" @click="toast.success('Kaydedildi')">
+              <BaseButton size="sm" variant="secondary" @click="toast.success('Saved')">
                 Success
               </BaseButton>
               <BaseButton size="sm" variant="secondary" @click="toast.warning('Weak connection')">
                 Warning
               </BaseButton>
-              <BaseButton size="sm" variant="secondary" @click="toast.danger('Kaydedilemedi')">
-                Hata
+              <BaseButton size="sm" variant="secondary" @click="deleteWithUndo">
+                Delete, with undo
+              </BaseButton>
+              <BaseButton size="sm" variant="secondary" @click="toast.danger('Could not save')">
+                Error
               </BaseButton>
             </div>
           </section>
@@ -266,12 +314,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             <SectionHeading :tone="NEUTRAL" label="Form" />
 
             <BaseCard class="mt-5 max-w-md">
-              <BaseInput
-                v-model="email"
-                label="E-posta"
-                type="email"
-                placeholder="ornek@site.com"
-              />
+              <BaseInput v-model="email" label="Email" type="email" placeholder="you@example.com" />
               <BaseInput
                 class="mt-4"
                 label="Password"
@@ -282,26 +325,26 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
               <BaseSelect
                 v-model="currency"
                 class="mt-4"
-                label="Para birimi"
+                label="Currency"
                 placeholder="Choose one"
                 hint="Every amount in the report is shown in this."
                 :options="[
                   { value: 'TRY', label: 'Turkish lira' },
-                  { value: 'JPY', label: 'Japon yeni' },
+                  { value: 'JPY', label: 'Japanese yen' },
                   { value: 'EUR', label: 'Euro' },
                 ]"
               />
 
-              <BaseTextarea v-model="note" class="mt-4" label="Not" :rows="3" />
+              <BaseTextarea v-model="note" class="mt-4" label="Note" :rows="3" />
 
               <BaseRadioGroup
                 v-model="themeChoice"
                 class="mt-5"
-                legend="Tema"
+                legend="Theme"
                 :options="[
-                  { value: 'system', label: 'Sistem' },
+                  { value: 'system', label: 'System' },
                   { value: 'light', label: 'Light' },
-                  { value: 'dark', label: 'Koyu' },
+                  { value: 'dark', label: 'Dark' },
                 ]"
               />
 
@@ -310,7 +353,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
               <SegmentedControl
                 class="mt-5"
                 :options="[
-                  { value: 'all', label: 'Hepsi' },
+                  { value: 'all', label: 'All' },
                   { value: 'free', label: 'Free' },
                   { value: 'paid', label: 'Paid' },
                 ]"
@@ -318,13 +361,41 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
                 @update:model-value="(value: string) => (segment = value)"
               />
             </BaseCard>
+
+            <BaseCard class="mt-4">
+              <div class="grid gap-6 sm:grid-cols-2">
+                <NumberInput
+                  v-model="guests"
+                  label="Guests"
+                  :min="1"
+                  :max="12"
+                  decrement-label="Fewer guests"
+                  increment-label="More guests"
+                  hint="Type it, or use the arrows and ↑ ↓"
+                />
+                <div>
+                  <p class="text-ink mb-1.5 text-sm">Verification code</p>
+                  <PinInput
+                    v-model="code"
+                    :length="6"
+                    label="Verification code"
+                    :cell-label="(n, total) => `Digit ${n} of ${total}`"
+                    @complete="toast.success(`Code ${$event} complete`)"
+                  />
+                </div>
+              </div>
+              <div class="mt-6 flex flex-wrap items-center gap-4">
+                <ToggleGroup v-model="marks" mode="multiple" label="Text style" :options="MARKS" />
+                <ToggleGroup v-model="view" label="View" :options="VIEWS" required size="sm" />
+              </div>
+            </BaseCard>
           </section>
 
           <section id="ayarlar" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Ayarlar" />
 
             <SettingsGroup class="mt-5" title="Genel">
-              <SettingsRow label="Tema"><ToneDot fill="bg-primary" /></SettingsRow>
+              <SettingsRow label="Theme"><ToneDot fill="bg-primary" /></SettingsRow>
               <SettingsRow label="Language" hint="Interface language">English</SettingsRow>
             </SettingsGroup>
           </section>

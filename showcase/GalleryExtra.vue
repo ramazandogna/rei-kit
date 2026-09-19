@@ -9,7 +9,9 @@ import {
   BaseCard,
   BaseCombobox,
   BaseMenu,
+  BasePopover,
   BaseSheet,
+  BaseStepper,
   BaseSlider,
   BaseSpinner,
   BaseSwitch,
@@ -104,6 +106,21 @@ const Boom = {
 const boom = ref(false)
 
 const sliderText = computed(() => `${minutes.value} minutes`)
+
+const onlyUnpaid = ref(true)
+const thisMonth = ref(false)
+
+const STEPS = [
+  { key: 'account', label: 'Account', description: 'Email and password' },
+  { key: 'plan', label: 'Plan', description: 'Monthly or yearly' },
+  { key: 'payment', label: 'Payment', description: 'Card details' },
+  { key: 'done', label: 'Done' },
+] as const
+const step = ref<(typeof STEPS)[number]['key']>('plan')
+const stepIndex = computed(() => STEPS.findIndex((s) => s.key === step.value))
+function move(by: number) {
+  step.value = STEPS[Math.max(0, Math.min(STEPS.length - 1, stepIndex.value + by))]!.key
+}
 </script>
 
 <template>
@@ -289,6 +306,29 @@ const sliderText = computed(() => `${minutes.value} minutes`)
 
           <PropTable name="BaseTooltip" />
         </div>
+
+        <div>
+          <p class="text-ink text-sm font-medium">BasePopover</p>
+          <p class="text-ink-soft mt-1 text-xs">
+            Anything, anchored to its trigger. Focus goes in, Escape brings it back, and the page
+            stays usable. The trigger is your own button.
+          </p>
+          <div class="mt-3">
+            <BasePopover label="Filters">
+              <template #trigger="{ props }">
+                <BaseButton variant="secondary" v-bind="props">Filters</BaseButton>
+              </template>
+              <template #default="{ close }">
+                <div class="flex flex-col gap-3">
+                  <BaseSwitch v-model="onlyUnpaid" label="Only unpaid" />
+                  <BaseSwitch v-model="thisMonth" label="This month" />
+                  <BaseButton size="sm" block @click="close">Done</BaseButton>
+                </div>
+              </template>
+            </BasePopover>
+          </div>
+          <PropTable name="BasePopover" />
+        </div>
       </BaseCard>
     </section>
 
@@ -350,6 +390,31 @@ const sliderText = computed(() => `${minutes.value} minutes`)
             <TabBar :items="BOTTOM" active="ledger" label="Bottom bar" />
           </div>
           <PropTable name="TabBar" />
+        </div>
+
+        <div class="sm:col-span-2">
+          <p class="text-ink text-sm font-medium">BaseStepper</p>
+          <p class="text-ink-soft mt-1 text-xs">
+            Where you are in a process. Finished steps can be clicked to go back; steps ahead
+            cannot.
+          </p>
+          <BaseStepper
+            v-model="step"
+            class="mt-4"
+            :steps="STEPS"
+            label="Sign-up"
+            interactive
+            :state-labels="{ complete: 'done', error: 'needs attention' }"
+          />
+          <div class="mt-4 flex gap-2">
+            <BaseButton size="sm" variant="secondary" :disabled="stepIndex === 0" @click="move(-1)"
+              >Back</BaseButton
+            >
+            <BaseButton size="sm" :disabled="stepIndex === STEPS.length - 1" @click="move(1)"
+              >Next</BaseButton
+            >
+          </div>
+          <PropTable name="BaseStepper" />
         </div>
       </BaseCard>
     </section>

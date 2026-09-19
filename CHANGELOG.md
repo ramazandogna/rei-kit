@@ -3,6 +3,46 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.4.0 — 2026-09-19
+
+**Clean under the strictest template checks, and a headline effect you can
+brand.**
+
+### Added
+
+- **`BaseButton` and `BaseInput` type their element's own attributes.**
+  `@click`, `aria-label` and `role` on a button, `placeholder`,
+  `autocomplete` and `inputmode` on an input were always passed through, but
+  typed nowhere. Under vue-tsc's `strictTemplates`, an undeclared attribute
+  is an error, so an app on that setting got errors from the kit's own
+  components. They are declared with `/* @vue-ignore */`, which types them
+  without making them runtime props, so they still fall through exactly as
+  before.
+- **The kit and every usage sample are type-checked under `strictTemplates`
+  in CI** (`pnpm type-check:strict`). Thirty-two errors before this release,
+  none now.
+- **`text-shimmer` takes two variables**: `--shimmer-base` for the text and
+  `--shimmer-band` for the light. That turns it into a brand headline:
+  `text-shimmer [--shimmer-base:var(--color-primary)]
+[--shimmer-band:var(--color-accent)]`. The defaults are unchanged.
+
+### Changed
+
+- **`BaseInput`'s model is generic**, inferred from what is bound: a
+  `ref('')` gets strings back and a `ref(0)` numbers. It used to be
+  `string | number | undefined`, which neither could take under
+  `strictTemplates`. A ref typed as the old union still works.
+- **`BaseTextarea` and `BaseRadioGroup` emit strings**, with an empty string
+  as the default instead of undefined. An empty field looks and behaves the
+  same; only the type is narrower.
+
+### Fixed
+
+- **`CountUp` showed fractions on its way to a whole number:** "12,478.245"
+  while counting to 12,480. Intl's default allows three decimal places, and
+  every frame between two integers is a fraction. It now counts with as many
+  decimals as the value has, unless `format` says otherwise.
+
 ## 2.3.1 — 2026-09-19
 
 **Documentation you can copy from.** No change to what the package renders

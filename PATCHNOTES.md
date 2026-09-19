@@ -60,6 +60,25 @@ without.
 
 ---
 
+## 2.4.0
+
+**You gain a kit that is clean under vue-tsc's `strictTemplates`**, and a
+`text-shimmer` you can paint in your brand:
+
+```html
+<h1 class="text-shimmer [--shimmer-band:var(--color-accent)] [--shimmer-base:var(--color-primary)]">
+  Every look.
+</h1>
+```
+
+`CountUp` no longer shows decimals while counting to a whole number.
+
+**Action required:** none, in almost every app. `BaseInput`'s `v-model` now
+takes the type of the ref you bind. If your app passed a
+`string | number` union into an input's model on purpose, it still
+type-checks. `BaseTextarea` and `BaseRadioGroup` start from `''` rather
+than `undefined` when nothing is bound.
+
 ## 2.3.1
 
 **You gain a copyable sample for every component**, in TypeScript and

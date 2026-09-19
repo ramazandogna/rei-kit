@@ -290,8 +290,9 @@ equivalent. `tokens.css` adds `no-scrollbar`, `pb-safe` and `focus-ring`.
 
 `rei-kit/motion.css` (in both presets) adds `animate-float`,
 `animate-pulse-soft`, `animate-glow`, `animate-wiggle`, `animate-pop` and
-`text-shimmer`. All of them stop under `prefers-reduced-motion`, so there is no
-need to write `motion-safe:` in front of them.
+`text-shimmer`, whose colours come from `--shimmer-base` and
+`--shimmer-band`. All of them stop under `prefers-reduced-motion`, so there is
+no need to write `motion-safe:` in front of them.
 
 **Every control drawn by hand carries `focus-ring`** (or states its own
 `:focus-visible` ring), and an `sr-only` input hands its focus to what is

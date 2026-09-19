@@ -153,6 +153,8 @@ describe('CountUp', () => {
     show(true)
     vi.advanceTimersByTime(500)
     await nextTick()
+    // A whole number counts in whole numbers: no "71.843" on the way to 100.
+    expect(shown()).toMatch(/^\d+$/)
     const halfway = Number(shown())
     // Ease-out: well past the halfway value at the halfway time.
     expect(halfway).toBeGreaterThan(70)
@@ -162,6 +164,21 @@ describe('CountUp', () => {
     await nextTick()
     expect(shown()).toBe('100')
     expect(wrapper.find('.sr-only').text()).toBe('100')
+  })
+})
+
+describe('CountUp, in decimals', () => {
+  it('counts with as many decimals as the value has', async () => {
+    allowMotion()
+    const show = stubVisibility()
+    const wrapper = mount(CountUp, { props: { value: 99.9, duration: 1000, locale: 'en-GB' } })
+    const shown = () => wrapper.find('[aria-hidden="true"]').text()
+
+    show(true)
+    vi.advanceTimersByTime(300)
+    await nextTick()
+
+    expect(shown()).toMatch(/^\d+\.\d$|^\d+$/)
   })
 })
 

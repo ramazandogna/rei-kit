@@ -42,8 +42,23 @@ const root = useTemplateRef<HTMLElement>('root')
    the real number rather than a zero that means nothing. */
 const shown = ref(value)
 
-const text = (n: number) =>
-  locale === undefined ? formatNumber(n, format) : formatNumber(n, format, locale)
+/* As many decimals as the value itself has, unless `format` says otherwise.
+   Without this a count to 12480 passes through "12,478.245": Intl's default
+   is up to three places, and every frame in between is a fraction. */
+const places = computed(() => {
+  if (format?.maximumFractionDigits !== undefined) return format.maximumFractionDigits
+  const [, decimals = ''] = String(value).split('.')
+  return decimals.length
+})
+
+const text = (n: number) => {
+  const options = { maximumFractionDigits: places.value, ...format }
+  const rounded = Number(n.toFixed(places.value))
+
+  return locale === undefined
+    ? formatNumber(rounded, options)
+    : formatNumber(rounded, options, locale)
+}
 
 const display = computed(() => text(shown.value))
 const label = computed(() => text(value))

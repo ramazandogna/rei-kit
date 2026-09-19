@@ -7,7 +7,7 @@
  *   animate-glow         a ring that swells and fades, in the primary colour
  *   animate-wiggle       a small shake — "look here", once in a while
  *   animate-pop          grows into place once — something that just arrived
- *   text-shimmer         light passing across text, in the palette's colours
+ *   text-shimmer         light passing across a headline, in the palette's colours
  *
  * Declared as theme animations, so Tailwind emits a keyframe only for the
  * utilities an app actually uses. Colours come from the roles, so every one
@@ -91,14 +91,19 @@
   }
 }
 
-/* Text painted with a band of light moving across it. The ink stays readable
-   the whole way: the band is the primary colour, not white. */
+/* A headline with a band of light moving across it. The text stays readable
+   the whole way: the band is a colour of the palette, not white.
+
+   Two knobs, so it suits a heading in ink as well as one in the brand:
+   `--shimmer-base` is the text, `--shimmer-band` the light. For a brand
+   headline: `text-shimmer [--shimmer-base:var(--color-primary)]
+   [--shimmer-band:var(--color-accent)]`. */
 @utility text-shimmer {
   background: linear-gradient(
       100deg,
-      var(--color-ink) 40%,
-      var(--color-primary) 50%,
-      var(--color-ink) 60%
+      var(--shimmer-base, var(--color-ink)) 40%,
+      var(--shimmer-band, var(--color-primary)) 50%,
+      var(--shimmer-base, var(--color-ink)) 60%
     )
     0 0 / 200% 100%;
   -webkit-background-clip: text;

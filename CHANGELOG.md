@@ -3,6 +3,52 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.5.0 — 2026-09-19
+
+**Six parts the kit was missing, and an undo on every toast.** The first
+half of the gap list, the most-reached-for first.
+
+### Added
+
+- **`BasePopover`** — a small non-modal dialog anchored to its trigger:
+  focus moves in on open, Escape returns it to the trigger, a click outside
+  or a Tab out closes it. The trigger is the app's own element: the
+  `trigger` slot hands over `props` to bind, rather than wrapping a button
+  in a button. It flips above the trigger when there is no room below, and
+  slides sideways instead of off the screen. The date picker in the next
+  release is built on it.
+- **`ToggleGroup`** — buttons that stay pressed: at most one in `single`
+  mode (and none, unless `required`), any number in `multiple`. One Tab
+  stop, crossed with the arrow keys. Icon-only buttons keep their label as
+  the accessible name. Not a `SegmentedControl`, which always has exactly
+  one answer.
+- **`NumberInput`** — a text field that settles on numbers, with minus and
+  plus buttons and the spin-button keyboard (arrows, Page Up/Down, Home/End).
+  Typing is free until the field is left, then the value is clamped and
+  rounded to the step's precision, so 0.1 + 0.2 is 0.3. Accepts a comma for
+  a decimal point. The buttons' names are required props.
+- **`PinInput`** — a one-time code or a PIN, one box per character. Typing
+  moves on, Backspace goes back, the arrows move, and a paste or a phone's
+  autofill fills every box. No `maxlength`, because iOS delivers an SMS code
+  into the first box in one go. `complete` fires once, when the last box is
+  filled.
+- **`CircularProgress`** — `ProgressBar` and `BaseSpinner` as a ring: it
+  fills with a `value` and turns without one, and breathes instead of
+  spinning for readers who asked for less motion. Five tones; the inside is
+  a slot.
+- **`BaseStepper`** — where someone is in a process, as an ordered list with
+  `aria-current="step"`. With `interactive`, finished steps go back to
+  themselves; steps ahead never can. The words a screen reader hears for
+  done and needs-fixing are the app's, in `stateLabels`.
+- **Toast actions.** `toast.success('Deleted', { action: { label: 'Undo',
+onClick } })` puts a button on the toast. The toast is dismissed first,
+  so the button cannot be pressed twice, and it stays eight seconds instead
+  of four: long enough to reach the button, not just to read the message.
+
+Every one ships with a copyable sample in TypeScript and JavaScript, is
+clean under `strictTemplates`, renders on a server, and is driven by the
+keyboard in its tests.
+
 ## 2.4.1 — 2026-09-19
 
 ### Fixed

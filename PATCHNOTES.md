@@ -60,6 +60,21 @@ without.
 
 ---
 
+## 2.5.0
+
+**You gain a popover, a toggle group, a number field, a code field, a ring
+and a stepper — and an undo on any toast:**
+
+```ts
+toast.success(t('entry.deleted'), {
+  action: { label: t('common.undo'), onClick: () => restore(entry) },
+})
+```
+
+Each has a copyable sample on the [showcase](https://ramazandogna.github.io/rei-kit/#api).
+
+**Action required:** none.
+
 ## 2.4.1
 
 **You gain a `BaseReveal` that animates what is already on screen**, on

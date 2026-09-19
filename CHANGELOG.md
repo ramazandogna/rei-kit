@@ -3,6 +3,40 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.2.0 — 2026-09-19
+
+**Two lines to install.**
+
+```css
+@import 'tailwindcss';
+@import 'rei-kit/mobile.css'; /* or rei-kit/web.css */
+```
+
+### Added
+
+- **`rei-kit/mobile.css` and `rei-kit/web.css`** — presets holding the tokens,
+  the matching shell, the four materials, the ten palettes, the compiled
+  component styles, and the `@source` that tells Tailwind where the
+  components are.
+
+  That last line is the reason. Tailwind builds only the classes it has seen
+  and never looks in `node_modules` by itself, so every app had to write an
+  `@source` with the right number of `../` for wherever its stylesheet sat.
+  Getting it wrong failed nothing: the components mounted and rendered
+  unstyled. A preset's `@source` is resolved from the preset's own file, so
+  it is right wherever the app's stylesheet is. It scans only the compiled
+  JavaScript. The source maps and type declarations name classes in examples
+  no component renders, and the old path built rules for them.
+
+  The parts are still exported one by one, unchanged.
+
+- **`pnpm size` builds each preset with Tailwind's own scanning switched
+  off**, and fails if a rule from a template class, from a compiled scoped
+  style or from a kit utility is missing. Before this, a preset that stopped
+  finding the components would have passed every check. The first version of
+  the check passed too: Tailwind was finding the classes in this repository's
+  `src/` on its own.
+
 ## 2.1.0 — 2026-09-19
 
 **Held to the standards it claims.** An audit of the kit against the rules it

@@ -60,6 +60,23 @@ without.
 
 ---
 
+## 2.2.0
+
+**You gain a two-line install.**
+
+```css
+@import 'tailwindcss';
+@import 'rei-kit/mobile.css'; /* or rei-kit/web.css for a wide site */
+```
+
+That line replaces the seven you wrote before, including the `@source`
+path whose `../` depth you had to count. It brings every material and
+palette too.
+
+**Action required:** none. Your current imports keep working. To switch,
+replace them, `@source` included, with the preset line and keep your
+`@theme` after it.
+
 ## 2.1.0
 
 **You gain focus you can see and dialogs that hold, whatever your app is mounted on.**

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import CodeBlock from './CodeBlock.vue'
+import examples from './examples.generated.json'
 import catalogue from './props.generated.json'
 import PropTable from './PropTable.vue'
 
@@ -23,13 +25,17 @@ const groups = computed(() => {
     byEntry.set(component.entry, list)
   }
 
-  const ORDER = ['rei-kit', 'rei-kit/app', 'rei-kit/web', 'rei-kit/pwa']
+  const ORDER = ['rei-kit', 'rei-kit/web', 'rei-kit/app', 'rei-kit/pwa', 'rei-kit/motion']
 
   return ORDER.filter((entry) => byEntry.has(entry)).map((entry) => ({
     entry,
     items: byEntry.get(entry)!,
   }))
 })
+
+/* Every component has one — a test fails otherwise — and it is a real file,
+   type-checked with this page, so what a reader copies compiles. */
+const exampleFor = (name: string) => examples.find((example) => example.name === name)
 </script>
 
 <template>
@@ -43,10 +49,17 @@ const groups = computed(() => {
           v-for="item in group.items"
           :id="`api-${item.name}`"
           :key="item.name"
-          class="border-hair/70 rounded-card border p-4"
+          class="surface rounded-card p-4 sm:p-5"
         >
           <h4 class="text-ink font-mono text-sm">{{ item.name }}</h4>
           <p class="text-ink-soft mt-1 max-w-[68ch] text-sm leading-relaxed">{{ item.summary }}</p>
+          <CodeBlock
+            v-if="exampleFor(item.name)"
+            class="mt-4"
+            :code="exampleFor(item.name)!.ts"
+            :js="exampleFor(item.name)!.js"
+            :file="`${item.name}Example.vue`"
+          />
           <PropTable :name="item.name" />
         </article>
       </div>

@@ -3,6 +3,8 @@ import { ref } from 'vue'
 
 import { NumberTicker } from '../src/motion/index'
 import catalogue from './props.generated.json'
+import pkg from '../package.json'
+import { readableRange } from './versions'
 import {
   BaseAvatar,
   BaseBadge,
@@ -12,7 +14,6 @@ import {
   PALETTES,
   ProgressBar,
   StatCard,
-  VERSION,
   useMaterial,
   useToast,
 } from '../src/index'
@@ -40,6 +41,20 @@ async function copyInstall() {
   }
 }
 
+/* What a reader checks before anything else: will it run in my project. Read
+   from the package's own peer ranges, so it cannot fall behind them. */
+const PLATFORM = [
+  { label: `Vue ${readableRange(pkg.peerDependencies.vue)}`, detail: 'Composition API' },
+  {
+    label: `Tailwind CSS ${readableRange(pkg.peerDependencies.tailwindcss)}`,
+    detail: 'Vite plugin',
+  },
+  { label: 'TypeScript', detail: 'types included' },
+  { label: 'JavaScript', detail: 'same API' },
+  { label: 'SSR', detail: 'and prerendering' },
+  { label: 'MIT', detail: 'licence' },
+]
+
 const TAGLINE: Record<string, string> = {
   quiet: 'Calm, hairline-edged, out of the way.',
   glass: 'Frosted, lit at the rim, over colour.',
@@ -51,10 +66,14 @@ const TAGLINE: Record<string, string> = {
 <template>
   <section class="hero">
     <div class="hero-copy">
-      <p class="hero-eyebrow">
+      <a href="#hareket" class="hero-eyebrow focus-ring">
         <span class="hero-dot" aria-hidden="true" />
-        v{{ VERSION }} · Vue 3 · Tailwind 4 · MIT
-      </p>
+        <span
+          ><strong>New</strong> — counters, rotating words and reveals in
+          <code>rei-kit/motion</code></span
+        >
+        <span aria-hidden="true">→</span>
+      </a>
 
       <h1 class="hero-title">
         One kit.
@@ -74,7 +93,8 @@ const TAGLINE: Record<string, string> = {
           <span class="hero-copy-mark" aria-hidden="true">{{ copied ? '✓' : '⧉' }}</span>
         </button>
 
-        <BaseButton as="a" href="#api" size="md">Browse components</BaseButton>
+        <BaseButton as="a" href="#start" size="md">Get started</BaseButton>
+        <BaseButton as="a" href="#api" size="md" variant="secondary">Browse components</BaseButton>
       </div>
 
       <ul class="hero-facts">
@@ -90,6 +110,17 @@ const TAGLINE: Record<string, string> = {
         </li>
         <li><strong>WCAG AA</strong> in every one</li>
       </ul>
+
+      <div class="hero-platform">
+        <p class="hero-platform-title">Runs on</p>
+        <ul class="hero-platform-list">
+          <li v-for="item in PLATFORM" :key="item.label" class="hero-chip">
+            <span class="hero-check" aria-hidden="true">✓</span>
+            <span class="text-ink font-medium">{{ item.label }}</span>
+            <span class="text-ink-soft">{{ item.detail }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <!-- The whole preview is live: the same components an app imports. -->
@@ -153,13 +184,72 @@ const TAGLINE: Record<string, string> = {
 .hero-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   border-radius: 9999px;
   border: 1px solid var(--surface-border-color);
-  background: color-mix(in oklab, var(--color-surface) 60%, transparent);
-  padding: 0.3125rem 0.75rem;
-  font-size: 0.75rem;
+  background: color-mix(in oklab, var(--color-surface) 70%, transparent);
+  padding: 0.4375rem 0.9375rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
   color: var(--color-ink-soft);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.hero-eyebrow:hover {
+  border-color: var(--color-primary);
+}
+
+.hero-eyebrow strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.hero-eyebrow code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8125rem;
+  color: var(--color-primary);
+}
+
+.hero-platform {
+  margin-top: 1.75rem;
+}
+
+.hero-platform-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+
+.hero-platform-list {
+  margin-top: 0.625rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  border-radius: 9999px;
+  border: 1px solid var(--surface-border-color);
+  background: color-mix(in oklab, var(--color-surface) 70%, transparent);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.hero-check {
+  display: grid;
+  width: 1.125rem;
+  height: 1.125rem;
+  place-items: center;
+  border-radius: 9999px;
+  background: var(--color-positive);
+  color: var(--color-on-positive);
+  font-size: 0.6875rem;
+  font-weight: 700;
 }
 
 .hero-dot {

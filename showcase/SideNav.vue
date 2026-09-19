@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
+import AuthorCredit from './AuthorCredit.vue'
 import catalogue from './props.generated.json'
 
 /**
@@ -23,6 +24,7 @@ import catalogue from './props.generated.json'
  * heading that has just scrolled off is still the section you are reading.
  */
 const SECTIONS = [
+  { id: 'start', label: 'Get started' },
   { id: 'axes', label: 'Themes: materials & palettes' },
   { id: 'aksiyon', label: 'Action' },
   { id: 'hareket', label: 'Motion' },
@@ -42,6 +44,7 @@ const SECTIONS = [
   { id: 'bosluk', label: 'Empty and waiting' },
   { id: 'olcu', label: 'Metrics' },
   { id: 'api', label: 'All props' },
+  { id: 'credits', label: 'About & credits' },
 ]
 
 const ENTRY_ORDER = ['rei-kit', 'rei-kit/web', 'rei-kit/app', 'rei-kit/pwa', 'rei-kit/motion']
@@ -243,6 +246,12 @@ function go(id: string) {
         Nothing matches “{{ query }}”.
       </p>
     </div>
+
+    <!-- Pinned under the list rather than at the end of it: the list is sixty
+         items long, and a credit nobody scrolls to is not a credit. -->
+    <div class="sc-nav-credit">
+      <AuthorCredit compact />
+    </div>
   </nav>
 </template>
 
@@ -251,12 +260,16 @@ function go(id: string) {
   position: sticky;
   top: 4.5rem;
   align-self: start;
+  display: flex;
+  max-height: calc(100dvh - 6rem);
   width: 16rem;
   flex-shrink: 0;
+  flex-direction: column;
 }
 
 .sc-nav-inner {
-  max-height: calc(100dvh - 6rem);
+  min-height: 0;
+  flex: 1;
   overflow-y: auto;
   padding-right: 0.5rem;
   padding-bottom: 2rem;
@@ -357,6 +370,12 @@ function go(id: string) {
   background: var(--color-primary);
 }
 
+.sc-nav-credit {
+  flex-shrink: 0;
+  border-top: 1px solid var(--color-hair);
+  padding: 0.875rem 0.5rem 0.25rem 0.125rem;
+}
+
 .sc-nav-empty {
   padding: 0.75rem 0.125rem;
   font-size: 0.75rem;
@@ -439,13 +458,14 @@ function go(id: string) {
     transform: translateX(0);
   }
 
-  .sc-nav-inner {
-    max-height: 100%;
+  .sc-nav {
+    max-height: none;
   }
 
   /* Off screen and unreachable, not merely invisible: a closed drawer must not
      hand a Tab press to links nobody can see. */
-  .sc-nav:not(.is-open) .sc-nav-inner {
+  .sc-nav:not(.is-open) .sc-nav-inner,
+  .sc-nav:not(.is-open) .sc-nav-credit {
     visibility: hidden;
   }
 }

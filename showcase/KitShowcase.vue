@@ -6,9 +6,11 @@ import ApiReference from './ApiReference.vue'
 import AppearanceBar from './AppearanceBar.vue'
 import AxesSection from './AxesSection.vue'
 import GalleryExtra from './GalleryExtra.vue'
+import GettingStarted from './GettingStarted.vue'
 import HeroSection from './HeroSection.vue'
 import MotionSection from './MotionSection.vue'
 import SideNav from './SideNav.vue'
+import SiteFooter from './SiteFooter.vue'
 
 import {
   BaseAlert,
@@ -73,7 +75,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
 <template>
   <!-- `canvas` rather than `bg-canvas`: the utility also carries the
        material's backdrop, which is what glass has to see through. -->
-  <div class="canvas text-ink min-h-dvh pb-24">
+  <div class="canvas text-ink min-h-dvh">
     <header class="sc-header surface-raised">
       <PageContainer class="flex flex-wrap items-center gap-x-4 gap-y-3 py-3">
         <a href="#top" class="flex items-center gap-2.5 whitespace-nowrap">
@@ -83,8 +85,10 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
         </a>
 
         <nav class="hidden items-center gap-4 text-xs md:flex" aria-label="Project">
+          <a class="text-ink-soft hover:text-ink transition-colors" href="#start">Get started</a>
           <a class="text-ink-soft hover:text-ink transition-colors" href="#axes">Themes</a>
-          <a class="text-ink-soft hover:text-ink transition-colors" href="#api">API</a>
+          <a class="text-ink-soft hover:text-ink transition-colors" href="#hareket">Motion</a>
+          <a class="text-ink-soft hover:text-ink transition-colors" href="#api">Components</a>
           <a
             class="text-ink-soft hover:text-ink transition-colors"
             href="https://www.npmjs.com/package/rei-kit"
@@ -109,6 +113,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
 
     <PageContainer id="top" as="main">
       <HeroSection />
+      <GettingStarted />
       <AxesSection />
 
       <div class="mt-20 max-w-[60ch]">
@@ -370,5 +375,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
         </div>
       </div>
     </PageContainer>
+
+    <SiteFooter />
   </div>
 </template>

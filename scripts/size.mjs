@@ -36,7 +36,9 @@ const JS_CASES = [
   },
   {
     name: 'every component',
-    budget: 28,
+    // 2.5.0: six components (popover, toggle group, number, code, ring,
+    // stepper) took it from 25.6 to 29.1 KB — about 0.6 KB each.
+    budget: 32,
     code: ['index', 'web', 'app', 'pwa', 'motion']
       .map((entry) => `import * as ${entry} from '${dist(`${entry}.js`)}'\nconsole.log(${entry})`)
       .join('\n'),

@@ -15,7 +15,7 @@ read off a type: which part to reach for, and the mistakes that compile.
 
 ## What this is
 
-A Vue 3 + Tailwind 4 component kit. 59 components across six entry points,
+A Vue 3 + Tailwind 4 component kit. 65 components across six entry points,
 typed, tested, and themed by role rather than by colour — on three
 independent axes: palette, material and mode. Three apps run on it
 and no two resemble each other: [Hibi](https://github.com/ramazandogna/hibi), a
@@ -88,14 +88,14 @@ render unstyled.
 Import from the narrowest one. Each exists so an app never downloads what it
 does not use.
 
-| Entry              | What it is for                                              | Components                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rei-kit`          | What any app has                                            | `BaseAlert` `BaseAvatar` `BaseBadge` `BaseButton` `BaseCard` `BaseCheckbox` `BaseCombobox` `BaseInput` `BaseMenu` `BaseRadioGroup` `BaseSelect` `BaseSheet` `BaseSlider` `BaseSpinner` `BaseSwitch` `BaseTable` `BaseTextarea` `EmptyState` `ErrorBoundary` `FormField` `GoogleButton` `LocaleLinks` `PageContainer` `PageHeader` `PriceCard` `ProgressBar` `SectionHeading` `SegmentedControl` `SettingsGroup` `SettingsRow` `SkeletonList` `StatCard` `TabBar` `ToastHost` `ToneDot` |
-| `rei-kit/web`      | A wide site with a header and a mouse                       | `BaseAccordion` `BaseBreadcrumb` `BaseDisclosure` `BaseModal` `BasePagination` `BaseTabs` `BaseTooltip` `NavLinks`                                                                                                                                                                                                                                                                                                                                                                     |
-| `rei-kit/app`      | A phone-shaped app with tabs and a sign-in screen           | `AuthForm` `AuthShell` `FabButton` `LocaleSheet` `OfflineBanner` `TabShell` `TourShell`                                                                                                                                                                                                                                                                                                                                                                                                |
-| `rei-kit/pwa`      | Installing and updating                                     | `InstallPrompt` `InstallSettings` `UpdatePrompt`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `rei-kit/motion`   | Numbers that count, words that change, content that arrives | `NumberTicker` `CountUp` `TextRotate` `TypeWriter` `BaseReveal` `BaseMarquee`                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `rei-kit/supabase` | Optional; importing it is the opt-in                        | none — `createSupabaseClient`, `setRememberMe`, `toAuthMessageKey`                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Entry              | What it is for                                              | Components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rei-kit`          | What any app has                                            | `BaseAlert` `BaseAvatar` `BaseBadge` `BaseButton` `BaseCard` `BaseCheckbox` `BaseCombobox` `BaseInput` `BaseMenu` `BasePopover` `BaseRadioGroup` `BaseSelect` `BaseSheet` `BaseSlider` `BaseSpinner` `BaseStepper` `BaseSwitch` `BaseTable` `BaseTextarea` `CircularProgress` `EmptyState` `ErrorBoundary` `FormField` `GoogleButton` `LocaleLinks` `NumberInput` `PageContainer` `PageHeader` `PinInput` `PriceCard` `ProgressBar` `SectionHeading` `SegmentedControl` `SettingsGroup` `SettingsRow` `SkeletonList` `StatCard` `TabBar` `ToastHost` `ToggleGroup` `ToneDot` |
+| `rei-kit/web`      | A wide site with a header and a mouse                       | `BaseAccordion` `BaseBreadcrumb` `BaseDisclosure` `BaseModal` `BasePagination` `BaseTabs` `BaseTooltip` `NavLinks`                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `rei-kit/app`      | A phone-shaped app with tabs and a sign-in screen           | `AuthForm` `AuthShell` `FabButton` `LocaleSheet` `OfflineBanner` `TabShell` `TourShell`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `rei-kit/pwa`      | Installing and updating                                     | `InstallPrompt` `InstallSettings` `UpdatePrompt`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `rei-kit/motion`   | Numbers that count, words that change, content that arrives | `NumberTicker` `CountUp` `TextRotate` `TypeWriter` `BaseReveal` `BaseMarquee`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `rei-kit/supabase` | Optional; importing it is the opt-in                        | none — `createSupabaseClient`, `setRememberMe`, `toAuthMessageKey`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 A test fails if a component ships without a row here, so this table cannot fall
 behind the package the way it once did.
@@ -109,12 +109,22 @@ looks almost right.
   what you were reading and is dismissed by leaving it. A sheet arrives from
   the bottom edge, belongs to a thumb, and is pinned to the 430px shell column
   — so on a desktop it is narrow, and that is correct.
+- **`BaseMenu`, `BasePopover` or `BaseModal`.** A menu is a list of actions:
+  arrows move through it. A popover holds anything — a few settings, a
+  picker — next to the control that opened it, and the page stays usable. A
+  modal takes the whole page until it is answered.
 - **`BaseMenu` or `BaseModal`.** A short list of actions is a menu: arrows move,
   Tab _leaves_. A dialog traps Tab. Getting that backwards traps somebody in a
   list of links.
 - **`BaseSelect` or `BaseCombobox`.** Up to a few dozen options, the native
   select — it opens the platform's own picker, which on a phone no web control
   matches. Past that, when reading the list is the problem, the combobox.
+- **`SegmentedControl` or `ToggleGroup`.** A segmented control always has
+  exactly one answer — it is a set of radios. A toggle group is buttons that
+  stay pressed: one or none in `single` mode, any number in `multiple`.
+- **`NumberInput` or `BaseSlider`.** A number someone knows — a count, a
+  price — is typed or stepped. A number someone feels out along a range is
+  slid.
 - **`BaseCheckbox` or `BaseSwitch`.** A checkbox states an intention something
   else commits; a switch is the commit, with no Save after it.
 - **`BaseAccordion` or `BaseDisclosure`.** The accordion owns the list. When
@@ -126,6 +136,8 @@ looks almost right.
   is on screen. It suits a statistic on a landing page, and decimals.
 - **`ProgressBar` or `BaseSpinner`.** A bar is a promise about how long. When
   there is no amount to show, a spinner, not a bar that cannot move.
+  `CircularProgress` is either, as a ring, for a small space: with a `value`
+  it fills, without one it turns.
 - **`BaseTabs`, `TabBar` or `NavLinks`.** `BaseTabs` switches panels inside one
   page and leaves no history. `TabBar` and `NavLinks` navigate, and share one
   item shape so moving between a bottom bar and a top one is a component swap.

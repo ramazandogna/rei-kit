@@ -85,6 +85,11 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BasePagination } from 'rei-kit/web'\n\nconst page = ref(1)\n</script>\n\n<template>\n  <BasePagination\n    :page=\"page\"\n    :pages=\"12\"\n    previous-label=\"Previous\"\n    next-label=\"Next\"\n    label=\"Pages\"\n    @change=\"page = $event\"\n  />\n</template>\n"
   },
   {
+    "name": "BasePopover",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseButton, BasePopover, BaseSwitch } from 'rei-kit'\n\nconst unpaid = ref(true)\n</script>\n\n<template>\n  <BasePopover label=\"Filters\">\n    <template #trigger=\"{ props }\">\n      <BaseButton variant=\"secondary\" v-bind=\"props\">Filters</BaseButton>\n    </template>\n\n    <template #default=\"{ close }\">\n      <BaseSwitch v-model=\"unpaid\" label=\"Only unpaid\" />\n      <BaseButton class=\"mt-3\" size=\"sm\" block @click=\"close\">Done</BaseButton>\n    </template>\n  </BasePopover>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton, BasePopover, BaseSwitch } from 'rei-kit'\n\nconst unpaid = ref(true)\n</script>\n\n<template>\n  <BasePopover label=\"Filters\">\n    <template #trigger=\"{ props }\">\n      <BaseButton variant=\"secondary\" v-bind=\"props\">Filters</BaseButton>\n    </template>\n\n    <template #default=\"{ close }\">\n      <BaseSwitch v-model=\"unpaid\" label=\"Only unpaid\" />\n      <BaseButton class=\"mt-3\" size=\"sm\" block @click=\"close\">Done</BaseButton>\n    </template>\n  </BasePopover>\n</template>\n"
+  },
+  {
     "name": "BaseRadioGroup",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseRadioGroup } from 'rei-kit'\n\nconst plan = ref('monthly')\nconst plans = [\n  { value: 'monthly', label: 'Monthly' },\n  { value: 'yearly', label: 'Yearly' },\n]\n</script>\n\n<template>\n  <BaseRadioGroup v-model=\"plan\" legend=\"Plan\" :options=\"plans\" />\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseRadioGroup } from 'rei-kit'\n\nconst plan = ref('monthly')\nconst plans = [\n  { value: 'monthly', label: 'Monthly' },\n  { value: 'yearly', label: 'Yearly' },\n]\n</script>\n\n<template>\n  <BaseRadioGroup v-model=\"plan\" legend=\"Plan\" :options=\"plans\" />\n</template>\n"
@@ -115,6 +120,11 @@
     "js": "<script setup>\nimport { BaseSpinner } from 'rei-kit'\n</script>\n\n<template>\n  <BaseSpinner label=\"Loading entries\" />\n</template>\n"
   },
   {
+    "name": "BaseStepper",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseButton, BaseStepper } from 'rei-kit'\n\nconst steps = [\n  { key: 'account', label: 'Account' },\n  { key: 'plan', label: 'Plan' },\n  { key: 'payment', label: 'Payment' },\n] as const\nconst step = ref<(typeof steps)[number]['key']>('plan')\n</script>\n\n<template>\n  <BaseStepper\n    v-model=\"step\"\n    :steps=\"steps\"\n    label=\"Sign-up\"\n    interactive\n    :state-labels=\"{ complete: 'done', error: 'needs attention' }\"\n  />\n  <BaseButton class=\"mt-4\" @click=\"step = 'payment'\">Next</BaseButton>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton, BaseStepper } from 'rei-kit'\n\nconst steps = [\n  { key: 'account', label: 'Account' },\n  { key: 'plan', label: 'Plan' },\n  { key: 'payment', label: 'Payment' },\n]\nconst step = ref('plan')\n</script>\n\n<template>\n  <BaseStepper\n    v-model=\"step\"\n    :steps=\"steps\"\n    label=\"Sign-up\"\n    interactive\n    :state-labels=\"{ complete: 'done', error: 'needs attention' }\"\n  />\n  <BaseButton class=\"mt-4\" @click=\"step = 'payment'\">Next</BaseButton>\n</template>\n"
+  },
+  {
     "name": "BaseSwitch",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseSwitch } from 'rei-kit'\n\nconst reminders = ref(true)\n</script>\n\n<template>\n  <BaseSwitch v-model=\"reminders\" label=\"Daily reminder\" hint=\"Every evening at 21:00\" />\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseSwitch } from 'rei-kit'\n\nconst reminders = ref(true)\n</script>\n\n<template>\n  <BaseSwitch v-model=\"reminders\" label=\"Daily reminder\" hint=\"Every evening at 21:00\" />\n</template>\n"
@@ -138,6 +148,11 @@
     "name": "BaseTooltip",
     "ts": "<script setup lang=\"ts\">\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n</template>\n",
     "js": "<script setup>\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n</template>\n"
+  },
+  {
+    "name": "CircularProgress",
+    "ts": "<script setup lang=\"ts\">\nimport { CircularProgress } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <CircularProgress :value=\"72\" label=\"Upload\" show-value size=\"lg\" />\n    <CircularProgress label=\"Loading\" />\n  </div>\n</template>\n",
+    "js": "<script setup>\nimport { CircularProgress } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <CircularProgress :value=\"72\" label=\"Upload\" show-value size=\"lg\" />\n    <CircularProgress label=\"Loading\" />\n  </div>\n</template>\n"
   },
   {
     "name": "CountUp",
@@ -195,6 +210,11 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { NavLinks } from 'rei-kit/web'\n\nconst active = ref('docs')\nconst links = [\n  { key: 'docs', to: '/docs', label: 'Docs' },\n  { key: 'blog', to: '/blog', label: 'Blog' },\n]\n</script>\n\n<template>\n  <NavLinks :items=\"links\" :active=\"active\" label=\"Main\" />\n</template>\n"
   },
   {
+    "name": "NumberInput",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { NumberInput } from 'rei-kit'\n\nconst guests = ref<number | undefined>(2)\n</script>\n\n<template>\n  <NumberInput\n    v-model=\"guests\"\n    label=\"Guests\"\n    :min=\"1\"\n    :max=\"12\"\n    decrement-label=\"Fewer guests\"\n    increment-label=\"More guests\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { NumberInput } from 'rei-kit'\n\nconst guests = ref(2)\n</script>\n\n<template>\n  <NumberInput\n    v-model=\"guests\"\n    label=\"Guests\"\n    :min=\"1\"\n    :max=\"12\"\n    decrement-label=\"Fewer guests\"\n    increment-label=\"More guests\"\n  />\n</template>\n"
+  },
+  {
     "name": "NumberTicker",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { NumberTicker } from 'rei-kit/motion'\n\nconst balance = ref(48200)\n</script>\n\n<template>\n  <NumberTicker :value=\"balance\" :format=\"{ style: 'currency', currency: 'TRY' }\" />\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { NumberTicker } from 'rei-kit/motion'\n\nconst balance = ref(48200)\n</script>\n\n<template>\n  <NumberTicker :value=\"balance\" :format=\"{ style: 'currency', currency: 'TRY' }\" />\n</template>\n"
@@ -213,6 +233,11 @@
     "name": "PageHeader",
     "ts": "<script setup lang=\"ts\">\nimport { BaseButton, PageHeader } from 'rei-kit'\n</script>\n\n<template>\n  <PageHeader title=\"Settings\">\n    <template #right>\n      <BaseButton size=\"sm\" variant=\"ghost\">Done</BaseButton>\n    </template>\n  </PageHeader>\n</template>\n",
     "js": "<script setup>\nimport { BaseButton, PageHeader } from 'rei-kit'\n</script>\n\n<template>\n  <PageHeader title=\"Settings\">\n    <template #right>\n      <BaseButton size=\"sm\" variant=\"ghost\">Done</BaseButton>\n    </template>\n  </PageHeader>\n</template>\n"
+  },
+  {
+    "name": "PinInput",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { PinInput } from 'rei-kit'\n\nconst code = ref('')\n\nfunction verify(value: string) {\n  // Send the code — it fires once, when the last box is filled.\n  console.log(value)\n}\n</script>\n\n<template>\n  <PinInput\n    v-model=\"code\"\n    label=\"Verification code\"\n    :cell-label=\"(n, total) => `Digit ${n} of ${total}`\"\n    @complete=\"verify\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { PinInput } from 'rei-kit'\n\nconst code = ref('')\n\nfunction verify(value) {\n  // Send the code — it fires once, when the last box is filled.\n  console.log(value)\n}\n</script>\n\n<template>\n  <PinInput\n    v-model=\"code\"\n    label=\"Verification code\"\n    :cell-label=\"(n, total) => `Digit ${n} of ${total}`\"\n    @complete=\"verify\"\n  />\n</template>\n"
   },
   {
     "name": "PriceCard",
@@ -273,6 +298,11 @@
     "name": "ToastHost",
     "ts": "<script setup lang=\"ts\">\nimport { BaseButton, ToastHost, useToast } from 'rei-kit'\n\nconst toast = useToast()\n</script>\n\n<template>\n  <!-- Once, near the root of the app. -->\n  <ToastHost close-label=\"Close\" />\n\n  <BaseButton @click=\"toast.success('Saved')\">Save</BaseButton>\n</template>\n",
     "js": "<script setup>\nimport { BaseButton, ToastHost, useToast } from 'rei-kit'\n\nconst toast = useToast()\n</script>\n\n<template>\n  <!-- Once, near the root of the app. -->\n  <ToastHost close-label=\"Close\" />\n\n  <BaseButton @click=\"toast.success('Saved')\">Save</BaseButton>\n</template>\n"
+  },
+  {
+    "name": "ToggleGroup",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Bold, Italic, Underline } from 'lucide-vue-next'\nimport { ToggleGroup } from 'rei-kit'\n\nconst marks = ref<string[]>([])\nconst marksOptions = [\n  { value: 'bold', label: 'Bold', icon: Bold, iconOnly: true },\n  { value: 'italic', label: 'Italic', icon: Italic, iconOnly: true },\n  { value: 'underline', label: 'Underline', icon: Underline, iconOnly: true },\n]\n</script>\n\n<template>\n  <ToggleGroup v-model=\"marks\" mode=\"multiple\" :options=\"marksOptions\" label=\"Text style\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { Bold, Italic, Underline } from 'lucide-vue-next'\nimport { ToggleGroup } from 'rei-kit'\n\nconst marks = ref([])\nconst marksOptions = [\n  { value: 'bold', label: 'Bold', icon: Bold, iconOnly: true },\n  { value: 'italic', label: 'Italic', icon: Italic, iconOnly: true },\n  { value: 'underline', label: 'Underline', icon: Underline, iconOnly: true },\n]\n</script>\n\n<template>\n  <ToggleGroup v-model=\"marks\" mode=\"multiple\" :options=\"marksOptions\" label=\"Text style\" />\n</template>\n"
   },
   {
     "name": "ToneDot",

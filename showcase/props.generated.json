@@ -622,6 +622,34 @@
     ]
   },
   {
+    "name": "BasePopover",
+    "entry": "rei-kit",
+    "summary": "A panel of anything — a form, a picker, a few settings — anchored to the control that opened it.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The panel's accessible name — what a screen reader announces on open.",
+        "default": ""
+      },
+      {
+        "name": "side",
+        "required": false,
+        "type": "'bottom' | 'top'",
+        "description": "Where it prefers to open. It flips when there is no room there.",
+        "default": "'bottom'"
+      },
+      {
+        "name": "align",
+        "required": false,
+        "type": "'start' | 'center' | 'end'",
+        "description": "Which edge of the trigger the panel lines up with.",
+        "default": "'start'"
+      }
+    ]
+  },
+  {
     "name": "BaseRadioGroup",
     "entry": "rei-kit",
     "summary": "A set of radios, and the reason there is no `BaseRadio`.",
@@ -881,6 +909,48 @@
     ]
   },
   {
+    "name": "BaseStepper",
+    "entry": "rei-kit",
+    "summary": "Where someone is in a process of several steps — a sign-up, a checkout, a form split into pages.",
+    "props": [
+      {
+        "name": "steps",
+        "required": true,
+        "type": "readonly StepperStep<K>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The list's accessible name, e.g. \"Checkout\".",
+        "default": ""
+      },
+      {
+        "name": "orientation",
+        "required": false,
+        "type": "'horizontal' | 'vertical'",
+        "description": "",
+        "default": "'horizontal'"
+      },
+      {
+        "name": "interactive",
+        "required": false,
+        "type": "boolean",
+        "description": "Completed steps become buttons that go back to them.",
+        "default": "false"
+      },
+      {
+        "name": "stateLabels",
+        "required": false,
+        "type": "{ complete: string; error: string }",
+        "description": "Read to a screen reader after a step's label: `{ complete: 'done', error: 'needs attention' }`.",
+        "default": "undefined"
+      }
+    ]
+  },
+  {
     "name": "BaseSwitch",
     "entry": "rei-kit",
     "summary": "A setting that takes effect the moment it is touched.",
@@ -1059,6 +1129,55 @@
         "type": "'top' | 'bottom'",
         "description": "",
         "default": "'top'"
+      }
+    ]
+  },
+  {
+    "name": "CircularProgress",
+    "entry": "rei-kit",
+    "summary": "Progress as a ring — for a small space, a card's corner, a goal.",
+    "props": [
+      {
+        "name": "value",
+        "required": false,
+        "type": "number",
+        "description": "How far. Leave it out while there is nothing to measure.",
+        "default": "undefined"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "100"
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The accessible name, e.g. \"Upload\". Required: a ring says nothing aloud on its own.",
+        "default": ""
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "",
+        "default": "'md'"
+      },
+      {
+        "name": "showValue",
+        "required": false,
+        "type": "boolean",
+        "description": "The rounded percentage inside the ring.",
+        "default": "false"
+      },
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'primary' | 'accent' | 'positive' | 'warning' | 'negative'",
+        "description": "",
+        "default": "'primary'"
       }
     ]
   },
@@ -1427,6 +1546,90 @@
     ]
   },
   {
+    "name": "NumberInput",
+    "entry": "rei-kit",
+    "summary": "A number, typed or stepped — a quantity, a price, a count of minutes.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "min",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "-Infinity"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "Infinity"
+      },
+      {
+        "name": "step",
+        "required": false,
+        "type": "number",
+        "description": "One press of a button or an arrow key. Its decimals set the rounding.",
+        "default": "1"
+      },
+      {
+        "name": "decrementLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name of the minus button, e.g. \"Decrease\".",
+        "default": ""
+      },
+      {
+        "name": "incrementLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name of the plus button, e.g. \"Increase\".",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "",
+        "default": "'md'"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      }
+    ]
+  },
+  {
     "name": "NumberTicker",
     "entry": "rei-kit/motion",
     "summary": "A number whose digits roll to their new value, like an odometer or a note counter.",
@@ -1507,6 +1710,62 @@
         "type": "string",
         "description": "",
         "default": ""
+      }
+    ]
+  },
+  {
+    "name": "PinInput",
+    "entry": "rei-kit",
+    "summary": "A short code typed one character per box — a sign-in code, a PIN.",
+    "props": [
+      {
+        "name": "length",
+        "required": false,
+        "type": "number",
+        "description": "How many characters.",
+        "default": "6"
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The group's accessible name, e.g. \"Verification code\".",
+        "default": ""
+      },
+      {
+        "name": "cellLabel",
+        "required": true,
+        "type": "(position: number, total: number) => string",
+        "description": "Each box's accessible name, from its 1-based position: `(n, total) => \\`Digit ${n} of ${total}\\``.",
+        "default": ""
+      },
+      {
+        "name": "type",
+        "required": false,
+        "type": "'numeric' | 'alphanumeric'",
+        "description": "`numeric` takes digits and opens the number pad; `alphanumeric` takes letters too.",
+        "default": "'numeric'"
+      },
+      {
+        "name": "mask",
+        "required": false,
+        "type": "boolean",
+        "description": "Show dots instead of the characters, for a PIN.",
+        "default": "false"
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "A message under the boxes; also marks them invalid.",
+        "default": "''"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
       }
     ]
   },
@@ -1856,6 +2115,48 @@
         "type": "boolean",
         "description": "Stack from the bottom instead of the top. For a phone shell, where the top is a status bar and a header and the thumb is nowhere near it.",
         "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "ToggleGroup",
+    "entry": "rei-kit",
+    "summary": "A row of buttons that stay pressed — one at a time, or several at once.",
+    "props": [
+      {
+        "name": "options",
+        "required": true,
+        "type": "readonly { value: V /** Visible text — or, with an icon and `iconOnly`, the accessible name. */ label: string icon?: Component | undefined /** Show the icon alone. The label becomes the button's accessible name. */ iconOnly?: boolean | undefined disabled?: boolean | undefined }[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The group's accessible name.",
+        "default": ""
+      },
+      {
+        "name": "mode",
+        "required": false,
+        "type": "M",
+        "description": "`single`: at most one pressed. `multiple`: any number.",
+        "default": "'single' as M"
+      },
+      {
+        "name": "required",
+        "required": false,
+        "type": "boolean",
+        "description": "In `single` mode, never let the last pressed button go.",
+        "default": "false"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "",
+        "default": "'md'"
       }
     ]
   },

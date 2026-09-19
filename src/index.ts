@@ -80,7 +80,7 @@ export { useDragScroll } from './composables/use-drag-scroll'
 export { useMediaQuery } from './composables/use-media-query'
 export { useVisualViewport } from './composables/use-visual-viewport'
 export { useToast } from './composables/use-toast'
-export type { Toast, ToastOptions, ToastTone } from './composables/use-toast'
+export type { Toast, ToastAction, ToastOptions, ToastTone } from './composables/use-toast'
 export type { VisualViewportRect } from './composables/use-visual-viewport'
 
 // ── Components ─────────────────────────────────────────────────────────────
@@ -123,6 +123,14 @@ export { default as LocaleLinks } from './components/LocaleLinks.vue'
 export { default as GoogleButton } from './components/GoogleButton.vue'
 export { default as TabBar } from './components/TabBar.vue'
 export type { TabItem } from './components/TabBar.vue'
+export { default as BasePopover } from './components/BasePopover.vue'
+export type { PopoverTriggerProps } from './components/BasePopover.vue'
+export { default as ToggleGroup } from './components/ToggleGroup.vue'
+export { default as NumberInput } from './components/NumberInput.vue'
+export { default as PinInput } from './components/PinInput.vue'
+export { default as CircularProgress } from './components/CircularProgress.vue'
+export { default as BaseStepper } from './components/BaseStepper.vue'
+export type { StepperStep } from './components/BaseStepper.vue'
 
 // ── i18n ───────────────────────────────────────────────────────────────────
 export { createI18nRuntime } from './i18n/runtime'

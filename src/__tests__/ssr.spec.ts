@@ -174,3 +174,36 @@ describe('server rendering, rei-kit/motion', () => {
     expect(await render(BaseMarquee, {})).toContain('rk-marquee-track')
   })
 })
+
+describe('server rendering, the second wave', () => {
+  it('renders the popover closed, and the new fields and indicators at rest', async () => {
+    const { BasePopover, BaseStepper, CircularProgress, NumberInput, PinInput, ToggleGroup } =
+      await import('../index')
+
+    expect(await render(BasePopover, { label: 'Filtreler' })).not.toContain('role="dialog"')
+    expect(
+      await render(ToggleGroup, { label: 'Biçim', options: [{ value: 'b', label: 'Kalın' }] }),
+    ).toContain('aria-pressed="false"')
+    expect(
+      await render(NumberInput, {
+        label: 'Adet',
+        decrementLabel: 'Azalt',
+        incrementLabel: 'Artır',
+        modelValue: 3,
+      }),
+    ).toContain('role="spinbutton"')
+    expect(
+      await render(PinInput, { label: 'Kod', cellLabel: (n: number) => `${n}. hane` }),
+    ).toContain('one-time-code')
+    expect(await render(CircularProgress, { label: 'Yükleme', value: 40 })).toContain(
+      'aria-valuenow="40"',
+    )
+    expect(
+      await render(BaseStepper, {
+        label: 'Kayıt',
+        steps: [{ key: 'a', label: 'Hesap' }],
+        modelValue: 'a',
+      }),
+    ).toContain('aria-current="step"')
+  })
+})

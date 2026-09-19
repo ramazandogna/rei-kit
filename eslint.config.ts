@@ -27,6 +27,17 @@ export default defineConfigWithVueTs(
   },
 
   {
+    name: 'kit/test-harnesses',
+    files: ['src/**/__tests__/*'],
+    rules: {
+      // A behaviour test mounts the component inside a small harness that
+      // owns its v-model. Those harnesses belong next to the test that uses
+      // them, not in files of their own.
+      'vue/one-component-per-file': 'off',
+    },
+  },
+
+  {
     name: 'kit/typed-props',
     files: ['**/*.vue'],
     rules: {

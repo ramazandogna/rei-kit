@@ -79,13 +79,13 @@ function onKeydown(event: KeyboardEvent) {
     <div class="rk-tabs" role="tablist" :aria-label="label || undefined" @keydown="onKeydown">
       <button
         v-for="item in items"
+        :id="tabId(item.key)"
         :key="item.key"
         ref="tabs"
         type="button"
         role="tab"
         class="rk-tab"
         :class="{ 'is-active': item.key === active }"
-        :id="tabId(item.key)"
         :aria-selected="item.key === active"
         :aria-controls="panelId(item.key)"
         :tabindex="item.key === active ? 0 : -1"
@@ -98,10 +98,10 @@ function onKeydown(event: KeyboardEvent) {
     <div
       v-for="item in items"
       v-show="item.key === active"
+      :id="panelId(item.key)"
       :key="item.key"
       role="tabpanel"
       class="rk-tabpanel"
-      :id="panelId(item.key)"
       :aria-labelledby="tabId(item.key)"
       tabindex="0"
     >

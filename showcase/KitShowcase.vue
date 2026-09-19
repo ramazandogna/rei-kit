@@ -106,7 +106,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
       <ToastHost close-label="Close" />
     </header>
 
-    <PageContainer as="main" id="top">
+    <PageContainer id="top" as="main">
       <HeroSection />
       <AxesSection />
 

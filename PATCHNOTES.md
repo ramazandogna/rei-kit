@@ -60,6 +60,19 @@ without.
 
 ---
 
+## 2.1.0
+
+**You gain focus you can see and dialogs that hold, whatever your app is mounted on.**
+
+- Moving through a `SegmentedControl` with Tab shows where you are now.
+- `BaseSheet`, `BaseModal` and `TourShell` take the page behind them out of
+  reach even when the app is not mounted on `#app`, and a closed sheet gives
+  focus back to what opened it.
+- `focus-ring` — one utility for the focus ring of any control you draw
+  yourself: `<button class="focus-ring …">`.
+
+**Action required:** none.
+
 ## 2.0.0
 
 **You gain the whole look of the kit as two attributes.**

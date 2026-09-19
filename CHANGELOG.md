@@ -3,6 +3,48 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.1.0 — 2026-09-19
+
+**Held to the standards it claims.** An audit of the kit against the rules it
+had written down, the gaps it found closed, and each rule tied to a check that
+fails, so the README can say which standards the kit meets and point at the
+proof.
+
+### Added
+
+- **`focus-ring`** — the keyboard focus ring as one utility, for any control
+  an app draws by hand. Only on `:focus-visible`, so a mouse click draws
+  nothing.
+- **A size budget.** `pnpm size` bundles a one-button app, a three-part app
+  and an app using everything, measures them the way an app's production
+  build would, and fails `check` past a line. A module that drags the whole
+  barrel in with a stray side effect is now caught the day it lands.
+- **`bench/`** — the same three components bundled with rei-kit, Element
+  Plus, Naive UI, PrimeVue, Ant Design Vue and Vuetify, each set up the way its
+  own docs set it up first, styles included. Versions pinned; anyone can run
+  it. Its numbers are the ones in the README.
+
+### Fixed
+
+- **`SegmentedControl` showed no focus at all.** Its real input is visually
+  hidden, and the visible pill was never told it had focus, so moving through
+  it with Tab showed nothing. It now takes the input's focus with `peer`.
+  `GoogleButton`, `LocaleLinks` and `TabBar` relied on whatever the browser
+  drew by default, which the materials can hide; they carry `focus-ring` now.
+  A test reads every component for both rules.
+- **Sheets and the guide took `#app` out of reach, and only `#app`.** That is
+  the id Vite's template happens to use, not one the kit can count on: an app
+  mounted on `#root` got a sheet whose background was still reachable with
+  Tab. `BaseSheet`, `TourShell` and now `BaseModal` share one helper that
+  makes everything outside the layer inert, whatever the app is mounted on,
+  never releases what the app made inert itself, and holds the page until the
+  last of several stacked layers closes.
+- **Closing a sheet dropped focus on the body.** Focus was handed back before
+  the page stopped being inert, and an inert element cannot take it. The page
+  is released first now.
+- **`BaseModal` trapped Tab but not a screen reader's virtual cursor**, which
+  walks past keydown handlers. It makes the page inert as well.
+
 ## 2.0.0 — 2026-09-19
 
 **One kit, every look.** Materials and palettes: the whole appearance of the

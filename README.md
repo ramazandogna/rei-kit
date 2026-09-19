@@ -78,9 +78,52 @@ A part is finished when three things are true:
 imports the kit's version of it. That is a bug in the kit, every time. Not in
 the app, and not a matter of taste.
 
+## Small, and measured
+
+A button, a text input and a modal: the three parts every product has.
+Bundled with each kit and set up the way its own docs recommend first, with
+styles included and Vue left out. Minified, gzip -9:
+
+| Kit                  |         JS |         CSS |       Total |
+| -------------------- | ---------: | ----------: | ----------: |
+| **rei-kit 2.1.0**    | **3.1 KB** | **12.1 KB** | **15.2 KB** |
+| element-plus 2.14.6  |    27.3 KB |      6.0 KB |     33.3 KB |
+| naive-ui 2.45.3      |    51.2 KB |           — |     51.2 KB |
+| primevue 5.0.1       |    53.6 KB |           — |     53.6 KB |
+| ant-design-vue 4.2.6 |    70.3 KB |           — |     70.3 KB |
+| vuetify 4.2.1        |    44.0 KB |     34.3 KB |     78.4 KB |
+
+rei-kit's CSS column is the stylesheet for **every** component, with all four
+materials available; the JavaScript is only what the three need, because each
+component is its own tree-shakeable module and there are no runtime
+dependencies. Naive UI, PrimeVue and Ant Design put their styles in the
+JavaScript. Run it yourself: `cd bench && npm install && npm run bench`.
+Nuxt UI is left out because it builds through its own Nuxt or Vite module and
+cannot be bundled the same way.
+
+The kit's own sizes are a budget, not a boast: `pnpm size` bundles a
+one-button app, the three-part app and an app using everything, and `check`
+fails when one grows past its line.
+
+## Built to standards
+
+Each claim here is enforced by something that fails, not by a promise.
+
+| Standard                                 | How it is held                                                                                                                                                                                             |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Open for extension, closed for edits** | A new look is a token, a material or a palette — never an edit to a component. Materials and palettes restyle all 53 without touching one, and a test fails if a component holds a colour.                 |
+| **Single responsibility**                | One part, one job. Label-and-error wiring lives in `FormField`, not in five inputs; taking the page behind a layer out of reach lives in one helper the modal, the sheet and the guide share.              |
+| **Depend on roles, not values**          | Components read `primary`, `surface`, `--shadow-card` — never a hex or a pixel shadow. An app's brand wins in both modes, tested.                                                                          |
+| **WAI-ARIA Authoring Practices**         | Menus, comboboxes, tabs, sliders, dialogs and accordions follow their APG pattern: arrows move, Tab leaves, Escape closes, focus returns. Behaviour tests drive each with the keyboard.                    |
+| **WCAG 2.2 AA**                          | Every palette pairing measured in both modes. Every control the kit draws has a visible focus ring, checked by a test. Reduced motion and reduced transparency are honoured by every material.             |
+| **TypeScript, strict**                   | `strict`, `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`, no `any` and no suppressed errors in the source. Declarations ship with the package, so JavaScript projects get the same autocomplete. |
+| **Semantic Versioning**                  | Every export is named in a test. A minor adds, a patch fixes; a change to what a component renders waits for a major, and the three apps' full test suites run against the packed tarball.                 |
+| **Server rendering**                     | No module touches `window` or `document` on import. One app is prerendered with it on every build.                                                                                                         |
+| **Supply chain**                         | No runtime dependencies. Published from CI with npm provenance, so every version is traceable to the commit that built it.                                                                                 |
+
 ## Status
 
-**v2.0.0 — three consumers.**
+**v2.1.0 — three consumers.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

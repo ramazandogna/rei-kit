@@ -1,0 +1,11 @@
+{
+  "//": "The kit and every usage sample under vue-tsc's strictest template checks: an unknown prop, attribute or event is an error, as it is in an app that turns this on.",
+  "extends": "./tsconfig.showcase.json",
+  "include": ["showcase/examples/**/*", "showcase/env.d.ts", "src/**/*", "src/**/*.vue"],
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.strict.tsbuildinfo"
+  },
+  "vueCompilerOptions": {
+    "strictTemplates": true
+  }
+}

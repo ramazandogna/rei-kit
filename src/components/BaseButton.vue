@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { HTMLAttributes } from 'vue'
 
 /**
  * The kit's button, and — when asked — its link.
@@ -28,72 +29,78 @@ const {
   pressed = undefined,
   to = undefined,
   href = undefined,
-} = defineProps<{
-  /** What to render. `button` unless this navigates. */
-  as?: 'button' | 'a' | 'router-link' | undefined
-  /**
-   * `link` is a real action that should read as text — "clear this note",
-   * "remove", "change category". It has no surface at all, so it also has no
-   * height and no padding: giving it either would make it a ghost button,
-   * which is a different thing and was already here.
-   */
-  variant?:
-    | 'primary'
-    | 'secondary'
-    | 'ghost'
-    | 'quiet'
-    | 'destructive'
-    | 'row'
-    | 'danger'
-    | 'positive'
-    | 'warning'
-    | 'accent'
-    | 'link'
-    | 'unstyled'
-    | undefined
-  /** `xs` is the action inside a prompt or a nudge, not on a page. */
-  size?: 'xs' | 'sm' | 'md' | 'lg' | undefined
-  loading?: boolean | undefined
-  disabled?: boolean | undefined
-  /** Ignored unless `as` is `button`. */
-  type?: 'button' | 'submit' | undefined
-  /**
-   * Square, sized to its icon, with no label beside it.
-   *
-   * **Pass `aria-label`.** An icon on its own has no accessible name, and a
-   * control a screen reader announces as "button" is not usable. Attributes
-   * fall through, so `aria-label` lands where it should — nothing here can
-   * check that you passed one, which is why it is said this loudly.
-   */
-  icon?: boolean | undefined
-  /** Fills its container. The ordinary case under a form. */
-  block?: boolean | undefined
-  /** For `as="router-link"`. */
-  to?: string | Record<string, unknown> | undefined
-  /** For `as="a"`. */
-  href?: string | undefined
-  /**
-   * Fully rounded rather than card-cornered.
-   *
-   * Every install prompt, update prompt and nudge across the apps used the
-   * same pair — a filled pill to act and a quiet one to dismiss — and none of
-   * them could use this component, because it only knew one corner radius.
-   */
-  pill?: boolean | undefined
-  /**
-   * That this button is a switch, and whether it is on.
-   *
-   * Omit it and the button is an action. Pass it and the button becomes a
-   * toggle: `aria-pressed` is written, and the variants that have an "off"
-   * look — ghost, quiet, secondary — take a filled one when on.
-   *
-   * There were 18 of these hand-written across the three apps, every one a
-   * picker cell or a filter chip, and almost none of them said `aria-pressed`
-   * at all. A screen reader met a row of identical buttons with no way to know
-   * which was chosen.
-   */
-  pressed?: boolean | undefined
-}>()
+} = defineProps<
+  {
+    /** What to render. `button` unless this navigates. */
+    as?: 'button' | 'a' | 'router-link' | undefined
+    /**
+     * `link` is a real action that should read as text — "clear this note",
+     * "remove", "change category". It has no surface at all, so it also has no
+     * height and no padding: giving it either would make it a ghost button,
+     * which is a different thing and was already here.
+     */
+    variant?:
+      | 'primary'
+      | 'secondary'
+      | 'ghost'
+      | 'quiet'
+      | 'destructive'
+      | 'row'
+      | 'danger'
+      | 'positive'
+      | 'warning'
+      | 'accent'
+      | 'link'
+      | 'unstyled'
+      | undefined
+    /** `xs` is the action inside a prompt or a nudge, not on a page. */
+    size?: 'xs' | 'sm' | 'md' | 'lg' | undefined
+    loading?: boolean | undefined
+    disabled?: boolean | undefined
+    /** Ignored unless `as` is `button`. */
+    type?: 'button' | 'submit' | undefined
+    /**
+     * Square, sized to its icon, with no label beside it.
+     *
+     * **Pass `aria-label`.** An icon on its own has no accessible name, and a
+     * control a screen reader announces as "button" is not usable. Attributes
+     * fall through, so `aria-label` lands where it should — nothing here can
+     * check that you passed one, which is why it is said this loudly.
+     */
+    icon?: boolean | undefined
+    /** Fills its container. The ordinary case under a form. */
+    block?: boolean | undefined
+    /** For `as="router-link"`. */
+    to?: string | Record<string, unknown> | undefined
+    /** For `as="a"`. */
+    href?: string | undefined
+    /**
+     * Fully rounded rather than card-cornered.
+     *
+     * Every install prompt, update prompt and nudge across the apps used the
+     * same pair — a filled pill to act and a quiet one to dismiss — and none of
+     * them could use this component, because it only knew one corner radius.
+     */
+    pill?: boolean | undefined
+    /**
+     * That this button is a switch, and whether it is on.
+     *
+     * Omit it and the button is an action. Pass it and the button becomes a
+     * toggle: `aria-pressed` is written, and the variants that have an "off"
+     * look — ghost, quiet, secondary — take a filled one when on.
+     *
+     * There were 18 of these hand-written across the three apps, every one a
+     * picker cell or a filter chip, and almost none of them said `aria-pressed`
+     * at all. A screen reader met a row of identical buttons with no way to know
+     * which was chosen.
+     */
+    pressed?: boolean | undefined
+    /* The root element's own attributes and listeners — `@click`, `aria-label`,
+     `role` — typed for editors and for vue-tsc's strictTemplates, where an
+     undeclared one is an error. `@vue-ignore` keeps them out of the runtime
+     props, so they still fall through to the element as before. */
+  } & /* @vue-ignore */ HTMLAttributes
+>()
 
 const VARIANT_CLASS = {
   primary: 'bg-primary text-on-primary shadow-(--shadow-control) hover:bg-primary/90',

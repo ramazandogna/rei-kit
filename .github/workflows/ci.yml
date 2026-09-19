@@ -35,6 +35,8 @@ jobs:
       # object for months, and nothing that type-checked ever looked at it.
       - name: Showcase types
         run: pnpm type-check:showcase
+      - name: Type-check under strictTemplates
+        run: pnpm type-check:strict
       - name: Tests
         run: pnpm test:ci
       - name: Build

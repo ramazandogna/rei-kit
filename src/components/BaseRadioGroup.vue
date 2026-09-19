@@ -26,7 +26,11 @@ const {
   legendHidden?: boolean | undefined
 }>()
 
-const model = defineModel<string | undefined>()
+/* An empty string by default, which is what an empty field holds anyway. It
+   also types what this emits as a string: without a default Vue types it as
+   possibly undefined, and under strictTemplates a `ref('')` could not take
+   it. */
+const model = defineModel<string>({ default: '' })
 
 const id = useId()
 const errorId = `${id}-error`

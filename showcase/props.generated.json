@@ -414,7 +414,7 @@
   {
     "name": "BaseInput",
     "entry": "rei-kit",
-    "summary": "A number field's value is a number.",
+    "summary": "A text field with its label, hint and error already wired to it.",
     "props": [
       {
         "name": "label",

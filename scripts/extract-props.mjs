@@ -24,10 +24,18 @@ function vueFiles(dir) {
   return out
 }
 
-/** The block between `defineProps<{` and its matching `}>()`. */
+/**
+ * The block between `defineProps<{` and its matching `}`.
+ *
+ * The brace may sit on the next line: a component that also types its root
+ * element's native attributes writes `defineProps<{ … } & HTMLAttributes>()`,
+ * and the formatter breaks that after the `<`. Only the literal is read —
+ * the native attributes are the element's, not the component's.
+ */
 function propsBlock(source) {
-  const start = source.indexOf('defineProps<{')
-  if (start === -1) return null
+  const match = /defineProps<\s*\{/.exec(source)
+  if (!match) return null
+  const start = match.index
 
   let depth = 0
   for (let i = start + 'defineProps<'.length; i < source.length; i++) {

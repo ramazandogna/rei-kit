@@ -47,6 +47,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./mobile.css": "./dist/mobile.css",
+    "./web.css": "./dist/web.css",
     "./tokens.css": "./dist/tokens.css",
     "./shell/mobile.css": "./dist/shell/mobile.css",
     "./shell/web.css": "./dist/shell/web.css",

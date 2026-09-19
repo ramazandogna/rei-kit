@@ -105,8 +105,48 @@ describe('the exports map', () => {
   it('offers every stylesheet the kit ships', () => {
     // A file in src/styles that nothing can import is a file that does not
     // exist as far as a consumer is concerned.
-    for (const entry of ['./tokens.css', './shell/mobile.css', './shell/web.css', './styles.css']) {
+    for (const entry of [
+      './mobile.css',
+      './web.css',
+      './tokens.css',
+      './shell/mobile.css',
+      './shell/web.css',
+      './materials.css',
+      './palettes.css',
+      './styles.css',
+    ]) {
       expect(pkg.exports, `${entry} is not in the exports map`).toHaveProperty(entry)
     }
+  })
+})
+
+describe('the presets', () => {
+  const presets = { mobile: read('../styles/mobile.css'), web: read('../styles/web.css') }
+  const imports = (css: string) =>
+    [...css.matchAll(/^@import '([^']+)';/gm)].map(([, path]) => path)
+
+  it.each(Object.entries(presets))('%s brings every part, and its own shell only', (kind, css) => {
+    const other = kind === 'mobile' ? 'web' : 'mobile'
+
+    expect(imports(css)).toEqual([
+      './tokens.css',
+      `./shell/${kind}.css`,
+      './materials.css',
+      './palettes.css',
+      './styles.css',
+    ])
+    expect(css).not.toContain(`shell/${other}.css`)
+  })
+
+  it.each(Object.entries(presets))('%s finds the components on its own', (_, css) => {
+    // Relative to the preset itself, so it holds wherever the app's stylesheet
+    // is. Only the compiled JavaScript: maps and declarations name classes in
+    // examples no component renders.
+    expect(css).toMatch(/^@source '\.\/\*\*\/\*\.js';$/m)
+  })
+
+  it.each(Object.entries(presets))('%s leaves Tailwind itself to the app', (_, css) => {
+    // An app that already imports tailwindcss would get all of it twice.
+    expect(imports(css)).not.toContain('tailwindcss')
   })
 })

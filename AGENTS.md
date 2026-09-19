@@ -62,15 +62,7 @@ runtime), `@supabase/supabase-js` ^2 (`rei-kit/supabase`).
 ```css
 /* src/assets/main.css */
 @import 'tailwindcss';
-@import 'rei-kit/tokens.css'; /* roles, dark variant, measures, utilities */
-@import 'rei-kit/shell/mobile.css'; /* or shell/web.css — one, never both */
-@import 'rei-kit/materials.css'; /* optional: glass, brutal, soft */
-@import 'rei-kit/palettes.css'; /* optional: the ten palettes */
-@import 'rei-kit/styles.css'; /* compiled component styles */
-
-/* Tailwind only generates classes it has seen, and it does not read
-   node_modules on its own. Adjust the depth to where this file sits. */
-@source '../../node_modules/rei-kit/dist';
+@import 'rei-kit/mobile.css'; /* or rei-kit/web.css for a wide site — one, never both */
 
 /* the whole rebrand */
 @theme {
@@ -80,10 +72,14 @@ runtime), `@supabase/supabase-js` ^2 (`rei-kit/supabase`).
 }
 ```
 
-**Every one of those lines fails silently when missing.** The build is green,
-the components mount, and they render unstyled — or, without `styles.css`,
-scoped transitions simply do not animate. Nothing type-checks CSS imports, so
-an app should have a test that reads its own stylesheet and asserts them.
+The preset is tokens, its shell, materials, palettes, compiled component
+styles and the `@source` that lets Tailwind find the components, resolved
+from the preset itself. **Reach for the preset.** The parts are still
+exported one by one (`tokens.css`, `shell/mobile.css`, `materials.css`,
+`palettes.css`, `styles.css`); an app wiring them itself must add
+`@source '<relative path>/node_modules/rei-kit/dist'`, and every one of those
+lines fails silently when missing: the build is green and the components
+render unstyled.
 
 ## Entry points
 

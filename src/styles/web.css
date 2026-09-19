@@ -1,0 +1,27 @@
+/* rei-kit, everything, for a wide site: a column with gutters and a page fade.
+ *
+ *   @import 'tailwindcss';
+ *   @import 'rei-kit/web.css';
+ *
+ * Two lines instead of seven, and the seven had a trap in them: Tailwind only
+ * builds classes it has seen, and it never looks in node_modules on its own,
+ * so every app had to write an `@source` with the right number of `../` for
+ * wherever its stylesheet happened to sit. Get it wrong and nothing fails —
+ * the components mount and render unstyled.
+ *
+ * Here the `@source` sits next to the files it points at, and Tailwind
+ * resolves it from this file, so it is right wherever the app is.
+ *
+ * Only the compiled JavaScript is scanned. The source maps and the type
+ * declarations mention classes too — in examples, in comments — and scanning
+ * them built rules no component uses.
+ *
+ * Want less? The parts are still importable one by one, and `mobile.css` is
+ * the same for a mobile app. Import one preset, never both. */
+@import './tokens.css';
+@import './shell/web.css';
+@import './materials.css';
+@import './palettes.css';
+@import './styles.css';
+
+@source './**/*.js';

@@ -160,11 +160,9 @@ const pie = (swatch: readonly string[]) =>
       <div class="axes-code">
         <pre
           class="surface rounded-card"
-        ><code><span class="c">/* main.css — after tailwindcss */</span>
-@import 'rei-kit/tokens.css';
-@import 'rei-kit/materials.css';
-@import 'rei-kit/palettes.css';
-@import 'rei-kit/styles.css';</code></pre>
+        ><code><span class="c">/* main.css — the whole kit, all four materials and ten palettes */</span>
+@import 'tailwindcss';
+@import 'rei-kit/mobile.css';</code></pre>
         <pre class="surface rounded-card"><code><span class="c">&lt;!-- pick once… --&gt;</span>
 &lt;html data-material="<b>{{ material }}</b>"
       data-palette="<b>{{ palette }}</b>"&gt;</code></pre>

@@ -86,17 +86,17 @@ styles included and Vue left out. Minified, gzip -9:
 
 | Kit                  |         JS |         CSS |       Total |
 | -------------------- | ---------: | ----------: | ----------: |
-| **rei-kit 2.1.0**    | **3.1 KB** | **12.1 KB** | **15.2 KB** |
+| **rei-kit 2.2.0**    | **3.1 KB** | **14.5 KB** | **17.6 KB** |
 | element-plus 2.14.6  |    27.3 KB |      6.0 KB |     33.3 KB |
 | naive-ui 2.45.3      |    51.2 KB |           — |     51.2 KB |
 | primevue 5.0.1       |    53.6 KB |           — |     53.6 KB |
 | ant-design-vue 4.2.6 |    70.3 KB |           — |     70.3 KB |
 | vuetify 4.2.1        |    44.0 KB |     34.3 KB |     78.4 KB |
 
-rei-kit's CSS column is the stylesheet for **every** component, with all four
-materials available; the JavaScript is only what the three need, because each
-component is its own tree-shakeable module and there are no runtime
-dependencies. Naive UI, PrimeVue and Ant Design put their styles in the
+rei-kit's CSS column is the whole `mobile.css` preset: the stylesheet for
+**every** component, all four materials and all ten palettes. The JavaScript
+is only what the three need, because each component is its own
+tree-shakeable module and there are no runtime dependencies. Naive UI, PrimeVue and Ant Design put their styles in the
 JavaScript. Run it yourself: `cd bench && npm install && npm run bench`.
 Nuxt UI is left out because it builds through its own Nuxt or Vite module and
 cannot be bundled the same way.
@@ -123,14 +123,14 @@ Each claim here is enforced by something that fails, not by a promise.
 
 ## Status
 
-**v2.1.0 — three consumers.**
+**v2.2.0 — three consumers.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Components   | 53 (`AuthForm`, `BaseTable`, `BaseCombobox`, `BaseSlider`, `TabShell`, `BaseModal`, `BaseTabs`, `BaseTooltip`, `BasePagination`, `BaseBreadcrumb`, `BaseDisclosure`, `BaseAccordion`, `NavLinks`, `OfflineBanner`, `FabButton`, `BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseSwitch`, `BaseRadioGroup`, `BaseMenu`, `BaseAvatar`, `BaseSpinner`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
 | Composables  | 16 (`useToast`, `useTheme`, `useMaterial`, `usePalette`, `useToday`, `useMediaQuery`, `useInstall`, `watchInstallability`, `createTabTransition`, `useThemeSync`, `useVisualViewport`, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | Utilities    | 33 (`applyTheme`, `applyMaterial`, `applyPalette`, `MATERIALS`, `PALETTES`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/supabase`, `rei-kit/shell/*.css`, `rei-kit/materials.css`, `rei-kit/palettes.css`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/supabase`, `rei-kit/mobile.css`, `rei-kit/web.css`, and each stylesheet on its own                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 | Consumers | [Hibi](https://github.com/ramazandogna/hibi) · [Kakei](https://github.com/ramazandogna/kakei) · [Kakehashi](https://github.com/ramazandogna/kakehashi-nihongo) |
 
@@ -178,11 +178,36 @@ import { createSupabaseClient } from 'rei-kit/supabase'
 
 ### Wiring the styles
 
-Four lines, and every one is load-bearing — plus two optional ones for the
-materials and palettes:
+Two lines, after Tailwind's own:
 
 ```css
 /* your app's main.css */
+@import 'tailwindcss';
+@import 'rei-kit/mobile.css'; /* a phone-shaped app — or rei-kit/web.css for a site */
+```
+
+That is the whole kit: the colour roles and dark variant, the shell, the four
+materials, the ten palettes and the compiled component styles. The preset
+also tells Tailwind where the components are, which used to be the step
+people got wrong: Tailwind only builds classes it has seen and never looks in
+`node_modules` on its own, and a missing or mis-counted `@source` path failed
+silently — the components mounted and came out unstyled. The preset's
+`@source` sits next to the files it points at, so it is right wherever your
+stylesheet is.
+
+Put your brand after it, and you are done:
+
+```css
+@theme {
+  --color-primary: #6b4de6;
+}
+```
+
+#### The parts, one by one
+
+The preset is only these, and an app that wants less can import them itself:
+
+```css
 @import 'tailwindcss';
 @import 'rei-kit/tokens.css'; /* colour roles, depth, motion, the dark variant */
 @import 'rei-kit/shell/mobile.css'; /* or shell/web.css — see The shell, below */
@@ -190,23 +215,16 @@ materials and palettes:
 @import 'rei-kit/palettes.css'; /* optional: the ten palettes */
 @import 'rei-kit/styles.css'; /* compiled component styles */
 
-/* Tailwind generates a utility only where it has seen the class, and it does
-   not walk node_modules on its own. Without this the kit's components render
-   with every class present in the markup and absent from the stylesheet. */
+/* Relative to this file: adjust the ../ depth to where it sits. */
 @source '../../node_modules/rei-kit/dist';
 ```
 
-The path is relative to the CSS file, so adjust the `../` depth to where your
-`main.css` sits.
-
 **Leaving any of these out fails quietly:** the build succeeds, the
-components mount, and they come out unstyled. Nothing type-checks this, so it
-is worth a test — Hibi's `kit-styling.spec.ts` reads its own stylesheet and
-asserts them, at unit-test speed. Copy it.
-
-That test exists because the failure is real: Hibi shipped with the tab bar
-invisible once, and separately spent three versions restating `tokens.css`
-locally instead of importing it, which nothing noticed.
+components mount, and they come out unstyled. Nothing type-checks CSS, so an
+app on this path is worth a test that reads its own stylesheet and asserts
+them — Hibi's `kit-styling.spec.ts` does, at unit-test speed. The kit holds
+its presets to the same line: `pnpm size` builds each one with Tailwind's own
+scanning switched off and fails if a component's classes are missing.
 
 ### Materials
 

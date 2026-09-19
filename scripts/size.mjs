@@ -43,17 +43,21 @@ const JS_CASES = [
   },
 ]
 
+/* A preset brings its own `@source`, so those cases add none: if the preset
+   stopped finding the components, the build would still pass and the size
+   would drop. `mustContain` is what catches that — a rule from a template
+   class, one from a compiled scoped style, and one from a kit utility. */
+const MUST_CONTAIN = ['.bg-primary', '.rk-modal-panel', '.surface-overlay', '.focus-ring']
+
 const CSS_CASES = [
   {
-    name: 'styles, all components',
+    name: 'core only',
     budget: 14,
     imports: ['tokens.css', 'shell/mobile.css', 'styles.css'],
+    source: true,
   },
-  {
-    name: '+ materials + palettes',
-    budget: 17,
-    imports: ['tokens.css', 'shell/mobile.css', 'materials.css', 'palettes.css', 'styles.css'],
-  },
+  { name: 'mobile.css preset', budget: 17, imports: ['mobile.css'], source: false },
+  { name: 'web.css preset', budget: 17, imports: ['web.css'], source: false },
 ]
 
 const kb = (bytes) => (bytes / 1024).toFixed(1)
@@ -81,10 +85,15 @@ async function bundle(name, entryFile, plugins = []) {
 
   const files = readdirSync(outDir, { recursive: true, encoding: 'utf8' })
 
-  return (extension) =>
+  const read = (extension) =>
     files
       .filter((file) => file.endsWith(extension))
-      .reduce((sum, file) => sum + gzip(readFileSync(resolve(outDir, file))), 0)
+      .map((file) => readFileSync(resolve(outDir, file)))
+
+  return {
+    size: (extension) => read(extension).reduce((sum, buffer) => sum + gzip(buffer), 0),
+    text: (extension) => read(extension).join('\n'),
+  }
 }
 
 rmSync(WORK, { recursive: true, force: true })
@@ -95,22 +104,31 @@ const rows = []
 for (const [index, { name, budget, code }] of JS_CASES.entries()) {
   const entry = resolve(WORK, `js-${index}.js`)
   writeFileSync(entry, code)
-  const size = (await bundle(`js-${index}`, entry))('.js')
+  const size = (await bundle(`js-${index}`, entry)).size('.js')
   rows.push({ name, kind: 'JS', size, budget })
 }
 
-for (const [index, { name, budget, imports }] of CSS_CASES.entries()) {
+const blind = []
+
+for (const [index, { name, budget, imports, source }] of CSS_CASES.entries()) {
   const entry = resolve(WORK, `css-${index}.css`)
   writeFileSync(
     entry,
     [
-      `@import 'tailwindcss';`,
+      // `source(none)`: Tailwind would otherwise scan the working directory —
+      // this repository, `src/` and all — and find every class whether the
+      // stylesheet under test points at them or not.
+      `@import 'tailwindcss' source(none);`,
       ...imports.map((file) => `@import '${dist(file)}';`),
-      `@source '${resolve(ROOT, 'dist')}';`,
+      ...(source ? [`@source '${resolve(ROOT, 'dist')}';`] : []),
     ].join('\n'),
   )
-  const size = (await bundle(`css-${index}`, entry, [tailwindcss()]))('.css')
-  rows.push({ name, kind: 'CSS', size, budget })
+  const output = await bundle(`css-${index}`, entry, [tailwindcss()])
+  rows.push({ name, kind: 'CSS', size: output.size('.css'), budget })
+
+  const css = output.text('.css')
+  const missing = MUST_CONTAIN.filter((selector) => !css.includes(selector))
+  if (missing.length > 0) blind.push(`${name} lacks ${missing.join(', ')}`)
 }
 
 const over = rows.filter(({ size, budget }) => size / 1024 > budget)
@@ -123,6 +141,11 @@ for (const { name, kind, size, budget } of rows) {
   )
 }
 console.log('')
+
+if (blind.length > 0) {
+  console.error(`A stylesheet no longer finds the components:\n  ${blind.join('\n  ')}\n`)
+  process.exit(1)
+}
 
 if (over.length > 0) {
   console.error(

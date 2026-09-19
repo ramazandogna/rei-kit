@@ -119,4 +119,36 @@ describe('ToastHost', () => {
     expect(close).not.toBeNull()
     wrapper.unmount()
   })
+
+  it('offers an undo that runs once and takes the toast away', async () => {
+    const wrapper = host()
+    const undo = vi.fn<() => void>()
+    useToast().success('silindi', { action: { label: 'Geri al', onClick: undo } })
+    await flushPromises()
+
+    const button = [...document.querySelectorAll('button')].find(
+      (b) => b.textContent?.trim() === 'Geri al',
+    )
+    button?.click()
+    await flushPromises()
+
+    expect(undo).toHaveBeenCalledOnce()
+    expect(useToast().toasts.value).toHaveLength(0)
+    wrapper.unmount()
+  })
+})
+
+describe('a toast with an action', () => {
+  it('stays long enough to reach the button', () => {
+    vi.useFakeTimers()
+    const toast = useToast()
+    toast.success('silindi', { action: { label: 'Geri al', onClick: () => {} } })
+
+    // Longer than a plain confirmation's four seconds.
+    vi.advanceTimersByTime(5000)
+    expect(toast.toasts.value).toHaveLength(1)
+
+    vi.advanceTimersByTime(4000)
+    expect(toast.toasts.value).toHaveLength(0)
+  })
 })

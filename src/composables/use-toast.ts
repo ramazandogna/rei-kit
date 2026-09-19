@@ -25,17 +25,36 @@ import { readonly, ref } from 'vue'
  */
 export type ToastTone = 'info' | 'success' | 'warning' | 'danger'
 
+/**
+ * One button on a toast — nearly always "Undo".
+ *
+ * The toast is dismissed when it is pressed, so the handler only has to do
+ * the undoing.
+ */
+export interface ToastAction {
+  /** The button's text. Already translated. */
+  readonly label: string
+  readonly onClick: () => void
+}
+
 export interface Toast {
   readonly id: number
   readonly message: string
   readonly tone: ToastTone
   /** Milliseconds on screen. `0` stays until dismissed. */
   readonly duration: number
+  readonly action?: ToastAction | undefined
 }
 
 export interface ToastOptions {
   /** Milliseconds on screen; `0` stays until dismissed. */
   duration?: number | undefined
+  /**
+   * A button on the toast. An undo is the kindest confirmation there is: act
+   * first, and let the reader take it back, instead of asking "are you sure"
+   * before every delete.
+   */
+  action?: ToastAction | undefined
 }
 
 /**
@@ -48,6 +67,12 @@ const DEFAULT_DURATION = 4000
  * A failure is read more slowly than a confirmation, and more often twice.
  */
 const DANGER_DURATION = 7000
+
+/**
+ * A toast with a button stays longer: the reader has to read it, decide and
+ * reach the button. Four seconds is enough to read "Deleted", not to undo it.
+ */
+const ACTION_DURATION = 8000
 
 /**
  * Three at once. A fourth pushes the oldest out rather than growing the stack
@@ -128,9 +153,11 @@ function resume(id: number): void {
 
 function push(tone: ToastTone, message: string, options: ToastOptions = {}): number {
   const id = ++nextId
-  const duration = options.duration ?? (tone === 'danger' ? DANGER_DURATION : DEFAULT_DURATION)
+  const duration =
+    options.duration ??
+    (options.action ? ACTION_DURATION : tone === 'danger' ? DANGER_DURATION : DEFAULT_DURATION)
 
-  const next = [...items.value, { id, message, tone, duration }]
+  const next = [...items.value, { id, message, tone, duration, action: options.action }]
 
   while (next.length > MAX_VISIBLE) {
     const oldest = next.shift()
@@ -155,6 +182,10 @@ function push(tone: ToastTone, message: string, options: ToastOptions = {}): num
  *
  * const id = toast.info(t('export.preparing'), { duration: 0 })
  * toast.dismiss(id)
+ *
+ * toast.success(t('entry.deleted'), {
+ *   action: { label: t('common.undo'), onClick: () => restore(entry) },
+ * })
  * ```
  */
 export function useToast() {

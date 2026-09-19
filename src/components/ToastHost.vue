@@ -30,6 +30,13 @@ const { closeLabel, bottom = false } = defineProps<{
 
 const { toasts, dismiss, pause, resume } = useToast()
 
+/* Dismissed first, so a handler that throws cannot leave the button on
+   screen to be pressed twice. */
+function runAction(id: number, onClick: () => void) {
+  dismiss(id)
+  onClick()
+}
+
 /**
  * Teleport needs a `body`, and a server has none.
  *
@@ -91,6 +98,16 @@ const TONE_CLASS = {
           />
 
           <p class="flex-1 text-sm leading-snug">{{ toast.message }}</p>
+
+          <BaseButton
+            v-if="toast.action"
+            variant="link"
+            size="sm"
+            class="-my-1 shrink-0"
+            @click="runAction(toast.id, toast.action.onClick)"
+          >
+            {{ toast.action.label }}
+          </BaseButton>
 
           <BaseButton
             variant="quiet"

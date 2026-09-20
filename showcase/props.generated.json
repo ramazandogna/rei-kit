@@ -1794,6 +1794,20 @@
         "type": "'top' | 'bottom'",
         "description": "",
         "default": "'top'"
+      },
+      {
+        "name": "follow",
+        "required": false,
+        "type": "boolean",
+        "description": "Track the pointer across the trigger instead of pinning to its middle.",
+        "default": "false"
+      },
+      {
+        "name": "offset",
+        "required": false,
+        "type": "number",
+        "description": "How far the bubble sits from the pointer, in pixels.",
+        "default": "14"
       }
     ]
   },
@@ -3054,6 +3068,76 @@
         "type": "string",
         "description": "",
         "default": "'Loading…'"
+      }
+    ]
+  },
+  {
+    "name": "SliderField",
+    "entry": "rei-kit",
+    "summary": "One number, reached either way: dragged along a range or typed exactly.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names both controls. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "min",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "0"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "100"
+      },
+      {
+        "name": "step",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "1"
+      },
+      {
+        "name": "decrementLabel",
+        "required": true,
+        "type": "string",
+        "description": "Names the number field's step-down button. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "incrementLabel",
+        "required": true,
+        "type": "string",
+        "description": "Names the number field's step-up button. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "format",
+        "required": false,
+        "type": "((value: number) => string)",
+        "description": "Turns the number into something a person would say — \"45 minutes\", \"₺12\". The slider's readout is the number field here, so this is only what a screen reader hears for the slider: `aria-valuetext`, which without it is a bare number and a bare number is not an answer to anything.",
+        "default": ""
       }
     ]
   },

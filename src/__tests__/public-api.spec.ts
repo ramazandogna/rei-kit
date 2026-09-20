@@ -115,6 +115,7 @@ const PUBLIC_API = [
   'SettingsGroup',
   'SettingsRow',
   'SkeletonList',
+  'SliderField',
   'StatCard',
   'ToastHost',
   'TabBar',

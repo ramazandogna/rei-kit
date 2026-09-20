@@ -19,6 +19,7 @@ import {
   PinInput,
   SectionHeading,
   SegmentedControl,
+  SliderField,
   TagsInput,
   ToggleGroup,
   useToast,
@@ -55,6 +56,7 @@ const view = ref<string | undefined>('list')
 
 const guests = ref<number | undefined>(2)
 const minutes = ref(45)
+const opacity = ref(40)
 const code = ref('')
 const tags = ref(['design'])
 const files = ref<File[]>([])
@@ -222,6 +224,16 @@ const CODE: Record<FormPartId, string> = {
   :max="90"
   :step="5"
   :format="spoken"
+/>`,
+  'form-slider-field': `<SliderField
+  v-model="opacity"
+  label="Opacity"
+  :min="0"
+  :max="100"
+  :step="5"
+  decrement-label="Less opaque"
+  increment-label="More opaque"
+  :format="(value) => \`\${value}%\`"
 />`,
   'form-pin': `<PinInput
   v-model="code"
@@ -549,6 +561,30 @@ const CODE: Record<FormPartId, string> = {
           <CodeBlock :code="CODE['form-slider']" lang="html" />
         </div>
         <PropTable name="BaseSlider" />
+      </article>
+
+      <article :id="part('form-slider-field').id" class="sc-part">
+        <header class="sc-part-head">
+          <h3 class="sc-part-name">{{ part('form-slider-field').title }}</h3>
+          <p class="sc-part-pitch">{{ part('form-slider-field').pitch }}</p>
+        </header>
+        <div class="sc-part-row">
+          <BaseCard>
+            <SliderField
+              v-model="opacity"
+              label="Opacity"
+              :min="0"
+              :max="100"
+              :step="5"
+              decrement-label="Less opaque"
+              increment-label="More opaque"
+              :format="(value) => `${value}%`"
+              hint="Drag for roughly right, type for exactly right."
+            />
+          </BaseCard>
+          <CodeBlock :code="CODE['form-slider-field']" lang="html" />
+        </div>
+        <PropTable name="SliderField" />
       </article>
 
       <article :id="part('form-pin').id" class="sc-part">

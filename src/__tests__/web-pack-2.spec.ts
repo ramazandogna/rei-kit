@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 
 import { BaseBreadcrumb, BaseDisclosure, BasePagination, BaseTabs, BaseTooltip } from '../web/index'
 
@@ -44,6 +45,71 @@ describe('BaseTooltip', () => {
     // works in a prerendered page and with scripting off. If this ever becomes
     // a v-if, that promise is gone.
     expect(build().find('[role="tooltip"]').text()).toBe('Copy to clipboard')
+  })
+
+  describe('following the pointer', () => {
+    const follow = (props: Record<string, unknown> = {}) =>
+      mount(BaseTooltip, {
+        props: { label: 'This cell', follow: true, ...props },
+        slots: { default: '<button>cell</button>' },
+        attachTo: document.body,
+      })
+
+    /* jsdom lays nothing out, so the trigger's box is all zeroes and the
+       pointer's client coordinates are the offsets. That is enough: what is
+       being checked is that the bubble is placed from the pointer at all. */
+    const move = async (w: ReturnType<typeof follow>, x: number, y: number) => {
+      // Dispatched rather than triggered: test-utils builds the event and
+      // then assigns the extras, and `clientX` on a MouseEvent is read-only.
+      w.element.dispatchEvent(
+        new MouseEvent('pointermove', { clientX: x, clientY: y, bubbles: true }),
+      )
+      await nextTick()
+    }
+
+    it('is still the anchored bubble until a pointer arrives', () => {
+      const w = follow()
+      const bubble = w.find('[role="tooltip"]')
+
+      expect(bubble.classes()).not.toContain('is-following')
+      expect(bubble.attributes('style')).toBeUndefined()
+    })
+
+    it('places the bubble from the pointer once it moves', async () => {
+      const w = follow()
+      await move(w, 40, 30)
+      await new Promise((resolve) => requestAnimationFrame(() => resolve(null)))
+      await nextTick()
+
+      const bubble = w.find('[role="tooltip"]')
+      expect(bubble.classes()).toContain('is-following')
+      expect(bubble.attributes('style')).toContain('left: 40px')
+      // Above the pointer by the offset, because the placement is `top`.
+      expect(bubble.attributes('style')).toContain('top: 16px')
+    })
+
+    it('goes back to the anchor when the pointer leaves', async () => {
+      const w = follow()
+      await move(w, 40, 30)
+      await new Promise((resolve) => requestAnimationFrame(() => resolve(null)))
+      await w.trigger('pointerleave')
+
+      // A keyboard has no cursor to follow: the tooltip is never lost, only
+      // still.
+      expect(w.find('[role="tooltip"]').classes()).not.toContain('is-following')
+    })
+
+    it('does not follow unless it was asked to', async () => {
+      const w = mount(BaseTooltip, {
+        props: { label: 'Copy' },
+        slots: { default: '<button>copy</button>' },
+      })
+
+      await move(w, 40, 30)
+      await new Promise((resolve) => requestAnimationFrame(() => resolve(null)))
+
+      expect(w.find('[role="tooltip"]').attributes('style')).toBeUndefined()
+    })
   })
 })
 

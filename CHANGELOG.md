@@ -3,6 +3,39 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.15.0 — 2026-09-20
+
+**The pair, and the pointer.**
+
+### Added
+
+- **`SliderField`** — a slider and a number field on one value. The two
+  answer different halves of the same question: a slider shows you where you
+  are in a range and is hopeless at landing on 37 out of 500; a field lands
+  on 37 at once and says nothing about whether 37 is a lot. Anything with a
+  wide range and an exact answer in it wants both, and apps kept building the
+  pair by hand.
+
+  Both controls carry the same name, because there are two controls and one
+  answer — two names would say they were two settings that happen to sit
+  together. The slider's own readout is off, since the field beside it is the
+  readout. Emptying the field leaves the thumb where it was: halfway through
+  typing a number there is no number, but a slider has no empty state, and
+  dragging the thumb to zero as the last digit is deleted is the wrong
+  answer.
+
+- **`BaseTooltip follow`** — the bubble tracks the pointer across the
+  trigger, for a target big enough that a bubble pinned to its middle is
+  nowhere near what is under the cursor: a chart, a map, a calendar cell.
+
+  It is opt-in because it is the one thing in this component that needs
+  JavaScript — the default is still shown by `:hover` and `:focus-within` in
+  the stylesheet, and still works in a prerendered page with scripting off.
+  It stops following for a keyboard, which has no cursor, and for a reader
+  who asked their system for less motion; both fall back to the anchored
+  bubble, so the tooltip is never lost, only still. Updates are held to one
+  per frame, since `pointermove` fires far faster than the screen redraws.
+
 ## 2.14.0 — 2026-09-20
 
 **A mega menu, and it is not a menu.**

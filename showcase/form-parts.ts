@@ -135,6 +135,14 @@ export const FORM_PARTS = [
       'A length, a volume, a threshold — a value found by moving along a range rather than by knowing it. The arrows move it too, and the value is spoken in your own words.',
   },
   {
+    id: 'form-slider-field',
+    group: 'form-values',
+    label: 'SliderField',
+    title: 'SliderField — both at once',
+    pitch:
+      'A wide range with an exact answer somewhere in it wants the slider and the field together: drag to find roughly right, type to land on it. Both carry the same name, because they are one answer and not two settings side by side.',
+  },
+  {
     id: 'form-pin',
     group: 'form-values',
     label: 'PinInput',

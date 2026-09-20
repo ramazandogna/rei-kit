@@ -98,6 +98,12 @@ export { default as BaseCheckbox } from './components/BaseCheckbox.vue'
 export { default as BaseRadioGroup } from './components/BaseRadioGroup.vue'
 export { default as BaseSelect } from './components/BaseSelect.vue'
 export { default as BaseSlider } from './components/BaseSlider.vue'
+
+/**
+ * A slider and a number field on one value: drag to find it, type to land
+ * on it. See `SliderField.vue` for why both carry the same name.
+ */
+export { default as SliderField } from './components/SliderField.vue'
 export { default as BaseSpinner } from './components/BaseSpinner.vue'
 export { default as BaseSwitch } from './components/BaseSwitch.vue'
 export { default as BaseTable } from './components/BaseTable.vue'

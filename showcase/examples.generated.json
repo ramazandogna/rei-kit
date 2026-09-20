@@ -211,8 +211,8 @@
   },
   {
     "name": "BaseTooltip",
-    "ts": "<script setup lang=\"ts\">\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n</template>\n",
-    "js": "<script setup>\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n</template>\n"
+    "ts": "<script setup lang=\"ts\">\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n\n  <!--\n    `follow` tracks the pointer, for a target big enough that a bubble pinned\n    to the middle would be nowhere near what is under the cursor. It falls\n    back to the anchored bubble for a keyboard and for anyone who asked their\n    system for less motion.\n  -->\n  <BaseTooltip label=\"Tuesday, 12 September — 3 entries\" follow>\n    <div class=\"bg-muted rounded-card grid h-24 w-full place-items-center\">A calendar cell</div>\n  </BaseTooltip>\n</template>\n",
+    "js": "<script setup>\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n\n  <!--\n    `follow` tracks the pointer, for a target big enough that a bubble pinned\n    to the middle would be nowhere near what is under the cursor. It falls\n    back to the anchored bubble for a keyboard and for anyone who asked their\n    system for less motion.\n  -->\n  <BaseTooltip label=\"Tuesday, 12 September — 3 entries\" follow>\n    <div class=\"bg-muted rounded-card grid h-24 w-full place-items-center\">A calendar cell</div>\n  </BaseTooltip>\n</template>\n"
   },
   {
     "name": "BaseTree",
@@ -378,6 +378,11 @@
     "name": "SkeletonList",
     "ts": "<script setup lang=\"ts\">\nimport { SkeletonList } from 'rei-kit'\n</script>\n\n<template>\n  <SkeletonList :rows=\"4\" label=\"Loading entries\" />\n</template>\n",
     "js": "<script setup>\nimport { SkeletonList } from 'rei-kit'\n</script>\n\n<template>\n  <SkeletonList :rows=\"4\" label=\"Loading entries\" />\n</template>\n"
+  },
+  {
+    "name": "SliderField",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { SliderField } from 'rei-kit'\n\nconst opacity = ref(40)\n</script>\n\n<template>\n  <SliderField\n    v-model=\"opacity\"\n    label=\"Opacity\"\n    :min=\"0\"\n    :max=\"100\"\n    :step=\"5\"\n    decrement-label=\"Less opaque\"\n    increment-label=\"More opaque\"\n    :format=\"(value) => `${value}%`\"\n    hint=\"Drag for roughly right, type for exactly right.\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { SliderField } from 'rei-kit'\n\nconst opacity = ref(40)\n</script>\n\n<template>\n  <SliderField\n    v-model=\"opacity\"\n    label=\"Opacity\"\n    :min=\"0\"\n    :max=\"100\"\n    :step=\"5\"\n    decrement-label=\"Less opaque\"\n    increment-label=\"More opaque\"\n    :format=\"(value) => `${value}%`\"\n    hint=\"Drag for roughly right, type for exactly right.\"\n  />\n</template>\n"
   },
   {
     "name": "StatCard",

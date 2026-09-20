@@ -357,6 +357,26 @@ function onCommand(id: string) {
             </BaseTooltip>
           </div>
 
+          <p class="text-ink-soft mt-4 text-xs">
+            <code class="text-xs">follow</code> tracks the pointer instead, for a target big enough
+            that a bubble pinned to the middle would be nowhere near what is under the cursor. It is
+            the one thing here that needs JavaScript, so it is opt-in — and it goes back to the
+            anchored bubble for a keyboard and for anyone who asked their system for less motion.
+          </p>
+          <div class="mt-3">
+            <BaseTooltip class="w-full" label="Tuesday, 12 September — 3 entries" follow>
+              <template #default="{ describedBy }">
+                <div
+                  class="bg-muted rounded-card text-ink-soft grid h-24 w-full place-items-center text-xs"
+                  tabindex="0"
+                  :aria-describedby="describedBy"
+                >
+                  Move the pointer across this
+                </div>
+              </template>
+            </BaseTooltip>
+          </div>
+
           <PropTable name="BaseTooltip" />
         </div>
 

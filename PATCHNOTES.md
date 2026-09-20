@@ -60,6 +60,35 @@ without.
 
 ---
 
+## 2.15.0
+
+**You gain `SliderField`** — one value, reached either way — **and a tooltip
+that can follow the pointer.**
+
+```vue
+<SliderField
+  v-model="opacity"
+  label="Opacity"
+  :min="0"
+  :max="100"
+  :step="5"
+  decrement-label="Less opaque"
+  increment-label="More opaque"
+  :format="(value) => `${value}%`"
+/>
+
+<!-- For a target too big for a bubble pinned to its middle. -->
+<BaseTooltip label="Tuesday, 12 September — 3 entries" follow>
+  <CalendarCell />
+</BaseTooltip>
+```
+
+`follow` needs JavaScript; without it the tooltip is the CSS-only one it has
+always been. It also stays anchored for a keyboard and under
+`prefers-reduced-motion`.
+
+**Action required:** none.
+
 ## 2.14.0
 
 **You gain `MegaMenu`** in `rei-kit/web` — the navigation row for a site

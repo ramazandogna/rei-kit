@@ -60,6 +60,14 @@ without.
 
 ---
 
+## 2.10.0
+
+**You gain a tags field that understands a paste** — "vue, html, css"
+becomes three tags — and a listbox that only highlights a row while it is
+being used, so nothing looks selected when it is not.
+
+**Action required:** none.
+
 ## 2.9.0
 
 **You gain a tree, a splitter, a toolbar and a transfer list** — all in

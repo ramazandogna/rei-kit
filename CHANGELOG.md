@@ -3,6 +3,23 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.10.0 — 2026-09-20
+
+### Added
+
+- **`TagsInput` splits what is pasted.** "vue, html, css" becomes three
+  tags, not one: a paste carrying a comma or a line break is split on both,
+  which is the shape every list copied from somewhere else arrives in. A
+  pasted single word is left in the field with the caret where it was.
+
+### Fixed
+
+- **A list that nobody is in no longer shows a current row.** `BaseListbox`
+  drew its "where the keyboard is" highlight whether or not it had focus,
+  which reads as a selection — and in `TransferList` that made a just-moved
+  item look chosen while the button beside it stayed disabled. The highlight
+  now needs focus; the tick and the tint, which mean chosen, do not.
+
 ## 2.9.0 — 2026-09-20
 
 **The shapes a wide screen is arranged with**, and two defects found while

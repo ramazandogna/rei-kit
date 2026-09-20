@@ -11,6 +11,7 @@ import {
   BaseKbd,
   BaseListbox,
   BaseMenu,
+  BaseSeparator,
   BasePopover,
   BaseSheet,
   BaseStepper,
@@ -34,9 +35,13 @@ import {
   BasePagination,
   BaseTabs,
   BaseTooltip,
+  BaseSplitter,
+  BaseToolbar,
+  BaseTree,
   CommandMenu,
   DataTable,
   NavLinks,
+  TransferList,
 } from '../src/web/index'
 import type { TableSort } from '../src/web/index'
 import PropTable from './PropTable.vue'
@@ -157,6 +162,36 @@ const COMMANDS = [
   },
   { label: 'Appearance', items: [{ id: 'theme', label: 'Switch the theme' }] },
 ] as const
+
+const split = ref(38)
+const openFolders = ref(['src'])
+const openFile = ref<string | undefined>('index')
+const FILES = [
+  {
+    key: 'src',
+    label: 'src',
+    children: [
+      { key: 'index', label: 'index.ts' },
+      {
+        key: 'components',
+        label: 'components',
+        children: [
+          { key: 'button', label: 'BaseButton.vue' },
+          { key: 'card', label: 'BaseCard.vue' },
+        ],
+      },
+    ],
+  },
+  { key: 'readme', label: 'README.md' },
+]
+
+const granted = ref<string[]>(['read'])
+const PERMISSIONS = [
+  { value: 'read', label: 'Read' },
+  { value: 'write', label: 'Write' },
+  { value: 'admin', label: 'Administer' },
+  { value: 'billing', label: 'Billing' },
+]
 
 const access = ref<string[]>(['ada'])
 const PEOPLE = [
@@ -578,6 +613,68 @@ function onCommand(id: string) {
           @select="onCommand"
         />
         <PropTable name="CommandMenu" />
+      </BaseCard>
+    </section>
+
+    <!-- ─────────────────────────── Desk layout ─────────────────────────── -->
+    <section id="masa">
+      <SectionHeading :tone="NEUTRAL" label="Desk layout" />
+      <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
+        The shapes a wide screen is arranged with. Each is a keyboard problem first: the tree's
+        arrows open, close and step in and out; the splitter's handle moves with them too, which is
+        the part a drag-only divider never offers.
+      </p>
+
+      <BaseCard class="mt-5">
+        <BaseToolbar label="Files" class="mb-3">
+          <BaseButton size="sm" variant="ghost">New</BaseButton>
+          <BaseButton size="sm" variant="ghost">Rename</BaseButton>
+          <BaseSeparator orientation="vertical" spacing="sm" />
+          <BaseButton size="sm" variant="ghost">Delete</BaseButton>
+        </BaseToolbar>
+
+        <div class="border-hair/70 rounded-card h-64 overflow-hidden border">
+          <BaseSplitter v-model="split" label="Resize the file list" class="h-full">
+            <template #start>
+              <BaseTree
+                v-model="openFile"
+                v-model:expanded="openFolders"
+                class="p-2"
+                :nodes="FILES"
+                label="Files"
+              />
+            </template>
+            <template #end>
+              <div class="text-ink-soft p-4 text-sm">
+                <p class="text-ink font-medium">{{ openFile ?? 'Nothing chosen' }}</p>
+                <p class="mt-2 text-xs">
+                  The handle is a separator with a value: the arrows move it, Home and End send it
+                  to its limits, Enter puts it back.
+                </p>
+              </div>
+            </template>
+          </BaseSplitter>
+        </div>
+
+        <PropTable name="BaseTree" />
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">TransferList</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          Available on the left, chosen on the right, and the chosen side keeps the order things
+          were added in.
+        </p>
+        <TransferList
+          v-model="granted"
+          :options="PERMISSIONS"
+          available-label="Available"
+          chosen-label="Granted"
+          add-label="Grant the chosen permissions"
+          remove-label="Take back the chosen permissions"
+          height="10rem"
+        />
+        <PropTable name="TransferList" />
       </BaseCard>
     </section>
 

@@ -44,6 +44,7 @@ const SECTIONS = [
   { id: 'acilir', label: 'Disclosure' },
   { id: 'veri', label: 'Data' },
   { id: 'komut', label: 'Command menu' },
+  { id: 'masa', label: 'Desk layout' },
   { id: 'durum', label: 'State' },
   { id: 'kabuk', label: 'Phone shell' },
   { id: 'bosluk', label: 'Empty and waiting' },

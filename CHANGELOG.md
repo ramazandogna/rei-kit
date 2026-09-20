@@ -3,6 +3,51 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.9.0 — 2026-09-20
+
+**The shapes a wide screen is arranged with**, and two defects found while
+building them.
+
+### Added
+
+- **`BaseTree`** (`rei-kit/web`) — branches inside branches. The keyboard is
+  the tree pattern, which is the whole reason to reach for one rather than
+  nested lists: up and down move through what is on screen, right opens a
+  branch and then steps into it, left closes it and then steps out to its
+  parent. Each row states `aria-level`, `aria-setsize` and `aria-posinset`,
+  so a screen reader can say "level 2, 3 of 7" — the only way somebody
+  listening knows where they are in a shape they cannot see. What is open is
+  the app's, through `v-model:expanded`, so a tree can be restored from a
+  URL.
+- **`BaseSplitter`** (`rei-kit/web`) — two panes and a handle. The handle is
+  a `separator` with a value: the arrows move it, Home and End send it to
+  its limits, and Enter puts it back where it started. A divider that
+  answers only to a drag is a layout a keyboard cannot change at all.
+- **`BaseToolbar`** (`rei-kit/web`) — a row of controls as one Tab stop,
+  with the arrows moving inside it. It picks up whatever is focusable within,
+  so the controls stay the app's. Twelve buttons in the tab order cost
+  twelve presses to get past; this costs one.
+- **`TransferList`** (`rei-kit/web`) — available on one side, chosen on the
+  other, with two buttons between. The chosen side keeps the order things
+  were moved in, because that order is usually the point.
+
+### Fixed
+
+- **A chip that both selects and removes nested one button inside another.**
+  `BaseChip` now renders the toggle and the remove button as siblings. A
+  button inside a button is not a control a browser or a screen reader can
+  make sense of — the same mistake `BaseDatePicker`'s clear button was fixed
+  for in 2.6.0, and now it has a test of its own.
+- **`BasePopover` stayed where it opened.** A page that scrolls or a window
+  that changes size under an open panel left it attached to nothing; it is
+  measured again while open.
+
+### Changed
+
+- `BaseTree`'s selection is typed by its mode, like the toggle group and the
+  listbox: `multiple` always hands back an array, and only a single choice
+  can be nothing.
+
 ## 2.8.0 — 2026-09-20
 
 **The desk-sized parts.** A table of real data, a list to choose from, and

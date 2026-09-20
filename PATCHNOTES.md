@@ -60,6 +60,17 @@ without.
 
 ---
 
+## 2.9.0
+
+**You gain a tree, a splitter, a toolbar and a transfer list** — all in
+`rei-kit/web`, and all driven by the keyboard as well as the pointer.
+
+Two fixes: a `BaseChip` that both selects and removes no longer nests one
+button in another, and a `BasePopover` keeps its place when the page
+scrolls under it.
+
+**Action required:** none.
+
 ## 2.8.0
 
 **You gain a data table, a command palette and a listbox:**

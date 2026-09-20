@@ -70,6 +70,8 @@ const PUBLIC_API = [
   'BaseMenu',
   'BaseSheet',
   'BaseSlider',
+  'BaseCalendar',
+  'BaseDatePicker',
   'BasePopover',
   'BaseStepper',
   'CircularProgress',

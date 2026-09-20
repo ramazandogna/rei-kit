@@ -265,6 +265,69 @@
     ]
   },
   {
+    "name": "BaseCalendar",
+    "entry": "rei-kit",
+    "summary": "A month of days, for choosing one or a stretch of them.",
+    "props": [
+      {
+        "name": "mode",
+        "required": false,
+        "type": "M",
+        "description": "One day, or a stretch from one day to another.",
+        "default": "'single' as M"
+      },
+      {
+        "name": "min",
+        "required": false,
+        "type": "string",
+        "description": "The earliest day that can be chosen, as `YYYY-MM-DD`.",
+        "default": "undefined"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "isDisabled",
+        "required": false,
+        "type": "((key: string) => boolean)",
+        "description": "Days to rule out inside the range — weekends, days already booked.",
+        "default": "undefined"
+      },
+      {
+        "name": "weekStartsOn",
+        "required": false,
+        "type": "WeekStart",
+        "description": "`1` Monday, `0` Sunday.",
+        "default": "1"
+      },
+      {
+        "name": "previousLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name of the back arrow, e.g. \"Previous month\".",
+        "default": ""
+      },
+      {
+        "name": "nextLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name of the forward arrow.",
+        "default": ""
+      },
+      {
+        "name": "today",
+        "required": false,
+        "type": "string",
+        "description": "Which day is marked as today. Given, so a test or a demo can fix it.",
+        "default": "todayKey()"
+      }
+    ]
+  },
+  {
     "name": "BaseCard",
     "entry": "rei-kit",
     "summary": "A surface with a border, and optionally a head and a foot.",
@@ -386,6 +449,139 @@
         "required": true,
         "type": "string",
         "description": "Shown when nothing matches. Already translated.",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "BaseDatePicker",
+    "entry": "rei-kit",
+    "summary": "A date, or a stretch of dates, chosen from a calendar in a popover.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "mode",
+        "required": false,
+        "type": "M",
+        "description": "One day, or a stretch from one day to another.",
+        "default": ""
+      },
+      {
+        "name": "placeholder",
+        "required": false,
+        "type": "string",
+        "description": "What the field shows while nothing is chosen.",
+        "default": ""
+      },
+      {
+        "name": "format",
+        "required": false,
+        "type": "Intl.DateTimeFormatOptions",
+        "description": "How the chosen date reads, through `Intl.DateTimeFormat`.",
+        "default": ""
+      },
+      {
+        "name": "presets",
+        "required": false,
+        "type": "readonly DatePreset[]",
+        "description": "Ready-made answers beside the calendar: \"Last 7 days\", \"This month\".",
+        "default": ""
+      },
+      {
+        "name": "clearLabel",
+        "required": false,
+        "type": "string",
+        "description": "Given, the field grows a button that empties it. Its accessible name.",
+        "default": ""
+      },
+      {
+        "name": "min",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "isDisabled",
+        "required": false,
+        "type": "((key: string) => boolean)",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "weekStartsOn",
+        "required": false,
+        "type": "WeekStart",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "previousLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name of the calendar's back arrow.",
+        "default": ""
+      },
+      {
+        "name": "nextLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name of the calendar's forward arrow.",
+        "default": ""
+      },
+      {
+        "name": "today",
+        "required": false,
+        "type": "string",
+        "description": "Which day the calendar marks as today. Given, so a demo or a test can fix it.",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
         "default": ""
       }
     ]

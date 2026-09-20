@@ -54,12 +54,13 @@ const MUST_CONTAIN = ['.bg-primary', '.rk-modal-panel', '.surface-overlay', '.fo
 const CSS_CASES = [
   {
     name: 'core only',
-    budget: 14,
+    // 2.6.0: the calendar's grid, days and month blocks took it to 14.4 KB.
+    budget: 16,
     imports: ['tokens.css', 'shell/mobile.css', 'styles.css'],
     source: true,
   },
-  { name: 'mobile.css preset', budget: 17, imports: ['mobile.css'], source: false },
-  { name: 'web.css preset', budget: 17, imports: ['web.css'], source: false },
+  { name: 'mobile.css preset', budget: 19, imports: ['mobile.css'], source: false },
+  { name: 'web.css preset', budget: 19, imports: ['web.css'], source: false },
 ]
 
 const kb = (bytes) => (bytes / 1024).toFixed(1)

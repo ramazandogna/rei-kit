@@ -40,6 +40,11 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton } from 'rei-kit'\n\nconst deleting = ref(false)\n\nfunction save() {\n  // …\n}\n</script>\n\n<template>\n  <div class=\"flex flex-wrap gap-2\">\n    <BaseButton @click=\"save\">Save</BaseButton>\n    <BaseButton variant=\"secondary\">Cancel</BaseButton>\n    <BaseButton variant=\"danger\" :loading=\"deleting\">Delete</BaseButton>\n    <BaseButton as=\"a\" href=\"/docs\" variant=\"ghost\">Read the docs</BaseButton>\n  </div>\n</template>\n"
   },
   {
+    "name": "BaseCalendar",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseCalendar, todayKey } from 'rei-kit'\n\nconst day = ref<string | undefined>(todayKey())\n</script>\n\n<template>\n  <BaseCalendar\n    v-model=\"day\"\n    previous-label=\"Previous month\"\n    next-label=\"Next month\"\n    :min=\"todayKey()\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseCalendar, todayKey } from 'rei-kit'\n\nconst day = ref(todayKey())\n</script>\n\n<template>\n  <BaseCalendar\n    v-model=\"day\"\n    previous-label=\"Previous month\"\n    next-label=\"Next month\"\n    :min=\"todayKey()\"\n  />\n</template>\n"
+  },
+  {
     "name": "BaseCard",
     "ts": "<script setup lang=\"ts\">\nimport { BaseCard } from 'rei-kit'\n</script>\n\n<template>\n  <BaseCard>\n    <template #head>This month</template>\n    Spent less than last month.\n    <template #foot>Updated today</template>\n  </BaseCard>\n</template>\n",
     "js": "<script setup>\nimport { BaseCard } from 'rei-kit'\n</script>\n\n<template>\n  <BaseCard>\n    <template #head>This month</template>\n    Spent less than last month.\n    <template #foot>Updated today</template>\n  </BaseCard>\n</template>\n"
@@ -53,6 +58,11 @@
     "name": "BaseCombobox",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseCombobox } from 'rei-kit'\n\nconst country = ref('')\nconst countries = [\n  { value: 'tr', label: 'Türkiye' },\n  { value: 'jp', label: 'Japan' },\n  { value: 'de', label: 'Germany' },\n]\n</script>\n\n<template>\n  <BaseCombobox\n    v-model=\"country\"\n    label=\"Country\"\n    :options=\"countries\"\n    placeholder=\"Start typing\"\n    empty-label=\"No country matches\"\n  />\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseCombobox } from 'rei-kit'\n\nconst country = ref('')\nconst countries = [\n  { value: 'tr', label: 'Türkiye' },\n  { value: 'jp', label: 'Japan' },\n  { value: 'de', label: 'Germany' },\n]\n</script>\n\n<template>\n  <BaseCombobox\n    v-model=\"country\"\n    label=\"Country\"\n    :options=\"countries\"\n    placeholder=\"Start typing\"\n    empty-label=\"No country matches\"\n  />\n</template>\n"
+  },
+  {
+    "name": "BaseDatePicker",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseDatePicker, addDays, todayKey } from 'rei-kit'\nimport type { DateRange } from 'rei-kit'\n\nconst span = ref<DateRange | undefined>()\n\nconst presets = [\n  { label: 'Last 7 days', value: () => ({ start: addDays(todayKey(), -6), end: todayKey() }) },\n  { label: 'Last 30 days', value: () => ({ start: addDays(todayKey(), -29), end: todayKey() }) },\n]\n</script>\n\n<template>\n  <BaseDatePicker\n    v-model=\"span\"\n    mode=\"range\"\n    label=\"Report period\"\n    placeholder=\"Choose a period\"\n    clear-label=\"Clear the period\"\n    :presets=\"presets\"\n    previous-label=\"Previous month\"\n    next-label=\"Next month\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseDatePicker, addDays, todayKey } from 'rei-kit'\n\nconst span = ref()\n\nconst presets = [\n  { label: 'Last 7 days', value: () => ({ start: addDays(todayKey(), -6), end: todayKey() }) },\n  { label: 'Last 30 days', value: () => ({ start: addDays(todayKey(), -29), end: todayKey() }) },\n]\n</script>\n\n<template>\n  <BaseDatePicker\n    v-model=\"span\"\n    mode=\"range\"\n    label=\"Report period\"\n    placeholder=\"Choose a period\"\n    clear-label=\"Clear the period\"\n    :presets=\"presets\"\n    previous-label=\"Previous month\"\n    next-label=\"Next month\"\n  />\n</template>\n"
   },
   {
     "name": "BaseDisclosure",

@@ -207,3 +207,17 @@ describe('server rendering, the second wave', () => {
     ).toContain('aria-current="step"')
   })
 })
+
+describe('server rendering, the calendar', () => {
+  it('renders a month without a browser, and a picker with its panel closed', async () => {
+    const { BaseCalendar, BaseDatePicker } = await import('../index')
+    const labels = { previousLabel: 'Önceki', nextLabel: 'Sonraki' }
+
+    const month = await render(BaseCalendar, { ...labels, today: '2026-09-17' })
+    expect(month).toContain('role="grid"')
+
+    const picker = await render(BaseDatePicker, { ...labels, label: 'Tarih' })
+    expect(picker).toContain('aria-haspopup="dialog"')
+    expect(picker).not.toContain('role="grid"')
+  })
+})

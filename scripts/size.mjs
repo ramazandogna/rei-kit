@@ -68,8 +68,10 @@ const CSS_CASES = [
     imports: ['tokens.css', 'shell/mobile.css', 'styles.css'],
     source: true,
   },
-  { name: 'mobile.css preset', budget: 21, imports: ['mobile.css'], source: false },
-  { name: 'web.css preset', budget: 21, imports: ['web.css'], source: false },
+  /* Raised with the number that moved them: 20.2/19.9 KB at 2.11, 21.1/20.8
+     at 2.16 (the colour picker's well, hex field and swatches). */
+  { name: 'mobile.css preset', budget: 22, imports: ['mobile.css'], source: false },
+  { name: 'web.css preset', budget: 22, imports: ['web.css'], source: false },
 ]
 
 const kb = (bytes) => (bytes / 1024).toFixed(1)

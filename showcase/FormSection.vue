@@ -13,10 +13,12 @@ import {
   BaseSlider,
   BaseSwitch,
   BaseTextarea,
+  ColorPicker,
   FileDrop,
   FormField,
   NumberInput,
   PinInput,
+  PALETTES,
   SectionHeading,
   SegmentedControl,
   SliderField,
@@ -60,6 +62,14 @@ const opacity = ref(40)
 const code = ref('')
 const tags = ref(['design'])
 const files = ref<File[]>([])
+const brand = ref('#6b4de6')
+
+/* The kit ships no colours of its own; these are the palettes' first roles,
+   which is one ready source an app can reach for. */
+const SWATCHES = PALETTES.map((palette) => ({
+  value: palette.swatch[0]!,
+  label: palette.name,
+}))
 
 const sliderText = computed(() => `${minutes.value} minutes`)
 
@@ -248,6 +258,12 @@ const CODE: Record<FormPartId, string> = {
   placeholder="Type and press Enter"
   :remove-label="(tag) => \`Remove \${tag}\`"
   :max="5"
+/>`,
+  'form-colour': `<ColorPicker
+  v-model="brand"
+  label="Brand colour"
+  hex-label="Hex value"
+  :swatches="swatches"
 />`,
   'form-file': `<FileDrop
   v-model="files"
@@ -628,6 +644,26 @@ const CODE: Record<FormPartId, string> = {
           <CodeBlock :code="CODE['form-tags']" lang="html" />
         </div>
         <PropTable name="TagsInput" />
+      </article>
+
+      <article :id="part('form-colour').id" class="sc-part">
+        <header class="sc-part-head">
+          <h3 class="sc-part-name">{{ part('form-colour').title }}</h3>
+          <p class="sc-part-pitch">{{ part('form-colour').pitch }}</p>
+        </header>
+        <div class="sc-part-row">
+          <BaseCard>
+            <ColorPicker
+              v-model="brand"
+              label="Brand colour"
+              hex-label="Hex value"
+              :swatches="SWATCHES"
+              hint="Type a short hex too — #abc becomes #aabbcc."
+            />
+          </BaseCard>
+          <CodeBlock :code="CODE['form-colour']" lang="html" />
+        </div>
+        <PropTable name="ColorPicker" />
       </article>
 
       <article :id="part('form-file').id" class="sc-part">

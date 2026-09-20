@@ -24,7 +24,7 @@ export const FORM_GROUPS = [
   {
     id: 'form-values',
     label: 'Form: numbers, codes and files',
-    lead: 'Answers with a shape: an amount, a length, a one-time code, a set of tags, a file. Each carries the keyboard behaviour its shape implies.',
+    lead: 'Answers with a shape: an amount, a length, a one-time code, a set of tags, a file, a colour. Each carries the keyboard behaviour its shape implies.',
   },
 ] as const
 
@@ -157,6 +157,14 @@ export const FORM_PARTS = [
     title: 'TagsInput — a set the reader assembles',
     pitch:
       'Enter or a comma commits one, Backspace takes the last back, and a pasted list becomes separate tags rather than one long one.',
+  },
+  {
+    id: 'form-colour',
+    group: 'form-values',
+    label: 'ColorPicker',
+    title: 'ColorPicker — a colour, as a hex value',
+    pitch:
+      'The platform’s own picker, painted — the same decision as the slider, which is a native range in kit clothes. The swatches beside it are yours, values and names both: a row of colours from the kit would be a product decision, and unnamed ones would be buttons a screen reader reads as nothing.',
   },
   {
     id: 'form-file',

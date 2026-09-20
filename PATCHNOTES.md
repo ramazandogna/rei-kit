@@ -60,6 +60,32 @@ without.
 
 ---
 
+## 2.16.0
+
+**You gain `ColorPicker`** — a colour as `#rrggbb`, from the platform's own
+picker, with your swatches beside it.
+
+```vue
+<script setup lang="ts">
+import { ColorPicker, PALETTES } from 'rei-kit'
+
+const brand = ref('#6b4de6')
+
+// The swatches are yours, values and names. PALETTES is one ready source.
+const swatches = PALETTES.map((p) => ({ value: p.swatch[0], label: p.name }))
+</script>
+
+<template>
+  <ColorPicker v-model="brand" label="Brand colour" hex-label="Hex value" :swatches="swatches" />
+</template>
+```
+
+`#abc` and capitals are accepted and handed back as `#aabbcc`, so you never
+compare two spellings of one colour. Leave `hexLabel` out and there is no
+hex field.
+
+**Action required:** none.
+
 ## 2.15.0
 
 **You gain `SliderField`** — one value, reached either way — **and a tooltip

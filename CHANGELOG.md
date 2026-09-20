@@ -3,6 +3,39 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.16.0 — 2026-09-20
+
+**A colour, as a hex value.**
+
+### Added
+
+- **`ColorPicker`** — the platform's own `input[type="color"]`, painted. The
+  same decision as `BaseSlider`: the native control already has the
+  eyedropper, the keyboard and, on a phone, a full-screen picker no web page
+  matches, so only the look is replaced.
+
+  The swatches beside it are the app's — values **and** names. A row of
+  colours shipped by the kit would be a product decision, which this kit
+  does not make, and unnamed ones would be buttons a screen reader reads as
+  nothing at all. `PALETTES` is a ready source for an app that wants the
+  kit's ten. The hex field appears only when `hexLabel` is given, for the
+  same reason `BaseChip` grows a remove button only when told what to call
+  it.
+
+  In and out as `#rrggbb`, lowercase, the way dates are `YYYY-MM-DD` and
+  times are `HH:mm`. `#abc` and `#AABBCC` are accepted from somebody typing
+  and normalised on the way out, so an app never compares two spellings of
+  one colour. Typing is allowed to be wrong on the way: `#ab` is not a
+  colour, and rewriting the field on every keystroke is what makes the third
+  character impossible to type. Something unreadable is put back on blur,
+  rather than leaving a field that says one thing while the colour is
+  another.
+
+  It holds no colour of its own, not even a fallback — the kit's own test
+  forbids a hex in a component, and it is right to: black is as much a
+  choice as any other. An unreadable value is handed to the native control
+  empty, and what it shows then is the platform's decision.
+
 ## 2.15.0 — 2026-09-20
 
 **The pair, and the pointer.**

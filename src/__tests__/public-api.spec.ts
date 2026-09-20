@@ -98,6 +98,7 @@ const PUBLIC_API = [
   'BaseRating',
   'BaseSeparator',
   'BaseSkeleton',
+  'ColorPicker',
   'CopyButton',
   'DescriptionList',
   'FileDrop',

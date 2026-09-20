@@ -1896,6 +1896,69 @@
     ]
   },
   {
+    "name": "ColorPicker",
+    "entry": "rei-kit",
+    "summary": "A colour, as a hex value.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the control. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "modelValue",
+        "required": true,
+        "type": "string",
+        "description": "The colour, as `#rrggbb`. Required: a picker with no colour shows none.",
+        "default": ""
+      },
+      {
+        "name": "swatches",
+        "required": false,
+        "type": "readonly ColorSwatch[]",
+        "description": "Colours to offer beside the picker. The app's values and names.",
+        "default": "[]"
+      },
+      {
+        "name": "hexLabel",
+        "required": false,
+        "type": "string",
+        "description": "Names the hex field. Without it, there is no hex field.",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      }
+    ]
+  },
+  {
     "name": "CommandMenu",
     "entry": "rei-kit/web",
     "summary": "Everything the app can do, behind one shortcut.",

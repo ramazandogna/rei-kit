@@ -9,9 +9,13 @@ import {
   BaseCard,
   BaseCombobox,
   BaseKbd,
+  BaseBadge,
   BaseListbox,
   BaseMenu,
+  BasePopconfirm,
   BaseSeparator,
+  DescriptionList,
+  TimePicker,
   BasePopover,
   BaseSheet,
   BaseStepper,
@@ -41,6 +45,7 @@ import {
   CommandMenu,
   DataTable,
   NavLinks,
+  ResponsiveDialog,
   TransferList,
 } from '../src/web/index'
 import type { TableSort } from '../src/web/index'
@@ -193,6 +198,14 @@ const PERMISSIONS = [
   { value: 'billing', label: 'Billing' },
 ]
 
+const askDelete = ref(false)
+const reminderAt = ref<string | undefined>('09:30')
+const FACTS = [
+  { key: 'status', term: 'Status' },
+  { term: 'Created', description: '12 September 2026' },
+  { term: 'Total', description: '₺1,240' },
+]
+
 const access = ref<string[]>(['ada'])
 const PEOPLE = [
   { value: 'ada', label: 'Ada Lovelace', description: 'Owner' },
@@ -260,6 +273,28 @@ function onCommand(id: string) {
           </FormField>
           <PropTable name="FormField" />
         </div>
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <div class="grid gap-6 sm:grid-cols-2">
+          <TimePicker
+            v-model="reminderAt"
+            label="Reminder"
+            hours-label="Hour"
+            minutes-label="Minute"
+            placeholder="Choose a time"
+            min="07:00"
+            max="22:00"
+            hint="Stored as HH:mm, shown in your own clock."
+          />
+          <div>
+            <p class="text-ink mb-2 text-sm font-medium">DescriptionList</p>
+            <DescriptionList :items="FACTS" layout="inline">
+              <template #status><BaseBadge tone="success">Paid</BaseBadge></template>
+            </DescriptionList>
+          </div>
+        </div>
+        <PropTable name="TimePicker" />
       </BaseCard>
 
       <BaseCard class="mt-4">
@@ -426,6 +461,52 @@ function onCommand(id: string) {
             </BasePopover>
           </div>
           <PropTable name="BasePopover" />
+        </div>
+
+        <div>
+          <p class="text-ink text-sm font-medium">BasePopconfirm</p>
+          <p class="text-ink-soft mt-1 text-xs">
+            The question beside the button that asked it, so what is being deleted stays on screen.
+          </p>
+          <div class="mt-3">
+            <BasePopconfirm
+              message="This entry will be deleted."
+              confirm-label="Delete"
+              cancel-label="Cancel"
+              @confirm="toast.success('Entry deleted')"
+            >
+              <template #trigger="{ props }">
+                <BaseButton variant="danger" size="sm" v-bind="props">Delete</BaseButton>
+              </template>
+            </BasePopconfirm>
+          </div>
+          <PropTable name="BasePopconfirm" />
+        </div>
+
+        <div>
+          <p class="text-ink text-sm font-medium">ResponsiveDialog</p>
+          <p class="text-ink-soft mt-1 text-xs">
+            A modal here, a sheet on a phone — one set of props. Narrow the window and press it
+            again.
+          </p>
+          <div class="mt-3">
+            <BaseButton variant="secondary" size="sm" @click="askDelete = true">
+              Ask to delete
+            </BaseButton>
+          </div>
+          <ResponsiveDialog
+            v-model="askDelete"
+            title="Delete this account?"
+            close-label="Close"
+            tone="alert"
+          >
+            Everything in it goes with it. This cannot be undone.
+            <template #actions>
+              <BaseButton variant="secondary" @click="askDelete = false">Keep it</BaseButton>
+              <BaseButton variant="danger" @click="askDelete = false">Delete</BaseButton>
+            </template>
+          </ResponsiveDialog>
+          <PropTable name="ResponsiveDialog" />
         </div>
       </BaseCard>
     </section>

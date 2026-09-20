@@ -76,20 +76,27 @@ function onKeydown(event: KeyboardEvent) {
     @keydown="readonly ? undefined : onKeydown($event)"
     @pointerleave="hovered = 0"
   >
-    <component
-      :is="readonly ? 'span' : 'button'"
+    <!--
+      Spans, never buttons, even though these are pressable.
+
+      The slider above is the control: it is what takes focus, what the
+      arrows move, and what a reader is told about. A `<button>` in here
+      was a second interactive thing inside it, and `aria-hidden` did not
+      undo that — a mouse press still moved focus onto an element hidden
+      from the accessibility tree, taking the slider's own focus ring with
+      it. A span has no such claim, and the pointer works exactly as before.
+    -->
+    <span
       v-for="star in stars"
       :key="star"
-      :type="readonly ? undefined : 'button'"
       class="rk-rating-star"
       :class="{ 'is-on': star <= shown }"
-      :tabindex="readonly ? undefined : -1"
-      :aria-hidden="true"
-      @click="pick(star)"
+      aria-hidden="true"
+      @click="readonly ? undefined : pick(star)"
       @pointerenter="readonly ? undefined : (hovered = star)"
     >
       <Star class="rk-rating-icon" />
-    </component>
+    </span>
   </div>
 </template>
 

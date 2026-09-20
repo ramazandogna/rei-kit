@@ -215,10 +215,23 @@ describe('BaseRating', () => {
     expect(wrapper.find('button').exists()).toBe(false)
   })
 
+  it('puts nothing focusable inside the slider', () => {
+    const wrapper = mount(BaseRating, { props: { label: 'Puanınız', valueLabel, modelValue: 3 } })
+
+    /*
+     * The stars are spans. They were buttons hidden with `aria-hidden` and
+     * `tabindex="-1"`, which kept them out of the tab order but not out of
+     * the way: a mouse press still put focus on an element hidden from the
+     * accessibility tree, and the slider's own focus ring went with it.
+     */
+    expect(wrapper.findAll('button, a, input, [tabindex]:not([tabindex="0"])')).toHaveLength(0)
+    expect(wrapper.findAll('.rk-rating-star')).toHaveLength(5)
+  })
+
   it('lets go of the score it already has', async () => {
     const wrapper = mount(BaseRating, { props: { label: 'Puanınız', valueLabel, modelValue: 3 } })
 
-    await wrapper.findAll('button')[2]!.trigger('click')
+    await wrapper.findAll('.rk-rating-star')[2]!.trigger('click')
 
     expect(wrapper.emitted('update:modelValue')!.at(-1)).toEqual([0])
   })

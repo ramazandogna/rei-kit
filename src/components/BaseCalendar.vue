@@ -297,7 +297,16 @@ watch(
       @pointerleave="hovered = null"
     >
       <div v-for="(week, index) in weeks" :key="index" class="rk-cal-week" role="row">
-        <div v-for="key in week" :key="key" role="gridcell" class="rk-cal-cell">
+        <!-- Selection belongs to the cell, not to the button inside it:
+             `role="button"` does not support `aria-selected`, so a reader
+             was told nothing at all about which day is chosen. -->
+        <div
+          v-for="key in week"
+          :key="key"
+          role="gridcell"
+          class="rk-cal-cell"
+          :aria-selected="stateOf(key) === 'selected'"
+        >
           <button
             type="button"
             class="rk-cal-day"
@@ -305,7 +314,6 @@ watch(
             :tabindex="key === focused ? 0 : -1"
             :disabled="disabled(key)"
             :aria-label="formatDate(fromDateKey(key), { dateStyle: 'full' })"
-            :aria-selected="stateOf(key) === 'selected'"
             :aria-current="key === today ? 'date' : undefined"
             @click="choose(key)"
             @pointerenter="hovered = key"

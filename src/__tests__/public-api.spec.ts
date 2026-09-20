@@ -74,6 +74,7 @@ const PUBLIC_API = [
   'BaseCalendar',
   'BaseChip',
   'BaseKbd',
+  'BaseListbox',
   'BaseLink',
   'BaseRating',
   'BaseSeparator',

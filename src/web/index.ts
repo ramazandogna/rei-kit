@@ -39,6 +39,21 @@ export { default as BaseModal } from './BaseModal.vue'
 
 export { default as BasePagination } from './BasePagination.vue'
 
+/**
+ * Everything the app can do, behind ⌘K. In the wide entry because it is a
+ * keyboard shortcut first: a phone has no ⌘, and an app that is only ever a
+ * phone should not download it.
+ */
+export { default as CommandMenu } from './CommandMenu.vue'
+export type { CommandGroup, CommandItem } from './CommandMenu.vue'
+
+/**
+ * `BaseTable` with a sort, a selection and a loading state. Wide because a
+ * table of nine columns is not a thing a phone shows; a phone shows a list.
+ */
+export { default as DataTable } from './DataTable.vue'
+export type { DataColumn, TableSort } from './DataTable.vue'
+
 export { default as BaseTabs } from './BaseTabs.vue'
 export type { TabPanel } from './BaseTabs.vue'
 

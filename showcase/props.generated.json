@@ -825,6 +825,48 @@
     ]
   },
   {
+    "name": "BaseListbox",
+    "entry": "rei-kit",
+    "summary": "A list you choose from, open on the page.",
+    "props": [
+      {
+        "name": "modelValue",
+        "required": false,
+        "type": "Value",
+        "description": "The chosen option, or options, with `v-model`.",
+        "default": "undefined"
+      },
+      {
+        "name": "options",
+        "required": true,
+        "type": "readonly ListboxOption<V>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The list's accessible name.",
+        "default": ""
+      },
+      {
+        "name": "mode",
+        "required": false,
+        "type": "M",
+        "description": "One option, or any number of them.",
+        "default": "'single' as M"
+      },
+      {
+        "name": "height",
+        "required": false,
+        "type": "string",
+        "description": "How tall before it scrolls. Any CSS length.",
+        "default": "'14rem'"
+      }
+    ]
+  },
+  {
     "name": "BaseMarquee",
     "entry": "rei-kit/motion",
     "summary": "A row that scrolls sideways without end: logos, testimonials, a ticker.",
@@ -1637,6 +1679,48 @@
     ]
   },
   {
+    "name": "CommandMenu",
+    "entry": "rei-kit/web",
+    "summary": "Everything the app can do, behind one shortcut.",
+    "props": [
+      {
+        "name": "groups",
+        "required": true,
+        "type": "readonly CommandGroup<Id>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The dialog's accessible name, e.g. \"Commands\".",
+        "default": ""
+      },
+      {
+        "name": "placeholder",
+        "required": true,
+        "type": "string",
+        "description": "The field's placeholder, e.g. \"Type a command or search\".",
+        "default": ""
+      },
+      {
+        "name": "emptyLabel",
+        "required": true,
+        "type": "string",
+        "description": "Shown when nothing matches, e.g. \"Nothing found\".",
+        "default": ""
+      },
+      {
+        "name": "hotkey",
+        "required": false,
+        "type": "string",
+        "description": "The letter that opens it with ⌘ or Ctrl. Unset, the app opens it itself.",
+        "default": "undefined"
+      }
+    ]
+  },
+  {
     "name": "CopyButton",
     "entry": "rei-kit",
     "summary": "Copies a piece of text, and says that it did.",
@@ -1717,6 +1801,90 @@
         "type": "string",
         "description": "A BCP 47 tag. Unset, the kit's active formatting locale.",
         "default": "undefined"
+      }
+    ]
+  },
+  {
+    "name": "DataTable",
+    "entry": "rei-kit/web",
+    "summary": "`BaseTable` with the three things a table of real data grows: a sort, a selection, and something to show while it is loading.",
+    "props": [
+      {
+        "name": "columns",
+        "required": true,
+        "type": "readonly DataColumn<Row>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "rows",
+        "required": true,
+        "type": "readonly Row[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "caption",
+        "required": true,
+        "type": "string",
+        "description": "What this table is. Required — an unnamed table is a box of numbers.",
+        "default": ""
+      },
+      {
+        "name": "captionHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "rowKey",
+        "required": false,
+        "type": "(string & keyof Row)",
+        "description": "Which field identifies a row. Required for selection.",
+        "default": "undefined"
+      },
+      {
+        "name": "selectAllLabel",
+        "required": false,
+        "type": "string",
+        "description": "Given with `rowKey`, the table grows a checkbox column. Names the header one.",
+        "default": "undefined"
+      },
+      {
+        "name": "rowLabel",
+        "required": false,
+        "type": "((row: Row) => string)",
+        "description": "Names each row's checkbox from the row: `(row) => \\`Select ${row.name}\\``.",
+        "default": "undefined"
+      },
+      {
+        "name": "manualSort",
+        "required": false,
+        "type": "boolean",
+        "description": "Report the sort instead of doing it — for a server that pages the data.",
+        "default": "false"
+      },
+      {
+        "name": "loading",
+        "required": false,
+        "type": "boolean",
+        "description": "Draws skeleton rows instead of the body.",
+        "default": "false"
+      },
+      {
+        "name": "loadingRows",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "5"
+      },
+      {
+        "name": "stickyHeader",
+        "required": false,
+        "type": "boolean",
+        "description": "Keeps the header on screen while the body scrolls under it.",
+        "default": "false"
       }
     ]
   },

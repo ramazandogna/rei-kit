@@ -38,8 +38,9 @@ const JS_CASES = [
     name: 'every component',
     // Raised deliberately as the kit grows, and only ever with the number
     // that moved it: 25.6 KB at 2.4, 29.1 at 2.5 (six controls), 31.2 at 2.6
-    // (the calendar), 34.1 at 2.7 (ten small parts, about 0.3 KB each).
-    budget: 37,
+    // (the calendar), 34.1 at 2.7 (ten small parts, about 0.3 KB each),
+    // 36.7 at 2.8 (the data table, the command menu and the listbox).
+    budget: 40,
     code: ['index', 'web', 'app', 'pwa', 'motion']
       .map((entry) => `import * as ${entry} from '${dist(`${entry}.js`)}'\nconsole.log(${entry})`)
       .join('\n'),
@@ -55,13 +56,14 @@ const MUST_CONTAIN = ['.bg-primary', '.rk-modal-panel', '.surface-overlay', '.fo
 const CSS_CASES = [
   {
     name: 'core only',
-    // 2.6.0: the calendar's grid, days and month blocks took it to 14.4 KB.
-    budget: 16,
+    // Raised with the number that moved it: 12.1 KB at 2.2, 14.4 at 2.6
+    // (the calendar), 16.6 at 2.8 (the data table and the command menu).
+    budget: 18,
     imports: ['tokens.css', 'shell/mobile.css', 'styles.css'],
     source: true,
   },
-  { name: 'mobile.css preset', budget: 19, imports: ['mobile.css'], source: false },
-  { name: 'web.css preset', budget: 19, imports: ['web.css'], source: false },
+  { name: 'mobile.css preset', budget: 21, imports: ['mobile.css'], source: false },
+  { name: 'web.css preset', budget: 21, imports: ['web.css'], source: false },
 ]
 
 const kb = (bytes) => (bytes / 1024).toFixed(1)

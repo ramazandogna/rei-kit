@@ -252,3 +252,31 @@ describe('server rendering, the basics', () => {
     ).toContain('Etiketler')
   })
 })
+
+describe('server rendering, the desk parts', () => {
+  it('renders a table and a listbox, and a palette that is closed', async () => {
+    const { BaseListbox } = await import('../index')
+    const { CommandMenu, DataTable } = await import('../web/index')
+
+    const table = await render(DataTable, {
+      caption: 'Ödemeler',
+      columns: [{ key: 'name', label: 'Ad', sortable: true }],
+      rows: [{ name: 'Ada' }],
+    })
+    expect(table).toContain('aria-sort="none"')
+
+    const list = await render(BaseListbox, {
+      label: 'Kişiler',
+      options: [{ value: 'a', label: 'Ada' }],
+    })
+    expect(list).toContain('role="listbox"')
+
+    const palette = await render(CommandMenu, {
+      groups: [{ items: [{ id: 'a', label: 'Bir' }] }],
+      label: 'Komutlar',
+      placeholder: 'Yazın',
+      emptyLabel: 'Yok',
+    })
+    expect(palette).not.toContain('role="combobox"')
+  })
+})

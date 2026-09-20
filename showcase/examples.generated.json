@@ -95,6 +95,11 @@
     "js": "<script setup>\nimport { BaseLink } from 'rei-kit'\n</script>\n\n<template>\n  <p>\n    Read the <BaseLink to=\"/docs\">documentation</BaseLink>, or the\n    <BaseLink href=\"https://vuejs.org\" external>Vue guide</BaseLink>.\n  </p>\n</template>\n"
   },
   {
+    "name": "BaseListbox",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseListbox } from 'rei-kit'\n\nconst chosen = ref<string[]>(['ada'])\nconst people = [\n  { value: 'ada', label: 'Ada Lovelace', description: 'Owner' },\n  { value: 'kenji', label: 'Kenji Mori', description: 'Editor' },\n  { value: 'mei', label: 'Mei Lin', description: 'Invited', disabled: true },\n]\n</script>\n\n<template>\n  <BaseListbox v-model=\"chosen\" mode=\"multiple\" :options=\"people\" label=\"People with access\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseListbox } from 'rei-kit'\n\nconst chosen = ref(['ada'])\nconst people = [\n  { value: 'ada', label: 'Ada Lovelace', description: 'Owner' },\n  { value: 'kenji', label: 'Kenji Mori', description: 'Editor' },\n  { value: 'mei', label: 'Mei Lin', description: 'Invited', disabled: true },\n]\n</script>\n\n<template>\n  <BaseListbox v-model=\"chosen\" mode=\"multiple\" :options=\"people\" label=\"People with access\" />\n</template>\n"
+  },
+  {
     "name": "BaseMarquee",
     "ts": "<script setup lang=\"ts\">\nimport { BaseBadge } from 'rei-kit'\nimport { BaseMarquee } from 'rei-kit/motion'\n\nconst names = ['Nord', 'Dracula', 'Catppuccin', 'Gruvbox']\n</script>\n\n<template>\n  <BaseMarquee :duration=\"40\">\n    <BaseBadge v-for=\"name in names\" :key=\"name\">{{ name }}</BaseBadge>\n  </BaseMarquee>\n</template>\n",
     "js": "<script setup>\nimport { BaseBadge } from 'rei-kit'\nimport { BaseMarquee } from 'rei-kit/motion'\n\nconst names = ['Nord', 'Dracula', 'Catppuccin', 'Gruvbox']\n</script>\n\n<template>\n  <BaseMarquee :duration=\"40\">\n    <BaseBadge v-for=\"name in names\" :key=\"name\">{{ name }}</BaseBadge>\n  </BaseMarquee>\n</template>\n"
@@ -200,6 +205,11 @@
     "js": "<script setup>\nimport { CircularProgress } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <CircularProgress :value=\"72\" label=\"Upload\" show-value size=\"lg\" />\n    <CircularProgress label=\"Loading\" />\n  </div>\n</template>\n"
   },
   {
+    "name": "CommandMenu",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { FileText, Settings } from 'lucide-vue-next'\nimport { BaseButton } from 'rei-kit'\nimport { CommandMenu } from 'rei-kit/web'\nimport type { CommandGroup } from 'rei-kit/web'\n\nconst open = ref(false)\n\nconst groups: CommandGroup<'new' | 'settings'>[] = [\n  {\n    label: 'Entries',\n    items: [{ id: 'new', label: 'Write an entry', hint: '⌘N', icon: FileText, keywords: ['add'] }],\n  },\n  { label: 'App', items: [{ id: 'settings', label: 'Open settings', icon: Settings }] },\n]\n\nfunction run(id: 'new' | 'settings') {\n  console.log(id)\n}\n</script>\n\n<template>\n  <BaseButton variant=\"secondary\" @click=\"open = true\">Commands (⌘K)</BaseButton>\n\n  <CommandMenu\n    v-model=\"open\"\n    :groups=\"groups\"\n    label=\"Commands\"\n    placeholder=\"Type a command or search\"\n    empty-label=\"Nothing found\"\n    hotkey=\"k\"\n    @select=\"run\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { FileText, Settings } from 'lucide-vue-next'\nimport { BaseButton } from 'rei-kit'\nimport { CommandMenu } from 'rei-kit/web'\n\nconst open = ref(false)\n\nconst groups = [\n  {\n    label: 'Entries',\n    items: [{ id: 'new', label: 'Write an entry', hint: '⌘N', icon: FileText, keywords: ['add'] }],\n  },\n  { label: 'App', items: [{ id: 'settings', label: 'Open settings', icon: Settings }] },\n]\n\nfunction run(id) {\n  console.log(id)\n}\n</script>\n\n<template>\n  <BaseButton variant=\"secondary\" @click=\"open = true\">Commands (⌘K)</BaseButton>\n\n  <CommandMenu\n    v-model=\"open\"\n    :groups=\"groups\"\n    label=\"Commands\"\n    placeholder=\"Type a command or search\"\n    empty-label=\"Nothing found\"\n    hotkey=\"k\"\n    @select=\"run\"\n  />\n</template>\n"
+  },
+  {
     "name": "CopyButton",
     "ts": "<script setup lang=\"ts\">\nimport { CopyButton } from 'rei-kit'\n</script>\n\n<template>\n  <CopyButton\n    text=\"pnpm add rei-kit\"\n    copy-label=\"Copy the command\"\n    copied-label=\"Copied\"\n    error-label=\"Could not copy\"\n    with-text\n  />\n</template>\n",
     "js": "<script setup>\nimport { CopyButton } from 'rei-kit'\n</script>\n\n<template>\n  <CopyButton\n    text=\"pnpm add rei-kit\"\n    copy-label=\"Copy the command\"\n    copied-label=\"Copied\"\n    error-label=\"Could not copy\"\n    with-text\n  />\n</template>\n"
@@ -208,6 +218,11 @@
     "name": "CountUp",
     "ts": "<script setup lang=\"ts\">\nimport { CountUp } from 'rei-kit/motion'\n</script>\n\n<template>\n  <CountUp :value=\"12480\" />\n</template>\n",
     "js": "<script setup>\nimport { CountUp } from 'rei-kit/motion'\n</script>\n\n<template>\n  <CountUp :value=\"12480\" />\n</template>\n"
+  },
+  {
+    "name": "DataTable",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { DataTable } from 'rei-kit/web'\nimport type { DataColumn, TableSort } from 'rei-kit/web'\n\ninterface Payment extends Record<string, unknown> {\n  id: string\n  name: string\n  amount: number\n}\n\nconst columns: DataColumn<Payment>[] = [\n  { key: 'name', label: 'Name', sortable: true },\n  { key: 'amount', label: 'Amount', align: 'end', sortable: true },\n]\nconst rows: Payment[] = [\n  { id: 'a', name: 'Ada Lovelace', amount: 4200 },\n  { id: 'b', name: 'Ömer Seyfettin', amount: 120 },\n]\n\nconst sort = ref<TableSort<Payment> | undefined>({ key: 'amount', direction: 'desc' })\nconst selected = ref<string[]>([])\n</script>\n\n<template>\n  <DataTable\n    v-model:sort=\"sort\"\n    v-model:selected=\"selected\"\n    :columns=\"columns\"\n    :rows=\"rows\"\n    caption=\"Payments\"\n    row-key=\"id\"\n    select-all-label=\"Select every payment\"\n    :row-label=\"(row) => `Select ${row.name}`\"\n  >\n    <template #amount=\"{ value }\">{{ value }} ₺</template>\n  </DataTable>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { DataTable } from 'rei-kit/web'\n\nconst columns = [\n  { key: 'name', label: 'Name', sortable: true },\n  { key: 'amount', label: 'Amount', align: 'end', sortable: true },\n]\nconst rows = [\n  { id: 'a', name: 'Ada Lovelace', amount: 4200 },\n  { id: 'b', name: 'Ömer Seyfettin', amount: 120 },\n]\n\nconst sort = ref({ key: 'amount', direction: 'desc' })\nconst selected = ref([])\n</script>\n\n<template>\n  <DataTable\n    v-model:sort=\"sort\"\n    v-model:selected=\"selected\"\n    :columns=\"columns\"\n    :rows=\"rows\"\n    caption=\"Payments\"\n    row-key=\"id\"\n    select-all-label=\"Select every payment\"\n    :row-label=\"(row) => `Select ${row.name}`\"\n  >\n    <template #amount=\"{ value }\">{{ value }} ₺</template>\n  </DataTable>\n</template>\n"
   },
   {
     "name": "EmptyState",

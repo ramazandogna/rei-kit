@@ -44,6 +44,7 @@ const note = ref('')
 const currency = ref<string | undefined>()
 const country = ref<'tr' | 'jp' | 'de' | ''>('')
 const access = ref<string[]>(['aiko'])
+const recipients = ref<string[]>(['aiko'])
 
 const remember = ref(false)
 const reminder = ref(true)
@@ -105,6 +106,48 @@ const PEOPLE = [
 const part = (id: FormPartId) => FORM_PARTS.find((one) => one.id === id)!
 const group = (id: FormGroupId) => FORM_GROUPS.find((one) => one.id === id)!
 
+/**
+ * A stand-in for a server, so the page can show the state a real one puts
+ * the control in without needing one.
+ */
+const cities = ref<{ value: string; label: string }[]>([])
+const city = ref('')
+const searching = ref(false)
+const row = ref('')
+
+const CITIES = [
+  'Istanbul',
+  'Izmir',
+  'Ankara',
+  'Osaka',
+  'Kyoto',
+  'Sapporo',
+  'Berlin',
+  'Bremen',
+  'Dresden',
+]
+
+/* Four thousand rows, which is where rendering all of them stops being free. */
+const MANY = Array.from({ length: 4000 }, (_, index) => ({
+  value: `row-${index}`,
+  label: `Row ${index + 1}`,
+}))
+
+async function search(query: string) {
+  if (query === '') {
+    cities.value = []
+    return
+  }
+
+  searching.value = true
+  // The wait is the point of the demo: it is what the loading state is for.
+  await new Promise((resolve) => setTimeout(resolve, 600))
+  cities.value = CITIES.filter((name) => name.toLowerCase().includes(query.toLowerCase())).map(
+    (name) => ({ value: name.toLowerCase(), label: name }),
+  )
+  searching.value = false
+}
+
 const CODE: Record<FormPartId, string> = {
   'form-input': `<BaseInput
   v-model="email"
@@ -125,12 +168,25 @@ const CODE: Record<FormPartId, string> = {
   placeholder="Choose one"
   :options="currencies"
 />`,
-  'form-combobox': `<BaseCombobox
-  v-model="country"
-  label="Country"
-  :options="countries"
-  placeholder="Type to filter"
-  empty-label="No matches"
+  'form-combobox': `<!-- One answer -->
+<BaseCombobox v-model="country" label="Country" :options="countries" ... />
+
+<!-- Several, as chips -->
+<BaseCombobox
+  v-model="recipients"
+  mode="multiple"
+  :remove-label="(name) => \`Remove \${name}\`"
+  ...
+/>
+
+<!-- From a server: debounced, and do not filter it twice -->
+<BaseCombobox
+  :options="results"
+  :loading="searching"
+  loading-label="Searching…"
+  filter="none"
+  @search="search"
+  ...
 />`,
   'form-listbox': `<BaseListbox
   v-model="access"
@@ -291,6 +347,42 @@ const CODE: Record<FormPartId, string> = {
               :options="COUNTRIES"
               placeholder="Type to filter"
               empty-label="No matches"
+            />
+
+            <BaseCombobox
+              v-model="recipients"
+              class="mt-5"
+              mode="multiple"
+              label="Recipients"
+              :options="PEOPLE"
+              :remove-label="(name) => `Remove ${name}`"
+              placeholder="Add someone"
+              empty-label="Nobody matches"
+              hint="Choose one again to take it off; Backspace removes the last."
+            />
+
+            <BaseCombobox
+              v-model="city"
+              class="mt-5"
+              label="City — from a server"
+              :options="cities"
+              :loading="searching"
+              loading-label="Searching…"
+              filter="none"
+              placeholder="Type two letters"
+              empty-label="No city matches"
+              hint="The typing settles first; nothing is fetched per keystroke."
+              @search="search"
+            />
+
+            <BaseCombobox
+              v-model="row"
+              class="mt-5"
+              label="One of four thousand"
+              :options="MANY"
+              placeholder="Type to filter"
+              empty-label="No matches"
+              hint="Only the rows near the viewport are in the DOM — the arrows still walk all of it."
             />
           </BaseCard>
           <CodeBlock :code="CODE['form-combobox']" lang="html" />

@@ -39,8 +39,11 @@ const JS_CASES = [
     // Raised deliberately as the kit grows, and only ever with the number
     // that moved it: 25.6 KB at 2.4, 29.1 at 2.5 (six controls), 31.2 at 2.6
     // (the calendar), 34.1 at 2.7 (ten small parts, about 0.3 KB each),
-    // 36.7 at 2.8 (the data table, the command menu and the listbox).
-    budget: 40,
+    // 36.7 at 2.8 (the data table, the command menu and the listbox),
+    // 40.7 at 2.13 (the combobox's multiple mode, its debounced search and
+    // its virtual window -- 0.8 KB for all three, which is the whole of
+    // what a virtual list usually costs as a dependency).
+    budget: 41,
     code: ['index', 'web', 'app', 'pwa', 'motion']
       .map((entry) => `import * as ${entry} from '${dist(`${entry}.js`)}'\nconsole.log(${entry})`)
       .join('\n'),

@@ -60,6 +60,42 @@ without.
 
 ---
 
+## 2.13.0
+
+**You gain a combobox that handles a real list:** several answers as chips, a
+list that comes from a server, and a list too long to render.
+
+```vue
+<!-- Several, as chips -->
+<BaseCombobox
+  v-model="recipients"
+  mode="multiple"
+  label="Recipients"
+  :options="people"
+  :remove-label="(name) => `Remove ${name}`"
+  empty-label="Nobody matches"
+/>
+
+<!-- From a server. The debounce is the kit's; filter="none" stops the
+     client narrowing what the server already narrowed. -->
+<BaseCombobox
+  label="City"
+  :options="results"
+  :loading="searching"
+  loading-label="Searching…"
+  filter="none"
+  empty-label="No city matches"
+  @search="search"
+/>
+```
+
+A list over 150 options renders only the rows near the viewport on its own —
+nothing to switch on, and `virtualizeAfter` moves the line if your rows are
+unusually cheap or unusually expensive.
+
+**Action required:** none. A combobox that asks for none of this is
+unchanged.
+
 ## 2.12.0
 
 **A money column now lines up with its own heading.** `align: 'end'` moved

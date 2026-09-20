@@ -1,5 +1,8 @@
-<script setup lang="ts" generic="V extends string">
+<script setup lang="ts" generic="V extends string, M extends 'single' | 'multiple' = 'single'">
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
+
+import { useBoundValue } from '../composables/use-bound-value'
+import BaseSkeleton from './BaseSkeleton.vue'
 
 export interface ComboboxOption<V extends string> {
   value: V
@@ -34,8 +37,37 @@ export interface ComboboxOption<V extends string> {
  *
  * The highlighted option is scrolled into view, because a highlight below the
  * fold is a selection nobody can see.
+ *
+ * ## A list that comes from a server
+ *
+ * `@search` is the typed text, debounced — the kit holds the timer so every
+ * app does not write the same one, and it is cancelled on unmount so a
+ * request is never fired at a component that has gone. Set `filter="none"`
+ * alongside it: when the server has already narrowed the list, narrowing it
+ * again here hides rows that matched for a reason the client cannot see.
+ *
+ * `loading` marks the list `aria-busy` while the answer is on its way, which
+ * is the part that is heard. `loadingLabel` is the part that is read, and it
+ * is optional for the same reason every other visible string here is a prop:
+ * the kit has no language of its own.
+ *
+ * ## More than one answer
+ *
+ * `mode="multiple"` keeps the chosen ones as chips in the field, and choosing
+ * an option again takes it back off. Backspace on an empty field removes the
+ * last one. The chips carry a remove button only when `removeLabel` is given,
+ * because a button whose name the kit had to invent would be a button that
+ * speaks a language the app does not.
+ *
+ * ## A list too long to render
+ *
+ * Past `virtualizeAfter` options only the rows near the viewport are in the
+ * DOM, with a spacer above and below standing in for the rest. Every row
+ * still states `aria-setsize` and `aria-posinset`, so what a screen reader
+ * hears is the whole list — "3 of 4000" — rather than the window.
  */
 const {
+  modelValue = undefined,
   label,
   options,
   placeholder = '',
@@ -43,7 +75,17 @@ const {
   error = '',
   disabled = false,
   emptyLabel,
+  mode = 'single' as M,
+  removeLabel = undefined,
+  loading = false,
+  loadingLabel = '',
+  filter = 'local',
+  debounce = 200,
+  virtualizeAfter = 150,
+  rowHeight = 36,
 } = defineProps<{
+  /** The chosen value, or values in `multiple` mode, with `v-model`. */
+  modelValue?: Value | undefined
   label: string
   options: readonly ComboboxOption<V>[]
   placeholder?: string | undefined
@@ -52,9 +94,55 @@ const {
   disabled?: boolean | undefined
   /** Shown when nothing matches. Already translated. */
   emptyLabel: string
+  /** `multiple` keeps the chosen ones as chips in the field. */
+  mode?: M | undefined
+  /** Names a chip's remove button. Without it, chips carry no button. */
+  removeLabel?: ((label: string) => string) | undefined
+  /** Marks the list busy while an answer is on its way. */
+  loading?: boolean | undefined
+  /** Read while `loading`. Already translated. */
+  loadingLabel?: string | undefined
+  /** `none` when the server has already narrowed the list. */
+  filter?: 'local' | 'none' | undefined
+  /** How long typing settles before `search`, in milliseconds. */
+  debounce?: number | undefined
+  /** Past this many options, only the rows near the viewport are rendered. */
+  virtualizeAfter?: number | undefined
+  /** A row's height in pixels; the virtual window is measured in these. */
+  rowHeight?: number | undefined
 }>()
 
-const model = defineModel<V | ''>({ default: '' })
+/** Multiple always hands back an array; a single choice is the value or ''. */
+type Value = M extends 'multiple' ? V[] : V | ''
+
+/* Declared by hand rather than with defineModel, which cannot both accept
+   `undefined` and promise never to emit it -- and an app whose model is
+   `ref('')` is exactly the one that breaks. See `use-bound-value.ts`. */
+const emit = defineEmits<{
+  'update:modelValue': [value: Value]
+  /** The typed text, once it has settled. For a list that lives on a server. */
+  search: [query: string]
+}>()
+
+const model = useBoundValue<Value>(
+  () => modelValue as Value | undefined,
+  (value) => emit('update:modelValue', value),
+)
+
+const multiple = computed(() => mode === 'multiple')
+
+/** The chosen values, however many there are, as a plain array. */
+const chosen = computed<V[]>(() => {
+  const value = model.value as V | V[] | '' | undefined
+  if (Array.isArray(value)) return value
+  return value === undefined || value === '' ? [] : [value]
+})
+
+const chosenOptions = computed(() =>
+  chosen.value.map(
+    (value) => options.find((option) => option.value === value) ?? { value, label: value },
+  ),
+)
 
 const id = useId()
 const listId = `${id}-list`
@@ -68,21 +156,30 @@ const highlighted = ref(0)
 const root = ref<HTMLElement | null>(null)
 const list = ref<HTMLElement | null>(null)
 
-const selected = computed(() => options.find((option) => option.value === model.value))
+const single = computed(() => (multiple.value ? undefined : chosenOptions.value[0]))
 
-/** What the input shows: the query while typing, the chosen label otherwise. */
+/**
+ * What the input shows.
+ *
+ * In multiple mode it is always the query: the answers are the chips beside
+ * it, and writing one of them into the field would mean deleting it to search
+ * for the next.
+ */
 const text = computed({
-  get: () => (open.value ? query.value : (selected.value?.label ?? '')),
+  get: () => (multiple.value || open.value ? query.value : (single.value?.label ?? '')),
   set: (value: string) => {
     query.value = value
     open.value = true
     highlighted.value = 0
+    announce(value)
   },
 })
 
 const matches = computed(() => {
   const needle = query.value.trim().toLowerCase()
-  if (!open.value || needle === '') return options
+  // `none` is for a list the server has already narrowed: filtering again
+  // here would hide rows that matched for a reason this side cannot see.
+  if (filter === 'none' || !open.value || needle === '') return options
 
   return options.filter((option) => option.label.toLowerCase().includes(needle))
 })
@@ -93,12 +190,74 @@ const describedBy = computed(() => {
   return undefined
 })
 
+/* ─── A list that comes from a server ─── */
+
+let timer: ReturnType<typeof setTimeout> | undefined
+
+function announce(value: string) {
+  if (timer) clearTimeout(timer)
+  timer = setTimeout(() => emit('search', value.trim()), debounce)
+}
+
+/* ─── Virtualisation ─── */
+
+const virtual = computed(() => matches.value.length > virtualizeAfter)
+const scrollTop = ref(0)
+/** How tall the list box is; read once it is open, never guessed. */
+const viewport = ref(224)
+
+const window_ = computed(() => {
+  if (!virtual.value) return { start: 0, end: matches.value.length }
+
+  // Three rows of slack each way, so a fast scroll does not show a gap
+  // before the next frame fills it.
+  const first = Math.max(0, Math.floor(scrollTop.value / rowHeight) - 3)
+  const count = Math.ceil(viewport.value / rowHeight) + 6
+
+  return { start: first, end: Math.min(matches.value.length, first + count) }
+})
+
+const rows = computed(() =>
+  matches.value.slice(window_.value.start, window_.value.end).map((option, index) => ({
+    option,
+    /** The row's place in the whole list, not in the window. */
+    index: window_.value.start + index,
+  })),
+)
+
+const padTop = computed(() => (virtual.value ? window_.value.start * rowHeight : 0))
+const padBottom = computed(() =>
+  virtual.value ? (matches.value.length - window_.value.end) * rowHeight : 0,
+)
+
+function onScroll(event: Event) {
+  scrollTop.value = (event.target as HTMLElement).scrollTop
+}
+
+/* ─── Choosing ─── */
+
 function choose(option: ComboboxOption<V> | undefined) {
   if (!option) return
 
-  model.value = option.value
+  if (multiple.value) {
+    const next = chosen.value.includes(option.value)
+      ? chosen.value.filter((one) => one !== option.value)
+      : [...chosen.value, option.value]
+
+    model.value = next as Value
+    // The field stays open: choosing several means choosing again.
+    query.value = ''
+    return
+  }
+
+  model.value = option.value as Value
   query.value = ''
   open.value = false
+}
+
+function remove(value: V) {
+  if (!multiple.value) return
+  model.value = chosen.value.filter((one) => one !== value) as Value
 }
 
 function move(delta: number) {
@@ -112,6 +271,22 @@ function move(delta: number) {
 
 async function scrollHighlightIntoView() {
   await nextTick()
+
+  // A virtual row may not be in the DOM at all, so the scroller is moved by
+  // arithmetic rather than by asking an element that is not there.
+  if (virtual.value && list.value) {
+    const top = highlighted.value * rowHeight
+    const bottom = top + rowHeight
+    if (top < list.value.scrollTop) list.value.scrollTop = top
+    else if (bottom > list.value.scrollTop + viewport.value) {
+      list.value.scrollTop = bottom - viewport.value
+    }
+    return
+  }
+
+  // By position rather than by selector: `CSS.escape` does not exist in jsdom
+  // or on a server, and the rows are the only children here -- the spacers
+  // are rendered only in the virtual case, which returned above.
   const el = list.value?.children[highlighted.value] as HTMLElement | undefined
   // A highlight below the fold is a selection nobody can see. Feature-detected
   // rather than called: `scrollIntoView` is missing in jsdom and in more than
@@ -135,6 +310,14 @@ function onKeydown(event: KeyboardEvent) {
       event.preventDefault()
       choose(matches.value[highlighted.value])
       break
+    case 'Backspace':
+      // Only with nothing to delete in the field, or it would eat a letter
+      // and a chip with the same press.
+      if (multiple.value && query.value === '' && chosen.value.length > 0) {
+        event.preventDefault()
+        remove(chosen.value[chosen.value.length - 1]!)
+      }
+      break
     case 'Escape':
       // Close first, clear second. One press to get the list out of the way
       // without losing what was typed.
@@ -142,8 +325,8 @@ function onKeydown(event: KeyboardEvent) {
       if (open.value) {
         open.value = false
         query.value = ''
-      } else {
-        model.value = ''
+      } else if (!multiple.value) {
+        model.value = '' as Value
       }
       break
     case 'Tab':
@@ -161,16 +344,26 @@ function onDocumentPointer(event: Event) {
 
 watch(
   open,
-  (isOpen) => {
+  async (isOpen) => {
     if (typeof document === 'undefined') return
 
-    if (isOpen) document.addEventListener('pointerdown', onDocumentPointer)
-    else document.removeEventListener('pointerdown', onDocumentPointer)
+    if (isOpen) {
+      document.addEventListener('pointerdown', onDocumentPointer)
+      await nextTick()
+      // Measured, not assumed: the height is a CSS value an app may change.
+      if (list.value) viewport.value = list.value.clientHeight || viewport.value
+    } else document.removeEventListener('pointerdown', onDocumentPointer)
   },
   { immediate: true },
 )
 
+/* A shorter list can leave the highlight past its end. */
+watch(matches, () => {
+  if (highlighted.value >= matches.value.length) highlighted.value = 0
+})
+
 onBeforeUnmount(() => {
+  if (timer) clearTimeout(timer)
   if (typeof document !== 'undefined') {
     document.removeEventListener('pointerdown', onDocumentPointer)
   }
@@ -181,13 +374,36 @@ onBeforeUnmount(() => {
   <div ref="root" class="rk-combo">
     <label :for="id" class="rk-combo-label">{{ label }}</label>
 
-    <div class="rk-combo-field">
+    <!-- With chips the whole box is the control, so it is the box that
+         carries the `control` surface and the focus ring; the input inside
+         it is plain text. Leaving `control` on the input drew a second
+         field inside the first. -->
+    <div class="rk-combo-field" :class="multiple ? 'is-multiple control' : ''">
+      <span
+        v-for="option in multiple ? chosenOptions : []"
+        :key="option.value"
+        class="rk-combo-chip"
+      >
+        <span>{{ option.label }}</span>
+        <button
+          v-if="removeLabel"
+          type="button"
+          class="rk-combo-chip-x focus-ring"
+          :aria-label="removeLabel(option.label)"
+          :disabled="disabled"
+          @click="remove(option.value)"
+        >
+          ×
+        </button>
+      </span>
+
       <input
         :id="id"
         v-model="text"
         type="text"
         role="combobox"
-        class="rk-combo-input control"
+        class="rk-combo-input"
+        :class="{ control: !multiple }"
         autocomplete="off"
         :placeholder="placeholder"
         :disabled="disabled"
@@ -220,25 +436,46 @@ onBeforeUnmount(() => {
       role="listbox"
       class="rk-combo-list surface-overlay"
       :aria-label="label"
+      :aria-multiselectable="multiple ? true : undefined"
+      :aria-busy="loading ? true : undefined"
+      @scroll="onScroll"
     >
+      <li v-if="padTop > 0" :style="{ height: `${padTop}px` }" aria-hidden="true" />
+
       <li
-        v-for="(option, index) in matches"
-        :id="optionId(index)"
-        :key="option.value"
+        v-for="row in rows"
+        :id="optionId(row.index)"
+        :key="row.option.value"
         role="option"
         class="rk-combo-option"
         :class="{
-          'is-highlighted': index === highlighted,
-          'is-selected': option.value === model,
+          'is-highlighted': row.index === highlighted,
+          'is-selected': chosen.includes(row.option.value),
         }"
-        :aria-selected="option.value === model"
-        @pointerdown.prevent="choose(option)"
-        @pointermove="highlighted = index"
+        :style="virtual ? { height: `${rowHeight}px` } : undefined"
+        :aria-selected="chosen.includes(row.option.value)"
+        :aria-setsize="matches.length"
+        :aria-posinset="row.index + 1"
+        @pointerdown.prevent="choose(row.option)"
+        @pointermove="highlighted = row.index"
       >
-        {{ option.label }}
+        {{ row.option.label }}
       </li>
 
-      <li v-if="matches.length === 0" class="rk-combo-empty">{{ emptyLabel }}</li>
+      <li v-if="padBottom > 0" :style="{ height: `${padBottom}px` }" aria-hidden="true" />
+
+      <!-- Rows in the shape of the rows that are coming, rather than a
+           spinner: the list keeps its height, so the page under it does not
+           jump when the answer lands. The list says `aria-busy`, which is
+           what is heard; `loadingLabel` is what is read, when given. -->
+      <li v-if="loading" class="rk-combo-status">
+        <span v-if="loadingLabel">{{ loadingLabel }}</span>
+        <span class="rk-combo-status-rows" aria-hidden="true">
+          <BaseSkeleton v-for="n in 3" :key="n" shape="text" height="0.75rem" />
+        </span>
+      </li>
+
+      <li v-else-if="matches.length === 0" class="rk-combo-empty">{{ emptyLabel }}</li>
     </ul>
 
     <p v-if="error" :id="errorId" class="rk-combo-error">{{ error }}</p>
@@ -266,6 +503,41 @@ onBeforeUnmount(() => {
   align-items: center;
 }
 
+/* With chips the field is a box that wraps, and the input is one item in it
+   that grows into whatever is left. */
+.rk-combo-field.is-multiple {
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  min-height: 2.75rem;
+  border-radius: var(--radius-card);
+  padding: 0.3125rem 2rem 0.3125rem 0.375rem;
+}
+
+.rk-combo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  background: var(--color-muted);
+  padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-ink);
+}
+
+.rk-combo-chip-x {
+  display: grid;
+  width: 1.125rem;
+  height: 1.125rem;
+  place-items: center;
+  border-radius: 9999px;
+  color: var(--color-ink-soft);
+  line-height: 1;
+}
+
+.rk-combo-chip-x:hover {
+  color: var(--color-ink);
+}
+
 /* 16px, like every other text control here: iOS zooms the viewport when it
    focuses a field under 16px and never zooms back. */
 .rk-combo-input {
@@ -277,7 +549,29 @@ onBeforeUnmount(() => {
   color: var(--color-ink);
 }
 
+.is-multiple .rk-combo-input {
+  width: auto;
+  height: 1.75rem;
+  min-width: 6rem;
+  flex: 1;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .rk-combo-input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+}
+
+.is-multiple .rk-combo-input:focus-visible {
+  outline: none;
+}
+
+/* The ring belongs to the whole box once the box is the control. */
+.rk-combo-field.is-multiple:focus-within {
   outline: 2px solid var(--color-primary);
   outline-offset: -1px;
 }
@@ -312,6 +606,14 @@ onBeforeUnmount(() => {
   color: var(--color-ink);
 }
 
+/* A virtual row's height is the arithmetic the spacers are built on, so it
+   cannot be left to the text inside it. */
+.rk-combo-option[style] {
+  display: flex;
+  align-items: center;
+  padding-block: 0;
+}
+
 .rk-combo-option.is-highlighted {
   background: var(--color-muted);
 }
@@ -320,10 +622,23 @@ onBeforeUnmount(() => {
   font-weight: 600;
 }
 
-.rk-combo-empty {
+.rk-combo-empty,
+.rk-combo-status {
   padding: 0.75rem 0.625rem;
   font-size: 0.875rem;
   color: var(--color-ink-soft);
+}
+
+.rk-combo-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rk-combo-status-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .rk-combo-error {

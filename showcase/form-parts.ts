@@ -68,7 +68,7 @@ export const FORM_PARTS = [
     label: 'BaseCombobox',
     title: 'BaseCombobox — a list too long to read',
     pitch:
-      'Type to narrow it. Past a few dozen options the problem stops being choosing and starts being finding, and that is the line where this replaces the select.',
+      'Type to narrow it. Past a few dozen options the problem stops being choosing and starts being finding, and that is the line where this replaces the select. It also takes several answers as chips, a list that lives on a server, and a list too long to put in the DOM.',
   },
   {
     id: 'form-listbox',

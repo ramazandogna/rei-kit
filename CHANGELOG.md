@@ -3,6 +3,46 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.13.0 — 2026-09-20
+
+**The combobox, for lists that are not a handful.** Three things a real app
+adds to it on its first week, and each one is a way to get the same control
+subtly wrong.
+
+### Added
+
+- **`mode="multiple"`** — the chosen ones stay as chips in the field and the
+  field stays open, because choosing several means choosing again. Choosing
+  an option a second time takes it back off; Backspace on an empty field
+  removes the last one, and only on an empty one, or a letter and a chip go
+  with the same press. The chips carry a remove button only when
+  `removeLabel` is given: a button whose name the kit invented would speak a
+  language the app does not.
+- **`@search`, `loading` and `filter`** — for a list that lives on a server.
+  The kit holds the debounce, so every app does not write the same timer, and
+  clears it on unmount, so a request is never fired at a component that has
+  gone. `filter="none"` stops the client narrowing what the server already
+  narrowed — otherwise rows that matched for a reason this side cannot see
+  simply vanish. `loading` marks the list `aria-busy` and draws rows in the
+  shape of the rows that are coming, so the list keeps its height.
+- **A virtual window** past `virtualizeAfter` options (150 by default): only
+  the rows near the viewport are in the DOM, with a spacer above and below
+  standing in for the rest, so the scrollbar still measures the whole list.
+  Every row states `aria-setsize` and `aria-posinset` against the **full**
+  list — "1 of 4000", not "1 of 13". That is the part a hand-written virtual
+  list gets wrong, and the part nobody sees it get wrong.
+
+None of it changes a combobox that does not ask for it, and all three
+together cost 0.8 KB — about what a virtual-list dependency costs before it
+renders anything.
+
+### Fixed
+
+- The highlighted option is found by position again rather than by selector.
+  An intermediate version reached for `CSS.escape`, which does not exist in
+  jsdom or on a server: the keyboard would have thrown where the test suite
+  runs and where a page is prerendered.
+
 ## 2.12.0 — 2026-09-20
 
 **A column that reads as one column.**

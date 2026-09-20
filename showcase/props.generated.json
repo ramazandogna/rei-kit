@@ -487,6 +487,13 @@
     "summary": "A field you type into to narrow a list, then choose from it.",
     "props": [
       {
+        "name": "modelValue",
+        "required": false,
+        "type": "Value",
+        "description": "The chosen value, or values in `multiple` mode, with `v-model`.",
+        "default": "undefined"
+      },
+      {
         "name": "label",
         "required": true,
         "type": "string",
@@ -534,6 +541,62 @@
         "type": "string",
         "description": "Shown when nothing matches. Already translated.",
         "default": ""
+      },
+      {
+        "name": "mode",
+        "required": false,
+        "type": "M",
+        "description": "`multiple` keeps the chosen ones as chips in the field.",
+        "default": "'single' as M"
+      },
+      {
+        "name": "removeLabel",
+        "required": false,
+        "type": "((label: string) => string)",
+        "description": "Names a chip's remove button. Without it, chips carry no button.",
+        "default": "undefined"
+      },
+      {
+        "name": "loading",
+        "required": false,
+        "type": "boolean",
+        "description": "Marks the list busy while an answer is on its way.",
+        "default": "false"
+      },
+      {
+        "name": "loadingLabel",
+        "required": false,
+        "type": "string",
+        "description": "Read while `loading`. Already translated.",
+        "default": "''"
+      },
+      {
+        "name": "filter",
+        "required": false,
+        "type": "'local' | 'none'",
+        "description": "`none` when the server has already narrowed the list.",
+        "default": "'local'"
+      },
+      {
+        "name": "debounce",
+        "required": false,
+        "type": "number",
+        "description": "How long typing settles before `search`, in milliseconds.",
+        "default": "200"
+      },
+      {
+        "name": "virtualizeAfter",
+        "required": false,
+        "type": "number",
+        "description": "Past this many options, only the rows near the viewport are rendered.",
+        "default": "150"
+      },
+      {
+        "name": "rowHeight",
+        "required": false,
+        "type": "number",
+        "description": "A row's height in pixels; the virtual window is measured in these.",
+        "default": "36"
       }
     ]
   },

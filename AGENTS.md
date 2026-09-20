@@ -150,7 +150,16 @@ looks almost right.
   typing — reach for it when a menu would need a second level.
 - **`BaseSelect` or `BaseCombobox`.** Up to a few dozen options, the native
   select — it opens the platform's own picker, which on a phone no web control
-  matches. Past that, when reading the list is the problem, the combobox.
+  matches. Past that, when reading the list is the problem, the combobox. The
+  combobox also takes `mode="multiple"` (chips in the field), a list from a
+  server (`@search` is debounced for you — pair it with `filter="none"`, or
+  the client narrows what the server already narrowed), and a list too long
+  to render (past `virtualizeAfter` only the rows near the viewport are in
+  the DOM, while every row still states its place in the whole list).
+- **`BaseCombobox mode="multiple"`, `TagsInput` or `TransferList`.** The
+  combobox chooses several from a list that exists; the tags field invents
+  values as you type; the transfer list shows the two sides at once, and is
+  the one to reach for when the order of the chosen matters.
 - **`SegmentedControl` or `ToggleGroup`.** A segmented control always has
   exactly one answer — it is a set of radios. A toggle group is buttons that
   stay pressed: one or none in `single` mode, any number in `multiple`.

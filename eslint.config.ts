@@ -27,6 +27,18 @@ export default defineConfigWithVueTs(
   },
 
   {
+    name: 'docs/highlighted-code',
+    files: ['showcase/CodeBlock.vue'],
+    rules: {
+      /* The only HTML rendered here is `highlight.ts`'s own spans: every
+         piece of the input is escaped before it is wrapped, and
+         `highlight.spec.ts` holds it to that. The alternative — a
+         highlighter dependency — would render HTML it built itself. */
+      'vue/no-v-html': 'off',
+    },
+  },
+
+  {
     name: 'kit/test-harnesses',
     files: ['src/**/__tests__/*'],
     rules: {

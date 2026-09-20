@@ -2,6 +2,8 @@
 import { copyToClipboard } from './clipboard'
 import { computed, ref } from 'vue'
 
+import { highlight } from './highlight'
+import type { CodeLang } from './highlight'
 import { codeLanguage } from './preferences'
 
 /**
@@ -34,6 +36,13 @@ const {
 }>()
 
 const shown = computed(() => (js !== undefined && codeLanguage.value === 'js' ? js : code))
+
+/* Coloured here rather than with a highlighter dependency: the samples are
+   a handful of shapes, and tokenising them in a hundred lines keeps the
+   colours in the palette's own roles. What is rendered is escaped first. */
+const coloured = computed(() =>
+  highlight(shown.value, (file?.split('.').pop() ?? lang) as CodeLang),
+)
 const copied = ref(false)
 
 async function copy() {
@@ -68,7 +77,7 @@ async function copy() {
     <pre
       class="cb-pre"
       :style="lines ? { height: `calc(${lines} * 1.6em + 1.75rem)` } : undefined"
-    ><code>{{ shown }}</code></pre>
+    ><code v-html="coloured" /></pre>
   </div>
 </template>
 
@@ -127,6 +136,39 @@ async function copy() {
 
 .cb-copy:hover {
   background: var(--color-muted);
+}
+
+/* The code's colours are the palette's: a tag in the primary, a string in
+   the positive, a comment in the soft ink. Change the palette and the code
+   changes with the page. */
+.cb-pre :deep(.tok-tag) {
+  color: var(--color-primary);
+}
+
+.cb-pre :deep(.tok-attr) {
+  color: var(--color-accent);
+}
+
+.cb-pre :deep(.tok-string) {
+  color: color-mix(in oklab, var(--color-positive) 80%, var(--color-ink));
+}
+
+.cb-pre :deep(.tok-comment) {
+  color: var(--color-ink-soft);
+  font-style: italic;
+}
+
+.cb-pre :deep(.tok-keyword) {
+  color: color-mix(in oklab, var(--color-accent) 85%, var(--color-ink));
+  font-weight: 600;
+}
+
+.cb-pre :deep(.tok-number) {
+  color: color-mix(in oklab, var(--color-warning) 70%, var(--color-ink));
+}
+
+.cb-pre :deep(.tok-punct) {
+  color: var(--color-ink-soft);
 }
 
 .cb-pre {

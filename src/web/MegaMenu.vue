@@ -226,10 +226,10 @@ onBeforeUnmount(() => {
 
         <button
           v-else
+          :ref="(el) => setButton(item.key, el as Element | null)"
           type="button"
           class="rk-mega-top focus-ring"
           :class="{ 'is-active': item.key === active }"
-          :ref="(el) => setButton(item.key, el as Element | null)"
           :aria-expanded="open === item.key"
           :aria-controls="panelId(item.key)"
           @click="toggle(item.key)"

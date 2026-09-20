@@ -3,6 +3,40 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.17.0 — 2026-09-20
+
+**What happened, in order.**
+
+### Added
+
+- **`BaseTimeline`** — an ordered list on a rail, for a record of what
+  already happened: a status trail, a note feed, an audit log.
+
+  This one was found by the rule rather than by taste. Hibi carries
+  `HabitNoteTimeline.vue`, hand-written in a file that already imports the
+  kit — which AGENTS.md calls a bug in the kit, every time. Its shape is
+  what this part is built from: a rail, a dot the app colours from its own
+  domain, a time line already formatted, and a body that is whatever the app
+  puts there.
+
+  The rail and the dots are `aria-hidden`. What carries the meaning is the
+  `<ol>`: announced as a list with a count, each event numbered, its time
+  read before its title. A rail drawn with divs says nothing at all, which
+  is what a hand-written one does.
+
+  Generic over your own objects, the way `BaseTable` is over its rows, so
+  the body slot hands them back typed and nothing has to be looked up by key
+  afterwards. A slot named for one event's key wins over the shared body,
+  for the one row that is different. `fill` takes a class rather than a
+  category — the same contract as `ToneDot` — so an app keys the marker off
+  whatever its own domain calls a kind. The kit sorts nothing: newest first
+  suits a feed, oldest first suits a trail, and both are the app's to
+  decide.
+
+  It is not `BaseStepper`. A stepper is a process you are *in*, with a
+  current step and steps ahead; a stepper drawn from history implies the
+  reader can move through it.
+
 ## 2.16.0 — 2026-09-20
 
 **A colour, as a hex value.**

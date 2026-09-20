@@ -1756,6 +1756,27 @@
     ]
   },
   {
+    "name": "BaseTimeline",
+    "entry": "rei-kit",
+    "summary": "What happened, in order, on a rail.",
+    "props": [
+      {
+        "name": "events",
+        "required": true,
+        "type": "readonly T[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the list. Already translated.",
+        "default": ""
+      }
+    ]
+  },
+  {
     "name": "BaseToolbar",
     "entry": "rei-kit/web",
     "summary": "A row of controls that belong together: a formatting bar, a row of view switches, the actions over a table.",

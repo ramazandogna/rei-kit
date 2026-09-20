@@ -121,6 +121,7 @@ const PUBLIC_API = [
   'BaseRadioGroup',
   'BaseSelect',
   'BaseTextarea',
+  'BaseTimeline',
   'EmptyState',
   'FormField',
   'ErrorBoundary',

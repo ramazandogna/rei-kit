@@ -60,6 +60,28 @@ without.
 
 ---
 
+## 2.17.0
+
+**You gain `BaseTimeline`** — what happened, in order, on a rail.
+
+```vue
+<BaseTimeline :events="notes" label="Notes on this habit">
+  <template #default="{ event }">
+    <BaseCard as="blockquote" padding="sm">{{ event.body }}</BaseCard>
+  </template>
+</BaseTimeline>
+```
+
+The events are your own objects: give them a `key` and a `time` (already
+formatted — only you know whether the line reads "12 September" or "2 hours
+ago") and add whatever else you need, and the body slot hands them back
+typed. `fill` colours the marker from a class, like `ToneDot`. A slot named
+for one event's key overrides the shared body.
+
+If you hand-wrote a note feed or a status trail, this replaces it.
+
+**Action required:** none.
+
 ## 2.16.0
 
 **You gain `ColorPicker`** — a colour as `#rrggbb`, from the platform's own

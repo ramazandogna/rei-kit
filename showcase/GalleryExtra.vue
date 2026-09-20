@@ -19,6 +19,7 @@ import {
   BaseSpinner,
   BaseSwitch,
   BaseTable,
+  BaseTimeline,
   ErrorBoundary,
   PriceCard,
   SectionHeading,
@@ -219,6 +220,30 @@ const PERMISSIONS = [
 ]
 
 const askDelete = ref(false)
+/* One event carries a note, the rest do not -- a slot named for its key
+   wins over the shared body. Declared rather than inferred: left to
+   inference these literals are a union, and a per-key slot would then see
+   an event that may or may not have a `note`. */
+interface TrailEvent {
+  key: string
+  time: string
+  title: string
+  note?: string
+  fill?: string
+}
+
+const TRAIL: TrailEvent[] = [
+  { key: 'placed', time: '12 Sep, 09:42', title: 'Order placed' },
+  {
+    key: 'packed',
+    time: '12 Sep, 14:10',
+    title: 'Packed',
+    note: 'Two parcels; the mug went in the smaller one.',
+  },
+  { key: 'sent', time: '13 Sep, 08:00', title: 'Sent', fill: 'bg-positive' },
+  { key: 'due', time: 'Expected 15 Sep', title: 'Delivery', fill: 'bg-muted' },
+]
+
 const FACTS = [
   { key: 'status', term: 'Status' },
   { term: 'Created', description: '12 September 2026' },
@@ -640,6 +665,26 @@ function onCommand(id: string) {
           <template #status><BaseBadge tone="success">Paid</BaseBadge></template>
         </DescriptionList>
         <PropTable name="DescriptionList" />
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">BaseTimeline</p>
+        <p class="text-ink-soft mt-1 mb-4 max-w-[64ch] text-xs leading-relaxed">
+          What happened, in order. An <code class="text-xs">&lt;ol&gt;</code>, so it is heard as a
+          list with a count and each event's time is read before its title — the rail and the dots
+          carry nothing and are hidden. It is generic over your own objects, the way the table is
+          over its rows, so the body slot hands them back typed. Not
+          <code class="text-xs">BaseStepper</code>: that is a process you are in, and this is a
+          record of one that happened.
+        </p>
+        <BaseTimeline :events="TRAIL" label="Order history">
+          <template #packed="{ event }">
+            <BaseCard as="blockquote" padding="sm" class="text-ink-soft text-xs">
+              {{ event.note }}
+            </BaseCard>
+          </template>
+        </BaseTimeline>
+        <PropTable name="BaseTimeline" />
       </BaseCard>
     </section>
 

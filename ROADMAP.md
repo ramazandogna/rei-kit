@@ -24,13 +24,13 @@ If something here is ever untrue, that is a bug worth reporting.
 
 | Version | What                                                                       |
 | ------- | -------------------------------------------------------------------------- |
+| 2.18.0  | `CommandMenu` matches every word, so two-word searches find things         |
 | 2.17.0  | `BaseTimeline` — a record of what happened, on a rail                      |
 | 2.16.0  | `ColorPicker` — the platform's own picker, painted                         |
 | 2.15.0  | `SliderField`, and a tooltip that can follow the pointer                   |
 | 2.14.0  | `MegaMenu` — a disclosure, not a `role="menu"`                             |
 | 2.13.0  | `BaseCombobox`: several answers, a list from a server, a virtual window    |
 | 2.12.0  | Table columns whose heading goes where their figures go                    |
-| 2.11.0  | `ResponsiveDialog`, `BasePopconfirm`, `TimePicker`, `DescriptionList`      |
 
 `CHANGELOG.md` has the reasoning; `PATCHNOTES.md` has what you gain and what
 you have to do.

@@ -36,6 +36,7 @@ const SECTIONS = [
   { id: 'bildirim', label: 'Notifications' },
   { id: 'form', label: 'Form' },
   { id: 'form-devam', label: 'Form — continued' },
+  { id: 'tarih', label: 'Dates' },
   { id: 'ayarlar', label: 'Settings' },
   { id: 'ust-katman', label: 'Overlays' },
   { id: 'gezinme', label: 'Navigation' },

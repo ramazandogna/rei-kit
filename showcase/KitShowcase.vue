@@ -33,6 +33,8 @@ import {
   SettingsRow,
   SkeletonList,
   StatCard,
+  BaseCalendar,
+  BaseDatePicker,
   ToastHost,
   ToggleGroup,
   ToneDot,
@@ -40,8 +42,11 @@ import {
   NumberInput,
   PinInput,
   VERSION,
+  addDays,
+  todayKey,
   useToast,
 } from '../src/index'
+import type { DateRange } from '../src/index'
 
 /**
  * What is in the kit, on one page.
@@ -70,6 +75,18 @@ const note = ref('')
 const themeChoice = ref('system')
 const remember = ref(false)
 const toast = useToast()
+
+const day = ref<string | undefined>(todayKey())
+const due = ref<string | undefined>()
+const period = ref<DateRange | undefined>()
+const PERIODS = [
+  { label: 'Last 7 days', value: () => ({ start: addDays(todayKey(), -6), end: todayKey() }) },
+  { label: 'Last 30 days', value: () => ({ start: addDays(todayKey(), -29), end: todayKey() }) },
+  {
+    label: 'This month',
+    value: () => ({ start: `${todayKey().slice(0, 7)}-01`, end: todayKey() }),
+  },
+]
 
 const guests = ref<number | undefined>(2)
 const code = ref('')
@@ -391,10 +408,69 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </BaseCard>
           </section>
 
-          <section id="ayarlar" class="mt-14">
-            <SectionHeading :tone="NEUTRAL" label="Ayarlar" />
+          <section id="tarih" class="mt-14">
+            <SectionHeading :tone="NEUTRAL" label="Dates" />
+            <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
+              Dates go in and out as the kit's date keys — <code class="text-xs">YYYY-MM-DD</code>,
+              always local, never a <code class="text-xs">Date</code>. What you read is
+              <code class="text-xs">Intl</code> in your language: change the page's language and the
+              month, the weekdays and every day's spoken name follow.
+            </p>
 
-            <SettingsGroup class="mt-5" title="Genel">
+            <div class="mt-5 grid gap-4 lg:grid-cols-2">
+              <BaseCard>
+                <p class="text-ink-soft text-xs font-medium tracking-wide uppercase">
+                  BaseCalendar
+                </p>
+                <div class="mt-3">
+                  <BaseCalendar
+                    v-model="day"
+                    previous-label="Previous month"
+                    next-label="Next month"
+                  />
+                </div>
+                <p class="text-ink-soft mt-2 text-xs">
+                  Arrows move a day and a week, Page Up and Down a month, with Shift a year.
+                </p>
+              </BaseCard>
+
+              <div class="flex flex-col gap-4">
+                <BaseCard>
+                  <BaseDatePicker
+                    v-model="due"
+                    label="Due date"
+                    placeholder="Choose a day"
+                    clear-label="Clear the date"
+                    previous-label="Previous month"
+                    next-label="Next month"
+                    :min="todayKey()"
+                    hint="Nothing before today can be chosen."
+                  />
+                </BaseCard>
+
+                <BaseCard>
+                  <BaseDatePicker
+                    v-model="period"
+                    mode="range"
+                    label="Report period"
+                    placeholder="Choose a period"
+                    clear-label="Clear the period"
+                    :presets="PERIODS"
+                    previous-label="Previous month"
+                    next-label="Next month"
+                  />
+                  <p class="text-ink-soft mt-3 text-xs">
+                    Ready-made answers sit beside the calendar, in your words and your arithmetic.
+                  </p>
+                </BaseCard>
+              </div>
+            </div>
+          </section>
+
+          <section id="ayarlar" class="mt-14">
+            <SectionHeading :tone="NEUTRAL" label="Settings" />
+
+            <SettingsGroup class="mt-5" title="General">
               <SettingsRow label="Theme"><ToneDot fill="bg-primary" /></SettingsRow>
               <SettingsRow label="Language" hint="Interface language">English</SettingsRow>
             </SettingsGroup>

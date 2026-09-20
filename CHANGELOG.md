@@ -3,6 +3,28 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.12.0 — 2026-09-20
+
+**A column that reads as one column.**
+
+### Fixed
+
+- **A right-aligned column's heading now moves with its figures**, in
+  `BaseTable` and `DataTable`. `align: 'end'` put the class on the heading
+  and the cells alike, but a table's own `.rk-table th { text-align: left }`
+  is one class *and* one element and outranked a bare `.is-end`, so only the
+  cells moved: a money column rendered as a heading on the far left with its
+  numbers at the far right, reading as two columns. Nothing could catch it —
+  the markup was right, the types were right, and the page rendered. A
+  stylesheet test now fails on an alignment rule weak enough to lose, and the
+  sort button goes to the same side as the heading it belongs to.
+
+### Added
+
+- **`align: 'center'`** on a table column, alongside `start` and `end`. A
+  status or an icon column belongs in the middle of its width, and writing
+  that by hand was the thing the prop existed to prevent.
+
 ## 2.11.0 — 2026-09-20
 
 **Asking, and saying.** Four parts a real app reaches for on its first week.

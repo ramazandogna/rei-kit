@@ -60,6 +60,29 @@ without.
 
 ---
 
+## 2.12.0
+
+**A money column now lines up with its own heading.** `align: 'end'` moved
+the figures and left the heading on the left, in both `BaseTable` and
+`DataTable` — so a column read as two. If you worked around it with a class
+on the heading, you can take that out.
+
+```vue
+<BaseTable
+  :columns="[
+    { key: 'item', label: 'Item' },
+    { key: 'status', label: 'Status', align: 'center' },
+    { key: 'amount', label: 'Amount', align: 'end' },
+  ]"
+  :rows="rows"
+  caption="September spending"
+/>
+```
+
+`align: 'center'` is new; `start` and `end` are unchanged.
+
+**Action required:** none.
+
 ## 2.11.0
 
 **You gain a dialog that changes shape with the screen, a confirmation that

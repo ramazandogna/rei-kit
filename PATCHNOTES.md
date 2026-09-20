@@ -60,6 +60,27 @@ without.
 
 ---
 
+## 2.11.0
+
+**You gain a dialog that changes shape with the screen, a confirmation that
+asks beside the button, a time field and a description list:**
+
+```vue
+<ResponsiveDialog v-model="open" title="Delete this account?" close-label="Close" tone="alert" />
+<BasePopconfirm
+  message="This entry will be deleted."
+  confirm-label="Delete"
+  cancel-label="Cancel"
+/>
+<TimePicker v-model="at" label="Reminder" hours-label="Hour" minutes-label="Minute" />
+<DescriptionList :items="facts" layout="inline" />
+```
+
+Times go in and out as `HH:mm`, the way dates go in and out as
+`YYYY-MM-DD`.
+
+**Action required:** none.
+
 ## 2.10.0
 
 **You gain a tags field that understands a paste** — "vue, html, css"

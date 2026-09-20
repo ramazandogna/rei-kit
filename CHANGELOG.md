@@ -3,6 +3,39 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.11.0 — 2026-09-20
+
+**Asking, and saying.** Four parts a real app reaches for on its first week.
+
+### Added
+
+- **`ResponsiveDialog`** (`rei-kit/web`) — a modal on a wide screen, a sheet
+  from the bottom edge on a phone, from one set of props. Two apps kept
+  writing both by hand and choosing between them, which is two markups, two
+  sets of labels, and one of the two always left behind. The width is read
+  after mount, never guessed during render, and until it is known it is the
+  sheet: the narrow answer fits on both.
+- **`BasePopconfirm`** — "Are you sure?" asked beside the button that asked
+  it, so the thing being deleted stays on screen. It sits between a toast
+  with an undo (kindest: act, and let it be taken back) and a dialog (for an
+  answer that needs explaining).
+- **`TimePicker`** — a time of day from two columns, in and out as `HH:mm`
+  on a 24-hour clock, shown through `Intl` in the reader's own — "14:30" in
+  Istanbul, "2:30 PM" in Chicago. Two listboxes rather than a text field,
+  for the reason the date picker is a button: a typed time is a parsing
+  problem in every locale at once. `min`, `max` and `step` rule out what
+  cannot be chosen.
+- **`DescriptionList`** — pairs of what-it-is and what-it-says, as the `<dl>`
+  that exists for exactly this and is almost never used. A grid of divs says
+  nothing about which text names which value; here "Status: paid" is heard
+  as one thing. Values that are not text come from a slot.
+
+### Fixed
+
+- `aria-disabled="false"` is no longer written on options that can be
+  chosen, in `BaseListbox` and `BaseTree`. An option that is available says
+  nothing about being disabled.
+
 ## 2.10.0 — 2026-09-20
 
 ### Added

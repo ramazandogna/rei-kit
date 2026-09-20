@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import AuthorCredit from './AuthorCredit.vue'
 import { BASICS_PARTS } from './basics-parts'
+import { FORM_GROUPS, FORM_PARTS } from './form-parts'
 import { MOTION_PARTS } from './motion-parts'
 import catalogue from './props.generated.json'
 
@@ -37,9 +38,15 @@ const SECTIONS = [
   { id: 'geri-bildirim', label: 'Status and feedback' },
   { id: 'ilerleme', label: 'Progress' },
   { id: 'bildirim', label: 'Notifications' },
-  { id: 'form', label: 'Form' },
-  { id: 'form-devam', label: 'Form — continued' },
-  { id: 'tarih', label: 'Dates' },
+  ...FORM_GROUPS.flatMap((group) => [
+    { id: group.id, label: group.label },
+    ...FORM_PARTS.filter((part) => part.group === group.id).map((part) => ({
+      id: part.id,
+      label: part.label,
+      sub: true,
+    })),
+  ]),
+  { id: 'tarih', label: 'Dates and times' },
   { id: 'ayarlar', label: 'Settings' },
   { id: 'ust-katman', label: 'Overlays' },
   { id: 'gezinme', label: 'Navigation' },
@@ -61,6 +68,25 @@ const query = ref('')
 const active = ref('')
 const open = ref(false)
 
+/**
+ * Where a component's name in this list should take you.
+ *
+ * The demo, wherever one exists — that is what somebody clicking `BaseSwitch`
+ * wants to see, and the props are printed directly under it anyway. This list
+ * used to send every name to the props table instead, which answered a
+ * question nobody had asked yet.
+ *
+ * Built from the same part lists the sections are built from, so a part that
+ * gains a heading gains the link on the same commit.
+ */
+const DEMOS = new Map<string, string>([
+  ...BASICS_PARTS.map((part) => [part.label, part.id] as const),
+  ...MOTION_PARTS.map((part) => [part.label, part.id] as const),
+  ...FORM_PARTS.map((part) => [part.label, part.id] as const),
+])
+
+const targetFor = (name: string) => DEMOS.get(name) ?? `api-${name}`
+
 const groups = computed(() => {
   const needle = query.value.trim().toLowerCase()
 
@@ -68,7 +94,8 @@ const groups = computed(() => {
     entry,
     items: catalogue
       .filter((c) => c.entry === entry)
-      .filter((c) => needle === '' || c.name.toLowerCase().includes(needle)),
+      .filter((c) => needle === '' || c.name.toLowerCase().includes(needle))
+      .map((c) => ({ ...c, target: targetFor(c.name) })),
   })).filter((group) => group.items.length > 0)
 })
 
@@ -241,11 +268,11 @@ function go(id: string) {
         <ul class="sc-nav-list">
           <li v-for="item in group.items" :key="item.name">
             <a
-              :href="`#api-${item.name}`"
+              :href="`#${item.target}`"
               class="sc-nav-link is-mono"
-              :class="{ 'is-active': active === `api-${item.name}` }"
-              :aria-current="active === `api-${item.name}` ? 'true' : undefined"
-              @click.prevent="go(`api-${item.name}`)"
+              :class="{ 'is-active': active === item.target }"
+              :aria-current="active === item.target ? 'true' : undefined"
+              @click.prevent="go(item.target)"
             >
               {{ item.name }}
             </a>

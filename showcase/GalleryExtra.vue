@@ -7,24 +7,19 @@ import {
   BaseAvatar,
   BaseButton,
   BaseCard,
-  BaseCombobox,
   BaseKbd,
   BaseBadge,
-  BaseListbox,
   BaseMenu,
   BasePopconfirm,
   BaseSeparator,
   DescriptionList,
-  TimePicker,
   BasePopover,
   BaseSheet,
   BaseStepper,
-  BaseSlider,
   BaseSpinner,
   BaseSwitch,
   BaseTable,
   ErrorBoundary,
-  FormField,
   PriceCard,
   SectionHeading,
   TabBar,
@@ -60,21 +55,12 @@ import PropTable from './PropTable.vue'
  * which is how the newest consumer came to hand-write 737 class attributes
  * against a kit that already had most of what it needed.
  */
-const reminder = ref(true)
-const minutes = ref(45)
-const country = ref<'tr' | 'jp' | 'de' | ''>('')
 const modal = ref(false)
 const alertModal = ref(false)
 const sheet = ref(false)
 const tab = ref<'overview' | 'history'>('overview')
 const page = ref(7)
 const menuOpen = ref(false)
-
-const COUNTRIES = [
-  { value: 'tr', label: 'Türkiye' }, // an endonym, on purpose
-  { value: 'jp', label: 'Japan' },
-  { value: 'de', label: 'Germany' },
-] as const
 
 const TABS = [
   { key: 'overview', label: 'Overview' },
@@ -120,8 +106,6 @@ const Boom = {
   render: () => null,
 }
 const boom = ref(false)
-
-const sliderText = computed(() => `${minutes.value} minutes`)
 
 const onlyUnpaid = ref(true)
 const thisMonth = ref(false)
@@ -199,19 +183,10 @@ const PERMISSIONS = [
 ]
 
 const askDelete = ref(false)
-const reminderAt = ref<string | undefined>('09:30')
 const FACTS = [
   { key: 'status', term: 'Status' },
   { term: 'Created', description: '12 September 2026' },
   { term: 'Total', description: '₺1,240' },
-]
-
-const access = ref<string[]>(['ada'])
-const PEOPLE = [
-  { value: 'ada', label: 'Ada Lovelace', description: 'Owner' },
-  { value: 'kenji', label: 'Kenji Mori', description: 'Editor' },
-  { value: 'mei', label: 'Mei Lin', description: 'Invited', disabled: true },
-  { value: 'omer', label: 'Ömer Seyfettin', description: 'Editor' },
 ]
 
 function onCommand(id: string) {
@@ -222,97 +197,6 @@ function onCommand(id: string) {
 <template>
   <div class="flex flex-col gap-14">
     <!-- ─────────────────────────── Form ─────────────────────────── -->
-    <section id="form-devam">
-      <SectionHeading :tone="NEUTRAL" label="Form — continued" />
-      <p class="text-ink-soft mt-2 text-sm">
-        Controls that take a value. A switch differs from a checkbox in more than shape: a checkbox
-        states an intention that something else commits, and a switch <em>is</em> the commit — there
-        is no Save after it.
-      </p>
-
-      <BaseCard class="mt-5 flex flex-col gap-6">
-        <div>
-          <BaseSwitch v-model="reminder" label="Daily reminder" hint="Every evening at 21:00" />
-          <PropTable name="BaseSwitch" />
-        </div>
-
-        <div>
-          <BaseSlider
-            v-model="minutes"
-            label="Session length"
-            :min="5"
-            :max="90"
-            :step="5"
-            :format="() => sliderText"
-            hint="The arrow keys move it too."
-          />
-          <PropTable name="BaseSlider" />
-        </div>
-
-        <div>
-          <BaseCombobox
-            v-model="country"
-            label="Country"
-            :options="COUNTRIES"
-            placeholder="Type to filter"
-            empty-label="No matches"
-          />
-          <PropTable name="BaseCombobox" />
-        </div>
-
-        <div>
-          <FormField label="Your own control" hint="FormField supplies the label and the wiring.">
-            <template #default="{ id, describedBy, invalid }">
-              <input
-                :id="id"
-                :aria-describedby="describedBy"
-                :aria-invalid="invalid"
-                class="border-hair bg-surface text-ink rounded-card h-11 w-full border px-3 text-base"
-              />
-            </template>
-          </FormField>
-          <PropTable name="FormField" />
-        </div>
-      </BaseCard>
-
-      <BaseCard class="mt-4">
-        <div class="grid gap-6 sm:grid-cols-2">
-          <TimePicker
-            v-model="reminderAt"
-            label="Reminder"
-            hours-label="Hour"
-            minutes-label="Minute"
-            placeholder="Choose a time"
-            min="07:00"
-            max="22:00"
-            hint="Stored as HH:mm, shown in your own clock."
-          />
-          <div>
-            <p class="text-ink mb-2 text-sm font-medium">DescriptionList</p>
-            <DescriptionList :items="FACTS" layout="inline">
-              <template #status><BaseBadge tone="success">Paid</BaseBadge></template>
-            </DescriptionList>
-          </div>
-        </div>
-        <PropTable name="TimePicker" />
-      </BaseCard>
-
-      <BaseCard class="mt-4">
-        <p class="text-ink text-sm font-medium">BaseListbox</p>
-        <p class="text-ink-soft mt-1 mb-3 text-xs">
-          A long list that stays on screen, choosing one or several. One Tab stop: the arrows move
-          the current option and typing a letter jumps to it.
-        </p>
-        <BaseListbox
-          v-model="access"
-          mode="multiple"
-          :options="PEOPLE"
-          label="People with access"
-        />
-        <PropTable name="BaseListbox" />
-      </BaseCard>
-    </section>
-
     <!-- ─────────────────────────── Katmanlar ─────────────────────────── -->
     <section id="ust-katman">
       <SectionHeading :tone="NEUTRAL" label="Overlays" />
@@ -665,6 +549,21 @@ function onCommand(id: string) {
         </DataTable>
         <p class="text-ink-soft mt-3 text-xs">{{ picked.length }} selected</p>
         <PropTable name="DataTable" />
+      </BaseCard>
+
+      <!-- Not a form control, which is where this used to sit: it states
+           facts rather than taking an answer, so it belongs with the table. -->
+      <BaseCard :id="'veri-dl'" class="mt-4">
+        <p class="text-ink text-sm font-medium">DescriptionList</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          Pairs of what-it-is and what-it-says, as the <code class="text-xs">&lt;dl&gt;</code> that
+          exists for exactly this. A grid of divs says nothing about which text names which value;
+          here “Status: Paid” is heard as one thing.
+        </p>
+        <DescriptionList :items="FACTS" layout="inline">
+          <template #status><BaseBadge tone="success">Paid</BaseBadge></template>
+        </DescriptionList>
+        <PropTable name="DescriptionList" />
       </BaseCard>
     </section>
 

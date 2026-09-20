@@ -138,3 +138,49 @@ describe('the showcase catalogue', () => {
     expect(wrong).toEqual([])
   })
 })
+
+/**
+ * The page's part lists have to match the page.
+ *
+ * Each list is read twice — once to lay out the section, once to build the
+ * menu and to point a component's name at its demo. That is what keeps the
+ * three in step, and it only holds while the list is true: an id nobody
+ * renders is a menu entry that scrolls nowhere, and a label that is not a
+ * component name is a link to a demo that does not exist.
+ *
+ * Both failures are silent in a browser. A dead anchor simply does nothing.
+ */
+describe('the showcase part lists', () => {
+  const lists = [
+    { file: 'showcase/basics-parts.ts', section: 'showcase/BasicsSection.vue' },
+    { file: 'showcase/form-parts.ts', section: 'showcase/FormSection.vue' },
+    { file: 'showcase/motion-parts.ts', section: 'showcase/MotionSection.vue' },
+  ]
+
+  const named = new Set(catalogue.map((entry) => entry.name))
+
+  for (const { file, section } of lists) {
+    const source = readFileSync(file, 'utf8')
+    const markup = readFileSync(section, 'utf8')
+    const ids = [...source.matchAll(/^\s*id: '([^']+)'/gm)].map((match) => match[1]!)
+    const labels = [...source.matchAll(/^\s*label: '([^']+)'/gm)].map((match) => match[1]!)
+
+    it(`${file} declares parts the section actually renders`, () => {
+      expect(ids.length).toBeGreaterThan(0)
+
+      for (const id of ids) {
+        // Either as a literal anchor or through the `part('id')` helper.
+        expect(markup).toContain(`'${id}'`)
+      }
+    })
+
+    it(`${file} names components the package ships`, () => {
+      // A group heading or an effect is not a component; only the labels
+      // that look like one have to resolve, and those are what the menu
+      // turns into a link.
+      for (const label of labels.filter((one) => /^[A-Z][A-Za-z]+$/.test(one))) {
+        expect(named, `${label} in ${file}`).toContain(label)
+      }
+    })
+  }
+})

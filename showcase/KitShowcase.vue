@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { NEUTRAL } from './tones'
 import { computed, ref } from 'vue'
-import { Bold, Italic, LayoutGrid, List, Underline } from 'lucide-vue-next'
 
 import ApiReference from './ApiReference.vue'
 import AppearanceBar from './AppearanceBar.vue'
 import AxesSection from './AxesSection.vue'
 import BasicsSection from './BasicsSection.vue'
+import FormSection from './FormSection.vue'
 import GalleryExtra from './GalleryExtra.vue'
 import GettingStarted from './GettingStarted.vue'
 import HeroSection from './HeroSection.vue'
@@ -18,32 +18,22 @@ import {
   BaseAlert,
   BaseBadge,
   BaseButton,
-  BaseInput,
   BaseCard,
-  BaseCheckbox,
-  BaseRadioGroup,
-  BaseSelect,
-  BaseTextarea,
   EmptyState,
   GoogleButton,
   PageContainer,
   ProgressBar,
   SectionHeading,
-  SegmentedControl,
   SettingsGroup,
   SettingsRow,
   SkeletonList,
   StatCard,
   BaseCalendar,
   BaseDatePicker,
-  FileDrop,
-  TagsInput,
+  TimePicker,
   ToastHost,
-  ToggleGroup,
   ToneDot,
   CircularProgress,
-  NumberInput,
-  PinInput,
   VERSION,
   addDays,
   todayKey,
@@ -71,19 +61,12 @@ import type { DateRange } from '../src/index'
  * here needing "a way to show a warning", not needing the letter A.
  */
 const progress = ref(7)
-const email = ref('')
-const segment = ref('all')
-const currency = ref('')
-const note = ref('')
-const themeChoice = ref('system')
-const remember = ref(false)
 const toast = useToast()
 
-const tags = ref(['design'])
-const files = ref<File[]>([])
 const day = ref<string | undefined>(todayKey())
 const due = ref<string | undefined>()
 const period = ref<DateRange | undefined>()
+const reminderAt = ref<string | undefined>('09:00')
 const PERIODS = [
   { label: 'Last 7 days', value: () => ({ start: addDays(todayKey(), -6), end: todayKey() }) },
   { label: 'Last 30 days', value: () => ({ start: addDays(todayKey(), -29), end: todayKey() }) },
@@ -91,20 +74,6 @@ const PERIODS = [
     label: 'This month',
     value: () => ({ start: `${todayKey().slice(0, 7)}-01`, end: todayKey() }),
   },
-]
-
-const guests = ref<number | undefined>(2)
-const code = ref('')
-const marks = ref<string[]>(['bold'])
-const view = ref<string | undefined>('list')
-const MARKS = [
-  { value: 'bold', label: 'Bold', icon: Bold, iconOnly: true },
-  { value: 'italic', label: 'Italic', icon: Italic, iconOnly: true },
-  { value: 'underline', label: 'Underline', icon: Underline, iconOnly: true },
-]
-const VIEWS = [
-  { value: 'list', label: 'List', icon: List },
-  { value: 'grid', label: 'Grid', icon: LayoutGrid },
 ]
 
 /* Acts first and lets the reader take it back — kinder than "are you sure". */
@@ -334,113 +303,10 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </div>
           </section>
 
-          <section id="form" class="mt-14">
-            <SectionHeading :tone="NEUTRAL" label="Form" />
-
-            <BaseCard class="mt-5 max-w-md">
-              <BaseInput v-model="email" label="Email" type="email" placeholder="you@example.com" />
-              <BaseInput
-                class="mt-4"
-                label="Password"
-                type="password"
-                error="Must be at least 10 characters."
-              />
-
-              <BaseSelect
-                v-model="currency"
-                class="mt-4"
-                label="Currency"
-                placeholder="Choose one"
-                hint="Every amount in the report is shown in this."
-                :options="[
-                  { value: 'TRY', label: 'Turkish lira' },
-                  { value: 'JPY', label: 'Japanese yen' },
-                  { value: 'EUR', label: 'Euro' },
-                ]"
-              />
-
-              <BaseTextarea v-model="note" class="mt-4" label="Note" :rows="3" />
-
-              <BaseRadioGroup
-                v-model="themeChoice"
-                class="mt-5"
-                legend="Theme"
-                :options="[
-                  { value: 'system', label: 'System' },
-                  { value: 'light', label: 'Light' },
-                  { value: 'dark', label: 'Dark' },
-                ]"
-              />
-
-              <BaseCheckbox v-model="remember" class="mt-5" label="Remember me" />
-
-              <SegmentedControl
-                class="mt-5"
-                :options="[
-                  { value: 'all', label: 'All' },
-                  { value: 'free', label: 'Free' },
-                  { value: 'paid', label: 'Paid' },
-                ]"
-                :model-value="segment"
-                @update:model-value="(value: string) => (segment = value)"
-              />
-            </BaseCard>
-
-            <BaseCard class="mt-4">
-              <div class="grid gap-6 sm:grid-cols-2">
-                <TagsInput
-                  v-model="tags"
-                  label="Tags"
-                  placeholder="Type and press Enter"
-                  :remove-label="(tag) => `Remove ${tag}`"
-                  :max="5"
-                  hint="Enter or a comma commits one; Backspace takes the last back."
-                />
-                <FileDrop
-                  v-model="files"
-                  label="Drop a receipt here"
-                  hint="PDF or an image, up to 5 MB"
-                  browse-label="Browse"
-                  remove-label="Remove"
-                  too-large-label="That file is over 5 MB"
-                  accept="image/*,.pdf"
-                  :max-size="5 * 1024 * 1024"
-                  multiple
-                />
-              </div>
-            </BaseCard>
-
-            <BaseCard class="mt-4">
-              <div class="grid gap-6 sm:grid-cols-2">
-                <NumberInput
-                  v-model="guests"
-                  label="Guests"
-                  :min="1"
-                  :max="12"
-                  decrement-label="Fewer guests"
-                  increment-label="More guests"
-                  hint="Type it, or use the arrows and ↑ ↓"
-                />
-                <div>
-                  <p class="text-ink mb-1.5 text-sm">Verification code</p>
-                  <PinInput
-                    v-model="code"
-                    :length="6"
-                    label="Verification code"
-                    :cell-label="(n, total) => `Digit ${n} of ${total}`"
-                    @complete="toast.success(`Code ${$event} complete`)"
-                  />
-                </div>
-              </div>
-              <div class="mt-6 flex flex-wrap items-center gap-4">
-                <ToggleGroup v-model="marks" mode="multiple" label="Text style" :options="MARKS" />
-                <ToggleGroup v-model="view" label="View" :options="VIEWS" required size="sm" />
-              </div>
-            </BaseCard>
-          </section>
+          <FormSection />
 
           <section id="tarih" class="mt-14">
-            <SectionHeading :tone="NEUTRAL" label="Dates" />
+            <SectionHeading :tone="NEUTRAL" label="Dates and times" />
             <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
               Dates go in and out as the kit's date keys — <code class="text-xs">YYYY-MM-DD</code>,
               always local, never a <code class="text-xs">Date</code>. What you read is
@@ -493,6 +359,23 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
                   <p class="text-ink-soft mt-3 text-xs">
                     Ready-made answers sit beside the calendar, in your words and your arithmetic.
                   </p>
+                </BaseCard>
+
+                <!-- The time of day is a second field, not a second half of
+                     this one: two decisions, and a locale writes them
+                     differently. It sits here because that is where somebody
+                     looks for it, not with the text fields. -->
+                <BaseCard>
+                  <TimePicker
+                    v-model="reminderAt"
+                    label="Reminder"
+                    hours-label="Hour"
+                    minutes-label="Minute"
+                    placeholder="Choose a time"
+                    min="07:00"
+                    max="22:00"
+                    hint="Stored as HH:mm, shown in your own clock."
+                  />
                 </BaseCard>
               </div>
             </div>

@@ -3,6 +3,40 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.18.1 — 2026-09-21
+
+**Two ARIA faults, and the check that can see them.**
+
+### Fixed
+
+- **`BaseCalendar` told a reader nothing about which day was chosen.**
+  `aria-selected` sat on the day `<button>`, and `role="button"` does not
+  support it, so it was dropped on the floor. Selection belongs to the
+  `gridcell` around it, which is where it is now. Nothing moves: the look
+  was always keyed off a class, never off the attribute.
+
+- **`BaseRating` put focus somewhere a reader could not follow.** The stars
+  were real `<button>`s inside `role="slider"`, hidden with `aria-hidden`
+  and `tabindex="-1"`. That kept them out of the tab order but not out of
+  the way — a mouse press still moved focus onto an element hidden from the
+  accessibility tree, taking the slider's own focus ring with it. They are
+  spans now. The pointer behaves exactly as before.
+
+### Added
+
+- **Every usage example now runs through axe.** The rules the kit already
+  had read the source: a `focus-ring` on each hand-drawn control, no colour
+  of a component's own. Reading source cannot tell you what the rendered
+  tree says, which is how both faults above survived a green suite. The
+  examples are the input because they are type-checked, one per component,
+  and the code a reader actually copies.
+
+  It is not a claim that the kit is accessible. jsdom has no layout, so
+  contrast is switched off rather than quietly passing, and focus order,
+  focus visibility and anything behind an interaction — an open menu, a
+  combobox with its list down — still need a real browser and each
+  component's own behaviour test.
+
 ## 2.18.0 — 2026-09-20
 
 **A command menu that reads the request, not the string.**

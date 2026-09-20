@@ -39,6 +39,7 @@ import {
   BaseTree,
   CommandMenu,
   DataTable,
+  MegaMenu,
   NavLinks,
   ResponsiveDialog,
   TransferList,
@@ -76,6 +77,41 @@ const NAV = [
   { key: 'courses', to: '/courses', label: 'Courses' },
   { key: 'blog', to: '/blog', label: 'Blog' },
   { key: 'pricing', to: '/pricing', label: 'Pricing' },
+] as const
+
+const MEGA = [
+  {
+    key: 'products',
+    label: 'Products',
+    columns: [
+      {
+        key: 'apps',
+        title: 'Apps',
+        links: [
+          { key: 'journal', to: '/journal', label: 'Journal', description: 'A day at a time' },
+          { key: 'ledger', to: '/ledger', label: 'Ledger', description: 'Where the money went' },
+        ],
+      },
+      {
+        key: 'developers',
+        title: 'Developers',
+        links: [
+          { key: 'kit', to: '/kit', label: 'Component kit' },
+          { key: 'api', to: '/api', label: 'API' },
+        ],
+      },
+      {
+        key: 'more',
+        title: 'More',
+        links: [
+          { key: 'changelog', to: '/changelog', label: 'Changelog' },
+          { key: 'status', to: '/status', label: 'Status' },
+        ],
+      },
+    ],
+  },
+  { key: 'pricing', label: 'Pricing', to: '/pricing' },
+  { key: 'docs', label: 'Docs', to: '/docs' },
 ] as const
 
 const BOTTOM = [
@@ -406,6 +442,26 @@ function onCommand(id: string) {
         <div>
           <NavLinks :items="NAV" active="blog" label="Primary navigation" />
           <PropTable name="NavLinks" />
+        </div>
+
+        <div>
+          <p class="text-ink text-sm font-medium">MegaMenu</p>
+          <p class="text-ink-soft mt-1 mb-3 text-xs">
+            The same row where a section holds more than a row can. Each top item is a button that
+            discloses a panel — not a <code class="text-xs">role="menu"</code>, which would promise
+            a keyboard contract these links do not have. Hover opens it, and so do a press and
+            Enter; Escape closes it and gives focus back.
+          </p>
+          <!-- The panel is absolutely positioned against the bar, so the bar
+               needs room under it while one is open. -->
+          <div class="pb-2">
+            <MegaMenu :items="MEGA" active="pricing" label="Site navigation">
+              <template #products>
+                <p class="text-ink-soft mt-4 text-xs">Everything is free while it is in beta.</p>
+              </template>
+            </MegaMenu>
+          </div>
+          <PropTable name="MegaMenu" />
         </div>
 
         <div>

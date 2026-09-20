@@ -2477,6 +2477,48 @@
     ]
   },
   {
+    "name": "MegaMenu",
+    "entry": "rei-kit/web",
+    "summary": "A wide site's navigation, where a section has more in it than a row can hold: columns of links under a heading, opened from the bar.",
+    "props": [
+      {
+        "name": "items",
+        "required": true,
+        "type": "readonly MegaMenuItem<K>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "active",
+        "required": false,
+        "type": "K",
+        "description": "Which section is current. Usually derived from the route.",
+        "default": "undefined"
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "Accessible name for the navigation landmark.",
+        "default": "''"
+      },
+      {
+        "name": "openOnHover",
+        "required": false,
+        "type": "boolean",
+        "description": "Whether a pointer opens a panel as well as a click.",
+        "default": "true"
+      },
+      {
+        "name": "hoverDelay",
+        "required": false,
+        "type": "number",
+        "description": "How long the pointer has to leave before the panel closes, in ms.",
+        "default": "120"
+      }
+    ]
+  },
+  {
     "name": "NavLinks",
     "entry": "rei-kit/web",
     "summary": "The primary navigation of a wide site.",

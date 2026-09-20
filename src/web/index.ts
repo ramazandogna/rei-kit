@@ -79,5 +79,8 @@ export type { TabPanel } from './BaseTabs.vue'
 
 export { default as BaseTooltip } from './BaseTooltip.vue'
 
+export { default as MegaMenu } from './MegaMenu.vue'
+export type { MegaMenuColumn, MegaMenuItem, MegaMenuLink } from './MegaMenu.vue'
+
 export { default as NavLinks } from './NavLinks.vue'
 export type { NavLinkItem } from './NavLinks.vue'

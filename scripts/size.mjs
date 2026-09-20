@@ -42,8 +42,9 @@ const JS_CASES = [
     // 36.7 at 2.8 (the data table, the command menu and the listbox),
     // 40.7 at 2.13 (the combobox's multiple mode, its debounced search and
     // its virtual window -- 0.8 KB for all three, which is the whole of
-    // what a virtual list usually costs as a dependency).
-    budget: 41,
+    // what a virtual list usually costs as a dependency), 41.4 at 2.14
+    // (the mega menu).
+    budget: 42,
     code: ['index', 'web', 'app', 'pwa', 'motion']
       .map((entry) => `import * as ${entry} from '${dist(`${entry}.js`)}'\nconsole.log(${entry})`)
       .join('\n'),
@@ -60,8 +61,9 @@ const CSS_CASES = [
   {
     name: 'core only',
     // Raised with the number that moved it: 12.1 KB at 2.2, 14.4 at 2.6
-    // (the calendar), 16.6 at 2.8 (the data table and the command menu).
-    budget: 18,
+    // (the calendar), 16.6 at 2.8 (the data table and the command menu),
+    // 18.0 at 2.14 (the mega menu's panel and columns).
+    budget: 19,
     imports: ['tokens.css', 'shell/mobile.css', 'styles.css'],
     source: true,
   },

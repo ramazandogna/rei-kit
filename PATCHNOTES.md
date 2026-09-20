@@ -60,6 +60,43 @@ without.
 
 ---
 
+## 2.14.0
+
+**You gain `MegaMenu`** in `rei-kit/web` — the navigation row for a site
+where a section has more in it than a row can hold.
+
+```vue
+<MegaMenu :items="items" :active="section" label="Main navigation">
+  <template #products>
+    <p>Everything is free while it is in beta.</p>
+  </template>
+</MegaMenu>
+```
+
+```ts
+const items = [
+  {
+    key: 'products',
+    label: 'Products',
+    columns: [
+      {
+        key: 'apps',
+        title: 'Apps',
+        links: [{ key: 'journal', to: '/journal', label: 'Journal', description: 'A day at a time' }],
+      },
+    ],
+  },
+  // No columns: a plain link in the same bar.
+  { key: 'pricing', label: 'Pricing', to: '/pricing' },
+]
+```
+
+It opens on hover, on a press and on Enter; Escape closes it and gives focus
+back. `vue-router` is needed for it, as it is for the other parts that
+navigate.
+
+**Action required:** none.
+
 ## 2.13.0
 
 **You gain a combobox that handles a real list:** several answers as chips, a

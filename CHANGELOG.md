@@ -3,6 +3,39 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.14.0 — 2026-09-20
+
+**A mega menu, and it is not a menu.**
+
+### Added
+
+- **`MegaMenu`** (`rei-kit/web`) — a wide site's navigation where a section
+  holds more than a row can: each top-level item discloses a panel of
+  columns, and an item with no columns stays a plain link rather than
+  becoming a button that does nothing when it is pressed.
+
+  It is a **disclosure**, not `role="menu"`. A menu is an application's
+  actions, and announcing links as menu items tells somebody listening that
+  Tab will not work and the arrows will — both untrue, and both stated with
+  confidence. Here the links are links: Tab walks them, Escape closes the
+  panel and gives focus back to the button that opened it. This is the part
+  hand-written mega menus get wrong, because `role="menu"` looks like the
+  more accessible answer and is the less accessible one.
+
+  Hover opens a panel, but never alone: a press and Enter open it too,
+  because a hover-only menu cannot be opened by a keyboard, a touchscreen or
+  a screen reader at all. The close is delayed, so the pointer can cross the
+  gap between the button and the panel. A slot named for a top-level item
+  adds anything else that panel needs.
+
+### Fixed
+
+- A press on a panel the pointer had already opened now keeps it — and pins
+  it, so moving away no longer closes it. Found in a browser and not in the
+  suite: hovering the button opened the panel and the click that followed
+  closed it again, so on a machine with a mouse the panel could not be
+  opened by clicking at all. A test now does both halves in that order.
+
 ## 2.13.0 — 2026-09-20
 
 **The combobox, for lists that are not a handful.** Three things a real app

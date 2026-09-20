@@ -60,6 +60,19 @@ without.
 
 ---
 
+## 2.7.0
+
+**You gain the basics:** `BaseSeparator`, `BaseSkeleton`, `BaseKbd`,
+`BaseChip`, `AvatarStack`, `BaseLink`, `CopyButton`, `BaseRating`,
+`FileDrop` and `TagsInput`.
+
+Each has a copyable sample on the
+[showcase](https://ramazandogna.github.io/rei-kit/#api), and the parts that
+name something — a chip's remove button, a rating's score, a file's remove
+button — take those words from you rather than inventing English ones.
+
+**Action required:** none.
+
 ## 2.6.0
 
 **You gain a calendar and a date picker:**

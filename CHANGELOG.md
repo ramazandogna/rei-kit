@@ -3,6 +3,55 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.7.0 — 2026-09-20
+
+**The basics every kit has, and this one did not.** Ten small parts, each
+one decision.
+
+### Added
+
+- **`BaseSeparator`** — a rule, with a word on it where that helps ("or").
+  `role="separator"` when it only divides, and nothing at all to assistive
+  tech when it carries a label, because then the text is the point.
+- **`BaseSkeleton`** — one grey box. A height is a CSS length, never a
+  class: `h-4` inside a component the app does not control renders at zero
+  the day that utility is missing from the app's stylesheet, which is how
+  every skeleton in one app came out invisible. `SkeletonList` is still the
+  rows; this is the shapes it does not cover.
+- **`BaseKbd`** — a key, or a chord, in the `<kbd>` element browsers and
+  screen readers already understand. The keys are the app's words, because
+  `⌘` on a Mac and `Ctrl` elsewhere is a decision about the reader's
+  machine.
+- **`BaseChip`** — a removable or selectable label: a filter, a recipient, a
+  tag. `BaseBadge` stays what it was, a standing label that is never a
+  control. `removeLabel` is required, because "×" alone is a button a
+  screen reader reads as "times".
+- **`AvatarStack`** — overlapped faces, and a count once there are more than
+  `max`. One thing to a screen reader, named by `label`, because ten
+  overlapping circles are neither ten faces nor a number.
+- **`BaseLink`** — a real link, routing with `to` or leaving with `href`.
+  One that leaves in a new tab carries the mark that says so and
+  `rel="noopener"`, without which the page that opens can reach back
+  through `window.opener`.
+- **`CopyButton`** — copies, and says so: the icon and the accessible name
+  change for two seconds and the change is announced politely. A refusal is
+  reported rather than swallowed, which is what a silent copy button leaves
+  you pasting the wrong thing after.
+- **`BaseRating`** — a score out of five. Given, it is one slider the arrows
+  move; read-only, it is an image with the score as its name and nothing to
+  Tab into, instead of five buttons that do nothing.
+- **`FileDrop`** — files, dropped or chosen. The box is a `<label>` around a
+  real file input, so Tab reaches it and Enter opens it: a `div` with a
+  click handler has no keyboard at all, and dragging is a gesture a keyboard
+  cannot make. It holds files; sending them stays the app's.
+- **`TagsInput`** — several short values in one field. Enter and a comma
+  commit, Backspace on an empty field takes the last one back.
+
+### Changed
+
+- The all-components size budget rises from 32 to 37 KB: the ten add 2.9 KB
+  together, about 0.3 KB each.
+
 ## 2.6.0 — 2026-09-20
 
 **Dates.** A calendar, and the field that opens one.

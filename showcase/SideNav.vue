@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import AuthorCredit from './AuthorCredit.vue'
 import { BASICS_PARTS } from './basics-parts'
 import { FORM_GROUPS, FORM_PARTS } from './form-parts'
+import { DESK_PARTS } from './desk-parts'
 import { MOTION_PARTS } from './motion-parts'
 import { NAV_PARTS } from './nav-parts'
 import { OVERLAY_PARTS } from './overlay-parts'
@@ -58,6 +59,7 @@ const SECTIONS = [
   { id: 'veri', label: 'Data' },
   { id: 'komut', label: 'Command menu' },
   { id: 'masa', label: 'Desk layout' },
+  ...DESK_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
   { id: 'durum', label: 'State' },
   { id: 'kabuk', label: 'Phone shell' },
   { id: 'bosluk', label: 'Empty and waiting' },

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { NEUTRAL } from './tones'
-import { computed, ref } from 'vue'
-import { CalendarRange, Plus, ReceiptText, Settings, UserStar } from 'lucide-vue-next'
+import { ref } from 'vue'
+import { Plus } from 'lucide-vue-next'
 
 import {
   BaseAvatar,
@@ -9,43 +9,30 @@ import {
   BaseCard,
   BaseKbd,
   BaseBadge,
-  BaseMenu,
-  BasePopconfirm,
   BaseSeparator,
   DescriptionList,
-  BasePopover,
-  BaseSheet,
-  BaseStepper,
   BaseSpinner,
-  BaseSwitch,
   BaseTable,
   BaseTimeline,
   ErrorBoundary,
   PriceCard,
   SectionHeading,
-  TabBar,
   useToast,
 } from '../src/index'
 import { AuthShell, FabButton, OfflineBanner } from '../src/app/index'
 import {
   BaseAccordion,
-  BaseBreadcrumb,
   BaseDisclosure,
-  BaseModal,
-  BasePagination,
-  BaseTabs,
-  BaseTooltip,
   BaseSplitter,
   BaseToolbar,
   BaseTree,
   CommandMenu,
   DataTable,
-  MegaMenu,
-  NavLinks,
-  ResponsiveDialog,
   TransferList,
 } from '../src/web/index'
 import type { TableSort } from '../src/web/index'
+import NavigationSection from './NavigationSection.vue'
+import OverlaysSection from './OverlaysSection.vue'
 import PropTable from './PropTable.vue'
 
 /**
@@ -57,68 +44,10 @@ import PropTable from './PropTable.vue'
  * which is how the newest consumer came to hand-write 737 class attributes
  * against a kit that already had most of what it needed.
  */
-const modal = ref(false)
-const alertModal = ref(false)
-const sheet = ref(false)
-const tab = ref<'overview' | 'history'>('overview')
-const page = ref(7)
-const menuOpen = ref(false)
-
-const TABS = [
-  { key: 'overview', label: 'Overview' },
-  { key: 'history', label: 'History' },
-] as const
 
 const FAQ = [
   { key: 'cancel', title: 'Can I cancel any time?' },
   { key: 'refund', title: 'What is the refund policy?' },
-] as const
-
-const NAV = [
-  { key: 'courses', to: '/courses', label: 'Courses' },
-  { key: 'blog', to: '/blog', label: 'Blog' },
-  { key: 'pricing', to: '/pricing', label: 'Pricing' },
-] as const
-
-const MEGA = [
-  {
-    key: 'products',
-    label: 'Products',
-    columns: [
-      {
-        key: 'apps',
-        title: 'Apps',
-        links: [
-          { key: 'journal', to: '/journal', label: 'Journal', description: 'A day at a time' },
-          { key: 'ledger', to: '/ledger', label: 'Ledger', description: 'Where the money went' },
-        ],
-      },
-      {
-        key: 'developers',
-        title: 'Developers',
-        links: [
-          { key: 'kit', to: '/kit', label: 'Component kit' },
-          { key: 'api', to: '/api', label: 'API' },
-        ],
-      },
-      {
-        key: 'more',
-        title: 'More',
-        links: [
-          { key: 'changelog', to: '/changelog', label: 'Changelog' },
-          { key: 'status', to: '/status', label: 'Status' },
-        ],
-      },
-    ],
-  },
-  { key: 'pricing', label: 'Pricing', to: '/pricing' },
-  { key: 'docs', label: 'Docs', to: '/docs' },
-] as const
-
-const BOTTOM = [
-  { key: 'month', to: '/month', label: 'Month', icon: CalendarRange },
-  { key: 'ledger', to: '/ledger', label: 'Ledger', icon: ReceiptText },
-  { key: 'profile', to: '/profile', label: 'Profile', icon: UserStar },
 ] as const
 
 const COLUMNS = [
@@ -143,21 +72,6 @@ const Boom = {
   render: () => null,
 }
 const boom = ref(false)
-
-const onlyUnpaid = ref(true)
-const thisMonth = ref(false)
-
-const STEPS = [
-  { key: 'account', label: 'Account', description: 'Email and password' },
-  { key: 'plan', label: 'Plan', description: 'Monthly or yearly' },
-  { key: 'payment', label: 'Payment', description: 'Card details' },
-  { key: 'done', label: 'Done' },
-] as const
-const step = ref<(typeof STEPS)[number]['key']>('plan')
-const stepIndex = computed(() => STEPS.findIndex((s) => s.key === step.value))
-function move(by: number) {
-  step.value = STEPS[Math.max(0, Math.min(STEPS.length - 1, stepIndex.value + by))]!.key
-}
 
 const toast = useToast()
 
@@ -219,7 +133,6 @@ const PERMISSIONS = [
   { value: 'billing', label: 'Billing' },
 ]
 
-const askDelete = ref(false)
 /* One event carries a note, the rest do not -- a slot named for its key
    wins over the shared body. Declared rather than inferred: left to
    inference these literals are a union, and a per-key slot would then see
@@ -258,330 +171,9 @@ function onCommand(id: string) {
 <template>
   <div class="flex flex-col gap-14">
     <!-- ─────────────────────────── Form ─────────────────────────── -->
-    <!-- ─────────────────────────── Katmanlar ─────────────────────────── -->
-    <section id="ust-katman">
-      <SectionHeading :tone="NEUTRAL" label="Overlays" />
-      <p class="text-ink-soft mt-2 max-w-[68ch] text-sm leading-relaxed">
-        Three different answers to “put something on top of the page”, and the kit keeps them
-        separate on purpose — merging them gives you one component that is wrong everywhere.
-      </p>
+    <OverlaysSection />
 
-      <BaseCard class="mt-5 flex flex-col gap-8">
-        <div>
-          <p class="text-ink text-sm font-medium">BaseModal — arrives from nowhere</p>
-          <p class="text-ink-soft mt-1 max-w-[64ch] text-sm leading-relaxed">
-            For a decision that interrupts what you were reading. It appears in the middle of the
-            page and is dismissed by leaving it. Try the keyboard: focus moves inside, Tab cannot
-            escape, Escape closes.
-          </p>
-
-          <div class="mt-3 flex flex-wrap gap-3">
-            <BaseButton @click="modal = true">Open modal</BaseButton>
-            <BaseButton variant="secondary" @click="alertModal = true">
-              Open a modal that must be answered
-            </BaseButton>
-          </div>
-
-          <BaseModal v-model="modal" title="Delete this entry?" close-label="Close">
-            Focus moved into this dialog when it opened, and it will return to the button you
-            pressed when it closes. Tab cycles inside, Escape closes, and the page behind cannot
-            scroll.
-            <template #actions>
-              <BaseButton variant="ghost" @click="modal = false">Cancel</BaseButton>
-              <BaseButton @click="modal = false">Delete</BaseButton>
-            </template>
-          </BaseModal>
-
-          <BaseModal
-            v-model="alertModal"
-            title="Your session has expired"
-            close-label="Close"
-            tone="alert"
-            :dismissible="false"
-          >
-            With <code class="text-xs">dismissible: false</code> there is no close button and Escape
-            does nothing — for a decision the reader has to actually make.
-            <template #actions>
-              <BaseButton @click="alertModal = false">Sign in again</BaseButton>
-            </template>
-          </BaseModal>
-
-          <PropTable name="BaseModal" />
-        </div>
-
-        <div>
-          <p class="text-ink text-sm font-medium">BaseSheet — arrives from the bottom edge</p>
-          <p class="text-ink-soft mt-1 max-w-[64ch] text-sm leading-relaxed">
-            The same job on a phone, where the top of the screen is out of reach and the bottom is
-            where your thumb already is. It carries a drag handle and is dismissed by pulling it
-            back down.
-          </p>
-          <p class="text-ink-soft mt-2 max-w-[64ch] text-sm leading-relaxed">
-            <strong class="text-ink">It will look narrow on a desktop, and that is correct.</strong>
-            A sheet belongs to a phone-shaped app, so it is pinned to the same 430px column the app
-            shell uses rather than stretching across a wide monitor. On a phone that column is the
-            whole screen.
-          </p>
-
-          <BaseButton class="mt-3" variant="ghost" @click="sheet = true"
-            >Open bottom sheet</BaseButton
-          >
-
-          <BaseSheet
-            v-model="sheet"
-            title="New transaction"
-            subtitle="This is what a sheet is for"
-            close-label="Close"
-          >
-            <p class="text-ink-soft text-sm leading-relaxed">
-              A form, a picker, a confirmation — anything a phone app would otherwise send you to a
-              second screen for. It stops at the width of the app shell, which on a phone is the
-              whole viewport.
-            </p>
-          </BaseSheet>
-
-          <PropTable name="BaseSheet" />
-        </div>
-
-        <div>
-          <p class="text-ink text-sm font-medium">BaseMenu — a short list of actions</p>
-          <p class="text-ink-soft mt-1 max-w-[64ch] text-sm leading-relaxed">
-            Not a dialog at all. Open it and try the arrow keys: they move between items, Home and
-            End jump to the ends, Escape closes, and Tab leaves rather than trapping you inside.
-          </p>
-
-          <div class="mt-3">
-            <BaseMenu v-model="menuOpen" label="Account">
-              <template #trigger><BaseAvatar label="Account" /></template>
-              <a role="menuitem" href="#api-BaseMenu">Profile</a>
-              <a role="menuitem" href="#api-BaseAvatar">My notes</a>
-              <hr />
-              <button type="button" role="menuitem">Sign out</button>
-            </BaseMenu>
-          </div>
-
-          <PropTable name="BaseMenu" />
-        </div>
-
-        <div>
-          <p class="text-ink text-sm font-medium">BaseTooltip — a label, not a layer</p>
-          <p class="text-ink-soft mt-1 max-w-[64ch] text-sm leading-relaxed">
-            Shown by <code class="text-xs">:hover</code> and
-            <code class="text-xs">:focus-within</code> in the stylesheet — no JavaScript, so it
-            survives a prerendered page and a reader with scripting off. Reach the button with Tab
-            and it appears.
-          </p>
-
-          <div class="mt-3">
-            <BaseTooltip label="Copy to clipboard">
-              <template #default="{ describedBy }">
-                <BaseButton variant="secondary" :aria-describedby="describedBy">
-                  <Settings class="size-4" />
-                </BaseButton>
-              </template>
-            </BaseTooltip>
-          </div>
-
-          <p class="text-ink-soft mt-4 text-xs">
-            <code class="text-xs">follow</code> tracks the pointer instead, for a target big enough
-            that a bubble pinned to the middle would be nowhere near what is under the cursor. It is
-            the one thing here that needs JavaScript, so it is opt-in — and it goes back to the
-            anchored bubble for a keyboard and for anyone who asked their system for less motion.
-          </p>
-          <div class="mt-3">
-            <BaseTooltip class="w-full" label="Tuesday, 12 September — 3 entries" follow>
-              <template #default="{ describedBy }">
-                <div
-                  class="bg-muted rounded-card text-ink-soft grid h-24 w-full place-items-center text-xs"
-                  tabindex="0"
-                  :aria-describedby="describedBy"
-                >
-                  Move the pointer across this
-                </div>
-              </template>
-            </BaseTooltip>
-          </div>
-
-          <PropTable name="BaseTooltip" />
-        </div>
-
-        <div>
-          <p class="text-ink text-sm font-medium">BasePopover</p>
-          <p class="text-ink-soft mt-1 text-xs">
-            Anything, anchored to its trigger. Focus goes in, Escape brings it back, and the page
-            stays usable. The trigger is your own button.
-          </p>
-          <div class="mt-3">
-            <BasePopover label="Filters">
-              <template #trigger="{ props }">
-                <BaseButton variant="secondary" v-bind="props">Filters</BaseButton>
-              </template>
-              <template #default="{ close }">
-                <div class="flex flex-col gap-3">
-                  <BaseSwitch v-model="onlyUnpaid" label="Only unpaid" />
-                  <BaseSwitch v-model="thisMonth" label="This month" />
-                  <BaseButton size="sm" block @click="close">Done</BaseButton>
-                </div>
-              </template>
-            </BasePopover>
-          </div>
-          <PropTable name="BasePopover" />
-        </div>
-
-        <div>
-          <p class="text-ink text-sm font-medium">BasePopconfirm</p>
-          <p class="text-ink-soft mt-1 text-xs">
-            The question beside the button that asked it, so what is being deleted stays on screen.
-          </p>
-          <div class="mt-3">
-            <BasePopconfirm
-              message="This entry will be deleted."
-              confirm-label="Delete"
-              cancel-label="Cancel"
-              @confirm="toast.success('Entry deleted')"
-            >
-              <template #trigger="{ props }">
-                <BaseButton variant="danger" size="sm" v-bind="props">Delete</BaseButton>
-              </template>
-            </BasePopconfirm>
-          </div>
-          <PropTable name="BasePopconfirm" />
-        </div>
-
-        <div>
-          <p class="text-ink text-sm font-medium">ResponsiveDialog</p>
-          <p class="text-ink-soft mt-1 text-xs">
-            A modal here, a sheet on a phone — one set of props. Narrow the window and press it
-            again.
-          </p>
-          <div class="mt-3">
-            <BaseButton variant="secondary" size="sm" @click="askDelete = true">
-              Ask to delete
-            </BaseButton>
-          </div>
-          <ResponsiveDialog
-            v-model="askDelete"
-            title="Delete this account?"
-            close-label="Close"
-            tone="alert"
-          >
-            Everything in it goes with it. This cannot be undone.
-            <template #actions>
-              <BaseButton variant="secondary" @click="askDelete = false">Keep it</BaseButton>
-              <BaseButton variant="danger" @click="askDelete = false">Delete</BaseButton>
-            </template>
-          </ResponsiveDialog>
-          <PropTable name="ResponsiveDialog" />
-        </div>
-      </BaseCard>
-    </section>
-
-    <!-- ─────────────────────────── Navigation ─────────────────────────── -->
-    <section id="gezinme">
-      <SectionHeading :tone="NEUTRAL" label="Navigation" />
-      <p class="text-ink-soft mt-2 text-sm">
-        The parts that say where you are and where you can go.
-      </p>
-
-      <BaseCard class="mt-5 flex flex-col gap-6">
-        <div>
-          <NavLinks :items="NAV" active="blog" label="Primary navigation" />
-          <PropTable name="NavLinks" />
-        </div>
-
-        <div>
-          <p class="text-ink text-sm font-medium">MegaMenu</p>
-          <p class="text-ink-soft mt-1 mb-3 text-xs">
-            The same row where a section holds more than a row can. Each top item is a button that
-            discloses a panel — not a <code class="text-xs">role="menu"</code>, which would promise
-            a keyboard contract these links do not have. Hover opens it, and so do a press and
-            Enter; Escape closes it and gives focus back.
-          </p>
-          <!-- The panel is absolutely positioned against the bar, so the bar
-               needs room under it while one is open. -->
-          <div class="pb-2">
-            <MegaMenu :items="MEGA" active="pricing" label="Site navigation">
-              <template #products>
-                <p class="text-ink-soft mt-4 text-xs">Everything is free while it is in beta.</p>
-              </template>
-            </MegaMenu>
-          </div>
-          <PropTable name="MegaMenu" />
-        </div>
-
-        <div>
-          <BaseBreadcrumb
-            :items="[
-              { label: 'Courses', to: '/courses' },
-              { label: 'N5', to: '/courses/n5' },
-              { label: 'Day 3' },
-            ]"
-            label="Breadcrumb"
-          />
-          <PropTable name="BaseBreadcrumb" />
-        </div>
-
-        <div>
-          <BaseTabs v-model="tab" :items="TABS" label="Sections">
-            <template #default="{ item }">
-              <p class="text-ink-soft text-sm">
-                {{ item.key === 'overview' ? 'The overview panel.' : 'The history panel.' }}
-                Move with the arrow keys; Home and End jump to the ends.
-              </p>
-            </template>
-          </BaseTabs>
-          <PropTable name="BaseTabs" />
-        </div>
-
-        <div>
-          <BasePagination
-            :page="page"
-            :pages="40"
-            previous-label="Previous"
-            next-label="Next"
-            label="Pages"
-            @change="page = $event"
-          />
-          <PropTable name="BasePagination" />
-        </div>
-
-        <div>
-          <!-- The bar is absolutely positioned -- it hangs inside the phone
-               shell rather than in the flow -- so it needs a box of its own.
-               The table has to sit outside that box, or opening it spills out
-               of the fixed height. -->
-          <div class="border-hair/70 rounded-card relative h-24 overflow-hidden border">
-            <TabBar :items="BOTTOM" active="ledger" label="Bottom bar" />
-          </div>
-          <PropTable name="TabBar" />
-        </div>
-
-        <div class="sm:col-span-2">
-          <p class="text-ink text-sm font-medium">BaseStepper</p>
-          <p class="text-ink-soft mt-1 text-xs">
-            Where you are in a process. Finished steps can be clicked to go back; steps ahead
-            cannot.
-          </p>
-          <BaseStepper
-            v-model="step"
-            class="mt-4"
-            :steps="STEPS"
-            label="Sign-up"
-            interactive
-            :state-labels="{ complete: 'done', error: 'needs attention' }"
-          />
-          <div class="mt-4 flex gap-2">
-            <BaseButton size="sm" variant="secondary" :disabled="stepIndex === 0" @click="move(-1)"
-              >Back</BaseButton
-            >
-            <BaseButton size="sm" :disabled="stepIndex === STEPS.length - 1" @click="move(1)"
-              >Next</BaseButton
-            >
-          </div>
-          <PropTable name="BaseStepper" />
-        </div>
-      </BaseCard>
-    </section>
+    <NavigationSection />
 
     <!-- ─────────────────────────── Disclosure ─────────────────────────── -->
     <section id="acilir">

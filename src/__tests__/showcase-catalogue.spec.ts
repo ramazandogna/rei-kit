@@ -184,3 +184,34 @@ describe('the showcase part lists', () => {
     })
   }
 })
+
+/**
+ * Every menu entry has to point at something that exists.
+ *
+ * The side menu carries a hand-written list of section ids alongside the
+ * generated part lists. A typo there, or a section renamed on one side only,
+ * is a link that scrolls nowhere — and a dead anchor does nothing at all, so
+ * nothing complains. This is the same guard the part lists get, extended to
+ * the ids nobody generates.
+ */
+describe('the showcase menu', () => {
+  const nav = readFileSync('showcase/SideNav.vue', 'utf8')
+
+  /** The ids written out in `SECTIONS`, not the ones spread in from a list. */
+  const ids = [...nav.matchAll(/\{ id: '([^']+)'/g)].map((match) => match[1]!)
+
+  const markup = readdirSync('showcase')
+    .filter((name) => name.endsWith('.vue'))
+    .map((name) => readFileSync(`showcase/${name}`, 'utf8'))
+    .join('\n')
+
+  it('lists sections the page actually has', () => {
+    expect(ids.length).toBeGreaterThan(20)
+
+    const missing = ids.filter(
+      (id) => !markup.includes(`id="${id}"`) && !markup.includes(`"${id}"`),
+    )
+
+    expect(missing, `no element carries: ${missing.join(', ')}`).toEqual([])
+  })
+})

@@ -5,6 +5,8 @@ import AuthorCredit from './AuthorCredit.vue'
 import { BASICS_PARTS } from './basics-parts'
 import { FORM_GROUPS, FORM_PARTS } from './form-parts'
 import { MOTION_PARTS } from './motion-parts'
+import { NAV_PARTS } from './nav-parts'
+import { OVERLAY_PARTS } from './overlay-parts'
 import catalogue from './props.generated.json'
 
 /**
@@ -49,7 +51,9 @@ const SECTIONS = [
   { id: 'tarih', label: 'Dates and times' },
   { id: 'ayarlar', label: 'Settings' },
   { id: 'ust-katman', label: 'Overlays' },
+  ...OVERLAY_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
   { id: 'gezinme', label: 'Navigation' },
+  ...NAV_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
   { id: 'acilir', label: 'Disclosure' },
   { id: 'veri', label: 'Data' },
   { id: 'komut', label: 'Command menu' },

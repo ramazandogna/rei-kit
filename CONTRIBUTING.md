@@ -57,7 +57,8 @@ and the mistakes that compile. The rules that catch people out:
 A new component also needs:
 
 1. An export in the right entry (`src/index.ts`, `src/web/index.ts`, …) and a
-   line in `public-api.spec.ts`.
+   line in `public-api.spec.ts` — plus a line in `showcase/type-surface.ts`
+   for every type it exports, which is how types are guarded at all.
 2. A row in the entry table in `AGENTS.md`, and usually a line in "which one
    to reach for" — that section is the one thing a prop table cannot say.
 3. A usage sample at `showcase/examples/<Name>.vue`, which is type-checked and

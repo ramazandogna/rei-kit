@@ -41,9 +41,6 @@ you have to do.
 size of the catalogue — it is that somebody arriving cannot tell in a minute
 whether this fits, and cannot tell at all whether it is maintained.
 
-- Type exports are not guarded by a test. Runtime exports of all six entries
-  are; the types are held only by the usage samples that import them. A
-  compile-time surface test would close that.
 - The showcase keeps growing sections faster than it grows a way around
   them. Several are still a card holding four components.
 

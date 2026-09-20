@@ -405,9 +405,14 @@ Four checks hold that line, and each catches something the others cannot:
   kit compiles fine without an export nothing inside it calls, so removing
   one would otherwise pass. It guarded only `rei-kit` until 2.15.0, which
   read as more than it was: a composable could vanish from `rei-kit/web` or
-  `rei-kit/pwa` with every check green. Type exports are not covered here —
-  these files are excluded from every tsconfig on purpose — and are held by
-  the usage samples, which are type-checked under `strictTemplates`.
+  `rei-kit/pwa` with every check green.
+- **`showcase/type-surface.ts` and `type-surface.spec.ts`** do the same for
+  types, which a test cannot check directly — types are gone by the time one
+  runs, and `src/__tests__/` is excluded from every tsconfig. So the surface
+  file re-exports every published type and is type-checked twice: rename or
+  remove one and it stops compiling. The spec then reads the entry files and
+  fails on a type that never reached the surface, which is the half a
+  compiler cannot catch. **A new exported type needs a line in that file.**
 - **`showcase-catalogue.spec.ts`** regenerates the prop catalogue and asserts it
   matches the exports in both directions, that every component has a
   description, that every component is mounted by a behaviour test, and that

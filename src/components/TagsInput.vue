@@ -12,6 +12,10 @@ import FormField from './FormField.vue'
  * are before the field rather than beside it, so the caret is always at the
  * end of the line the way it is in a mail client.
  *
+ * A pasted "vue, html, css" becomes three tags rather than one: whatever is
+ * pasted is split on commas and line breaks, which is the shape every list
+ * copied from somewhere else arrives in.
+ *
  * `removeLabel` builds each chip's remove button name from the tag, so a
  * screen reader hears "Remove: design" rather than five buttons called "×".
  */
@@ -47,14 +51,40 @@ const model = defineModel<string[]>({ default: () => [] })
 
 const draft = ref('')
 
-function add() {
-  const value = draft.value.trim()
-  draft.value = ''
-  if (!value) return
-  if (max !== undefined && model.value.length >= max) return
-  if (!allowDuplicates && model.value.includes(value)) return
+/** Commits one or many: "vue, html" is two tags however it arrived. */
+function commit(text: string) {
+  const parts = text
+    .split(/[\n,]/)
+    .map((part) => part.trim())
+    .filter(Boolean)
 
-  model.value = [...model.value, value]
+  if (parts.length === 0) return
+
+  const next = [...model.value]
+  for (const value of parts) {
+    if (max !== undefined && next.length >= max) break
+    if (!allowDuplicates && next.includes(value)) continue
+    next.push(value)
+  }
+
+  if (next.length !== model.value.length) model.value = next
+}
+
+function add() {
+  const text = draft.value
+  draft.value = ''
+  commit(text)
+}
+
+function onPaste(event: ClipboardEvent) {
+  const text = event.clipboardData?.getData('text') ?? ''
+  // Only when there is something to split on; a single word is left to the
+  // field so the caret stays where the reader put it.
+  if (!/[\n,]/.test(text)) return
+
+  event.preventDefault()
+  commit(`${draft.value}${text}`)
+  draft.value = ''
 }
 
 function remove(index: number) {
@@ -104,6 +134,7 @@ function onKeydown(event: KeyboardEvent) {
           :aria-invalid="invalid"
           :disabled="disabled || (max !== undefined && model.length >= max)"
           @keydown="onKeydown"
+          @paste="onPaste"
           @blur="add"
         />
       </div>

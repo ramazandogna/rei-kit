@@ -292,6 +292,28 @@ describe('TagsInput', () => {
     expect(wrapper.emitted('update:modelValue')!.at(-1)).toEqual([['design']])
   })
 
+  it('splits a pasted list into one tag each', async () => {
+    const wrapper = mount(TagsInput, { props: { ...props, modelValue: [] } })
+
+    const paste = new Event('paste', { bubbles: true, cancelable: true }) as ClipboardEvent
+    Object.defineProperty(paste, 'clipboardData', { value: { getData: () => 'vue, html\ncss' } })
+    wrapper.find('input').element.dispatchEvent(paste)
+    await nextTick()
+
+    expect(wrapper.emitted('update:modelValue')!.at(-1)).toEqual([['vue', 'html', 'css']])
+  })
+
+  it('leaves a pasted single word in the field, caret and all', async () => {
+    const wrapper = mount(TagsInput, { props: { ...props, modelValue: [] } })
+
+    const paste = new Event('paste', { bubbles: true, cancelable: true }) as ClipboardEvent
+    Object.defineProperty(paste, 'clipboardData', { value: { getData: () => 'vue' } })
+    wrapper.find('input').element.dispatchEvent(paste)
+    await nextTick()
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
   it('stops at the limit, and names every chip’s remove button', async () => {
     const wrapper = mount(TagsInput, { props: { ...props, modelValue: ['a', 'b'], max: 2 } })
 

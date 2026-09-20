@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { readFileSync } from 'node:fs'
 import { nextTick } from 'vue'
 
 import { BaseListbox } from '../index'
@@ -155,6 +156,17 @@ describe('BaseListbox', () => {
     await wrapper.trigger('keydown', { key: 'ö' })
 
     expect(wrapper.attributes('aria-activedescendant')).toContain('-3')
+  })
+
+  it('shows a current row only while it is being used', () => {
+    /* A highlight left on a list nobody is in reads as a selection, which is
+       exactly what it is not — the bug that made a moved item in a transfer
+       list look picked while the button beside it stayed disabled. Asserted
+       against the stylesheet, because scoped styles are not applied in a
+       test and a computed colour would be a lie either way. */
+    const source = readFileSync('src/components/BaseListbox.vue', 'utf8')
+
+    expect(source).toContain('.rk-listbox:focus-within .rk-listbox-option.is-active')
   })
 
   it('does not choose what is disabled', async () => {

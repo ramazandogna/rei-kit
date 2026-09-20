@@ -211,7 +211,10 @@ function onKeydown(event: KeyboardEvent) {
   color: var(--color-ink);
 }
 
-.rk-listbox-option.is-active {
+/* The current row shows only while the list has focus. A list that is not
+   being used has no "current" row, and a highlight left behind on one reads
+   as a selection — which is exactly what it is not. */
+.rk-listbox:focus-within .rk-listbox-option.is-active {
   background: var(--color-muted);
 }
 
@@ -220,10 +223,14 @@ function onKeydown(event: KeyboardEvent) {
   font-weight: 500;
 }
 
-/* Both at once: the current option and the chosen one are different things,
-   and a list that shows only one of them loses the reader's place. */
-.rk-listbox-option.is-chosen.is-active {
-  background: color-mix(in oklab, var(--color-primary) 12%, transparent);
+/* Chosen is the tick and the tint, and it holds whether the list is in use
+   or not: the current option and the chosen one are different things. */
+.rk-listbox-option.is-chosen {
+  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+}
+
+.rk-listbox:focus-within .rk-listbox-option.is-chosen.is-active {
+  background: color-mix(in oklab, var(--color-primary) 20%, transparent);
 }
 
 .rk-listbox-option.is-disabled {

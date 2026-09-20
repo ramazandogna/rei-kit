@@ -120,6 +120,11 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BasePagination } from 'rei-kit/web'\n\nconst page = ref(1)\n</script>\n\n<template>\n  <BasePagination\n    :page=\"page\"\n    :pages=\"12\"\n    previous-label=\"Previous\"\n    next-label=\"Next\"\n    label=\"Pages\"\n    @change=\"page = $event\"\n  />\n</template>\n"
   },
   {
+    "name": "BasePopconfirm",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseButton, BasePopconfirm } from 'rei-kit'\n\nfunction remove() {\n  // …\n}\n</script>\n\n<template>\n  <BasePopconfirm\n    message=\"This entry will be deleted.\"\n    confirm-label=\"Delete\"\n    cancel-label=\"Cancel\"\n    @confirm=\"remove\"\n  >\n    <template #trigger=\"{ props }\">\n      <BaseButton variant=\"danger\" size=\"sm\" v-bind=\"props\">Delete</BaseButton>\n    </template>\n  </BasePopconfirm>\n</template>\n",
+    "js": "<script setup>\nimport { BaseButton, BasePopconfirm } from 'rei-kit'\n\nfunction remove() {\n  // …\n}\n</script>\n\n<template>\n  <BasePopconfirm\n    message=\"This entry will be deleted.\"\n    confirm-label=\"Delete\"\n    cancel-label=\"Cancel\"\n    @confirm=\"remove\"\n  >\n    <template #trigger=\"{ props }\">\n      <BaseButton variant=\"danger\" size=\"sm\" v-bind=\"props\">Delete</BaseButton>\n    </template>\n  </BasePopconfirm>\n</template>\n"
+  },
+  {
     "name": "BasePopover",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseButton, BasePopover, BaseSwitch } from 'rei-kit'\n\nconst unpaid = ref(true)\n</script>\n\n<template>\n  <BasePopover label=\"Filters\">\n    <template #trigger=\"{ props }\">\n      <BaseButton variant=\"secondary\" v-bind=\"props\">Filters</BaseButton>\n    </template>\n\n    <template #default=\"{ close }\">\n      <BaseSwitch v-model=\"unpaid\" label=\"Only unpaid\" />\n      <BaseButton class=\"mt-3\" size=\"sm\" block @click=\"close\">Done</BaseButton>\n    </template>\n  </BasePopover>\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton, BasePopover, BaseSwitch } from 'rei-kit'\n\nconst unpaid = ref(true)\n</script>\n\n<template>\n  <BasePopover label=\"Filters\">\n    <template #trigger=\"{ props }\">\n      <BaseButton variant=\"secondary\" v-bind=\"props\">Filters</BaseButton>\n    </template>\n\n    <template #default=\"{ close }\">\n      <BaseSwitch v-model=\"unpaid\" label=\"Only unpaid\" />\n      <BaseButton class=\"mt-3\" size=\"sm\" block @click=\"close\">Done</BaseButton>\n    </template>\n  </BasePopover>\n</template>\n"
@@ -240,6 +245,11 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { DataTable } from 'rei-kit/web'\n\nconst columns = [\n  { key: 'name', label: 'Name', sortable: true },\n  { key: 'amount', label: 'Amount', align: 'end', sortable: true },\n]\nconst rows = [\n  { id: 'a', name: 'Ada Lovelace', amount: 4200 },\n  { id: 'b', name: 'Ömer Seyfettin', amount: 120 },\n]\n\nconst sort = ref({ key: 'amount', direction: 'desc' })\nconst selected = ref([])\n</script>\n\n<template>\n  <DataTable\n    v-model:sort=\"sort\"\n    v-model:selected=\"selected\"\n    :columns=\"columns\"\n    :rows=\"rows\"\n    caption=\"Payments\"\n    row-key=\"id\"\n    select-all-label=\"Select every payment\"\n    :row-label=\"(row) => `Select ${row.name}`\"\n  >\n    <template #amount=\"{ value }\">{{ value }} ₺</template>\n  </DataTable>\n</template>\n"
   },
   {
+    "name": "DescriptionList",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseBadge, DescriptionList } from 'rei-kit'\n\nconst items = [\n  { key: 'status', term: 'Status' },\n  { term: 'Created', description: '12 September 2026' },\n  { term: 'Total', description: '₺1,240' },\n]\n</script>\n\n<template>\n  <DescriptionList :items=\"items\" layout=\"inline\">\n    <template #status><BaseBadge tone=\"success\">Paid</BaseBadge></template>\n  </DescriptionList>\n</template>\n",
+    "js": "<script setup>\nimport { BaseBadge, DescriptionList } from 'rei-kit'\n\nconst items = [\n  { key: 'status', term: 'Status' },\n  { term: 'Created', description: '12 September 2026' },\n  { term: 'Total', description: '₺1,240' },\n]\n</script>\n\n<template>\n  <DescriptionList :items=\"items\" layout=\"inline\">\n    <template #status><BaseBadge tone=\"success\">Paid</BaseBadge></template>\n  </DescriptionList>\n</template>\n"
+  },
+  {
     "name": "EmptyState",
     "ts": "<script setup lang=\"ts\">\nimport { BaseButton, EmptyState } from 'rei-kit'\n</script>\n\n<template>\n  <EmptyState title=\"No entries yet\" description=\"Your first one takes ten seconds.\">\n    <template #action>\n      <BaseButton>Write one</BaseButton>\n    </template>\n  </EmptyState>\n</template>\n",
     "js": "<script setup>\nimport { BaseButton, EmptyState } from 'rei-kit'\n</script>\n\n<template>\n  <EmptyState title=\"No entries yet\" description=\"Your first one takes ten seconds.\">\n    <template #action>\n      <BaseButton>Write one</BaseButton>\n    </template>\n  </EmptyState>\n</template>\n"
@@ -335,6 +345,11 @@
     "js": "<script setup>\nimport { ProgressBar } from 'rei-kit'\n</script>\n\n<template>\n  <ProgressBar :value=\"18\" :max=\"28\" label=\"Course progress\" />\n</template>\n"
   },
   {
+    "name": "ResponsiveDialog",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseButton } from 'rei-kit'\nimport { ResponsiveDialog } from 'rei-kit/web'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseButton variant=\"danger\" @click=\"open = true\">Delete account</BaseButton>\n\n  <ResponsiveDialog v-model=\"open\" title=\"Delete this account?\" close-label=\"Close\" tone=\"alert\">\n    Everything in it goes with it. This cannot be undone.\n\n    <template #actions>\n      <BaseButton variant=\"secondary\" @click=\"open = false\">Keep it</BaseButton>\n      <BaseButton variant=\"danger\">Delete</BaseButton>\n    </template>\n  </ResponsiveDialog>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton } from 'rei-kit'\nimport { ResponsiveDialog } from 'rei-kit/web'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseButton variant=\"danger\" @click=\"open = true\">Delete account</BaseButton>\n\n  <ResponsiveDialog v-model=\"open\" title=\"Delete this account?\" close-label=\"Close\" tone=\"alert\">\n    Everything in it goes with it. This cannot be undone.\n\n    <template #actions>\n      <BaseButton variant=\"secondary\" @click=\"open = false\">Keep it</BaseButton>\n      <BaseButton variant=\"danger\">Delete</BaseButton>\n    </template>\n  </ResponsiveDialog>\n</template>\n"
+  },
+  {
     "name": "SectionHeading",
     "ts": "<script setup lang=\"ts\">\nimport { SectionHeading } from 'rei-kit'\n\n// Written out, so Tailwind sees the classes.\nconst income = {\n  fill: 'bg-positive',\n  card: 'bg-positive/5 border-positive/25',\n  text: 'text-positive',\n}\n</script>\n\n<template>\n  <SectionHeading :tone=\"income\" label=\"Income\" :count=\"3\" />\n</template>\n",
     "js": "<script setup>\nimport { SectionHeading } from 'rei-kit'\n\n// Written out, so Tailwind sees the classes.\nconst income = {\n  fill: 'bg-positive',\n  card: 'bg-positive/5 border-positive/25',\n  text: 'text-positive',\n}\n</script>\n\n<template>\n  <SectionHeading :tone=\"income\" label=\"Income\" :count=\"3\" />\n</template>\n"
@@ -383,6 +398,11 @@
     "name": "TextRotate",
     "ts": "<script setup lang=\"ts\">\nimport { TextRotate } from 'rei-kit/motion'\n</script>\n\n<template>\n  <h1>Build it <TextRotate :words=\"['glass', 'brutal', 'soft']\" /></h1>\n</template>\n",
     "js": "<script setup>\nimport { TextRotate } from 'rei-kit/motion'\n</script>\n\n<template>\n  <h1>Build it <TextRotate :words=\"['glass', 'brutal', 'soft']\" /></h1>\n</template>\n"
+  },
+  {
+    "name": "TimePicker",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TimePicker } from 'rei-kit'\n\nconst at = ref<string | undefined>('09:30')\n</script>\n\n<template>\n  <TimePicker\n    v-model=\"at\"\n    label=\"Reminder\"\n    hours-label=\"Hour\"\n    minutes-label=\"Minute\"\n    placeholder=\"Choose a time\"\n    :step=\"15\"\n    min=\"07:00\"\n    max=\"22:00\"\n    hint=\"Stored as HH:mm, shown in your own clock.\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { TimePicker } from 'rei-kit'\n\nconst at = ref('09:30')\n</script>\n\n<template>\n  <TimePicker\n    v-model=\"at\"\n    label=\"Reminder\"\n    hours-label=\"Hour\"\n    minutes-label=\"Minute\"\n    placeholder=\"Choose a time\"\n    :step=\"15\"\n    min=\"07:00\"\n    max=\"22:00\"\n    hint=\"Stored as HH:mm, shown in your own clock.\"\n  />\n</template>\n"
   },
   {
     "name": "ToastHost",

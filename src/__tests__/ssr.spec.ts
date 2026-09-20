@@ -301,3 +301,23 @@ describe('server rendering, the layout parts', () => {
     ).toContain('Verilebilir')
   })
 })
+
+describe('server rendering, asking and saying', () => {
+  it('renders the confirmation, the time field and the pairs', async () => {
+    const { BasePopconfirm, DescriptionList, TimePicker } = await import('../index')
+
+    expect(
+      await render(BasePopconfirm, {
+        message: 'Silinsin mi?',
+        confirmLabel: 'Sil',
+        cancelLabel: 'Vazgeç',
+      }),
+    ).not.toContain('role="dialog"')
+    expect(
+      await render(TimePicker, { label: 'Saat', hoursLabel: 'Saat', minutesLabel: 'Dakika' }),
+    ).toContain('aria-haspopup="dialog"')
+    expect(
+      await render(DescriptionList, { items: [{ term: 'Durum', description: 'Ödendi' }] }),
+    ).toContain('<dt')
+  })
+})

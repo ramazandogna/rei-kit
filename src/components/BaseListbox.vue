@@ -159,6 +159,8 @@ function onKeydown(event: KeyboardEvent) {
     :aria-activedescendant="options.length ? `${id}-${active}` : undefined"
     @keydown="onKeydown"
   >
+    <!-- `aria-disabled` is omitted rather than `false`: an option that can be
+         chosen says nothing about being disabled. -->
     <div
       v-for="(option, index) in options"
       :id="`${id}-${index}`"
@@ -171,7 +173,7 @@ function onKeydown(event: KeyboardEvent) {
       }"
       role="option"
       :aria-selected="chosen.has(option.value)"
-      :aria-disabled="option.disabled"
+      :aria-disabled="option.disabled || undefined"
       @click="((active = index), select(option))"
     >
       <span class="min-w-0 flex-1">

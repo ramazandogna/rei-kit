@@ -1014,6 +1014,48 @@
     ]
   },
   {
+    "name": "BasePopconfirm",
+    "entry": "rei-kit",
+    "summary": "\"Are you sure?\", asked beside the button that asked it.",
+    "props": [
+      {
+        "name": "message",
+        "required": true,
+        "type": "string",
+        "description": "The question. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "confirmLabel",
+        "required": true,
+        "type": "string",
+        "description": "The button that goes ahead, e.g. \"Delete\".",
+        "default": ""
+      },
+      {
+        "name": "cancelLabel",
+        "required": true,
+        "type": "string",
+        "description": "The button that does not, e.g. \"Cancel\".",
+        "default": ""
+      },
+      {
+        "name": "title",
+        "required": false,
+        "type": "string",
+        "description": "A heading over the question, and the panel's accessible name.",
+        "default": "''"
+      },
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'danger' | 'primary'",
+        "description": "The confirming button's variant.",
+        "default": "'danger'"
+      }
+    ]
+  },
+  {
     "name": "BasePopover",
     "entry": "rei-kit",
     "summary": "A panel of anything — a form, a picker, a few settings — anchored to the control that opened it.",
@@ -1987,6 +2029,27 @@
     ]
   },
   {
+    "name": "DescriptionList",
+    "entry": "rei-kit",
+    "summary": "Pairs of \"what it is\" and \"what it says\": the summary at the top of a detail page, the facts under an invoice.",
+    "props": [
+      {
+        "name": "items",
+        "required": true,
+        "type": "readonly DescriptionItem[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "layout",
+        "required": false,
+        "type": "'stacked' | 'inline'",
+        "description": "`inline` puts the term beside its value; `stacked` puts it above.",
+        "default": "'stacked'"
+      }
+    ]
+  },
+  {
     "name": "EmptyState",
     "entry": "rei-kit",
     "summary": "A list with nothing in it yet, said kindly.",
@@ -2715,6 +2778,55 @@
     ]
   },
   {
+    "name": "ResponsiveDialog",
+    "entry": "rei-kit/web",
+    "summary": "One question, asked the way the screen it lands on expects: a modal on a wide screen, a sheet from the bottom edge on a phone.",
+    "props": [
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "The dialog's heading, and its accessible name. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "closeLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name of the close button.",
+        "default": ""
+      },
+      {
+        "name": "subtitle",
+        "required": false,
+        "type": "string",
+        "description": "A line under the title, on the sheet.",
+        "default": "''"
+      },
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'default' | 'alert'",
+        "description": "`alert` makes the wide one an `alertdialog`: an answer is required.",
+        "default": "'default'"
+      },
+      {
+        "name": "dismissible",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "true"
+      },
+      {
+        "name": "breakpoint",
+        "required": false,
+        "type": "string",
+        "description": "Where it turns from a sheet into a modal. Any media width.",
+        "default": "'48rem'"
+      }
+    ]
+  },
+  {
     "name": "SectionHeading",
     "entry": "rei-kit",
     "summary": "A pill heading for a group of things.",
@@ -3003,6 +3115,97 @@
         "required": false,
         "type": "boolean",
         "description": "Holds the current word. For a pause button, or a section out of view.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "TimePicker",
+    "entry": "rei-kit",
+    "summary": "A time of day, chosen from two columns.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "hoursLabel",
+        "required": true,
+        "type": "string",
+        "description": "The hour column's accessible name, e.g. \"Hour\".",
+        "default": ""
+      },
+      {
+        "name": "minutesLabel",
+        "required": true,
+        "type": "string",
+        "description": "The minute column's accessible name.",
+        "default": ""
+      },
+      {
+        "name": "placeholder",
+        "required": false,
+        "type": "string",
+        "description": "What the field shows while nothing is chosen.",
+        "default": "''"
+      },
+      {
+        "name": "step",
+        "required": false,
+        "type": "number",
+        "description": "Minutes between the choices in the second column.",
+        "default": "15"
+      },
+      {
+        "name": "min",
+        "required": false,
+        "type": "string",
+        "description": "The earliest time that can be chosen, as `HH:mm`.",
+        "default": "undefined"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "",
+        "default": "'md'"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
         "default": "false"
       }
     ]

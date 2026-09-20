@@ -201,7 +201,7 @@ function onClick(index: number, row: Row) {
       :aria-posinset="row.position"
       :aria-expanded="row.node.children?.length ? isOpen(row.node) : undefined"
       :aria-selected="chosen.has(row.node.key)"
-      :aria-disabled="row.node.disabled"
+      :aria-disabled="row.node.disabled || undefined"
       :style="{ '--rk-tree-level': row.level }"
       @click="onClick(index, row)"
     >

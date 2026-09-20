@@ -67,6 +67,13 @@ export type { TreeNode } from './BaseTree.vue'
 
 export { default as TransferList } from './TransferList.vue'
 
+/**
+ * One question, asked the way the screen expects: a modal on a wide screen,
+ * a sheet on a phone. In the wide entry because it needs both, and a phone
+ * app that only ever shows the sheet should reach for `BaseSheet` itself.
+ */
+export { default as ResponsiveDialog } from './ResponsiveDialog.vue'
+
 export { default as BaseTabs } from './BaseTabs.vue'
 export type { TabPanel } from './BaseTabs.vue'
 

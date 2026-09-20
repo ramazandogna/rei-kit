@@ -31,6 +31,18 @@ describe('BaseTable', () => {
     expect(w.find('caption').classes()).toContain('rk-table-caption-hidden')
   })
 
+  it('aligns the heading with its cells, so a column reads as one column', () => {
+    // The bug this locks: the class was on both, but `.rk-table th` sets
+    // `text-align: left` and outranked a bare `.is-end`, so a money column
+    // rendered as a heading on the left and its figures at the far edge.
+    const w = build()
+
+    expect(w.findAll('th')[1]!.classes()).toContain('is-end')
+    expect(w.findAll('td')[1]!.classes()).toContain('is-end')
+    // Nothing is added to a column that did not ask for an alignment.
+    expect(w.findAll('th')[0]!.classes()).not.toContain('is-end')
+  })
+
   it('scopes its headers, so a cell is read with its column', () => {
     const w = build()
 

@@ -167,7 +167,7 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
             :key="column.key"
             scope="col"
             :aria-sort="ariaSort(column)"
-            :class="[column.align === 'end' && 'is-end', column.nowrap && 'is-nowrap']"
+            :class="[column.align && `is-${column.align}`, column.nowrap && 'is-nowrap']"
           >
             <button
               v-if="column.sortable"
@@ -221,7 +221,7 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
           <td
             v-for="column in columns"
             :key="column.key"
-            :class="[column.align === 'end' && 'is-end', column.nowrap && 'is-nowrap']"
+            :class="[column.align && `is-${column.align}`, column.nowrap && 'is-nowrap']"
           >
             <slot :name="column.key" :row="row" :value="row[column.key]">
               {{ row[column.key] }}
@@ -309,9 +309,24 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
   background: color-mix(in oklab, var(--color-primary) 8%, transparent);
 }
 
-.is-end {
+/* Named against `.rk-data th`, which sets `text-align: left` and would
+   otherwise win: the heading stayed on the left while its numbers sat at the
+   far edge, so one column read as two. The sort button is inline-flex, so it
+   follows the heading's alignment and carries the arrow with it. */
+.rk-data th.is-end,
+.rk-data td.is-end {
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+.rk-data th.is-center,
+.rk-data td.is-center {
+  text-align: center;
+}
+
+.rk-data th.is-start,
+.rk-data td.is-start {
+  text-align: left;
 }
 
 .is-nowrap {

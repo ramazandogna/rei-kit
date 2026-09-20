@@ -168,3 +168,36 @@ describe('motion.css', () => {
     }
   })
 })
+
+/**
+ * A table's alignment has to outrank the table's own `text-align: left`.
+ *
+ * `.rk-table th { text-align: left }` is one class and one element; a bare
+ * `.is-end` is one class, and loses. Both tables carried the class on the
+ * heading and the cells and only the cells moved, so a money column rendered
+ * as a heading on the left with its figures at the far right edge — a column
+ * that reads as two. Nothing else can catch this: the markup is correct, the
+ * types are correct, and the page renders.
+ */
+describe('table alignment', () => {
+  const sources = {
+    BaseTable: read('../components/BaseTable.vue'),
+    DataTable: read('../web/DataTable.vue'),
+  }
+
+  for (const [name, source] of Object.entries(sources)) {
+    const prefix = name === 'BaseTable' ? '.rk-table' : '.rk-data'
+
+    it(`${name} aligns the heading as well as the cells`, () => {
+      for (const align of ['is-start', 'is-center', 'is-end']) {
+        expect(source).toContain(`${prefix} th.${align}`)
+        expect(source).toContain(`${prefix} td.${align}`)
+      }
+    })
+
+    it(`${name} declares no alignment that the table itself outranks`, () => {
+      // A rule starting at the class alone is the shape of the bug.
+      expect(source).not.toMatch(/^\.is-(start|center|end)\s*\{/m)
+    })
+  }
+})

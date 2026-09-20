@@ -4,8 +4,11 @@ export interface Column<Row> {
   key: string & keyof Row
   /** Column heading. Already translated. */
   label: string
-  /** `end` for money and counts, which are read by their last digit. */
-  align?: 'start' | 'end' | undefined
+  /**
+   * `end` for money and counts, which are read by their last digit.
+   * The heading follows the cells, so the column reads as one column.
+   */
+  align?: 'start' | 'center' | 'end' | undefined
   /** Stops a column wrapping — dates, short codes. */
   nowrap?: boolean | undefined
 }
@@ -74,7 +77,7 @@ const keyFor = (row: Row, index: number) => (rowKey ? String(row[rowKey]) : inde
             v-for="column in columns"
             :key="column.key"
             scope="col"
-            :class="[column.align === 'end' && 'is-end', column.nowrap && 'is-nowrap']"
+            :class="[column.align && `is-${column.align}`, column.nowrap && 'is-nowrap']"
           >
             {{ column.label }}
           </th>
@@ -86,7 +89,7 @@ const keyFor = (row: Row, index: number) => (rowKey ? String(row[rowKey]) : inde
           <td
             v-for="column in columns"
             :key="column.key"
-            :class="[column.align === 'end' && 'is-end', column.nowrap && 'is-nowrap']"
+            :class="[column.align && `is-${column.align}`, column.nowrap && 'is-nowrap']"
           >
             <slot :name="column.key" :row="row" :value="row[column.key]">
               {{ row[column.key] }}
@@ -160,10 +163,24 @@ const keyFor = (row: Row, index: number) => (rowKey ? String(row[rowKey]) : inde
   border-bottom: 0;
 }
 
-/* Numbers line up on their last digit, which is the one being compared. */
-.is-end {
+/* Numbers line up on their last digit, which is the one being compared.
+   Both the heading and the cells, and named against `.rk-table th` rather
+   than on its own: a bare `.is-end` loses to it, and the column then reads as
+   two columns — a heading on the left and its numbers far off to the right. */
+.rk-table th.is-end,
+.rk-table td.is-end {
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+.rk-table th.is-center,
+.rk-table td.is-center {
+  text-align: center;
+}
+
+.rk-table th.is-start,
+.rk-table td.is-start {
+  text-align: left;
 }
 
 .is-nowrap {

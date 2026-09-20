@@ -137,7 +137,7 @@ function onCommand(id: string) {
     <NavigationSection />
 
     <!-- ─────────────────────────── Disclosure ─────────────────────────── -->
-    <section id="acilir">
+    <section id="disclosure">
       <SectionHeading :tone="NEUTRAL" label="Disclosure" />
       <p class="text-ink-soft mt-2 text-sm">
         The answer stays in the markup while the section is shut — which is what a crawler, and a
@@ -170,7 +170,7 @@ function onCommand(id: string) {
     </section>
 
     <!-- ─────────────────────────── Data ─────────────────────────── -->
-    <section id="veri">
+    <section id="data">
       <SectionHeading :tone="NEUTRAL" label="Data" />
       <p class="text-ink-soft mt-2 text-sm">
         The table owns its horizontal scroller and that scroller is reachable by keyboard — a region
@@ -242,7 +242,7 @@ function onCommand(id: string) {
     </section>
 
     <!-- ─────────────────────────── Command menu ─────────────────────────── -->
-    <section id="komut">
+    <section id="command-menu">
       <SectionHeading :tone="NEUTRAL" label="Command menu" />
       <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
         Everything the app can do, behind one shortcut. The field is a combobox and the results are
@@ -273,7 +273,7 @@ function onCommand(id: string) {
     <DeskSection />
 
     <!-- ─────────────────────────── State ─────────────────────────── -->
-    <section id="durum">
+    <section id="state">
       <SectionHeading :tone="NEUTRAL" label="State" />
       <p class="text-ink-soft mt-2 text-sm">Waiting, identity, and failure.</p>
 
@@ -317,7 +317,7 @@ function onCommand(id: string) {
     </section>
 
     <!-- ─────────────────────────── Phone shell ─────────────────────────── -->
-    <section id="kabuk">
+    <section id="phone-shell">
       <SectionHeading :tone="NEUTRAL" label="Phone shell" />
       <p class="text-ink-soft mt-2 text-sm">
         <code>rei-kit/app</code> — what a fourth phone app starts from instead of an empty

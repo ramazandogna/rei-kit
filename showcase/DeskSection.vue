@@ -49,7 +49,7 @@ const part = (id: DeskPartId) => DESK_PARTS.find((one) => one.id === id)!
 </script>
 
 <template>
-  <section id="masa">
+  <section id="desk">
     <SectionHeading :tone="NEUTRAL" label="Desk layout" />
     <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
       The shapes a wide screen is arranged with. Each is a keyboard problem first — which is the

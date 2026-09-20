@@ -88,7 +88,7 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
 </script>
 
 <template>
-  <section id="gezinme">
+  <section id="navigation">
     <SectionHeading :tone="NEUTRAL" label="Navigation" />
     <p class="text-ink-soft mt-2 text-sm">The parts that say where you are and where you can go.</p>
 

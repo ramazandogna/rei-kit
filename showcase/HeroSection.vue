@@ -63,7 +63,7 @@ const TAGLINE: Record<string, string> = {
 <template>
   <section class="hero">
     <div class="hero-copy">
-      <a href="#hareket" class="hero-eyebrow focus-ring">
+      <a href="#motion" class="hero-eyebrow focus-ring">
         <span class="hero-dot" aria-hidden="true" />
         <span
           ><strong>New</strong> — counters, rotating words and reveals in

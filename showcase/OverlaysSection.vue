@@ -41,7 +41,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
 </script>
 
 <template>
-  <section id="ust-katman">
+  <section id="overlays">
     <SectionHeading :tone="NEUTRAL" label="Overlays" />
     <p class="text-ink-soft mt-2 max-w-[68ch] text-sm leading-relaxed">
       Several different answers to “put something on top of the page”, and the kit keeps them

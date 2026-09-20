@@ -115,7 +115,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
         <nav class="hidden items-center gap-4 text-xs md:flex" aria-label="Project">
           <a class="text-ink-soft hover:text-ink transition-colors" href="#start">Get started</a>
           <a class="text-ink-soft hover:text-ink transition-colors" href="#axes">Themes</a>
-          <a class="text-ink-soft hover:text-ink transition-colors" href="#hareket">Motion</a>
+          <a class="text-ink-soft hover:text-ink transition-colors" href="#motion">Motion</a>
           <a class="text-ink-soft hover:text-ink transition-colors" href="#api">Components</a>
           <a
             class="text-ink-soft hover:text-ink transition-colors"
@@ -176,8 +176,8 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           <!-- Every section says what the thing is for. A gallery of components
            with their names under them tells you what exists; it does not tell
            you which one to reach for. -->
-          <section id="aksiyon" class="mt-14">
-            <SectionHeading :tone="NEUTRAL" label="Aksiyon" />
+          <section id="action" class="mt-14">
+            <SectionHeading :tone="NEUTRAL" label="Action" />
             <p class="text-ink-soft mt-2 text-sm">Controls that start something or confirm it.</p>
 
             <BaseCard class="mt-5">
@@ -198,7 +198,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
 
           <MotionSection />
 
-          <section id="yuzey" class="mt-14">
+          <section id="surfaces" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Surfaces" />
             <p class="text-ink-soft mt-2 text-sm">
               Boxes that hold content. <code class="text-xs">BaseCard</code> takes a head and a foot
@@ -221,7 +221,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </div>
           </section>
 
-          <section id="geri-bildirim" class="mt-14">
+          <section id="status" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Status and feedback" />
             <p class="text-ink-soft mt-2 text-sm">
               <code class="text-xs">BaseAlert</code> is a message that has to be read;
@@ -246,7 +246,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </div>
           </section>
 
-          <section id="ilerleme" class="mt-14">
+          <section id="progress" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Progress" />
             <p class="text-ink-soft mt-2 text-sm">
               The value is clamped: 101, a negative, and a divide-by-zero all stay inside the track.
@@ -295,7 +295,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </div>
           </section>
 
-          <section id="bildirim" class="mt-14">
+          <section id="notifications" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Notifications" />
 
             <p class="text-ink-soft mt-2 max-w-prose text-sm leading-relaxed">
@@ -325,7 +325,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
 
           <FormSection />
 
-          <section id="tarih" class="mt-14">
+          <section id="dates" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Dates and times" />
             <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
               Dates go in and out as the kit's date keys — <code class="text-xs">YYYY-MM-DD</code>,
@@ -401,7 +401,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </div>
           </section>
 
-          <section id="ayarlar" class="mt-14">
+          <section id="settings" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Settings" />
 
             <SettingsGroup class="mt-5" title="General">
@@ -410,7 +410,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </SettingsGroup>
           </section>
 
-          <section id="bosluk" class="mt-14">
+          <section id="empty" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Empty and waiting" />
             <p class="text-ink-soft mt-2 text-sm">
               A skeleton's height is a CSS length, not a class. That distinction was confused once,
@@ -428,7 +428,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </div>
           </section>
 
-          <section id="olcu" class="mt-14">
+          <section id="metrics" class="mt-14">
             <SectionHeading :tone="NEUTRAL" label="Metrics" />
             <p class="text-ink-soft mt-2 text-sm">
               <code class="text-xs">PageContainer</code> gives two widths:

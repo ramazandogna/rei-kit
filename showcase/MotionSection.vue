@@ -114,7 +114,7 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
 </script>
 
 <template>
-  <section id="hareket" class="mt-14">
+  <section id="motion" class="mt-14">
     <SectionHeading :tone="NEUTRAL" label="Motion" />
     <h2 class="motion-title text-shimmer">Things that move, on purpose.</h2>
     <p class="motion-lead">

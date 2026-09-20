@@ -16,7 +16,7 @@ const COLUMNS = [
     links: [
       { label: 'Get started', href: '#start' },
       { label: 'Materials & palettes', href: '#axes' },
-      { label: 'Motion', href: '#hareket' },
+      { label: 'Motion', href: '#motion' },
       { label: 'Every component', href: '#api' },
     ],
   },

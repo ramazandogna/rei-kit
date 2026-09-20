@@ -8,6 +8,8 @@ import {
   BaseButton,
   BaseCard,
   BaseCombobox,
+  BaseKbd,
+  BaseListbox,
   BaseMenu,
   BasePopover,
   BaseSheet,
@@ -21,6 +23,7 @@ import {
   PriceCard,
   SectionHeading,
   TabBar,
+  useToast,
 } from '../src/index'
 import { AuthShell, FabButton, OfflineBanner } from '../src/app/index'
 import {
@@ -31,8 +34,11 @@ import {
   BasePagination,
   BaseTabs,
   BaseTooltip,
+  CommandMenu,
+  DataTable,
   NavLinks,
 } from '../src/web/index'
+import type { TableSort } from '../src/web/index'
 import PropTable from './PropTable.vue'
 
 /**
@@ -121,6 +127,48 @@ const stepIndex = computed(() => STEPS.findIndex((s) => s.key === step.value))
 function move(by: number) {
   step.value = STEPS[Math.max(0, Math.min(STEPS.length - 1, stepIndex.value + by))]!.key
 }
+
+const toast = useToast()
+
+const sort = ref<TableSort<(typeof DATA_ROWS)[number]> | undefined>({
+  key: 'amount',
+  direction: 'desc',
+})
+const picked = ref<string[]>([])
+const DATA_COLUMNS = [
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'method', label: 'Method' },
+  { key: 'amount', label: 'Amount', align: 'end', sortable: true },
+] as const
+const DATA_ROWS = [
+  { id: 'a', name: 'Ada Lovelace', method: 'Card', amount: 4200 },
+  { id: 'b', name: 'Ömer Seyfettin', method: 'Transfer', amount: 120 },
+  { id: 'c', name: 'Mei Lin', method: 'Card', amount: 980 },
+]
+
+const commands = ref(false)
+const COMMANDS = [
+  {
+    label: 'Entries',
+    items: [
+      { id: 'new', label: 'Write an entry', hint: '⌘N', keywords: ['add', 'create'] },
+      { id: 'search', label: 'Search entries', keywords: ['find'] },
+    ],
+  },
+  { label: 'Appearance', items: [{ id: 'theme', label: 'Switch the theme' }] },
+] as const
+
+const access = ref<string[]>(['ada'])
+const PEOPLE = [
+  { value: 'ada', label: 'Ada Lovelace', description: 'Owner' },
+  { value: 'kenji', label: 'Kenji Mori', description: 'Editor' },
+  { value: 'mei', label: 'Mei Lin', description: 'Invited', disabled: true },
+  { value: 'omer', label: 'Ömer Seyfettin', description: 'Editor' },
+]
+
+function onCommand(id: string) {
+  toast.info(`Ran: ${id}`)
+}
 </script>
 
 <template>
@@ -177,6 +225,21 @@ function move(by: number) {
           </FormField>
           <PropTable name="FormField" />
         </div>
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">BaseListbox</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          A long list that stays on screen, choosing one or several. One Tab stop: the arrows move
+          the current option and typing a letter jumps to it.
+        </p>
+        <BaseListbox
+          v-model="access"
+          mode="multiple"
+          :options="PEOPLE"
+          label="People with access"
+        />
+        <PropTable name="BaseListbox" />
       </BaseCard>
     </section>
 
@@ -463,6 +526,58 @@ function move(by: number) {
       <BaseCard class="mt-5">
         <BaseTable :columns="COLUMNS" :rows="ROWS" caption="September spending" row-key="name" />
         <PropTable name="BaseTable" />
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">DataTable</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          The same table with what real data grows: press a heading to sort — the header says
+          “sorted ascending” to a screen reader, not only an arrow — and tick rows by key, so the
+          selection survives a sort.
+        </p>
+        <DataTable
+          v-model:sort="sort"
+          v-model:selected="picked"
+          :columns="DATA_COLUMNS"
+          :rows="DATA_ROWS"
+          caption="Payments"
+          row-key="id"
+          select-all-label="Select every payment"
+          :row-label="(row) => `Select ${row.name}`"
+        >
+          <template #amount="{ value }">{{ value }} ₺</template>
+        </DataTable>
+        <p class="text-ink-soft mt-3 text-xs">{{ picked.length }} selected</p>
+        <PropTable name="DataTable" />
+      </BaseCard>
+    </section>
+
+    <!-- ─────────────────────────── Command menu ─────────────────────────── -->
+    <section id="komut">
+      <SectionHeading :tone="NEUTRAL" label="Command menu" />
+      <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
+        Everything the app can do, behind one shortcut. The field is a combobox and the results are
+        its listbox, so focus never leaves what you are typing in; the arrows move the current
+        result and <code class="text-xs">aria-activedescendant</code> says which one it is.
+      </p>
+
+      <BaseCard class="mt-5">
+        <div class="flex flex-wrap items-center gap-3">
+          <BaseButton variant="secondary" @click="commands = true">Open</BaseButton>
+          <span class="text-ink-soft text-sm"
+            >or press <BaseKbd :keys="['⌘', 'K']" joiner="+"
+          /></span>
+        </div>
+        <CommandMenu
+          v-model="commands"
+          :groups="COMMANDS"
+          label="Commands"
+          placeholder="Type a command or search"
+          empty-label="Nothing found"
+          hotkey="k"
+          @select="onCommand"
+        />
+        <PropTable name="CommandMenu" />
       </BaseCard>
     </section>
 

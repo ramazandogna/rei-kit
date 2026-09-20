@@ -43,6 +43,7 @@ const SECTIONS = [
   { id: 'gezinme', label: 'Navigation' },
   { id: 'acilir', label: 'Disclosure' },
   { id: 'veri', label: 'Data' },
+  { id: 'komut', label: 'Command menu' },
   { id: 'durum', label: 'State' },
   { id: 'kabuk', label: 'Phone shell' },
   { id: 'bosluk', label: 'Empty and waiting' },

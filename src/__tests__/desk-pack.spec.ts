@@ -203,6 +203,38 @@ describe('CommandMenu', () => {
       attachTo: document.body,
     })
 
+  it('finds an item by words in different fields', async () => {
+    /* The bug this locks: the query was matched as one string against each
+       field on its own, so "yeni write" -- a word from the label and a word
+       from the keywords -- found nothing, and a person typing has no way of
+       knowing which half lives where. */
+    const wrapper = build()
+    await nextTick()
+
+    const field = document.querySelector('input')!
+    field.value = 'yeni write'
+    field.dispatchEvent(new Event('input'))
+    await nextTick()
+
+    const options = document.querySelectorAll('[role="option"]')
+    expect(options).toHaveLength(1)
+    expect(options[0]!.textContent).toContain('Yeni kayıt')
+
+    // Order does not matter either.
+    field.value = 'add kayıt'
+    field.dispatchEvent(new Event('input'))
+    await nextTick()
+    expect(document.querySelectorAll('[role="option"]')).toHaveLength(1)
+
+    // A word that matches nothing still rules the item out.
+    field.value = 'yeni nope'
+    field.dispatchEvent(new Event('input'))
+    await nextTick()
+    expect(document.querySelectorAll('[role="option"]')).toHaveLength(0)
+
+    wrapper.unmount()
+  })
+
   it('is a combobox whose results are its list', async () => {
     const wrapper = build()
     await nextTick()

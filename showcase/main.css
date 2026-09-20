@@ -115,3 +115,35 @@ body {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
+
+/* The way in to the command palette, beside the appearance controls. It is a
+   control rather than a line of text because it has to be pressable: a
+   keyboard shortcut alone reaches nobody on a touchscreen, and nobody who
+   has not been told. */
+.sc-find {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-hair);
+  padding: 0.3125rem 0.625rem 0.3125rem 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--color-ink-soft);
+  transition:
+    color 140ms ease,
+    border-color 140ms ease;
+}
+
+.sc-find:hover {
+  border-color: var(--color-primary);
+  color: var(--color-ink);
+}
+
+/* On a phone the header already wraps to two lines; the words go and the
+   icon stays, which is still a target and still says what it does. */
+@media (max-width: 30rem) {
+  .sc-find span,
+  .sc-find kbd {
+    display: none;
+  }
+}

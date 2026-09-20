@@ -2,96 +2,15 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import AuthorCredit from './AuthorCredit.vue'
-import { BASICS_PARTS } from './basics-parts'
-import { FORM_GROUPS, FORM_PARTS } from './form-parts'
-import { DESK_PARTS } from './desk-parts'
-import { MOTION_PARTS } from './motion-parts'
-import { NAV_PARTS } from './nav-parts'
-import { OVERLAY_PARTS } from './overlay-parts'
+import { SECTIONS } from './sections'
+import { targetFor } from './targets'
 import catalogue from './props.generated.json'
-
-/**
- * The way around the page.
- *
- * A single scrolling gallery is fine for reading once and useless for the thing
- * people actually do, which is arrive knowing what they need — "a dropdown", "a
- * date field" — and wanting to see whether it exists. So: every component
- * listed, filterable by name, and the list follows where you are.
- *
- * ## Why the highlight is an IntersectionObserver and not a scroll handler
- *
- * A scroll handler runs on the main thread on every frame, and this page is
- * fifteen thousand pixels of live components. The observer does the work off
- * the main thread and reports only when a section crosses the line, which is
- * the difference between a menu that follows you and a page that stutters
- * while it does.
- *
- * The line is a quarter down the viewport rather than at the top, because a
- * heading that has just scrolled off is still the section you are reading.
- */
-const SECTIONS = [
-  { id: 'start', label: 'Get started' },
-  { id: 'axes', label: 'Themes: materials & palettes' },
-  { id: 'aksiyon', label: 'Action' },
-  { id: 'basics', label: 'Basics' },
-  ...BASICS_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
-  { id: 'hareket', label: 'Motion' },
-  ...MOTION_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
-  { id: 'yuzey', label: 'Surfaces' },
-  { id: 'geri-bildirim', label: 'Status and feedback' },
-  { id: 'ilerleme', label: 'Progress' },
-  { id: 'bildirim', label: 'Notifications' },
-  ...FORM_GROUPS.flatMap((group) => [
-    { id: group.id, label: group.label },
-    ...FORM_PARTS.filter((part) => part.group === group.id).map((part) => ({
-      id: part.id,
-      label: part.label,
-      sub: true,
-    })),
-  ]),
-  { id: 'tarih', label: 'Dates and times' },
-  { id: 'ayarlar', label: 'Settings' },
-  { id: 'ust-katman', label: 'Overlays' },
-  ...OVERLAY_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
-  { id: 'gezinme', label: 'Navigation' },
-  ...NAV_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
-  { id: 'acilir', label: 'Disclosure' },
-  { id: 'veri', label: 'Data' },
-  { id: 'komut', label: 'Command menu' },
-  { id: 'masa', label: 'Desk layout' },
-  ...DESK_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
-  { id: 'durum', label: 'State' },
-  { id: 'kabuk', label: 'Phone shell' },
-  { id: 'bosluk', label: 'Empty and waiting' },
-  { id: 'olcu', label: 'Metrics' },
-  { id: 'api', label: 'All props' },
-  { id: 'credits', label: 'About & credits' },
-]
 
 const ENTRY_ORDER = ['rei-kit', 'rei-kit/web', 'rei-kit/app', 'rei-kit/pwa', 'rei-kit/motion']
 
 const query = ref('')
 const active = ref('')
 const open = ref(false)
-
-/**
- * Where a component's name in this list should take you.
- *
- * The demo, wherever one exists — that is what somebody clicking `BaseSwitch`
- * wants to see, and the props are printed directly under it anyway. This list
- * used to send every name to the props table instead, which answered a
- * question nobody had asked yet.
- *
- * Built from the same part lists the sections are built from, so a part that
- * gains a heading gains the link on the same commit.
- */
-const DEMOS = new Map<string, string>([
-  ...BASICS_PARTS.map((part) => [part.label, part.id] as const),
-  ...MOTION_PARTS.map((part) => [part.label, part.id] as const),
-  ...FORM_PARTS.map((part) => [part.label, part.id] as const),
-])
-
-const targetFor = (name: string) => DEMOS.get(name) ?? `api-${name}`
 
 const groups = computed(() => {
   const needle = query.value.trim().toLowerCase()

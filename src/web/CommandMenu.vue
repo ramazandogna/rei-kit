@@ -71,11 +71,29 @@ const field = useTemplateRef<HTMLInputElement>('field')
 const sheetRoot = ensureSheetRoot()
 let release: (() => void) | null = null
 
+/**
+ * Every word has to appear somewhere, rather than the whole query in one
+ * place.
+ *
+ * Matching the query as a single string means "date picker" finds nothing
+ * when the name is `BaseDatePicker` and the word "picker" lives in the
+ * keywords beside it — the two halves are in different fields, and a person
+ * typing has no way of knowing that. Splitting on spaces is what makes a
+ * palette feel like it is reading the request rather than the string.
+ *
+ * The words may land in any order and in any field, which is why the
+ * searchable text is joined first.
+ */
 const matches = computed(() => {
-  const needle = query.value.trim().toLowerCase()
-  const keep = (item: CommandItem<Id>) =>
-    needle === '' ||
-    [item.label, ...(item.keywords ?? [])].some((word) => word.toLowerCase().includes(needle))
+  const terms = query.value.trim().toLowerCase().split(/\s+/).filter(Boolean)
+
+  const keep = (item: CommandItem<Id>) => {
+    if (terms.length === 0) return true
+
+    const haystack = [item.label, ...(item.keywords ?? [])].join(' ').toLowerCase()
+
+    return terms.every((term) => haystack.includes(term))
+  }
 
   return groups
     .map((group) => ({ ...group, items: group.items.filter(keep) }))

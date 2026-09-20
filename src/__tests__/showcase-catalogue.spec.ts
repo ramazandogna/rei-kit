@@ -195,7 +195,7 @@ describe('the showcase part lists', () => {
  * the ids nobody generates.
  */
 describe('the showcase menu', () => {
-  const nav = readFileSync('showcase/SideNav.vue', 'utf8')
+  const nav = readFileSync('showcase/sections.ts', 'utf8')
 
   /** The ids written out in `SECTIONS`, not the ones spread in from a list. */
   const ids = [...nav.matchAll(/\{ id: '([^']+)'/g)].map((match) => match[1]!)

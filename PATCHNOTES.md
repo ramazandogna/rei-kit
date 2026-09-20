@@ -60,6 +60,14 @@ without.
 
 ---
 
+## 2.18.0
+
+**Your command menu finds things with two-word searches now.** "date picker"
+used to find nothing when the words were split between the label and the
+keywords; each word is matched on its own, in any order.
+
+**Action required:** none. Anything that matched before still matches.
+
 ## 2.17.0
 
 **You gain `BaseTimeline`** — what happened, in order, on a rail.

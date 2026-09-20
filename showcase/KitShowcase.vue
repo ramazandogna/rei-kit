@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { Search } from 'lucide-vue-next'
+
 import { NEUTRAL } from './tones'
 import { computed, ref } from 'vue'
 
 import ApiReference from './ApiReference.vue'
+import CommandPalette from './CommandPalette.vue'
 import AppearanceBar from './AppearanceBar.vue'
 import AxesSection from './AxesSection.vue'
 import BasicsSection from './BasicsSection.vue'
@@ -19,6 +22,7 @@ import {
   BaseBadge,
   BaseButton,
   BaseCard,
+  BaseKbd,
   EmptyState,
   GoogleButton,
   PageContainer,
@@ -60,6 +64,7 @@ import type { DateRange } from '../src/index'
  * Grouped by what a thing is for rather than alphabetically — somebody arrives
  * here needing "a way to show a warning", not needing the letter A.
  */
+const findOpen = ref(false)
 const progress = ref(7)
 const toast = useToast()
 
@@ -128,10 +133,25 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
           >
         </nav>
 
-        <AppearanceBar class="ml-auto" />
+        <!-- A shortcut nobody knows about is a shortcut nobody has. The
+             button is the whole point: it says the palette exists and opens
+             it for a pointer, which a key combination alone cannot. -->
+        <button
+          type="button"
+          class="sc-find focus-ring ml-auto"
+          @click="findOpen = !findOpen"
+          @keydown.enter.prevent="findOpen = true"
+        >
+          <Search class="size-3.5" aria-hidden="true" />
+          <span>Find anything</span>
+          <BaseKbd :keys="['⌘', 'K']" joiner="+" />
+        </button>
+
+        <AppearanceBar />
       </PageContainer>
 
       <ToastHost close-label="Close" />
+      <CommandPalette v-model="findOpen" />
     </header>
 
     <PageContainer id="top" as="main">

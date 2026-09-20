@@ -3,6 +3,24 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.18.0 — 2026-09-20
+
+**A command menu that reads the request, not the string.**
+
+### Fixed
+
+- **`CommandMenu` now matches every word of the query separately.** It
+  matched the whole query as one string against each field on its own, so
+  "date picker" found nothing when the name was `BaseDatePicker` and the
+  word "picker" lived in the keywords beside it — the two halves are in
+  different fields, and somebody typing has no way of knowing that. Now each
+  word has to appear somewhere in the label or the keywords, in any order,
+  which is what makes a palette feel like it is reading the request.
+
+  Found by using it: the showcase now runs its own command palette over all
+  ninety-two components, and two-word searches were the first thing that
+  failed.
+
 ## 2.17.0 — 2026-09-20
 
 **What happened, in order.**

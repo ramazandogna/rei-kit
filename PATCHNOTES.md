@@ -60,6 +60,29 @@ without.
 
 ---
 
+## 2.6.0
+
+**You gain a calendar and a date picker:**
+
+```vue
+<BaseDatePicker
+  v-model="period"
+  mode="range"
+  label="Report period"
+  :presets="[
+    { label: 'Last 7 days', value: () => ({ start: addDays(todayKey(), -6), end: todayKey() }) },
+  ]"
+  previous-label="Previous month"
+  next-label="Next month"
+/>
+```
+
+Dates go in and out as `YYYY-MM-DD` keys — the same ones `toDateKey`,
+`addDays` and the rest of the kit's date utilities speak. What a reader sees
+is `Intl` in their own language.
+
+**Action required:** none.
+
 ## 2.5.0
 
 **You gain a popover, a toggle group, a number field, a code field, a ring

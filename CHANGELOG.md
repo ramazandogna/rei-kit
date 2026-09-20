@@ -3,6 +3,48 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.6.0 — 2026-09-20
+
+**Dates.** A calendar, and the field that opens one.
+
+### Added
+
+- **`BaseCalendar`** — a month of days, for one day or a stretch of them.
+  Dates cross the boundary as the kit's date keys (`YYYY-MM-DD`, local) and
+  never as `Date` objects, because `toISOString()` on a late evening east of
+  Greenwich is tomorrow — the bug `toDateKey` exists to prevent, and one a
+  component handing back `Date`s would hand to every app.
+
+  The keyboard is the date-grid pattern: arrows move a day and a week, Home
+  and End reach the ends of the week, Page Up and Down change the month, and
+  with Shift, the year. One day is in the Tab order at a time, so a calendar
+  costs one press to cross rather than thirty-one. It always draws six weeks,
+  so paging it does not change its height.
+
+  Ranges take two clicks in either order, and the days between light up as
+  the pointer moves, so the second click lands where it looks like it will.
+  `min`, `max` and `isDisabled` rule days out. The month, the weekdays and
+  every day's spoken name come from `Intl` in the app's locale; the two
+  arrows are the only words an app passes, because "previous" has no date to
+  build itself from.
+
+- **`BaseDatePicker`** — the field: it shows the chosen date through `Intl`
+  and opens a calendar in a popover. A button rather than a text input,
+  because a typed date is a parsing problem in every locale at once —
+  "03/04" is two different days either side of the Atlantic.
+
+  `presets` are the ready-made answers a report offers ("Last 7 days", "This
+  month"), in the app's words and the app's arithmetic, evaluated when
+  pressed so that "today" is today. `clearLabel` adds a button that empties
+  it — beside the field, never inside it, because a button nested in a button
+  is not a control a browser can make sense of.
+
+### Changed
+
+- The size budgets rise: the calendar's styles take the core stylesheet from
+  13.9 to 14.4 KB (budget 16), and the two components take the whole bundle
+  to 31.2 KB (budget 32).
+
 ## 2.5.0 — 2026-09-19
 
 **Six parts the kit was missing, and an undo on every toast.** The first

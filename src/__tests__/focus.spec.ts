@@ -179,11 +179,15 @@ describe('focus you can see', () => {
 
   it('passes a hidden input’s focus on to what is visible', () => {
     // An `sr-only` input takes focus and shows nothing. Its visible stand-in
-    // has to be told, or Tab moves through the control invisibly.
+    // has to be told — with Tailwind's `peer-focus-visible:` or with CSS's
+    // own `:has(… :focus-visible)` — or Tab moves through it invisibly.
     const silent = files
       .filter(({ source }) => /<input[^>]*sr-only/.test(source))
       .filter(
-        ({ source }) => !/peer-focus-visible|has-focus-visible|has-\[:focus-visible\]/.test(source),
+        ({ source }) =>
+          !/peer-focus-visible|has-focus-visible|has-\[:focus-visible\]|:has\([^)]*:focus-visible\)/.test(
+            source,
+          ),
       )
       .map(({ name }) => name)
 

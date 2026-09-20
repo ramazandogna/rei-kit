@@ -48,6 +48,41 @@
     "props": []
   },
   {
+    "name": "AvatarStack",
+    "entry": "rei-kit",
+    "summary": "The people on a thing, overlapped: who is in a conversation, who shares a list.",
+    "props": [
+      {
+        "name": "people",
+        "required": true,
+        "type": "readonly { name: string; src?: string | undefined }[]",
+        "description": "Each person's name, and a picture where there is one.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The stack's accessible name: \"Shared with 6 people\". Already translated.",
+        "default": ""
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "How many faces before the rest become a number.",
+        "default": "4"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "",
+        "default": "'md'"
+      }
+    ]
+  },
+  {
     "name": "BaseAccordion",
     "entry": "rei-kit/web",
     "summary": "A list that opens one section at a time.",
@@ -398,6 +433,55 @@
     ]
   },
   {
+    "name": "BaseChip",
+    "entry": "rei-kit",
+    "summary": "A short label with, when it is one of a set someone assembled, a way to take it off: a filter, a recipient, a tag.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The text. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "icon",
+        "required": false,
+        "type": "Component",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'neutral' | 'primary' | 'success' | 'warning' | 'danger'",
+        "description": "",
+        "default": "'neutral'"
+      },
+      {
+        "name": "removeLabel",
+        "required": false,
+        "type": "string",
+        "description": "Given, the chip grows a remove button. Its accessible name.",
+        "default": "undefined"
+      },
+      {
+        "name": "selected",
+        "required": false,
+        "type": "boolean",
+        "description": "Given, the whole chip is a toggle and this is its state.",
+        "default": "undefined"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      }
+    ]
+  },
+  {
     "name": "BaseCombobox",
     "entry": "rei-kit",
     "summary": "A field you type into to narrow a list, then choose from it.",
@@ -671,6 +755,76 @@
     ]
   },
   {
+    "name": "BaseKbd",
+    "entry": "rei-kit",
+    "summary": "A keyboard key, or a chord of them: `⌘ K`, `Ctrl Shift P`.",
+    "props": [
+      {
+        "name": "keys",
+        "required": true,
+        "type": "string | readonly string[]",
+        "description": "One key, or the keys of a chord: `['⌘', 'K']`.",
+        "default": ""
+      },
+      {
+        "name": "joiner",
+        "required": false,
+        "type": "string",
+        "description": "Drawn between the keys — \"+\", \"then\". Empty, they simply sit apart.",
+        "default": "''"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "",
+        "default": "'md'"
+      }
+    ]
+  },
+  {
+    "name": "BaseLink",
+    "entry": "rei-kit",
+    "summary": "A link in a sentence — the one thing a button is not.",
+    "props": [
+      {
+        "name": "to",
+        "required": false,
+        "type": "string | Record<string, unknown>",
+        "description": "A route. Uses `RouterLink`, so the app needs vue-router.",
+        "default": "undefined"
+      },
+      {
+        "name": "href",
+        "required": false,
+        "type": "string",
+        "description": "A URL. Anything not on this site should be `external`.",
+        "default": "undefined"
+      },
+      {
+        "name": "external",
+        "required": false,
+        "type": "boolean",
+        "description": "Opens in a new tab, with the mark and the `rel` that belong to that.",
+        "default": "undefined"
+      },
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'primary' | 'ink'",
+        "description": "",
+        "default": "'primary'"
+      },
+      {
+        "name": "underline",
+        "required": false,
+        "type": "'always' | 'hover' | 'none'",
+        "description": "",
+        "default": "'hover'"
+      }
+    ]
+  },
+  {
     "name": "BaseMarquee",
     "entry": "rei-kit/motion",
     "summary": "A row that scrolls sideways without end: logos, testimonials, a ticker.",
@@ -895,6 +1049,55 @@
     ]
   },
   {
+    "name": "BaseRating",
+    "entry": "rei-kit",
+    "summary": "A score out of five, given or shown.",
+    "props": [
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "5"
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "What is being rated: \"Difficulty\", \"Your rating\". Already translated.",
+        "default": ""
+      },
+      {
+        "name": "valueLabel",
+        "required": true,
+        "type": "(value: number, max: number) => string",
+        "description": "The spoken value: `(value, max) => \\`${value} out of ${max}\\`.`",
+        "default": ""
+      },
+      {
+        "name": "readonly",
+        "required": false,
+        "type": "boolean",
+        "description": "Shows a score rather than asks for one.",
+        "default": "false"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "",
+        "default": "'md'"
+      },
+      {
+        "name": "allowClear",
+        "required": false,
+        "type": "boolean",
+        "description": "Pressing the current score again clears it.",
+        "default": "true"
+      }
+    ]
+  },
+  {
     "name": "BaseReveal",
     "entry": "rei-kit/motion",
     "summary": "Content that fades or rises into place as it scrolls into view.",
@@ -993,6 +1196,34 @@
     ]
   },
   {
+    "name": "BaseSeparator",
+    "entry": "rei-kit",
+    "summary": "A line between things — with, when it helps, a word on it.",
+    "props": [
+      {
+        "name": "orientation",
+        "required": false,
+        "type": "'horizontal' | 'vertical'",
+        "description": "",
+        "default": "'horizontal'"
+      },
+      {
+        "name": "label",
+        "required": false,
+        "type": "string",
+        "description": "A word in the middle of the line: \"or\", \"Today\". Already translated.",
+        "default": "''"
+      },
+      {
+        "name": "spacing",
+        "required": false,
+        "type": "'none' | 'sm' | 'md'",
+        "description": "Room around it. `none` for a divider inside a list that has its own.",
+        "default": "'md'"
+      }
+    ]
+  },
+  {
     "name": "BaseSheet",
     "entry": "rei-kit",
     "summary": "Pins the sheet to the area the keyboard has left visible.",
@@ -1017,6 +1248,34 @@
         "type": "string",
         "description": "Accessible name for the close button. A prop rather than a translation: a component that calls t() forces every consumer onto one i18n setup, and this is the package's only visible string.",
         "default": "'Close'"
+      }
+    ]
+  },
+  {
+    "name": "BaseSkeleton",
+    "entry": "rei-kit",
+    "summary": "One grey box standing in for content that has not arrived.",
+    "props": [
+      {
+        "name": "width",
+        "required": false,
+        "type": "string",
+        "description": "Any CSS length: `12rem`, `60%`, `8ch`.",
+        "default": "'100%'"
+      },
+      {
+        "name": "height",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'1rem'"
+      },
+      {
+        "name": "shape",
+        "required": false,
+        "type": "'block' | 'text' | 'circle'",
+        "description": "`circle` makes a round one and squares the width to the height.",
+        "default": "'block'"
       }
     ]
   },
@@ -1378,6 +1637,48 @@
     ]
   },
   {
+    "name": "CopyButton",
+    "entry": "rei-kit",
+    "summary": "Copies a piece of text, and says that it did.",
+    "props": [
+      {
+        "name": "text",
+        "required": true,
+        "type": "string",
+        "description": "What lands on the clipboard.",
+        "default": ""
+      },
+      {
+        "name": "copyLabel",
+        "required": true,
+        "type": "string",
+        "description": "The button's name at rest, e.g. \"Copy the key\".",
+        "default": ""
+      },
+      {
+        "name": "copiedLabel",
+        "required": true,
+        "type": "string",
+        "description": "Its name for the two seconds after, e.g. \"Copied\".",
+        "default": ""
+      },
+      {
+        "name": "errorLabel",
+        "required": false,
+        "type": "string",
+        "description": "Said when the browser refuses. Unset, a refusal only leaves it unchanged.",
+        "default": "undefined"
+      },
+      {
+        "name": "withText",
+        "required": false,
+        "type": "boolean",
+        "description": "Show the label beside the icon, rather than only to assistive tech.",
+        "default": "false"
+      }
+    ]
+  },
+  {
     "name": "CountUp",
     "entry": "rei-kit/motion",
     "summary": "A number that counts up to its value once it scrolls into view.",
@@ -1465,6 +1766,76 @@
         "type": "string",
         "description": "The words beside the icon.",
         "default": ""
+      }
+    ]
+  },
+  {
+    "name": "FileDrop",
+    "entry": "rei-kit",
+    "summary": "Files, dropped on or chosen from a real file input.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The instruction in the box: \"Drop a receipt here\". Already translated.",
+        "default": ""
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "A line under it: what is accepted, how big.",
+        "default": "''"
+      },
+      {
+        "name": "browseLabel",
+        "required": true,
+        "type": "string",
+        "description": "The button inside the box, e.g. \"Browse\".",
+        "default": ""
+      },
+      {
+        "name": "removeLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name of each file's remove button.",
+        "default": ""
+      },
+      {
+        "name": "accept",
+        "required": false,
+        "type": "string",
+        "description": "Passed to the input: `image/*`, `.pdf`.",
+        "default": "undefined"
+      },
+      {
+        "name": "multiple",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "maxSize",
+        "required": false,
+        "type": "number",
+        "description": "In bytes. Anything larger is refused and reported through `rejected`.",
+        "default": "undefined"
+      },
+      {
+        "name": "tooLargeLabel",
+        "required": false,
+        "type": "string",
+        "description": "Shown under the box when a file was too large.",
+        "default": "undefined"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
       }
     ]
   },
@@ -2264,6 +2635,83 @@
     "entry": "rei-kit/app",
     "summary": "The phone frame the whole app sits inside.",
     "props": []
+  },
+  {
+    "name": "TagsInput",
+    "entry": "rei-kit",
+    "summary": "A field that holds several short values: recipients, labels, skills.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "removeLabel",
+        "required": true,
+        "type": "(tag: string) => string",
+        "description": "`(tag) => \\`Remove ${tag}\\`` — already translated.",
+        "default": ""
+      },
+      {
+        "name": "placeholder",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "How many tags at most. The field stops taking them at the limit.",
+        "default": "undefined"
+      },
+      {
+        "name": "allowDuplicates",
+        "required": false,
+        "type": "boolean",
+        "description": "By default the same tag twice is ignored.",
+        "default": "false"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "",
+        "default": "'md'"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      }
+    ]
   },
   {
     "name": "TextRotate",

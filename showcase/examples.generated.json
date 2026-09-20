@@ -10,6 +10,11 @@
     "js": "<script setup>\nimport { AuthForm, AuthShell } from 'rei-kit/app'\nimport { signInWithPassword } from './auth'\n\nconst labels = {\n  email: 'Email',\n  password: 'Password',\n  confirmPassword: 'Confirm password',\n  submit: 'Sign in',\n}\n\nasync function signIn({ email, password }) {\n  await signInWithPassword(email, password)\n}\n</script>\n\n<template>\n  <AuthShell>\n    <template #brand>My app</template>\n\n    <AuthForm mode=\"signIn\" :labels=\"labels\" @submit=\"signIn\" />\n  </AuthShell>\n</template>\n"
   },
   {
+    "name": "AvatarStack",
+    "ts": "<script setup lang=\"ts\">\nimport { AvatarStack } from 'rei-kit'\n\nconst people = [\n  { name: 'Aiko Tanaka' },\n  { name: 'Kenji Mori' },\n  { name: 'Mei Lin' },\n  { name: 'Ravi Patel' },\n  { name: 'Sara Yilmaz' },\n]\n</script>\n\n<template>\n  <AvatarStack :people=\"people\" :max=\"3\" label=\"Shared with 5 people\" />\n</template>\n",
+    "js": "<script setup>\nimport { AvatarStack } from 'rei-kit'\n\nconst people = [\n  { name: 'Aiko Tanaka' },\n  { name: 'Kenji Mori' },\n  { name: 'Mei Lin' },\n  { name: 'Ravi Patel' },\n  { name: 'Sara Yilmaz' },\n]\n</script>\n\n<template>\n  <AvatarStack :people=\"people\" :max=\"3\" label=\"Shared with 5 people\" />\n</template>\n"
+  },
+  {
     "name": "BaseAccordion",
     "ts": "<script setup lang=\"ts\">\nimport { BaseAccordion } from 'rei-kit/web'\n\nconst faq = [\n  { key: 'price', title: 'How much does it cost?' },\n  { key: 'export', title: 'Can I export my data?' },\n]\n</script>\n\n<template>\n  <BaseAccordion :items=\"faq\">\n    <template #default=\"{ item }\">\n      <p v-if=\"item.key === 'price'\">Free while in beta.</p>\n      <p v-else>Yes, from the settings page.</p>\n    </template>\n  </BaseAccordion>\n</template>\n",
     "js": "<script setup>\nimport { BaseAccordion } from 'rei-kit/web'\n\nconst faq = [\n  { key: 'price', title: 'How much does it cost?' },\n  { key: 'export', title: 'Can I export my data?' },\n]\n</script>\n\n<template>\n  <BaseAccordion :items=\"faq\">\n    <template #default=\"{ item }\">\n      <p v-if=\"item.key === 'price'\">Free while in beta.</p>\n      <p v-else>Yes, from the settings page.</p>\n    </template>\n  </BaseAccordion>\n</template>\n"
@@ -55,6 +60,11 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseCheckbox } from 'rei-kit'\n\nconst remember = ref(false)\n</script>\n\n<template>\n  <BaseCheckbox v-model=\"remember\" label=\"Remember me\" />\n</template>\n"
   },
   {
+    "name": "BaseChip",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseChip } from 'rei-kit'\n\nconst tags = ref(['design', 'vue'])\n\nfunction remove(tag: string) {\n  tags.value = tags.value.filter((one) => one !== tag)\n}\n</script>\n\n<template>\n  <div class=\"flex flex-wrap gap-2\">\n    <BaseChip\n      v-for=\"tag in tags\"\n      :key=\"tag\"\n      :label=\"tag\"\n      :remove-label=\"`Remove ${tag}`\"\n      @remove=\"remove(tag)\"\n    />\n  </div>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseChip } from 'rei-kit'\n\nconst tags = ref(['design', 'vue'])\n\nfunction remove(tag) {\n  tags.value = tags.value.filter((one) => one !== tag)\n}\n</script>\n\n<template>\n  <div class=\"flex flex-wrap gap-2\">\n    <BaseChip\n      v-for=\"tag in tags\"\n      :key=\"tag\"\n      :label=\"tag\"\n      :remove-label=\"`Remove ${tag}`\"\n      @remove=\"remove(tag)\"\n    />\n  </div>\n</template>\n"
+  },
+  {
     "name": "BaseCombobox",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseCombobox } from 'rei-kit'\n\nconst country = ref('')\nconst countries = [\n  { value: 'tr', label: 'Türkiye' },\n  { value: 'jp', label: 'Japan' },\n  { value: 'de', label: 'Germany' },\n]\n</script>\n\n<template>\n  <BaseCombobox\n    v-model=\"country\"\n    label=\"Country\"\n    :options=\"countries\"\n    placeholder=\"Start typing\"\n    empty-label=\"No country matches\"\n  />\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseCombobox } from 'rei-kit'\n\nconst country = ref('')\nconst countries = [\n  { value: 'tr', label: 'Türkiye' },\n  { value: 'jp', label: 'Japan' },\n  { value: 'de', label: 'Germany' },\n]\n</script>\n\n<template>\n  <BaseCombobox\n    v-model=\"country\"\n    label=\"Country\"\n    :options=\"countries\"\n    placeholder=\"Start typing\"\n    empty-label=\"No country matches\"\n  />\n</template>\n"
@@ -73,6 +83,16 @@
     "name": "BaseInput",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseInput } from 'rei-kit'\n\nconst email = ref('')\n</script>\n\n<template>\n  <BaseInput v-model=\"email\" label=\"Email\" type=\"email\" hint=\"We never share it.\" />\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseInput } from 'rei-kit'\n\nconst email = ref('')\n</script>\n\n<template>\n  <BaseInput v-model=\"email\" label=\"Email\" type=\"email\" hint=\"We never share it.\" />\n</template>\n"
+  },
+  {
+    "name": "BaseKbd",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseKbd } from 'rei-kit'\n</script>\n\n<template>\n  <p>Press <BaseKbd :keys=\"['⌘', 'K']\" joiner=\"+\" /> to search.</p>\n</template>\n",
+    "js": "<script setup>\nimport { BaseKbd } from 'rei-kit'\n</script>\n\n<template>\n  <p>Press <BaseKbd :keys=\"['⌘', 'K']\" joiner=\"+\" /> to search.</p>\n</template>\n"
+  },
+  {
+    "name": "BaseLink",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseLink } from 'rei-kit'\n</script>\n\n<template>\n  <p>\n    Read the <BaseLink to=\"/docs\">documentation</BaseLink>, or the\n    <BaseLink href=\"https://vuejs.org\" external>Vue guide</BaseLink>.\n  </p>\n</template>\n",
+    "js": "<script setup>\nimport { BaseLink } from 'rei-kit'\n</script>\n\n<template>\n  <p>\n    Read the <BaseLink to=\"/docs\">documentation</BaseLink>, or the\n    <BaseLink href=\"https://vuejs.org\" external>Vue guide</BaseLink>.\n  </p>\n</template>\n"
   },
   {
     "name": "BaseMarquee",
@@ -105,6 +125,11 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseRadioGroup } from 'rei-kit'\n\nconst plan = ref('monthly')\nconst plans = [\n  { value: 'monthly', label: 'Monthly' },\n  { value: 'yearly', label: 'Yearly' },\n]\n</script>\n\n<template>\n  <BaseRadioGroup v-model=\"plan\" legend=\"Plan\" :options=\"plans\" />\n</template>\n"
   },
   {
+    "name": "BaseRating",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseRating } from 'rei-kit'\n\nconst score = ref(4)\n</script>\n\n<template>\n  <BaseRating\n    v-model=\"score\"\n    label=\"Your rating\"\n    :value-label=\"(value, max) => `${value} out of ${max}`\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseRating } from 'rei-kit'\n\nconst score = ref(4)\n</script>\n\n<template>\n  <BaseRating\n    v-model=\"score\"\n    label=\"Your rating\"\n    :value-label=\"(value, max) => `${value} out of ${max}`\"\n  />\n</template>\n"
+  },
+  {
     "name": "BaseReveal",
     "ts": "<script setup lang=\"ts\">\nimport { BaseCard } from 'rei-kit'\nimport { BaseReveal } from 'rei-kit/motion'\n\nconst items = ['Fast', 'Accessible', 'Themeable']\n</script>\n\n<template>\n  <BaseReveal v-for=\"(item, i) in items\" :key=\"item\" :delay=\"i * 80\">\n    <BaseCard>{{ item }}</BaseCard>\n  </BaseReveal>\n</template>\n",
     "js": "<script setup>\nimport { BaseCard } from 'rei-kit'\nimport { BaseReveal } from 'rei-kit/motion'\n\nconst items = ['Fast', 'Accessible', 'Themeable']\n</script>\n\n<template>\n  <BaseReveal v-for=\"(item, i) in items\" :key=\"item\" :delay=\"i * 80\">\n    <BaseCard>{{ item }}</BaseCard>\n  </BaseReveal>\n</template>\n"
@@ -115,9 +140,19 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseSelect } from 'rei-kit'\n\nconst currency = ref()\nconst options = [\n  { value: 'TRY', label: 'Turkish lira' },\n  { value: 'JPY', label: 'Japanese yen' },\n]\n</script>\n\n<template>\n  <BaseSelect v-model=\"currency\" label=\"Currency\" :options=\"options\" placeholder=\"Choose one\" />\n</template>\n"
   },
   {
+    "name": "BaseSeparator",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseSeparator } from 'rei-kit'\n</script>\n\n<template>\n  <p>Signed in already?</p>\n  <BaseSeparator label=\"or\" />\n  <p>Create an account.</p>\n</template>\n",
+    "js": "<script setup>\nimport { BaseSeparator } from 'rei-kit'\n</script>\n\n<template>\n  <p>Signed in already?</p>\n  <BaseSeparator label=\"or\" />\n  <p>Create an account.</p>\n</template>\n"
+  },
+  {
     "name": "BaseSheet",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseButton, BaseSheet } from 'rei-kit'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseButton @click=\"open = true\">New entry</BaseButton>\n\n  <BaseSheet v-model=\"open\" title=\"New entry\" close-label=\"Close\">\n    <p>Anything that belongs to a thumb.</p>\n  </BaseSheet>\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton, BaseSheet } from 'rei-kit'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <BaseButton @click=\"open = true\">New entry</BaseButton>\n\n  <BaseSheet v-model=\"open\" title=\"New entry\" close-label=\"Close\">\n    <p>Anything that belongs to a thumb.</p>\n  </BaseSheet>\n</template>\n"
+  },
+  {
+    "name": "BaseSkeleton",
+    "ts": "<script setup lang=\"ts\">\nimport { BaseSkeleton } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-3\" aria-busy=\"true\">\n    <BaseSkeleton shape=\"circle\" height=\"2.5rem\" />\n    <div class=\"flex-1\">\n      <BaseSkeleton shape=\"text\" width=\"40%\" height=\"0.75rem\" />\n      <BaseSkeleton class=\"mt-2\" shape=\"text\" width=\"70%\" height=\"0.75rem\" />\n    </div>\n  </div>\n</template>\n",
+    "js": "<script setup>\nimport { BaseSkeleton } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-3\" aria-busy=\"true\">\n    <BaseSkeleton shape=\"circle\" height=\"2.5rem\" />\n    <div class=\"flex-1\">\n      <BaseSkeleton shape=\"text\" width=\"40%\" height=\"0.75rem\" />\n      <BaseSkeleton class=\"mt-2\" shape=\"text\" width=\"70%\" height=\"0.75rem\" />\n    </div>\n  </div>\n</template>\n"
   },
   {
     "name": "BaseSlider",
@@ -165,6 +200,11 @@
     "js": "<script setup>\nimport { CircularProgress } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <CircularProgress :value=\"72\" label=\"Upload\" show-value size=\"lg\" />\n    <CircularProgress label=\"Loading\" />\n  </div>\n</template>\n"
   },
   {
+    "name": "CopyButton",
+    "ts": "<script setup lang=\"ts\">\nimport { CopyButton } from 'rei-kit'\n</script>\n\n<template>\n  <CopyButton\n    text=\"pnpm add rei-kit\"\n    copy-label=\"Copy the command\"\n    copied-label=\"Copied\"\n    error-label=\"Could not copy\"\n    with-text\n  />\n</template>\n",
+    "js": "<script setup>\nimport { CopyButton } from 'rei-kit'\n</script>\n\n<template>\n  <CopyButton\n    text=\"pnpm add rei-kit\"\n    copy-label=\"Copy the command\"\n    copied-label=\"Copied\"\n    error-label=\"Could not copy\"\n    with-text\n  />\n</template>\n"
+  },
+  {
     "name": "CountUp",
     "ts": "<script setup lang=\"ts\">\nimport { CountUp } from 'rei-kit/motion'\n</script>\n\n<template>\n  <CountUp :value=\"12480\" />\n</template>\n",
     "js": "<script setup>\nimport { CountUp } from 'rei-kit/motion'\n</script>\n\n<template>\n  <CountUp :value=\"12480\" />\n</template>\n"
@@ -183,6 +223,11 @@
     "name": "FabButton",
     "ts": "<script setup lang=\"ts\">\nimport { FabButton } from 'rei-kit/app'\n\nfunction create() {\n  // …\n}\n</script>\n\n<template>\n  <FabButton label=\"New entry\" @click=\"create\">+</FabButton>\n</template>\n",
     "js": "<script setup>\nimport { FabButton } from 'rei-kit/app'\n\nfunction create() {\n  // …\n}\n</script>\n\n<template>\n  <FabButton label=\"New entry\" @click=\"create\">+</FabButton>\n</template>\n"
+  },
+  {
+    "name": "FileDrop",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { FileDrop } from 'rei-kit'\n\nconst files = ref<File[]>([])\n</script>\n\n<template>\n  <FileDrop\n    v-model=\"files\"\n    label=\"Drop a receipt here\"\n    hint=\"PDF or an image, up to 5 MB\"\n    browse-label=\"Browse\"\n    remove-label=\"Remove\"\n    too-large-label=\"That file is over 5 MB\"\n    accept=\"image/*,.pdf\"\n    :max-size=\"5 * 1024 * 1024\"\n    multiple\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { FileDrop } from 'rei-kit'\n\nconst files = ref([])\n</script>\n\n<template>\n  <FileDrop\n    v-model=\"files\"\n    label=\"Drop a receipt here\"\n    hint=\"PDF or an image, up to 5 MB\"\n    browse-label=\"Browse\"\n    remove-label=\"Remove\"\n    too-large-label=\"That file is over 5 MB\"\n    accept=\"image/*,.pdf\"\n    :max-size=\"5 * 1024 * 1024\"\n    multiple\n  />\n</template>\n"
   },
   {
     "name": "FormField",
@@ -298,6 +343,11 @@
     "name": "TabShell",
     "ts": "<script setup lang=\"ts\">\nimport { RouterView } from 'vue-router'\nimport { TabShell } from 'rei-kit/app'\n</script>\n\n<template>\n  <TabShell>\n    <RouterView />\n\n    <template #aside>\n      <p>© 2026 My app</p>\n    </template>\n  </TabShell>\n</template>\n",
     "js": "<script setup>\nimport { RouterView } from 'vue-router'\nimport { TabShell } from 'rei-kit/app'\n</script>\n\n<template>\n  <TabShell>\n    <RouterView />\n\n    <template #aside>\n      <p>© 2026 My app</p>\n    </template>\n  </TabShell>\n</template>\n"
+  },
+  {
+    "name": "TagsInput",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TagsInput } from 'rei-kit'\n\nconst tags = ref(['design'])\n</script>\n\n<template>\n  <TagsInput\n    v-model=\"tags\"\n    label=\"Tags\"\n    placeholder=\"Type and press Enter\"\n    :remove-label=\"(tag) => `Remove ${tag}`\"\n    :max=\"5\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { TagsInput } from 'rei-kit'\n\nconst tags = ref(['design'])\n</script>\n\n<template>\n  <TagsInput\n    v-model=\"tags\"\n    label=\"Tags\"\n    placeholder=\"Type and press Enter\"\n    :remove-label=\"(tag) => `Remove ${tag}`\"\n    :max=\"5\"\n  />\n</template>\n"
   },
   {
     "name": "TextRotate",

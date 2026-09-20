@@ -221,3 +221,34 @@ describe('server rendering, the calendar', () => {
     expect(picker).not.toContain('role="grid"')
   })
 })
+
+describe('server rendering, the basics', () => {
+  it('renders the small parts without a browser', async () => {
+    const kit = await import('../index')
+
+    expect(await render(kit.BaseSeparator, { label: 'veya' })).toContain('veya')
+    expect(await render(kit.BaseSkeleton, { height: '2rem' })).toContain('height:2rem')
+    expect(await render(kit.BaseKbd, { keys: ['⌘', 'K'] })).toContain('<kbd')
+    expect(await render(kit.BaseChip, { label: 'tasarım' })).toContain('tasarım')
+    expect(
+      await render(kit.AvatarStack, { people: [{ name: 'Aiko' }], label: '1 kişi' }),
+    ).toContain('aria-label="1 kişi"')
+    expect(await render(kit.BaseLink, { href: '/a' })).toContain('href="/a"')
+    expect(
+      await render(kit.CopyButton, { text: 'x', copyLabel: 'Kopyala', copiedLabel: 'Kopyalandı' }),
+    ).toContain('aria-label="Kopyala"')
+    expect(
+      await render(kit.BaseRating, {
+        label: 'Puan',
+        valueLabel: (value: number, max: number) => `${max} üzerinden ${value}`,
+        modelValue: 3,
+      }),
+    ).toContain('role="slider"')
+    expect(
+      await render(kit.FileDrop, { label: 'Bırakın', browseLabel: 'Gözat', removeLabel: 'Kaldır' }),
+    ).toContain('type="file"')
+    expect(
+      await render(kit.TagsInput, { label: 'Etiketler', removeLabel: (tag: string) => tag }),
+    ).toContain('Etiketler')
+  })
+})

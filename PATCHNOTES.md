@@ -60,6 +60,21 @@ without.
 
 ---
 
+## 2.8.0
+
+**You gain a data table, a command palette and a listbox:**
+
+```vue
+<DataTable v-model:sort="sort" v-model:selected="picked" :columns="columns" :rows="rows" … />
+<CommandMenu v-model="open" :groups="groups" hotkey="k" … />
+<BaseListbox v-model="people" mode="multiple" :options="options" label="People" />
+```
+
+The table and the palette are in `rei-kit/web` — a phone shows a list, not
+nine columns, and has no ⌘ to press.
+
+**Action required:** none.
+
 ## 2.7.0
 
 **You gain the basics:** `BaseSeparator`, `BaseSkeleton`, `BaseKbd`,

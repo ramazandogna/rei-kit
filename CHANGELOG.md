@@ -3,6 +3,50 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.8.0 — 2026-09-20
+
+**The desk-sized parts.** A table of real data, a list to choose from, and
+everything the app can do behind one shortcut.
+
+### Added
+
+- **`DataTable`** (`rei-kit/web`) — `BaseTable` with the three things real
+  data grows. The sort is a button inside the `th` and the `th` carries
+  `aria-sort`, which is what a screen reader reads as "sorted ascending"; an
+  arrow glyph on a div is neither. Sorting happens in the component by
+  default, comparing numbers as numbers and text with `localeCompare`, so
+  "Ömer" lands before "Zeynep" where the reader lives; `manualSort` reports
+  the sort instead, which is what a server-paged table needs, because
+  sorting the twenty rows on screen is a lie about the other nine thousand.
+  Selection is keyed by row, never by index — an index selection means
+  something else the moment the table is sorted — and every checkbox is
+  named by the app. `loading` draws skeleton rows.
+- **`CommandMenu`** (`rei-kit/web`) — the ⌘K palette: a field, results under
+  it, arrows to move and Enter to run. The field is a combobox and the
+  results are its listbox, so focus never leaves what you are typing in and
+  `aria-activedescendant` says which result is current. Matching covers the
+  `keywords` beside each label, so "new" finds "Yeni kayıt" in an app whose
+  language is not English. In the wide entry because it is a keyboard
+  shortcut first.
+- **`BaseListbox`** — a long list that stays on screen, taking one answer or
+  several. One Tab stop, arrows to move, and typing a letter jumps to the
+  next option that starts with it. Between `BaseRadioGroup` (a handful, all
+  visible) and `BaseSelect` (the platform's own picker).
+
+### Fixed
+
+- **A `CommandMenu` mounted already open never took focus** and never held
+  the page — the same bug `BaseMenu` had, from a watcher that was not
+  `immediate`. It looked open and behaved like a div.
+- `scrollIntoView` is called defensively: it does not exist everywhere, and
+  a missing scroll must not take the keyboard down with it.
+
+### Changed
+
+- Size budgets rise with the numbers that moved them: the whole bundle to
+  36.7 KB (budget 40), the core stylesheet to 16.7 (18), the presets to 19.3
+  (21).
+
 ## 2.7.0 — 2026-09-20
 
 **The basics every kit has, and this one did not.** Ten small parts, each

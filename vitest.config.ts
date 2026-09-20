@@ -2,8 +2,7 @@ import { fileURLToPath } from 'node:url'
 import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
 import viteConfig from './vite.config'
 
-const entry = (name: string) =>
-  fileURLToPath(new URL(`./src/${name}/index.ts`, import.meta.url))
+const entry = (name: string) => fileURLToPath(new URL(`./src/${name}/index.ts`, import.meta.url))
 
 export default mergeConfig(
   viteConfig,
@@ -27,7 +26,10 @@ export default mergeConfig(
         { find: /^rei-kit\/pwa$/, replacement: entry('pwa') },
         { find: /^rei-kit\/motion$/, replacement: entry('motion') },
         { find: /^rei-kit\/supabase$/, replacement: entry('supabase') },
-        { find: /^rei-kit$/, replacement: fileURLToPath(new URL('./src/index.ts', import.meta.url)) },
+        {
+          find: /^rei-kit$/,
+          replacement: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
+        },
       ],
     },
   }),

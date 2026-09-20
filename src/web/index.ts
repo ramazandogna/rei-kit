@@ -54,6 +54,19 @@ export type { CommandGroup, CommandItem } from './CommandMenu.vue'
 export { default as DataTable } from './DataTable.vue'
 export type { DataColumn, TableSort } from './DataTable.vue'
 
+/**
+ * Two panes and a handle, a tree, a toolbar and a transfer list: the shapes
+ * a desk-sized screen is arranged with, and that a phone never shows.
+ */
+export { default as BaseSplitter } from './BaseSplitter.vue'
+
+export { default as BaseToolbar } from './BaseToolbar.vue'
+
+export { default as BaseTree } from './BaseTree.vue'
+export type { TreeNode } from './BaseTree.vue'
+
+export { default as TransferList } from './TransferList.vue'
+
 export { default as BaseTabs } from './BaseTabs.vue'
 export type { TabPanel } from './BaseTabs.vue'
 

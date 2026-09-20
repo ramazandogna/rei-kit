@@ -170,6 +170,11 @@
     "js": "<script setup>\nimport { BaseSpinner } from 'rei-kit'\n</script>\n\n<template>\n  <BaseSpinner label=\"Loading entries\" />\n</template>\n"
   },
   {
+    "name": "BaseSplitter",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseSplitter } from 'rei-kit/web'\n\nconst split = ref(35)\n</script>\n\n<template>\n  <BaseSplitter v-model=\"split\" label=\"Resize the list\" class=\"h-72\">\n    <template #start><nav class=\"p-3\">The list</nav></template>\n    <template #end><article class=\"p-3\">What is selected</article></template>\n  </BaseSplitter>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseSplitter } from 'rei-kit/web'\n\nconst split = ref(35)\n</script>\n\n<template>\n  <BaseSplitter v-model=\"split\" label=\"Resize the list\" class=\"h-72\">\n    <template #start><nav class=\"p-3\">The list</nav></template>\n    <template #end><article class=\"p-3\">What is selected</article></template>\n  </BaseSplitter>\n</template>\n"
+  },
+  {
     "name": "BaseStepper",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseButton, BaseStepper } from 'rei-kit'\n\nconst steps = [\n  { key: 'account', label: 'Account' },\n  { key: 'plan', label: 'Plan' },\n  { key: 'payment', label: 'Payment' },\n] as const\nconst step = ref<(typeof steps)[number]['key']>('plan')\n</script>\n\n<template>\n  <BaseStepper\n    v-model=\"step\"\n    :steps=\"steps\"\n    label=\"Sign-up\"\n    interactive\n    :state-labels=\"{ complete: 'done', error: 'needs attention' }\"\n  />\n  <BaseButton class=\"mt-4\" @click=\"step = 'payment'\">Next</BaseButton>\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseButton, BaseStepper } from 'rei-kit'\n\nconst steps = [\n  { key: 'account', label: 'Account' },\n  { key: 'plan', label: 'Plan' },\n  { key: 'payment', label: 'Payment' },\n]\nconst step = ref('plan')\n</script>\n\n<template>\n  <BaseStepper\n    v-model=\"step\"\n    :steps=\"steps\"\n    label=\"Sign-up\"\n    interactive\n    :state-labels=\"{ complete: 'done', error: 'needs attention' }\"\n  />\n  <BaseButton class=\"mt-4\" @click=\"step = 'payment'\">Next</BaseButton>\n</template>\n"
@@ -195,9 +200,19 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseTextarea } from 'rei-kit'\n\nconst note = ref('')\n</script>\n\n<template>\n  <BaseTextarea v-model=\"note\" label=\"Note\" :rows=\"4\" />\n</template>\n"
   },
   {
+    "name": "BaseToolbar",
+    "ts": "<script setup lang=\"ts\">\nimport { Bold, Italic, Underline } from 'lucide-vue-next'\nimport { BaseButton, BaseSeparator } from 'rei-kit'\nimport { BaseToolbar } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseToolbar label=\"Formatting\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Bold\"><Bold class=\"size-4\" /></BaseButton>\n    <BaseButton icon variant=\"ghost\" aria-label=\"Italic\"><Italic class=\"size-4\" /></BaseButton>\n    <BaseSeparator orientation=\"vertical\" spacing=\"sm\" />\n    <BaseButton icon variant=\"ghost\" aria-label=\"Underline\"\n      ><Underline class=\"size-4\"\n    /></BaseButton>\n  </BaseToolbar>\n</template>\n",
+    "js": "<script setup>\nimport { Bold, Italic, Underline } from 'lucide-vue-next'\nimport { BaseButton, BaseSeparator } from 'rei-kit'\nimport { BaseToolbar } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseToolbar label=\"Formatting\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Bold\"><Bold class=\"size-4\" /></BaseButton>\n    <BaseButton icon variant=\"ghost\" aria-label=\"Italic\"><Italic class=\"size-4\" /></BaseButton>\n    <BaseSeparator orientation=\"vertical\" spacing=\"sm\" />\n    <BaseButton icon variant=\"ghost\" aria-label=\"Underline\"\n      ><Underline class=\"size-4\"\n    /></BaseButton>\n  </BaseToolbar>\n</template>\n"
+  },
+  {
     "name": "BaseTooltip",
     "ts": "<script setup lang=\"ts\">\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n</template>\n",
     "js": "<script setup>\nimport { BaseButton } from 'rei-kit'\nimport { BaseTooltip } from 'rei-kit/web'\n</script>\n\n<template>\n  <BaseTooltip label=\"Copy link\">\n    <BaseButton icon variant=\"ghost\" aria-label=\"Copy link\">⧉</BaseButton>\n  </BaseTooltip>\n</template>\n"
+  },
+  {
+    "name": "BaseTree",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseTree } from 'rei-kit/web'\nimport type { TreeNode } from 'rei-kit/web'\n\nconst nodes: TreeNode<string>[] = [\n  {\n    key: 'src',\n    label: 'src',\n    children: [\n      { key: 'index', label: 'index.ts' },\n      {\n        key: 'components',\n        label: 'components',\n        children: [{ key: 'button', label: 'Button.vue' }],\n      },\n    ],\n  },\n  { key: 'readme', label: 'README.md' },\n]\n\nconst open = ref(['src'])\nconst chosen = ref<string | undefined>('index')\n</script>\n\n<template>\n  <BaseTree v-model=\"chosen\" v-model:expanded=\"open\" :nodes=\"nodes\" label=\"Files\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseTree } from 'rei-kit/web'\n\nconst nodes = [\n  {\n    key: 'src',\n    label: 'src',\n    children: [\n      { key: 'index', label: 'index.ts' },\n      {\n        key: 'components',\n        label: 'components',\n        children: [{ key: 'button', label: 'Button.vue' }],\n      },\n    ],\n  },\n  { key: 'readme', label: 'README.md' },\n]\n\nconst open = ref(['src'])\nconst chosen = ref('index')\n</script>\n\n<template>\n  <BaseTree v-model=\"chosen\" v-model:expanded=\"open\" :nodes=\"nodes\" label=\"Files\" />\n</template>\n"
   },
   {
     "name": "CircularProgress",
@@ -388,6 +403,11 @@
     "name": "TourShell",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TourShell } from 'rei-kit/app'\n\nconst open = ref(true)\nconst step = ref(0)\n</script>\n\n<template>\n  <TourShell\n    v-model=\"open\"\n    :index=\"step\"\n    :total=\"3\"\n    dialog-label=\"Welcome tour\"\n    skip-label=\"Skip\"\n    back-label=\"Back\"\n    next-label=\"Next\"\n    last-label=\"Start\"\n    :step-label=\"(n) => `Step ${n}`\"\n    @next=\"step++\"\n    @back=\"step--\"\n    @dismiss=\"open = false\"\n  >\n    <template #default=\"{ index }\">\n      <h2>Step {{ index + 1 }}</h2>\n    </template>\n  </TourShell>\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { TourShell } from 'rei-kit/app'\n\nconst open = ref(true)\nconst step = ref(0)\n</script>\n\n<template>\n  <TourShell\n    v-model=\"open\"\n    :index=\"step\"\n    :total=\"3\"\n    dialog-label=\"Welcome tour\"\n    skip-label=\"Skip\"\n    back-label=\"Back\"\n    next-label=\"Next\"\n    last-label=\"Start\"\n    :step-label=\"(n) => `Step ${n}`\"\n    @next=\"step++\"\n    @back=\"step--\"\n    @dismiss=\"open = false\"\n  >\n    <template #default=\"{ index }\">\n      <h2>Step {{ index + 1 }}</h2>\n    </template>\n  </TourShell>\n</template>\n"
+  },
+  {
+    "name": "TransferList",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TransferList } from 'rei-kit/web'\n\nconst granted = ref<string[]>(['read'])\nconst permissions = [\n  { value: 'read', label: 'Read' },\n  { value: 'write', label: 'Write' },\n  { value: 'admin', label: 'Administer' },\n]\n</script>\n\n<template>\n  <TransferList\n    v-model=\"granted\"\n    :options=\"permissions\"\n    available-label=\"Available\"\n    chosen-label=\"Granted\"\n    add-label=\"Grant the chosen permissions\"\n    remove-label=\"Take back the chosen permissions\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { TransferList } from 'rei-kit/web'\n\nconst granted = ref(['read'])\nconst permissions = [\n  { value: 'read', label: 'Read' },\n  { value: 'write', label: 'Write' },\n  { value: 'admin', label: 'Administer' },\n]\n</script>\n\n<template>\n  <TransferList\n    v-model=\"granted\"\n    :options=\"permissions\"\n    available-label=\"Available\"\n    chosen-label=\"Granted\"\n    add-label=\"Grant the chosen permissions\"\n    remove-label=\"Take back the chosen permissions\"\n  />\n</template>\n"
   },
   {
     "name": "TypeWriter",

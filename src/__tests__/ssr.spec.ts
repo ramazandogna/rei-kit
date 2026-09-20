@@ -280,3 +280,24 @@ describe('server rendering, the desk parts', () => {
     expect(palette).not.toContain('role="combobox"')
   })
 })
+
+describe('server rendering, the layout parts', () => {
+  it('renders a tree, a splitter, a toolbar and a transfer list', async () => {
+    const { BaseSplitter, BaseToolbar, BaseTree, TransferList } = await import('../web/index')
+
+    expect(
+      await render(BaseTree, { label: 'Dosyalar', nodes: [{ key: 'a', label: 'src' }] }),
+    ).toContain('role="tree"')
+    expect(await render(BaseSplitter, { label: 'Böl' })).toContain('role="separator"')
+    expect(await render(BaseToolbar, { label: 'Biçim' })).toContain('role="toolbar"')
+    expect(
+      await render(TransferList, {
+        options: [{ value: 'a', label: 'Okuma' }],
+        availableLabel: 'Verilebilir',
+        chosenLabel: 'Verilmiş',
+        addLabel: 'Ekle',
+        removeLabel: 'Çıkar',
+      }),
+    ).toContain('Verilebilir')
+  })
+})

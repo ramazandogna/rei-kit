@@ -1406,6 +1406,48 @@
     ]
   },
   {
+    "name": "BaseSplitter",
+    "entry": "rei-kit/web",
+    "summary": "Two panes and a handle between them — a list beside a preview, an editor beside its output.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The handle's accessible name, e.g. \"Resize the list\".",
+        "default": ""
+      },
+      {
+        "name": "orientation",
+        "required": false,
+        "type": "'horizontal' | 'vertical'",
+        "description": "`horizontal`: side by side, the handle moves left and right.",
+        "default": "'horizontal'"
+      },
+      {
+        "name": "min",
+        "required": false,
+        "type": "number",
+        "description": "How small the first pane may get, as a percentage.",
+        "default": "15"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "85"
+      },
+      {
+        "name": "step",
+        "required": false,
+        "type": "number",
+        "description": "How far one arrow press moves it, in percentage points.",
+        "default": "2"
+      }
+    ]
+  },
+  {
     "name": "BaseStepper",
     "entry": "rei-kit",
     "summary": "Where someone is in a process of several steps — a sign-up, a checkout, a form split into pages.",
@@ -1609,6 +1651,27 @@
     ]
   },
   {
+    "name": "BaseToolbar",
+    "entry": "rei-kit/web",
+    "summary": "A row of controls that belong together: a formatting bar, a row of view switches, the actions over a table.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The toolbar's accessible name, e.g. \"Formatting\".",
+        "default": ""
+      },
+      {
+        "name": "orientation",
+        "required": false,
+        "type": "'horizontal' | 'vertical'",
+        "description": "",
+        "default": "'horizontal'"
+      }
+    ]
+  },
+  {
     "name": "BaseTooltip",
     "entry": "rei-kit/web",
     "summary": "A short label that appears beside a control.",
@@ -1626,6 +1689,41 @@
         "type": "'top' | 'bottom'",
         "description": "",
         "default": "'top'"
+      }
+    ]
+  },
+  {
+    "name": "BaseTree",
+    "entry": "rei-kit/web",
+    "summary": "A tree of things that contain things: folders, a category list, a table of contents.",
+    "props": [
+      {
+        "name": "modelValue",
+        "required": false,
+        "type": "Value",
+        "description": "The chosen key, or keys in `multiple` mode, with `v-model`.",
+        "default": "undefined"
+      },
+      {
+        "name": "nodes",
+        "required": true,
+        "type": "readonly TreeNode<K>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The tree's accessible name.",
+        "default": ""
+      },
+      {
+        "name": "mode",
+        "required": false,
+        "type": "M",
+        "description": "`multiple` lets several be chosen, each with its own tick.",
+        "default": "'single' as M"
       }
     ]
   },
@@ -3060,6 +3158,55 @@
         "type": "string",
         "description": "Where the dialog goes. A phone shell clips its children, so the guide has to leave the tree to cover the tab bar and the header alike.",
         "default": "'body'"
+      }
+    ]
+  },
+  {
+    "name": "TransferList",
+    "entry": "rei-kit/web",
+    "summary": "Two lists and the way between them: what is available, what is chosen.",
+    "props": [
+      {
+        "name": "options",
+        "required": true,
+        "type": "readonly ListboxOption<V>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "availableLabel",
+        "required": true,
+        "type": "string",
+        "description": "Heading over the left list, e.g. \"Available\". Already translated.",
+        "default": ""
+      },
+      {
+        "name": "chosenLabel",
+        "required": true,
+        "type": "string",
+        "description": "Heading over the right list.",
+        "default": ""
+      },
+      {
+        "name": "addLabel",
+        "required": true,
+        "type": "string",
+        "description": "The → button's accessible name, e.g. \"Add the chosen ones\".",
+        "default": ""
+      },
+      {
+        "name": "removeLabel",
+        "required": true,
+        "type": "string",
+        "description": "The ← button's accessible name.",
+        "default": ""
+      },
+      {
+        "name": "height",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'14rem'"
       }
     ]
   },

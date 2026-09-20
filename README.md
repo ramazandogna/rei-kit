@@ -549,6 +549,21 @@ git push --follow-tags
 Then write the release into `PATCHNOTES.md` — what a consumer gains, and what
 they have to do to take it.
 
+## Taking part
+
+| File                                   | What it answers                                                          |
+| -------------------------------------- | ------------------------------------------------------------------------ |
+| [CONTRIBUTING.md](CONTRIBUTING.md)      | How to set it up, the one command CI runs, and what a new component needs |
+| [ROADMAP.md](ROADMAP.md)                | What is next, what is being weighed up, and what this will never do       |
+| [SECURITY.md](SECURITY.md)              | How to report a vulnerability, and what the package does and does not do  |
+| [AGENTS.md](AGENTS.md)                  | The design document: which part to reach for, and the mistakes that compile |
+| [CHANGELOG.md](CHANGELOG.md)            | Why each change was made                                                  |
+| [PATCHNOTES.md](PATCHNOTES.md)          | What you gain per release, and what you have to do to take it             |
+
+The most useful issue you can open is the one that says what you tried to
+build and what you ended up writing by hand: a control hand-written in a file
+that already imports the kit's version of it is a bug in the kit, every time.
+
 ## Author
 
 Made by **Ramazan Doğan** — [github.com/ramazandogna](https://github.com/ramazandogna),

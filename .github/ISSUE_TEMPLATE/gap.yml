@@ -1,0 +1,45 @@
+name: Something is missing
+description: You reached for the kit and ended up writing it by hand.
+labels: ['gap']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These are the most useful issues this project gets. A control written
+        by hand in a file that already imports the kit is a bug in the kit,
+        every time — not in your app, and not a matter of taste.
+
+  - type: textarea
+    id: hand-written
+    attributes:
+      label: What you wrote by hand
+      description: The markup, however rough. This is what the kit part gets built from.
+      render: vue
+    validations:
+      required: true
+
+  - type: textarea
+    id: reached-for
+    attributes:
+      label: What you reached for first
+      description: |
+        Which kit part you tried, and where it stopped being the right one. If
+        nothing looked close, say that — it usually means the docs are the
+        problem rather than the kit.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: entry
+    attributes:
+      label: Where it would belong
+      description: Best guess; no harm in being wrong.
+      options:
+        - rei-kit — anything any app has
+        - rei-kit/web — a wide site with a header and a mouse
+        - rei-kit/app — a phone-shaped app
+        - rei-kit/pwa — installing and updating
+        - rei-kit/motion — things that move
+        - Not sure
+    validations:
+      required: true

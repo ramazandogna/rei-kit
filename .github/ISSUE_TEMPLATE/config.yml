@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Every component, live
+    url: https://ramazandogna.github.io/rei-kit/
+    about: The gallery is the documentation — every prop is generated from the source.
+  - name: Reporting a vulnerability
+    url: https://github.com/ramazandogna/rei-kit/security/advisories/new
+    about: Private reporting, so it stays closed until there is a fix.

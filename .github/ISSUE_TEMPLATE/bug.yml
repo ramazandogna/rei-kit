@@ -1,0 +1,55 @@
+name: Bug report
+description: Something in the kit behaves differently from what it says it does.
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For anything that looks like a security problem, please use
+        [private reporting](https://github.com/ramazandogna/rei-kit/security/advisories/new)
+        instead — see `SECURITY.md`.
+
+  - type: input
+    id: version
+    attributes:
+      label: rei-kit version
+      placeholder: '2.17.0'
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: Which part
+      description: The component, composable or utility. One per issue, please.
+      placeholder: BaseCombobox
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected, and what happened
+      description: |
+        Both halves matter. "The chips do not clear" tells us less than
+        "I expected the field to empty after choosing, and the chip stayed".
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: The smallest thing that shows it
+      description: |
+        Markup is enough — the props you passed and what you saw. A link to a
+        reproduction is welcome but never required.
+      render: vue
+    validations:
+      required: true
+
+  - type: input
+    id: where
+    attributes:
+      label: Where it happens
+      description: Browser and platform, and whether it also happens on the showcase site.
+      placeholder: 'Safari 18, iPhone — also on ramazandogna.github.io/rei-kit'

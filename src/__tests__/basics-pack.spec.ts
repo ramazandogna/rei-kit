@@ -93,12 +93,27 @@ describe('BaseChip', () => {
 
   it('becomes a toggle when it is given a state', async () => {
     const wrapper = mount(BaseChip, { props: { label: 'unpaid', selected: true } })
+    const toggle = wrapper.find('button')
 
-    expect(wrapper.element.tagName).toBe('BUTTON')
-    expect(wrapper.attributes('aria-pressed')).toBe('true')
+    expect(toggle.attributes('aria-pressed')).toBe('true')
 
-    await wrapper.trigger('click')
+    await toggle.trigger('click')
     expect(wrapper.emitted('select')).toHaveLength(1)
+  })
+
+  it('keeps its two buttons side by side, never one inside the other', async () => {
+    const wrapper = mount(BaseChip, {
+      props: { label: 'unpaid', selected: false, removeLabel: 'unpaid filtresini kaldır' },
+    })
+    const buttons = wrapper.findAll('button')
+
+    expect(buttons).toHaveLength(2)
+    // A button nested in a button is not a control a browser can make sense of.
+    expect(buttons[1]!.element.closest('button')).toBe(buttons[1]!.element)
+
+    await buttons[1]!.trigger('click')
+    expect(wrapper.emitted('remove')).toHaveLength(1)
+    expect(wrapper.emitted('select')).toBeUndefined()
   })
 })
 

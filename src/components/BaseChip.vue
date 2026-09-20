@@ -12,6 +12,10 @@ import type { Component } from 'vue'
  *
  * `removeLabel` is required when it can be removed, because "×" alone is a
  * button a screen reader reads as "times".
+ *
+ * A chip that both selects and removes is two buttons side by side, never
+ * one inside the other: a button nested in a button is not a control a
+ * browser or a screen reader can make sense of.
  */
 const {
   label,
@@ -36,17 +40,22 @@ const emit = defineEmits<{ remove: []; select: [] }>()
 </script>
 
 <template>
-  <component
-    :is="selected === undefined ? 'span' : 'button'"
-    :type="selected === undefined ? undefined : 'button'"
+  <span
     class="rk-chip"
-    :class="[`tone-${tone}`, { 'is-selected': selected, 'is-button': selected !== undefined }]"
-    :aria-pressed="selected"
-    :disabled="selected === undefined ? undefined : disabled"
-    @click="selected === undefined ? undefined : emit('select')"
+    :class="[`tone-${tone}`, { 'is-selected': selected, 'is-disabled': disabled }]"
   >
-    <component :is="icon" v-if="icon" class="size-3.5 shrink-0" aria-hidden="true" />
-    <span class="truncate">{{ label }}</span>
+    <component
+      :is="selected === undefined ? 'span' : 'button'"
+      :type="selected === undefined ? undefined : 'button'"
+      class="rk-chip-body"
+      :class="{ 'focus-ring is-button': selected !== undefined }"
+      :aria-pressed="selected"
+      :disabled="selected === undefined ? undefined : disabled"
+      @click="selected === undefined ? undefined : emit('select')"
+    >
+      <component :is="icon" v-if="icon" class="size-3.5 shrink-0" aria-hidden="true" />
+      <span class="truncate">{{ label }}</span>
+    </component>
 
     <button
       v-if="removeLabel"
@@ -54,11 +63,11 @@ const emit = defineEmits<{ remove: []; select: [] }>()
       class="rk-chip-remove focus-ring"
       :aria-label="removeLabel"
       :disabled="disabled"
-      @click.stop="emit('remove')"
+      @click="emit('remove')"
     >
       <X class="size-3" aria-hidden="true" />
     </button>
-  </component>
+  </span>
 </template>
 
 <style scoped>
@@ -76,16 +85,17 @@ const emit = defineEmits<{ remove: []; select: [] }>()
   color: var(--color-ink);
 }
 
-.rk-chip.is-button {
-  cursor: pointer;
-  transition:
-    background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard);
+.rk-chip-body {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  color: inherit;
 }
 
-.rk-chip.is-button:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+.rk-chip-body.is-button {
+  cursor: pointer;
 }
 
 .rk-chip.is-selected {
@@ -93,7 +103,7 @@ const emit = defineEmits<{ remove: []; select: [] }>()
   color: var(--color-on-primary);
 }
 
-.rk-chip:disabled {
+.rk-chip.is-disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }

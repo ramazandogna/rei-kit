@@ -114,6 +114,17 @@ function onFocusout(event: FocusEvent) {
   if (next && root.value && !root.value.contains(next)) close()
 }
 
+/* Re-measured while it is open: the page can scroll or the window change
+   size under an open panel, and one that stays where it opened ends up
+   attached to nothing. Passive and capturing, so a scroll inside any
+   ancestor counts. */
+function watchViewport(on: boolean) {
+  if (typeof window === 'undefined') return
+  const method = on ? 'addEventListener' : 'removeEventListener'
+  window[method]('resize', place)
+  window[method]('scroll', place, true)
+}
+
 function onDocumentPointer(event: Event) {
   if (root.value && !root.value.contains(event.target as Node)) close()
 }
@@ -125,10 +136,12 @@ watch(
 
     if (!isOpen) {
       document.removeEventListener('pointerdown', onDocumentPointer)
+      watchViewport(false)
       return
     }
 
     document.addEventListener('pointerdown', onDocumentPointer)
+    watchViewport(true)
     // Reset before it renders, so it is measured where it asked to be rather
     // than where it ended up last time.
     placed.value = side
@@ -145,6 +158,7 @@ onBeforeUnmount(() => {
   if (typeof document !== 'undefined') {
     document.removeEventListener('pointerdown', onDocumentPointer)
   }
+  watchViewport(false)
 })
 </script>
 

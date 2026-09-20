@@ -28,6 +28,7 @@ const SECTIONS = [
   { id: 'start', label: 'Get started' },
   { id: 'axes', label: 'Themes: materials & palettes' },
   { id: 'aksiyon', label: 'Action' },
+  { id: 'basics', label: 'Basics' },
   { id: 'hareket', label: 'Motion' },
   ...MOTION_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
   { id: 'yuzey', label: 'Surfaces' },

@@ -72,3 +72,46 @@ body {
   font-weight: 700;
   transition: border-radius var(--duration-slow) var(--ease-standard);
 }
+
+/* One part of the kit, presented on its own: a heading, a sentence on what it
+   is for, a live demo and the code beside it. Shared by every section that
+   goes component by component, so the page has one shape for "here is a
+   part" rather than a different one per section. */
+.sc-part {
+  margin-top: 3rem;
+}
+
+.sc-part-head {
+  max-width: 60ch;
+}
+
+.sc-part-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+.sc-part-pitch {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+}
+
+/* One column on a phone, sized by the page rather than by the longest line
+   in it — a code sample's own width would otherwise set the column, and a
+   marquee's track alone is two thousand pixels wide. Two from a laptop up. */
+.sc-part-row {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .sc-part-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}

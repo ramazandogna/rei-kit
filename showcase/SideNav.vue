@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import AuthorCredit from './AuthorCredit.vue'
+import { BASICS_PARTS } from './basics-parts'
 import { MOTION_PARTS } from './motion-parts'
 import catalogue from './props.generated.json'
 
@@ -29,6 +30,7 @@ const SECTIONS = [
   { id: 'axes', label: 'Themes: materials & palettes' },
   { id: 'aksiyon', label: 'Action' },
   { id: 'basics', label: 'Basics' },
+  ...BASICS_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
   { id: 'hareket', label: 'Motion' },
   ...MOTION_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),
   { id: 'yuzey', label: 'Surfaces' },

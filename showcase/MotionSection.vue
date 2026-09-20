@@ -125,12 +125,12 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     </p>
 
     <!-- NumberTicker -->
-    <article :id="part('motion-ticker').id" class="motion-part">
-      <header class="motion-head">
-        <h3 class="motion-name">{{ part('motion-ticker').title }}</h3>
-        <p class="motion-pitch">{{ part('motion-ticker').pitch }}</p>
+    <article :id="part('motion-ticker').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('motion-ticker').title }}</h3>
+        <p class="sc-part-pitch">{{ part('motion-ticker').pitch }}</p>
       </header>
-      <div class="motion-row">
+      <div class="sc-part-row">
         <BaseCard>
           <p class="text-ink text-4xl font-bold tracking-tight">
             <NumberTicker
@@ -150,12 +150,12 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     </article>
 
     <!-- CountUp -->
-    <article :id="part('motion-count').id" class="motion-part">
-      <header class="motion-head">
-        <h3 class="motion-name">{{ part('motion-count').title }}</h3>
-        <p class="motion-pitch">{{ part('motion-count').pitch }}</p>
+    <article :id="part('motion-count').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('motion-count').title }}</h3>
+        <p class="sc-part-pitch">{{ part('motion-count').pitch }}</p>
       </header>
-      <div class="motion-row">
+      <div class="sc-part-row">
         <BaseCard>
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -177,12 +177,12 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     </article>
 
     <!-- TextRotate -->
-    <article :id="part('motion-rotate').id" class="motion-part">
-      <header class="motion-head">
-        <h3 class="motion-name">{{ part('motion-rotate').title }}</h3>
-        <p class="motion-pitch">{{ part('motion-rotate').pitch }}</p>
+    <article :id="part('motion-rotate').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('motion-rotate').title }}</h3>
+        <p class="sc-part-pitch">{{ part('motion-rotate').pitch }}</p>
       </header>
-      <div class="motion-row">
+      <div class="sc-part-row">
         <BaseCard>
           <p class="text-ink text-2xl font-bold tracking-tight">
             Build it
@@ -196,12 +196,12 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     </article>
 
     <!-- TypeWriter -->
-    <article :id="part('motion-type').id" class="motion-part">
-      <header class="motion-head">
-        <h3 class="motion-name">{{ part('motion-type').title }}</h3>
-        <p class="motion-pitch">{{ part('motion-type').pitch }}</p>
+    <article :id="part('motion-type').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('motion-type').title }}</h3>
+        <p class="sc-part-pitch">{{ part('motion-type').pitch }}</p>
       </header>
-      <div class="motion-row">
+      <div class="sc-part-row">
         <BaseCard>
           <p class="text-ink font-mono text-lg">
             <TypeWriter :text="['Write it once.', 'Change the look.', 'Ship it.']" />
@@ -212,12 +212,12 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     </article>
 
     <!-- BaseReveal -->
-    <article :id="part('motion-reveal').id" class="motion-part">
-      <header class="motion-head">
-        <h3 class="motion-name">{{ part('motion-reveal').title }}</h3>
-        <p class="motion-pitch">{{ part('motion-reveal').pitch }}</p>
+    <article :id="part('motion-reveal').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('motion-reveal').title }}</h3>
+        <p class="sc-part-pitch">{{ part('motion-reveal').pitch }}</p>
       </header>
-      <div class="motion-row">
+      <div class="sc-part-row">
         <BaseCard>
           <div class="flex items-center justify-between">
             <p class="text-ink-soft text-xs">Scrolls in, one after another.</p>
@@ -236,12 +236,12 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     </article>
 
     <!-- BaseMarquee -->
-    <article :id="part('motion-marquee').id" class="motion-part">
-      <header class="motion-head">
-        <h3 class="motion-name">{{ part('motion-marquee').title }}</h3>
-        <p class="motion-pitch">{{ part('motion-marquee').pitch }}</p>
+    <article :id="part('motion-marquee').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('motion-marquee').title }}</h3>
+        <p class="sc-part-pitch">{{ part('motion-marquee').pitch }}</p>
       </header>
-      <div class="motion-row">
+      <div class="sc-part-row">
         <BaseCard class="min-w-0">
           <BaseMarquee :duration="28">
             <BaseBadge v-for="name in PALETTE_NAMES" :key="name">{{ name }}</BaseBadge>
@@ -252,12 +252,12 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     </article>
 
     <!-- text-shimmer -->
-    <article :id="part('motion-shimmer').id" class="motion-part">
-      <header class="motion-head">
-        <h3 class="motion-name">{{ part('motion-shimmer').title }}</h3>
-        <p class="motion-pitch">{{ part('motion-shimmer').pitch }}</p>
+    <article :id="part('motion-shimmer').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('motion-shimmer').title }}</h3>
+        <p class="sc-part-pitch">{{ part('motion-shimmer').pitch }}</p>
       </header>
-      <div class="motion-row">
+      <div class="sc-part-row">
         <BaseCard>
           <p class="text-shimmer text-3xl font-bold tracking-tight">Ship on Friday</p>
           <p
@@ -274,12 +274,12 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     </article>
 
     <!-- Attention effects -->
-    <article :id="part('motion-attention').id" class="motion-part">
-      <header class="motion-head">
-        <h3 class="motion-name">{{ part('motion-attention').title }}</h3>
-        <p class="motion-pitch">{{ part('motion-attention').pitch }}</p>
+    <article :id="part('motion-attention').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('motion-attention').title }}</h3>
+        <p class="sc-part-pitch">{{ part('motion-attention').pitch }}</p>
       </header>
-      <div class="motion-row">
+      <div class="sc-part-row">
         <BaseCard>
           <ul class="effects">
             <li class="effect">
@@ -362,45 +362,6 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.8125em;
   color: var(--color-ink);
-}
-
-.motion-part {
-  margin-top: 3rem;
-}
-
-.motion-head {
-  max-width: 60ch;
-}
-
-.motion-name {
-  font-size: 1.125rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--color-ink);
-}
-
-.motion-pitch {
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-ink-soft);
-}
-
-/* One column on a phone, sized by the page rather than by the longest line
-   in it — the marquee's track alone is two thousand pixels wide. Two columns
-   from a laptop up. */
-.motion-row {
-  margin-top: 1rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
-  align-items: start;
-}
-
-@media (min-width: 64rem) {
-  .motion-row {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
 }
 
 .effects {

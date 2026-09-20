@@ -6,6 +6,7 @@ import { Bold, Italic, LayoutGrid, List, Underline } from 'lucide-vue-next'
 import ApiReference from './ApiReference.vue'
 import AppearanceBar from './AppearanceBar.vue'
 import AxesSection from './AxesSection.vue'
+import BasicsSection from './BasicsSection.vue'
 import GalleryExtra from './GalleryExtra.vue'
 import GettingStarted from './GettingStarted.vue'
 import HeroSection from './HeroSection.vue'
@@ -33,16 +34,8 @@ import {
   SettingsRow,
   SkeletonList,
   StatCard,
-  AvatarStack,
   BaseCalendar,
-  BaseChip,
   BaseDatePicker,
-  BaseKbd,
-  BaseLink,
-  BaseRating,
-  BaseSeparator,
-  BaseSkeleton,
-  CopyButton,
   FileDrop,
   TagsInput,
   ToastHost,
@@ -86,19 +79,8 @@ const themeChoice = ref('system')
 const remember = ref(false)
 const toast = useToast()
 
-const chips = ref(['design', 'vue'])
-const unpaidOnly = ref(false)
-const score = ref(4)
 const tags = ref(['design'])
 const files = ref<File[]>([])
-const PEOPLE = [
-  { name: 'Aiko Tanaka' },
-  { name: 'Kenji Mori' },
-  { name: 'Mei Lin' },
-  { name: 'Ravi Patel' },
-  { name: 'Sara Yilmaz' },
-]
-
 const day = ref<string | undefined>(todayKey())
 const due = ref<string | undefined>()
 const period = ref<DateRange | undefined>()
@@ -223,104 +205,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
             </BaseCard>
           </section>
 
-          <section id="basics" class="mt-14">
-            <SectionHeading :tone="NEUTRAL" label="Basics" />
-            <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
-              The small parts every interface is made of. Each is one decision: a rule that can
-              carry a word, a grey box that takes a length rather than a class, a key that is a real
-              <code class="text-xs">&lt;kbd&gt;</code>, a chip that can be taken off.
-            </p>
-
-            <BaseCard class="mt-5">
-              <div class="grid gap-6 sm:grid-cols-2">
-                <div>
-                  <p class="rk-demo-title">BaseSeparator</p>
-                  <p class="text-ink-soft text-sm">Signed in already?</p>
-                  <BaseSeparator label="or" />
-                  <p class="text-ink-soft text-sm">Create an account.</p>
-                </div>
-
-                <div>
-                  <p class="rk-demo-title">BaseSkeleton</p>
-                  <div class="flex items-center gap-3" aria-busy="true">
-                    <BaseSkeleton shape="circle" height="2.5rem" />
-                    <div class="flex-1">
-                      <BaseSkeleton shape="text" width="40%" height="0.75rem" />
-                      <BaseSkeleton class="mt-2" shape="text" width="70%" height="0.75rem" />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <p class="rk-demo-title">BaseKbd</p>
-                  <p class="text-ink-soft text-sm">
-                    Press <BaseKbd :keys="['⌘', 'K']" joiner="+" /> to search.
-                  </p>
-                </div>
-
-                <div>
-                  <p class="rk-demo-title">BaseChip</p>
-                  <div class="flex flex-wrap items-center gap-2">
-                    <BaseChip
-                      v-for="tag in chips"
-                      :key="tag"
-                      :label="tag"
-                      :remove-label="`Remove ${tag}`"
-                      @remove="chips = chips.filter((one) => one !== tag)"
-                    />
-                    <BaseChip
-                      label="Unpaid"
-                      tone="warning"
-                      :selected="unpaidOnly"
-                      @select="unpaidOnly = !unpaidOnly"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <p class="rk-demo-title">AvatarStack</p>
-                  <AvatarStack :people="PEOPLE" :max="3" label="Shared with 5 people" />
-                </div>
-
-                <div>
-                  <p class="rk-demo-title">BaseRating</p>
-                  <div class="flex items-center gap-4">
-                    <BaseRating
-                      v-model="score"
-                      label="Your rating"
-                      :value-label="(value, max) => `${value} out of ${max}`"
-                    />
-                    <BaseRating
-                      :model-value="4"
-                      readonly
-                      size="sm"
-                      label="Average"
-                      :value-label="(value, max) => `${value} out of ${max}`"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <p class="rk-demo-title">BaseLink</p>
-                  <p class="text-ink-soft text-sm">
-                    Read the <BaseLink href="#start">install guide</BaseLink>, or the
-                    <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.
-                  </p>
-                </div>
-
-                <div>
-                  <p class="rk-demo-title">CopyButton</p>
-                  <CopyButton
-                    text="pnpm add rei-kit"
-                    copy-label="Copy the command"
-                    copied-label="Copied"
-                    error-label="Could not copy"
-                    with-text
-                  />
-                </div>
-              </div>
-            </BaseCard>
-          </section>
+          <BasicsSection />
 
           <MotionSection />
 
@@ -678,14 +563,3 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
     <SiteFooter />
   </div>
 </template>
-
-<style scoped>
-.rk-demo-title {
-  margin-bottom: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-ink-soft);
-}
-</style>

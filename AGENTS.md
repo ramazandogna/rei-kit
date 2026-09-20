@@ -387,8 +387,13 @@ breaking change waits for the next major and arrives with its reason in
 
 Four checks hold that line, and each catches something the others cannot:
 
-- **`public-api.spec.ts`** names every export. The kit compiles fine without an
-  export nothing inside it calls, so removing one would otherwise pass.
+- **`public-api.spec.ts`** names every runtime export of all six entries. The
+  kit compiles fine without an export nothing inside it calls, so removing
+  one would otherwise pass. It guarded only `rei-kit` until 2.15.0, which
+  read as more than it was: a composable could vanish from `rei-kit/web` or
+  `rei-kit/pwa` with every check green. Type exports are not covered here —
+  these files are excluded from every tsconfig on purpose — and are held by
+  the usage samples, which are type-checked under `strictTemplates`.
 - **`showcase-catalogue.spec.ts`** regenerates the prop catalogue and asserts it
   matches the exports in both directions, that every component has a
   description, that every component is mounted by a behaviour test, and that

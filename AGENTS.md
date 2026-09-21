@@ -307,6 +307,13 @@ looks almost right.
   a message on screen should _be_ the live region (`BaseAlert`,
   `FormField`, a toast), not be duplicated into this one.
 
+- **A height on `ScrollArea` goes on `ScrollArea`.** The class you write
+  lands on its wrapper, and the wrapper is a flex column, so `max-h-56` or
+  `h-full` reaches the box that actually scrolls. Before 2.23.1 it did not,
+  and the failure was quiet in the worst way: `VirtualList` sizes its window
+  from that box, so an unconstrained one reported the height of the whole
+  list and rendered every row of it.
+
 - **`ScrollArea` or a `div` with `overflow-auto`.** The plain div is fine
   until the app hides the scrollbar, which all three here do on a
   horizontal row — a bar under a 40px strip of chips is louder than the

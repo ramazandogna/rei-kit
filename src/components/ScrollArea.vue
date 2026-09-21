@@ -162,15 +162,42 @@ defineExpose({
 </template>
 
 <style scoped>
+/*
+ * A flex column, so a height written on this box reaches the box that
+ * scrolls.
+ *
+ * The caller's class lands here, on the wrapper, because that is the
+ * element the component renders outermost — so `class="max-h-56"` is the
+ * obvious and only thing to write. It used to do nothing. The viewport
+ * carried `max-height: 100%`, and a percentage height resolves against the
+ * parent's *height*, which is `auto` here; a parent with only a
+ * `max-height` gives it nothing to resolve against, so the rule was inert
+ * and the viewport grew to the full height of its contents.
+ *
+ * Visually that spills. For `VirtualList` it is worse than spilling: the
+ * window is sized from `clientHeight`, so an unconstrained viewport reports
+ * the height of the whole list, every row is "near the viewport", and five
+ * thousand of them render at once. That is the component's whole purpose,
+ * inverted, by the one line every caller writes.
+ *
+ * `flex: 1 1 auto` with `min-height: 0` is what lets the item shrink below
+ * its content, which is the part that is easy to leave out: a flex item's
+ * default `min-height: auto` refuses to go below its content and the box
+ * spills exactly as before.
+ */
 .rk-scroll {
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   min-height: 0;
 }
 
 .rk-scroll-viewport {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
   max-width: 100%;
-  max-height: 100%;
 }
 
 .rk-scroll-viewport.is-x {

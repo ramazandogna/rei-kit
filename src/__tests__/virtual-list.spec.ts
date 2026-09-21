@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { readFileSync } from 'node:fs'
 import { nextTick } from 'vue'
 
 import VirtualList from '../components/VirtualList.vue'
@@ -131,5 +132,120 @@ describe('VirtualList', () => {
     const wrapper = mountList(ROWS)
 
     expect(wrapper.get('ul').attributes('aria-label')).toBe('Bütün kayıtlar')
+  })
+})
+
+/**
+ * The two faults behind "Row 576" running down the whole documentation page.
+ *
+ * Both come from the same place: the window is sized from the viewport's
+ * `clientHeight`, so anything that leaves that number wrong renders the
+ * wrong number of rows — and being wrong in the unbounded direction means
+ * rendering the entire list, which is this component's purpose inverted.
+ */
+describe('the window follows the box it is in', () => {
+  /* Two components observe here — `ScrollArea` for its fades and this one
+     for its row count — so every instance is kept and all of them are
+     fired, rather than guessing which was constructed last. */
+  class FakeResizeObserver {
+    static instances: FakeResizeObserver[] = []
+    observed: Element[] = []
+    disconnect = vi.fn<() => void>()
+
+    constructor(readonly callback: () => void) {
+      FakeResizeObserver.instances.push(this)
+    }
+
+    observe(target: Element) {
+      this.observed.push(target)
+    }
+
+    static resize() {
+      for (const one of FakeResizeObserver.instances) one.callback()
+    }
+
+    static watching(target: Element) {
+      return FakeResizeObserver.instances.filter((one) => one.observed.includes(target))
+    }
+  }
+
+  beforeEach(() => {
+    FakeResizeObserver.instances = []
+    vi.stubGlobal('ResizeObserver', FakeResizeObserver)
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('re-measures when the box changes size under it', async () => {
+    const wrapper = mountList(ROWS)
+    /* The template ref lands after the first render, so the effect that
+       creates the observer runs on the tick after mount. */
+    await nextTick()
+
+    const viewport = wrapper.get('.rk-scroll-viewport').element
+
+    const before = rows(wrapper).length
+
+    /* A sidebar opens, the window is resized, or the panel this list is in
+       is laid out a frame after it mounted. Without the observer the list
+       keeps the height it measured once and renders to it for ever. */
+    Object.defineProperty(viewport, 'clientHeight', { value: 400, configurable: true })
+    FakeResizeObserver.resize()
+    await nextTick()
+
+    expect(rows(wrapper).length).toBeGreaterThan(before)
+    // Two of them watch the viewport: the scroll area's and this list's.
+    expect(FakeResizeObserver.watching(viewport).length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('lets go of the observers when it unmounts', async () => {
+    const wrapper = mountList(ROWS)
+    await nextTick()
+    const observers = [...FakeResizeObserver.instances]
+
+    wrapper.unmount()
+
+    expect(observers.length).toBeGreaterThan(0)
+    for (const one of observers) expect(one.disconnect).toHaveBeenCalled()
+  })
+})
+
+/**
+ * The half jsdom cannot see, asserted as the rule it is.
+ *
+ * `class="max-h-56"` lands on `ScrollArea`'s wrapper, because that is the
+ * outermost element the component renders — it is the obvious and only
+ * thing a caller writes. It used to do nothing: the viewport carried
+ * `max-height: 100%`, and a percentage height resolves against the
+ * parent's *height*, which is `auto`, so the rule was inert and the
+ * viewport grew to the height of all five thousand rows.
+ *
+ * There is no layout in jsdom to catch that, so what is checked is the
+ * mechanism that replaced it. Both halves matter and the second is the one
+ * that gets dropped: a flex item's default `min-height: auto` refuses to
+ * shrink below its content, and the box spills exactly as before.
+ */
+describe('a height written on ScrollArea reaches the box that scrolls', () => {
+  const styles = readFileSync('src/components/ScrollArea.vue', 'utf8')
+  const rule = (selector: string) =>
+    styles.slice(
+      styles.indexOf(`${selector} {`),
+      styles.indexOf('}', styles.indexOf(`${selector} {`)),
+    )
+
+  it('makes the wrapper a flex column', () => {
+    expect(rule('.rk-scroll')).toContain('flex-direction: column')
+    expect(rule('.rk-scroll')).toContain('display: flex')
+  })
+
+  it('lets the viewport shrink below its content', () => {
+    expect(rule('.rk-scroll-viewport')).toContain('min-height: 0')
+    expect(rule('.rk-scroll-viewport')).toContain('flex: 1 1 auto')
+  })
+
+  it('no longer relies on a percentage with nothing to resolve against', () => {
+    expect(rule('.rk-scroll-viewport')).not.toContain('max-height: 100%')
   })
 })

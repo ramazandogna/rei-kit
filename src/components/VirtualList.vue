@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { computed, onMounted, useTemplateRef, watch } from 'vue'
+import { computed, onMounted, onScopeDispose, useTemplateRef, watch, watchEffect } from 'vue'
 
 import { useVirtualWindow } from '../composables/use-virtual-window'
 import ScrollArea from './ScrollArea.vue'
@@ -88,6 +88,30 @@ function measure() {
 onMounted(measure)
 // A list that arrives after mount can change the box's height along with it.
 watch(() => items.length, measure)
+
+/*
+ * And again whenever the box itself changes size.
+ *
+ * `ScrollArea` observes the viewport for its own fades, but that answers a
+ * different question and its result does not reach here. Without this, a
+ * window resize, a sidebar opening, or a list mounted inside a panel that
+ * is laid out a frame later leaves `viewportHeight` at whatever it was —
+ * which renders too few rows and leaves a gap at the bottom, or too many.
+ */
+let observer: ResizeObserver | null = null
+
+watchEffect(() => {
+  observer?.disconnect()
+  observer = null
+
+  const element = area.value?.viewport
+  if (!element || typeof ResizeObserver === 'undefined') return
+
+  observer = new ResizeObserver(measure)
+  observer.observe(element)
+})
+
+onScopeDispose(() => observer?.disconnect())
 
 /** Scrolls a row into view by its index, for an app driving the list itself. */
 function scrollToIndex(index: number) {

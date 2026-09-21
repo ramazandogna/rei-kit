@@ -66,6 +66,40 @@ const router = () =>
  */
 const AXE_TIMEOUT_MS = 30_000
 
+const AXE_OPTIONS: axe.RunOptions = {
+  resultTypes: ['violations'],
+  rules: { 'color-contrast': { enabled: false }, region: { enabled: false } },
+}
+
+/*
+ * Every axe run in this file goes through here, and they are chained rather
+ * than merely awaited.
+ *
+ * axe-core is a module-level singleton: `axe.run` asserts that no run is in
+ * flight, and the flag it checks is cleared by the run finishing, not by
+ * whoever was waiting for it walking away. So when a case hits the timeout
+ * above, vitest abandons the await while the run itself carries on — and
+ * the next case calls `axe.run`, hits the assertion, and fails with "Axe is
+ * already running". So does the one after that. One slow case took the
+ * whole file down, which is how a suite that had found nothing for weeks
+ * could still be the loudest thing in CI.
+ *
+ * Chaining makes the overlap impossible instead of detecting it: a call
+ * that arrives while a run is in flight waits for it, which is exactly what
+ * the assertion was asking for. The abandoned run still returns a result
+ * for a document its own test no longer owns, but that test has already
+ * failed by timeout — what it cannot do any more is fail the next hundred.
+ */
+let inFlight: Promise<unknown> = Promise.resolve()
+
+function runAxe(): Promise<axe.AxeResults> {
+  const next = inFlight.then(() => axe.run(document.body, AXE_OPTIONS))
+  /* `.catch` rather than `next` itself, or one rejection breaks the chain
+     for every run after it — the failure mode this exists to remove. */
+  inFlight = next.catch(() => undefined)
+  return next
+}
+
 describe('the examples, through axe', () => {
   it('has one example per component to audit', () => {
     expect(NAMES.length).toBeGreaterThan(90)
@@ -86,10 +120,7 @@ describe('the examples, through axe', () => {
         global: { plugins: [router()] },
       })
 
-      const results = await axe.run(document.body, {
-        resultTypes: ['violations'],
-        rules: { 'color-contrast': { enabled: false }, region: { enabled: false } },
-      })
+      const results = await runAxe()
 
       const found = results.violations.map(
         (violation) => `${violation.id} (${violation.nodes.length}): ${violation.help}`,
@@ -177,10 +208,7 @@ describe('the examples, through axe, with things open', () => {
 
           audited.add(name)
 
-          const results = await axe.run(document.body, {
-            resultTypes: ['violations'],
-            rules: { 'color-contrast': { enabled: false }, region: { enabled: false } },
-          })
+          const results = await runAxe()
 
           for (const violation of results.violations) {
             const line = `${act} on trigger ${index}: ${violation.id} — ${violation.help}`
@@ -205,5 +233,29 @@ describe('the examples, through axe, with things open', () => {
        notice. If this ever drops, the skip above has started swallowing
        the thing this whole describe exists for. */
     expect(audited.size).toBeGreaterThanOrEqual(13)
+  })
+})
+
+/**
+ * The chaining above, proved by abandoning a run.
+ *
+ * This is the one fault in this file that has actually been seen in CI, and
+ * it is invisible in a green run: everything passes until a machine is slow
+ * enough for one case to hit the timeout, and then a hundred cases fail for
+ * a reason that has nothing to do with any of them. Take the chain out of
+ * `runAxe` and this test is the one that says so.
+ */
+describe('the axe runs in this file', () => {
+  it('cannot be broken by a run whose caller walked away', async () => {
+    document.body.innerHTML = '<main><h1>Something for axe to walk</h1></main>'
+
+    /* What a timed-out case leaves behind: a run in flight with nobody
+       waiting for it. The `catch` is only so Node does not call the
+       rejection unhandled — it is not a wait. */
+    void runAxe().catch(() => undefined)
+
+    await expect(runAxe()).resolves.toHaveProperty('violations')
+
+    document.body.innerHTML = ''
   })
 })

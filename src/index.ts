@@ -146,6 +146,14 @@ export { default as ScrollArea } from './components/ScrollArea.vue'
  * that is usually dropped.
  */
 export { default as VirtualList } from './components/VirtualList.vue'
+/**
+ * `AnnounceHost` and `useAnnounce`, for saying something to a reader when
+ * nothing on screen has changed enough to say it: a filter that narrowed a
+ * list, a route that changed, a draft that saved itself.
+ */
+export { default as AnnounceHost } from './components/AnnounceHost.vue'
+export { useAnnounce, announce } from './composables/use-announce'
+export type { AnnounceOptions } from './composables/use-announce'
 export { default as AvatarStack } from './components/AvatarStack.vue'
 export { default as BaseCalendar } from './components/BaseCalendar.vue'
 export { default as BaseChip } from './components/BaseChip.vue'

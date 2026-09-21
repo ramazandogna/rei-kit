@@ -3,7 +3,14 @@ import { CalendarRange, ReceiptText, UserStar } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
 import { BaseButton, BaseCard, BaseStepper, SectionHeading, TabBar } from '../src/index'
-import { BaseBreadcrumb, BasePagination, BaseTabs, MegaMenu, NavLinks } from '../src/web/index'
+import {
+  BaseBreadcrumb,
+  BasePagination,
+  BaseTabs,
+  MegaMenu,
+  NavLinks,
+  SkipLink,
+} from '../src/web/index'
 import { NAV_PARTS } from './nav-parts'
 import type { NavPartId } from './nav-parts'
 import PropTable from './PropTable.vue'
@@ -91,6 +98,27 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
   <section id="navigation">
     <SectionHeading :tone="NEUTRAL" label="Navigation" />
     <p class="text-ink-soft mt-2 text-sm">The parts that say where you are and where you can go.</p>
+
+    <article :id="part('nav-skip').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('nav-skip').title }}</h3>
+        <p class="sc-part-pitch">{{ part('nav-skip').pitch }}</p>
+      </header>
+      <BaseCard class="mt-4">
+        <!-- Press Tab with this card in view: the link appears at the top
+             left, and Enter puts focus on the paragraph below. -->
+        <div class="relative">
+          <SkipLink for="sc-skip-target" label="İçeriğe geç" />
+          <nav class="mb-3 flex gap-3" aria-label="Example sections">
+            <a href="#sc-skip-a" class="text-ink-soft text-sm">Products</a>
+            <a href="#sc-skip-b" class="text-ink-soft text-sm">Pricing</a>
+            <a href="#sc-skip-c" class="text-ink-soft text-sm">Docs</a>
+          </nav>
+          <p id="sc-skip-target" class="text-ink text-sm">The content the link skips to.</p>
+        </div>
+      </BaseCard>
+      <PropTable name="SkipLink" />
+    </article>
 
     <article :id="part('nav-links').id" class="sc-part">
       <header class="sc-part-head">

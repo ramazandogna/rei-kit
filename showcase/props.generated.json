@@ -56,6 +56,12 @@
     ]
   },
   {
+    "name": "AnnounceHost",
+    "entry": "rei-kit",
+    "summary": "The two live regions `announce()` speaks through. Render one per app, anywhere — nothing here is ever visible.",
+    "props": []
+  },
+  {
     "name": "AuthForm",
     "entry": "rei-kit/app",
     "summary": "The sign-in and sign-up forms, which are one component.",
@@ -3397,6 +3403,27 @@
         "type": "string",
         "description": "",
         "default": "'Loading…'"
+      }
+    ]
+  },
+  {
+    "name": "SkipLink",
+    "entry": "rei-kit/web",
+    "summary": "\"Skip to content\" — the first thing in the tab order, hidden until it has focus.",
+    "props": [
+      {
+        "name": "for",
+        "required": true,
+        "type": "string",
+        "description": "The `id` of what to skip to, usually the page's `<main>`. Without the `#`.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "What it says, e.g. \"İçeriğe geç\". Already translated.",
+        "default": ""
       }
     ]
   },

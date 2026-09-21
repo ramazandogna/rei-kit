@@ -99,3 +99,10 @@ export type { MegaMenuColumn, MegaMenuItem, MegaMenuLink } from './MegaMenu.vue'
 
 export { default as NavLinks } from './NavLinks.vue'
 export type { NavLinkItem } from './NavLinks.vue'
+
+/**
+ * `SkipLink`, the first thing in the tab order. The kit ships the header
+ * that creates the need for it — bypassing a repeated block is WCAG 2.4.1,
+ * Level A — and it moves focus itself rather than trusting the fragment.
+ */
+export { default as SkipLink } from './SkipLink.vue'

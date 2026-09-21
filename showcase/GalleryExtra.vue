@@ -6,6 +6,7 @@ import { Plus } from 'lucide-vue-next'
 import {
   ActivityGrid,
   ScrollArea,
+  AnnounceHost,
   VirtualList,
   BaseAvatar,
   BaseButton,
@@ -21,6 +22,7 @@ import {
   SectionHeading,
   formatDate,
   lastNDays,
+  useAnnounce,
   useToast,
 } from '../src/index'
 import { AuthShell, FabButton, OfflineBanner } from '../src/app/index'
@@ -77,6 +79,14 @@ const toast = useToast()
 const SCROLL_MONTHS = Array.from({ length: 12 }, (_, i) =>
   formatDate(new Date(2026, i, 1), { month: 'long' }),
 )
+
+const { announce } = useAnnounce()
+const resultCount = ref(0)
+
+function announceResults() {
+  resultCount.value = (resultCount.value + 3) % 12
+  announce(`${resultCount.value} sonuç`)
+}
 
 /** Long enough that rendering all of it would be the reason to reach for it. */
 const MANY_ROWS = Array.from({ length: 5000 }, (_, index) => ({
@@ -263,6 +273,23 @@ function onCommand(id: string) {
           </template>
         </VirtualList>
         <PropTable name="VirtualList" />
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">AnnounceHost</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          Nothing here is ever visible, which is the point. The kit already has a live region in a
+          dozen components, but each belongs to something on screen; this is for what has none — a
+          filter that narrowed a list, a route that changed, a draft that saved itself. Press the
+          button with a screen reader on: the count changes silently on screen and is said out loud,
+          including the second time it lands on the same number.
+        </p>
+        <AnnounceHost />
+        <div class="flex items-center gap-3">
+          <BaseButton variant="secondary" @click="announceResults">Filtrele</BaseButton>
+          <span class="text-ink-soft text-sm">{{ resultCount }} sonuç</span>
+        </div>
+        <PropTable name="AnnounceHost" />
       </BaseCard>
 
       <BaseCard class="mt-4">

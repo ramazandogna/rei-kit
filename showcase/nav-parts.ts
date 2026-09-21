@@ -8,6 +8,13 @@
  */
 export const NAV_PARTS = [
   {
+    id: 'nav-skip',
+    label: 'SkipLink',
+    title: 'SkipLink — past the header, in one press',
+    pitch:
+      'The first thing in the tab order and invisible until it has focus. The kit ships the header that creates the need for it, and bypassing a repeated block is WCAG 2.4.1, Level A. The half usually broken is the important one: a bare link to #main scrolls the page and leaves focus in the header, so the next Tab is the second nav item and nothing happened. This moves focus itself.',
+  },
+  {
     id: 'nav-links',
     label: 'NavLinks',
     title: 'NavLinks — the row at the top',

@@ -154,7 +154,11 @@ looks almost right.
   chosen side keeping the order things were added in.
 - **`BaseTable` or `DataTable`.** The table draws rows. The data table adds
   the three things real data grows: a sort a screen reader can hear, a
-  selection keyed by row rather than by index, and a loading state.
+  selection keyed by row rather than by index, and a loading state. Both
+  scroll through `ScrollArea`, so a wide table is a named focus stop only
+  when its cells are text — a table of links already moves under the
+  keyboard, and the stop both of them used to have unconditionally was a
+  press for nothing on every one.
 - **`BaseListbox`, `BaseRadioGroup` or `BaseSelect`.** A radio group is a
   handful of options, all visible and all equal. A select opens the
   platform's own picker. A listbox is a long list that stays on screen and

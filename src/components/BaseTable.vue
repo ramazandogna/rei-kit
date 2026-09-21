@@ -1,4 +1,6 @@
 <script setup lang="ts" generic="Row extends Record<string, unknown>">
+import ScrollArea from './ScrollArea.vue'
+
 export interface Column<Row> {
   /** Key into the row, and the slot name for a custom cell. */
   key: string & keyof Row
@@ -63,7 +65,12 @@ const keyFor = (row: Row, index: number) => (rowKey ? String(row[rowKey]) : inde
 </script>
 
 <template>
-  <div class="rk-table-scroll" tabindex="0" role="region" :aria-label="caption">
+  <!-- `ScrollArea` rather than a scroller written here: it makes this a
+       named focus stop only when it overflows *and* holds nothing
+       focusable. A table of links or buttons already moves under the
+       keyboard, and the stop this used to have unconditionally was a press
+       for nothing on every one of them. -->
+  <ScrollArea axis="x" :label="caption" class="rk-table-scroll">
     <table class="rk-table">
       <caption :class="captionHidden ? 'rk-table-caption-hidden' : 'rk-table-caption'">
         {{
@@ -106,20 +113,10 @@ const keyFor = (row: Row, index: number) => (rowKey ? String(row[rowKey]) : inde
         </tr>
       </tbody>
     </table>
-  </div>
+  </ScrollArea>
 </template>
 
 <style scoped>
-.rk-table-scroll {
-  overflow-x: auto;
-}
-
-.rk-table-scroll:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-  border-radius: var(--radius-cell);
-}
-
 .rk-table {
   width: 100%;
   border-collapse: collapse;

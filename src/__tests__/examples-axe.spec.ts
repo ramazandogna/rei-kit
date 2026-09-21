@@ -52,38 +52,56 @@ const router = () =>
     routes: [{ path: '/:rest(.*)*', component: Blank }],
   })
 
+/*
+ * axe-core in jsdom is slow and, more to the point, variable: it walks the
+ * whole document for every one of these, and on a loaded machine a single
+ * case can take several seconds. At the default five it fails one case in
+ * three runs, and a different one each time — which is what gives it away
+ * as patience rather than a fault.
+ *
+ * This raises the patience and changes no assertion. It was measured
+ * across six runs of the suite on this machine, three on the commit before
+ * the one that first showed it: the same rate either way, so it is not a
+ * regression, it is the suite.
+ */
+const AXE_TIMEOUT_MS = 30_000
+
 describe('the examples, through axe', () => {
   it('has one example per component to audit', () => {
     expect(NAMES.length).toBeGreaterThan(90)
   })
 
-  it.each(NAMES)('%s renders nothing axe objects to', async (name) => {
-    const mod = (await import(`../../showcase/examples/${name}.vue`)) as {
-      default: Parameters<typeof mount>[0]
-    }
+  it.each(NAMES)(
+    '%s renders nothing axe objects to',
+    async (name) => {
+      const mod = (await import(`../../showcase/examples/${name}.vue`)) as {
+        default: Parameters<typeof mount>[0]
+      }
 
-    const host = document.createElement('div')
-    document.body.append(host)
+      const host = document.createElement('div')
+      document.body.append(host)
 
-    const wrapper = mount(mod.default, {
-      attachTo: host,
-      global: { plugins: [router()] },
-    })
+      const wrapper = mount(mod.default, {
+        attachTo: host,
+        global: { plugins: [router()] },
+      })
 
-    const results = await axe.run(document.body, {
-      resultTypes: ['violations'],
-      rules: { 'color-contrast': { enabled: false }, region: { enabled: false } },
-    })
+      const results = await axe.run(document.body, {
+        resultTypes: ['violations'],
+        rules: { 'color-contrast': { enabled: false }, region: { enabled: false } },
+      })
 
-    const found = results.violations.map(
-      (violation) => `${violation.id} (${violation.nodes.length}): ${violation.help}`,
-    )
+      const found = results.violations.map(
+        (violation) => `${violation.id} (${violation.nodes.length}): ${violation.help}`,
+      )
 
-    wrapper.unmount()
-    host.remove()
+      wrapper.unmount()
+      host.remove()
 
-    expect(found).toEqual([])
-  })
+      expect(found).toEqual([])
+    },
+    AXE_TIMEOUT_MS,
+  )
 })
 
 /**
@@ -106,51 +124,86 @@ describe('the examples, through axe', () => {
 describe('the examples, through axe, with things open', () => {
   const TRIGGERS = 'button, input, [role="combobox"], summary, [aria-expanded], [aria-haspopup]'
 
-  it.each(NAMES)('%s opens onto nothing axe objects to', async (name) => {
-    const mod = (await import(`../../showcase/examples/${name}.vue`)) as {
-      default: Parameters<typeof mount>[0]
-    }
+  /* Which components actually opened onto something. The skip below is what
+     makes this suite fast, and a skip is also how it could quietly stop
+     auditing anything at all — so what it did is counted and checked. */
+  const audited = new Set<string>()
 
-    const found: string[] = []
-
-    for (const act of ['click', 'focus', 'pointerenter', 'arrow'] as const) {
-      for (let index = 0; index < 3; index += 1) {
-        document.body.innerHTML = ''
-        const host = document.createElement('div')
-        document.body.append(host)
-
-        const wrapper = mount(mod.default, {
-          attachTo: host,
-          global: { plugins: [router()] },
-        })
-
-        const triggers = wrapper.findAll(TRIGGERS)
-        if (index >= triggers.length) {
-          wrapper.unmount()
-          break
-        }
-
-        if (act === 'arrow') await triggers[index]!.trigger('keydown', { key: 'ArrowDown' })
-        else await triggers[index]!.trigger(act)
-
-        await nextTick()
-        await new Promise((resolve) => setTimeout(resolve, 0))
-
-        const results = await axe.run(document.body, {
-          resultTypes: ['violations'],
-          rules: { 'color-contrast': { enabled: false }, region: { enabled: false } },
-        })
-
-        for (const violation of results.violations) {
-          const line = `${act} on trigger ${index}: ${violation.id} — ${violation.help}`
-          if (!found.includes(line)) found.push(line)
-        }
-
-        wrapper.unmount()
+  it.each(NAMES)(
+    '%s opens onto nothing axe objects to',
+    async (name) => {
+      const mod = (await import(`../../showcase/examples/${name}.vue`)) as {
+        default: Parameters<typeof mount>[0]
       }
-    }
 
-    document.body.innerHTML = ''
-    expect(found).toEqual([])
+      const found: string[] = []
+
+      for (const act of ['click', 'focus', 'pointerenter', 'arrow'] as const) {
+        for (let index = 0; index < 3; index += 1) {
+          document.body.innerHTML = ''
+          const host = document.createElement('div')
+          document.body.append(host)
+
+          const wrapper = mount(mod.default, {
+            attachTo: host,
+            global: { plugins: [router()] },
+          })
+
+          const triggers = wrapper.findAll(TRIGGERS)
+          if (index >= triggers.length) {
+            wrapper.unmount()
+            break
+          }
+
+          const before = document.body.innerHTML
+
+          if (act === 'arrow') await triggers[index]!.trigger('keydown', { key: 'ArrowDown' })
+          else await triggers[index]!.trigger(act)
+
+          await nextTick()
+          await new Promise((resolve) => setTimeout(resolve, 0))
+
+          /* Nothing opened, so this tree is the one the closed-state sweep
+             above already audited and axe would be asked the same question
+             twice. Most of the 12 pokes per component land here — skipping
+             them is what keeps this suite inside its timeout, and what a
+             timeout being hit costs is not one test: axe-core is a
+             module-level singleton, so a run abandoned mid-flight makes
+             every test after it fail with "Axe is already running". */
+          if (document.body.innerHTML === before) {
+            wrapper.unmount()
+            continue
+          }
+
+          audited.add(name)
+
+          const results = await axe.run(document.body, {
+            resultTypes: ['violations'],
+            rules: { 'color-contrast': { enabled: false }, region: { enabled: false } },
+          })
+
+          for (const violation of results.violations) {
+            const line = `${act} on trigger ${index}: ${violation.id} — ${violation.help}`
+            if (!found.includes(line)) found.push(line)
+          }
+
+          wrapper.unmount()
+        }
+      }
+
+      document.body.innerHTML = ''
+      expect(found).toEqual([])
+    },
+    // Twelve axe runs per case here rather than one, so this needs the
+    // patience even more than the sweep above.
+    AXE_TIMEOUT_MS,
+  )
+
+  it('audited the components that actually open onto something', () => {
+    /* A floor, not the coverage: `BaseCombobox` holds its list with
+       `v-show`, so it is audited in both states while adding no nodes to
+       notice. If this ever drops, the skip above has started swallowing
+       the thing this whole describe exists for. */
+    expect(audited.size).toBeGreaterThanOrEqual(13)
   })
 })

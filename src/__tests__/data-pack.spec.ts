@@ -49,14 +49,46 @@ describe('BaseTable', () => {
     expect(w.findAll('th').every((th) => th.attributes('scope') === 'col')).toBe(true)
   })
 
-  it('makes its own scroller reachable by keyboard', () => {
-    // A region you can only reach by dragging is a region a keyboard cannot
-    // read at all -- one line of markup, and the line everyone forgets.
-    const scroller = build().find('.rk-table-scroll')
+  it('scrolls through ScrollArea rather than a scroller of its own', () => {
+    const wrapper = build()
 
-    expect(scroller.attributes('tabindex')).toBe('0')
-    expect(scroller.attributes('role')).toBe('region')
-    expect(scroller.attributes('aria-label')).toBe('Spending')
+    // Third copy of the same four lines in the kit, after CodeBlock and
+    // the showcase. It is one component now, and it is the component that
+    // knows when the stop is worth having.
+    expect(wrapper.find('.rk-table-scroll .rk-scroll-viewport').exists()).toBe(true)
+  })
+
+  it('becomes a named focus stop when it overflows and the cells are only text', async () => {
+    const wrapper = build()
+    const viewport = wrapper.get('.rk-scroll-viewport')
+
+    // jsdom lays nothing out, so the overflow is set by hand — it is the
+    // input the decision is made from.
+    Object.defineProperty(viewport.element, 'clientWidth', { value: 100, configurable: true })
+    Object.defineProperty(viewport.element, 'scrollWidth', { value: 600, configurable: true })
+    await viewport.trigger('scroll')
+
+    // A region only a drag can reach is a region a keyboard cannot read at
+    // all, and the end of the widest row is simply unreachable.
+    expect(viewport.attributes('tabindex')).toBe('0')
+    expect(viewport.attributes('role')).toBe('region')
+    expect(viewport.attributes('aria-label')).toBe('Spending')
+  })
+
+  it('does not take a stop of its own when a cell already takes focus', async () => {
+    const wrapper = mount(BaseTable, {
+      props: { columns, rows, caption: 'Spending' },
+      slots: { name: '<a href="#x">bir bağlantı</a>' },
+    })
+    const viewport = wrapper.get('.rk-scroll-viewport')
+
+    Object.defineProperty(viewport.element, 'clientWidth', { value: 100, configurable: true })
+    Object.defineProperty(viewport.element, 'scrollWidth', { value: 600, configurable: true })
+    await viewport.trigger('scroll')
+
+    // Tab already scrolls the next link into view; a stop here would be a
+    // press for nothing on every table of links in the app.
+    expect(viewport.attributes('tabindex')).toBeUndefined()
   })
 
   it('spans the empty row across every column', () => {

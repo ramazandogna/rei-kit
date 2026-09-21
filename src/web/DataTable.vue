@@ -3,6 +3,7 @@ import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-vue-next'
 import { computed } from 'vue'
 
 import BaseCheckbox from '../components/BaseCheckbox.vue'
+import ScrollArea from '../components/ScrollArea.vue'
 import BaseSkeleton from '../components/BaseSkeleton.vue'
 import type { Column } from '../components/BaseTable.vue'
 
@@ -142,7 +143,7 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
 </script>
 
 <template>
-  <div class="rk-data-scroll" tabindex="0" role="region" :aria-label="caption">
+  <ScrollArea axis="x" :label="caption" class="rk-data-scroll">
     <table class="rk-data" :class="{ 'is-sticky': stickyHeader }">
       <caption :class="captionHidden ? 'rk-data-caption-hidden' : 'rk-data-caption'">
         {{
@@ -241,20 +242,15 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
         </tr>
       </tbody>
     </table>
-  </div>
+  </ScrollArea>
 </template>
 
 <style scoped>
-/* The scroller is focusable: a region only a drag can reach is a region a
-   keyboard cannot read at all. */
+/* `ScrollArea` owns the scrolling and decides whether this is a focus
+   stop: with selection or a sortable column there is already a way in for
+   a keyboard, and a stop of its own would be a press for nothing. */
 .rk-data-scroll {
-  overflow-x: auto;
   border-radius: var(--radius-card);
-}
-
-.rk-data-scroll:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
 }
 
 .rk-data {

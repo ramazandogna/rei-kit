@@ -14,9 +14,9 @@ import { OVERLAY_PARTS } from './overlay-parts'
  * heading gains its way in on the same commit.
  */
 export const SECTIONS = [
-  { id: 'start', label: 'Get started' },
   { id: 'axes', label: 'Themes: materials & palettes' },
   { id: 'evidence', label: 'Evidence: size and guards' },
+  { id: 'start', label: 'Get started' },
   { id: 'action', label: 'Action' },
   { id: 'basics', label: 'Basics' },
   ...BASICS_PARTS.map((part) => ({ id: part.id, label: part.label, sub: true })),

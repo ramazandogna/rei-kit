@@ -156,10 +156,14 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
     </header>
 
     <PageContainer id="top" as="main">
+      <!-- The order is the argument: what it is, what is different about it,
+           where that leaves it against the others — and only then how to
+           install it. Somebody who already knows they want it has the
+           hero's own "Get started" button. -->
       <HeroSection />
-      <GettingStarted />
       <AxesSection />
       <EvidenceSection />
+      <GettingStarted />
 
       <div class="mt-20 max-w-[60ch]">
         <SectionHeading :tone="NEUTRAL" label="Components" />

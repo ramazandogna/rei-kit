@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { BarChart, BaseCard, BaseTable, DonutChart, SectionHeading, ToneDot } from '../src/index'
+import { BarChart, BaseCard, BaseTable, DonutChart, SectionHeading } from '../src/index'
+import { BaseDisclosure } from '../src/web/index'
 import type { Column } from '../src/index'
 import bench from '../bench/results.json'
 import { NEUTRAL } from './tones'
@@ -30,7 +31,6 @@ interface Row {
   js: string
   css: string
   total: string
-  ours: boolean
 }
 
 const kb = (bytes: number) => `${(bytes / 1024).toFixed(1)} KB`
@@ -44,7 +44,6 @@ const suites = computed(() =>
       js: kb(row.js),
       css: row.css === 0 ? '—' : kb(row.css),
       total: kb(row.js + row.css),
-      ours: row.name.startsWith('rei-kit'),
     })),
   })),
 )
@@ -103,6 +102,29 @@ const columns: readonly Column<Row>[] = [
  * project can, and because removing the thing it guards makes it go red —
  * that is the bar for a row, not "there is a test file".
  */
+/*
+ * Three, chosen because each names a fault nothing else in the project can
+ * see and a reader can picture in one line. The full list is a wall, and a
+ * wall is read as decoration.
+ */
+const HEADLINE = [
+  {
+    file: 'direction-keys.spec.ts',
+    what: 'ArrowLeft, in Arabic, must move forward',
+    why: 'ten components were walking backwards through themselves, and it type-checked, rendered and passed axe',
+  },
+  {
+    file: 'examples-axe.spec.ts',
+    what: 'every example audited open, not just closed',
+    why: 'a menu, a dialog and a combobox list are exactly where the ARIA lives',
+  },
+  {
+    file: 'consumer.yml',
+    what: 'the real tarball, installed into three apps',
+    why: 'every one of their own test suites runs against it before a release goes out',
+  },
+]
+
 const GUARDS = [
   {
     file: 'direction-styles.spec.ts',
@@ -142,103 +164,66 @@ const GUARDS = [
 <template>
   <section id="evidence" class="mt-24">
     <SectionHeading :tone="NEUTRAL" label="Evidence" />
-    <h2 class="text-ink mt-4 text-3xl font-bold tracking-tight">
-      Two claims, and how to check them.
-    </h2>
-    <p class="text-ink-soft mt-3 max-w-[60ch] text-[0.9375rem] leading-relaxed">
-      A gallery shows you what exists. It cannot show you what a kit costs, or whether the rules it
-      states are enforced. Both are below, and both are reproducible.
+    <h2 class="text-ink mt-4 text-3xl font-bold tracking-tight">Smaller as you use more of it.</h2>
+    <p class="text-ink-soft mt-3 max-w-[58ch] text-[0.9375rem] leading-relaxed">
+      Every kit is small in a demo. This one is a flat stylesheet and per-component JavaScript, so
+      the tenth component costs almost nothing — the opposite shape from a kit that ships its styles
+      inside its JavaScript. Here is what that looks like on a real screen: ten components, bundled
+      the way each kit's own documentation sets it up.
     </p>
 
     <BaseCard class="mt-8">
-      <h3 class="text-ink text-lg font-semibold">The smallest of six, measured</h3>
-      <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
-        Two cases, because one is how a size comparison lies in either direction. Three components
-        is the smallest real app and the case <em>least</em> favourable to this kit. Ten adds a
-        select, a checkbox, a switch, tabs, a data table, a tooltip and a card — a screen rather
-        than a demo. Each kit is bundled the way its own documentation sets it up, styles included.
-        Minified, gzip level 9, Vue excluded.
+      <BarChart
+        :series="chart"
+        label="Total bundle size at ten components, by kit"
+        :value-label="(value) => `${value.toFixed(1)} KB`"
+        :fill="(item) => (item.ours ? 'bg-positive' : 'bg-muted')"
+      />
+
+      <p class="text-ink-soft mt-5 max-w-[58ch] text-sm leading-relaxed">
+        A quarter smaller at three components;
+        <strong class="text-ink">{{ lead }}× smaller at ten</strong>. Seven more components cost
+        this kit about 5 KB and cost the others 60 to 125, because only the JavaScript grows here.
+      </p>
+      <p class="text-ink-soft mt-2 max-w-[58ch] text-sm leading-relaxed">
+        Drawn with the kit's own <code class="text-ink">BarChart</code>, from the file
+        <code class="text-ink">bench/run.mjs</code> writes. It is a table underneath, the scale
+        starts at zero, and a test fails if the numbers are not the published version's.
       </p>
 
-      <div class="mt-6">
-        <h4 class="text-ink text-sm font-semibold">Ten components, total</h4>
-        <div class="mt-3">
-          <BarChart
-            :series="chart"
-            label="Total bundle size at ten components, by kit"
-            :value-label="(value) => `${value.toFixed(1)} KB`"
-            :fill="(item) => (item.ours ? 'bg-positive' : 'bg-muted')"
-          />
-        </div>
-        <p class="text-ink-soft mt-3 max-w-[62ch] text-xs leading-relaxed">
-          Drawn with this kit's own <code class="text-ink">BarChart</code>, from the same file the
-          tables below read. It is a real table underneath — every kit a row heading, every number
-          printed beside its bar — and the scale starts at zero, which is the only reason a chart on
-          a page like this one is worth looking at.
-        </p>
-      </div>
+      <div class="mt-5">
+        <BaseDisclosure title="The numbers, both cases" :heading-level="4">
+          <div v-for="suite in suites" :key="suite.id" class="mt-4 first:mt-1">
+            <h5 class="text-ink text-sm font-semibold">{{ suite.label }}</h5>
+            <div class="mt-2">
+              <BaseTable
+                :columns="columns"
+                :rows="suite.rows"
+                :caption="`Bundle size by kit — ${suite.label}`"
+                caption-hidden
+              />
+            </div>
+          </div>
 
-      <div v-for="suite in suites" :key="suite.id" class="mt-6">
-        <h4 class="text-ink text-sm font-semibold">{{ suite.label }}</h4>
-        <div class="mt-2">
-          <BaseTable
-            :columns="columns"
-            :rows="suite.rows"
-            :caption="`Bundle size by kit — ${suite.label}`"
-            caption-hidden
-          >
-            <template #kit="{ row }">
-              <span class="inline-flex items-center gap-2" :class="row.ours ? 'font-semibold' : ''">
-                <ToneDot v-if="row.ours" fill="bg-primary" label="This kit" />
-                {{ row.kit }}
-              </span>
-            </template>
-          </BaseTable>
-        </div>
-      </div>
-
-      <div class="text-ink-soft mt-5 max-w-[62ch] space-y-3 text-sm leading-relaxed">
-        <p>
-          <strong class="text-ink">The slope is the point, not the total.</strong> Seven more
-          components cost this kit 5 KB, because the stylesheet does not move and only the
-          JavaScript grows. For the kits that put their styles in the JavaScript there is no flat
-          part at all, so the same seven cost them between 60 and 125 KB. The gap goes from a
-          quarter smaller at three components to
-          <strong class="text-ink">{{ lead }}× smaller at ten</strong>.
-        </p>
-        <p>
-          <strong class="text-ink">Read the two columns differently.</strong> The JavaScript is only
-          what those three components need: each one is its own tree-shakeable module, and there are
-          no runtime dependencies at all. Naive UI, PrimeVue and Ant Design put their styles inside
-          the JavaScript, which is why their CSS column is empty and their JS column is not.
-        </p>
-        <p>
-          The CSS is the entire preset — every component, all four materials, all ten palettes — and
-          it is the same size whether an app imports three components or every one of them. That is
-          the trade this kit makes on purpose: a flat stylesheet paid for once, against
-          per-component JavaScript paid for each time.
-        </p>
-        <p>
-          <strong class="text-ink">What this does not say:</strong> nothing has been measured past
-          ten components, and these are ten components imported rather than an app using them, so
-          the table says what it says and no more. The ten-component row uses this kit's
-          <code class="text-ink">DataTable</code> rather than its plainer
-          <code class="text-ink">BaseTable</code>, because the other five bring a data grid and the
-          comparable part is the one that has sorting and selection — it is the heavier of the two.
-          Run it yourself with
-          <code class="text-ink">cd bench &amp;&amp; npm install &amp;&amp; npm run bench</code>; it
-          writes the numbers this page reads. Measured {{ bench.measured }}.
-        </p>
+          <p class="text-ink-soft mt-4 max-w-[58ch] text-sm leading-relaxed">
+            Three components is the case <em>least</em> favourable to a flat stylesheet, and it is
+            still the one this kit wins. Nothing has been measured past ten, and these are ten
+            components imported rather than an app using them. The ten-component row uses
+            <code class="text-ink">DataTable</code> and not the plainer
+            <code class="text-ink">BaseTable</code>, because the others bring a data grid and the
+            comparable part is the heavier one. Run it yourself:
+            <code class="text-ink">cd bench &amp;&amp; npm run bench</code>. Measured
+            {{ bench.measured }}.
+          </p>
+        </BaseDisclosure>
       </div>
     </BaseCard>
 
     <BaseCard class="mt-6">
       <h3 class="text-ink text-lg font-semibold">Where the flat 23 KB goes</h3>
-      <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
-        The flat column, broken up. Nearly all of it is one file — every component's scoped styles,
-        shipped whole, because they are plain CSS with no utility classes for Tailwind to shake out.
-        That is what an app using three components carries and an app using ninety does not pay
-        again.
+      <p class="text-ink-soft mt-2 max-w-[58ch] text-sm leading-relaxed">
+        Nearly all of it is one file: every component's styles, shipped whole. That is what an app
+        using three components carries — and what an app using ninety never pays again.
       </p>
 
       <div class="mt-5">
@@ -249,37 +234,39 @@ const GUARDS = [
           :fill="(_, index) => TONES[index % TONES.length]!"
         />
       </div>
-
-      <p class="text-ink-soft mt-5 max-w-[62ch] text-sm leading-relaxed">
-        Bars above and a ring here on purpose: the six kits need ranking, which is lengths, and
-        these five are parts of one number, which is what a ring is for. Reaching for the ring to
-        rank things is the most common chart mistake there is, and
-        <code class="text-ink">AGENTS.md</code> says so where the components are described.
-      </p>
     </BaseCard>
 
     <BaseCard class="mt-6">
-      <h3 class="text-ink text-lg font-semibold">Every rule is a check that goes red</h3>
-      <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
-        This kit does not assert that it is accessible, or stable, or right-to-left. It has checks
-        that fail, and every one of them was verified by breaking the thing it guards. These are the
-        ones that catch what nothing else in the project can.
+      <h3 class="text-ink text-lg font-semibold">It does not claim to be accessible</h3>
+      <p class="text-ink-soft mt-2 max-w-[58ch] text-sm leading-relaxed">
+        It has checks that go red instead, and each was verified by breaking the thing it guards.
+        Three of the 1,333, to show what kind of thing they are:
       </p>
 
-      <dl class="mt-5 grid gap-4 sm:grid-cols-2">
-        <div v-for="guard in GUARDS" :key="guard.file" class="min-w-0">
-          <dt class="text-ink font-mono text-xs font-semibold">{{ guard.file }}</dt>
-          <dd class="text-ink-soft mt-1 text-sm leading-relaxed">{{ guard.what }}</dd>
-        </div>
-      </dl>
+      <ul class="text-ink-soft mt-4 max-w-[58ch] space-y-2 text-sm leading-relaxed">
+        <li v-for="guard in HEADLINE" :key="guard.file">
+          <strong class="text-ink">{{ guard.what }}</strong> — {{ guard.why }}
+        </li>
+      </ul>
 
-      <p class="text-ink-soft mt-5 max-w-[62ch] text-sm leading-relaxed">
-        <strong class="text-ink">And what is still not measured.</strong> These run in jsdom, which
-        has no layout — so contrast and focus order are out of reach and the axe rules for them are
-        switched off rather than quietly passing. The palettes are checked against WCAG AA by
-        measurement; focus order is not. That needs a real browser, and until it exists this page
-        says so.
-      </p>
+      <div class="mt-5">
+        <BaseDisclosure title="The rest, and what is still not measured" :heading-level="4">
+          <dl class="mt-1 grid gap-4 sm:grid-cols-2">
+            <div v-for="guard in GUARDS" :key="guard.file" class="min-w-0">
+              <dt class="text-ink font-mono text-xs font-semibold">{{ guard.file }}</dt>
+              <dd class="text-ink-soft mt-1 text-sm leading-relaxed">{{ guard.what }}</dd>
+            </div>
+          </dl>
+
+          <p class="text-ink-soft mt-5 max-w-[58ch] text-sm leading-relaxed">
+            <strong class="text-ink">What is still not measured.</strong> These run in jsdom, which
+            has no layout, so contrast and focus order are out of reach — the axe rules for both are
+            switched off rather than quietly passing, and the palettes are checked by measuring
+            their pairings instead. That needs a real browser, and until it exists this page says
+            so.
+          </p>
+        </BaseDisclosure>
+      </div>
     </BaseCard>
   </section>
 </template>

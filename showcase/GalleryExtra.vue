@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { Plus } from 'lucide-vue-next'
 
 import {
+  ActivityGrid,
   BaseAvatar,
   BaseButton,
   BaseCard,
@@ -16,6 +17,7 @@ import {
   ErrorBoundary,
   PriceCard,
   SectionHeading,
+  lastNDays,
   useToast,
 } from '../src/index'
 import { AuthShell, FabButton, OfflineBanner } from '../src/app/index'
@@ -65,6 +67,14 @@ const Boom = {
 const boom = ref(false)
 
 const toast = useToast()
+
+/* A year of made-up busyness, from the date itself: a demo that randomised
+   it would redraw differently on every render. */
+const YEAR = lastNDays(365)
+const LEVELS = ['bg-muted', 'bg-primary/25', 'bg-primary/50', 'bg-primary/75', 'bg-primary']
+const busyness = (key: string) => (key.charCodeAt(9) + key.charCodeAt(8)) % 5
+const levelFor = (key: string) => LEVELS[busyness(key)]!
+const dayLabel = (key: string) => `${key}: ${busyness(key)} entries`
 
 const sort = ref<TableSort<(typeof DATA_ROWS)[number]> | undefined>({
   key: 'amount',
@@ -180,6 +190,24 @@ function onCommand(id: string) {
       <BaseCard class="mt-5">
         <BaseTable :columns="COLUMNS" :rows="ROWS" caption="September spending" row-key="name" />
         <PropTable name="BaseTable" />
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">ActivityGrid</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          A year at a glance. It is a real table — weekdays down, weeks across — because the CSS
+          grid everyone writes first flows by column and puts the DOM in a different order from the
+          picture. Tab onto it once, then use the arrows: the whole year is one stop.
+        </p>
+        <ActivityGrid
+          :days="YEAR"
+          label="Your year"
+          :level-for="levelFor"
+          :day-label="dayLabel"
+          :is-selectable="(key) => busyness(key) > 0"
+          @select="toast.info(dayLabel($event))"
+        />
+        <PropTable name="ActivityGrid" />
       </BaseCard>
 
       <BaseCard class="mt-4">

@@ -129,6 +129,11 @@ export { default as LocaleLinks } from './components/LocaleLinks.vue'
 export { default as GoogleButton } from './components/GoogleButton.vue'
 export { default as TabBar } from './components/TabBar.vue'
 export type { TabItem } from './components/TabBar.vue'
+/**
+ * `ActivityGrid`, a year at a glance — a real table, so the DOM order is
+ * the picture's order, and one tab stop rather than three hundred odd.
+ */
+export { default as ActivityGrid } from './components/ActivityGrid.vue'
 export { default as AvatarStack } from './components/AvatarStack.vue'
 export { default as BaseCalendar } from './components/BaseCalendar.vue'
 export { default as BaseChip } from './components/BaseChip.vue'

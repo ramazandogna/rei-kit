@@ -1,5 +1,61 @@
 [
   {
+    "name": "ActivityGrid",
+    "entry": "rei-kit",
+    "summary": "A year of days, as a grid you can read at a glance.",
+    "props": [
+      {
+        "name": "days",
+        "required": true,
+        "type": "readonly string[]",
+        "description": "The days to draw, as `YYYY-MM-DD`, oldest first.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the grid, e.g. \"Your year\". Already translated.",
+        "default": ""
+      },
+      {
+        "name": "levelFor",
+        "required": true,
+        "type": "(key: string) => string",
+        "description": "A class for one day's square, e.g. `bg-positive/40`.",
+        "default": ""
+      },
+      {
+        "name": "dayLabel",
+        "required": true,
+        "type": "(key: string) => string",
+        "description": "What a reader hears on a day: the date, and what happened. Translated.",
+        "default": ""
+      },
+      {
+        "name": "isSelectable",
+        "required": false,
+        "type": "((key: string) => boolean)",
+        "description": "Which days lead somewhere. Unset, the grid is a picture and nothing else.",
+        "default": "undefined"
+      },
+      {
+        "name": "weekStartsOn",
+        "required": false,
+        "type": "WeekStart",
+        "description": "`1` Monday, `0` Sunday.",
+        "default": "1"
+      },
+      {
+        "name": "startAtEnd",
+        "required": false,
+        "type": "boolean",
+        "description": "Open on the most recent weeks — a year otherwise starts far off-screen.",
+        "default": "true"
+      }
+    ]
+  },
+  {
     "name": "AuthForm",
     "entry": "rei-kit/app",
     "summary": "The sign-in and sign-up forms, which are one component.",

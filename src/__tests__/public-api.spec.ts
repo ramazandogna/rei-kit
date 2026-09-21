@@ -89,6 +89,7 @@ const PUBLIC_API = [
   'BaseMenu',
   'BaseSheet',
   'BaseSlider',
+  'ActivityGrid',
   'AvatarStack',
   'BaseCalendar',
   'BaseChip',

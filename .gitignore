@@ -21,3 +21,7 @@ REI-KIT-PLAN.md
 
 # Assistant workspace. Never part of the package or the history.
 .claude/
+
+# Playwright
+test-results
+playwright-report

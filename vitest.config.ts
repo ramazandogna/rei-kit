@@ -9,7 +9,10 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude],
+      /* `browser/` is Playwright's, and its files import `@playwright/test`:
+         picked up here they fail on the import alone, which reads like a
+         broken test rather than a suite that belongs to another runner. */
+      exclude: [...configDefaults.exclude, 'browser/**'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       /*
        * The examples import `rei-kit` the way a reader would, and without

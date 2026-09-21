@@ -45,7 +45,7 @@ const JS_CASES = [
     // what a virtual list usually costs as a dependency), 41.4 at 2.14
     // (the mega menu), 42.0 at 2.15 (the slider field and the tooltip's
     // pointer tracking -- 0.5 KB, most of it the field).
-    budget: 46, // 45.2 KB at 2.20.0: ActivityGrid.
+    budget: 47, // 46.4 KB at 2.21.0: ScrollArea and VirtualList.
     code: ['index', 'web', 'app', 'pwa', 'motion']
       .map((entry) => `import * as ${entry} from '${dist(`${entry}.js`)}'\nconsole.log(${entry})`)
       .join('\n'),

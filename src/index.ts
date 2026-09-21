@@ -140,6 +140,12 @@ export { default as ActivityGrid } from './components/ActivityGrid.vue'
  * focus stop — but only when nothing inside it can take focus.
  */
 export { default as ScrollArea } from './components/ScrollArea.vue'
+/**
+ * `VirtualList`, a long list where only the rows near the viewport exist —
+ * and every one of them states its place in the whole, which is the half
+ * that is usually dropped.
+ */
+export { default as VirtualList } from './components/VirtualList.vue'
 export { default as AvatarStack } from './components/AvatarStack.vue'
 export { default as BaseCalendar } from './components/BaseCalendar.vue'
 export { default as BaseChip } from './components/BaseChip.vue'

@@ -4028,5 +4028,47 @@
         "default": ""
       }
     ]
+  },
+  {
+    "name": "VirtualList",
+    "entry": "rei-kit",
+    "summary": "A long list where only the rows near the viewport are in the DOM.",
+    "props": [
+      {
+        "name": "items",
+        "required": true,
+        "type": "readonly T[]",
+        "description": "The whole list. Only the rows near the viewport are rendered.",
+        "default": ""
+      },
+      {
+        "name": "rowHeight",
+        "required": true,
+        "type": "number",
+        "description": "Every row is this tall, in pixels.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the list, e.g. \"Bütün kayıtlar\". Already translated.",
+        "default": ""
+      },
+      {
+        "name": "virtualizeAfter",
+        "required": false,
+        "type": "number",
+        "description": "Below this many rows the list is not windowed at all.",
+        "default": "50"
+      },
+      {
+        "name": "scrollbar",
+        "required": false,
+        "type": "'auto' | 'hidden'",
+        "description": "Passed to the scroll area: `hidden` takes the native bar away.",
+        "default": "'auto'"
+      }
+    ]
   }
 ]

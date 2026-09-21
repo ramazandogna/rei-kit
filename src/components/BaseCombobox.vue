@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 
 import { useBoundValue } from '../composables/use-bound-value'
+import { useVirtualWindow } from '../composables/use-virtual-window'
 import BaseSkeleton from './BaseSkeleton.vue'
 
 export interface ComboboxOption<V extends string> {
@@ -201,21 +202,24 @@ function announce(value: string) {
 
 /* ─── Virtualisation ─── */
 
-const virtual = computed(() => matches.value.length > virtualizeAfter)
-const scrollTop = ref(0)
-/** How tall the list box is; read once it is open, never guessed. */
-const viewport = ref(224)
-
-const window_ = computed(() => {
-  if (!virtual.value) return { start: 0, end: matches.value.length }
-
-  // Three rows of slack each way, so a fast scroll does not show a gap
-  // before the next frame fills it.
-  const first = Math.max(0, Math.floor(scrollTop.value / rowHeight) - 3)
-  const count = Math.ceil(viewport.value / rowHeight) + 6
-
-  return { start: first, end: Math.min(matches.value.length, first + count) }
+/* The windowing arithmetic lives in `useVirtualWindow`, which `VirtualList`
+   shares: one copy, so the padding that keeps the scrollbar honest about
+   the length of the list cannot drift between them. */
+const {
+  active: virtual,
+  window: window_,
+  padTop,
+  padBottom,
+  viewportHeight: viewport,
+  onScroll,
+} = useVirtualWindow({
+  count: computed(() => matches.value.length),
+  rowHeight: computed(() => rowHeight),
+  threshold: computed(() => virtualizeAfter),
 })
+
+/** How tall the list box is; read once it is open, and this until then. */
+viewport.value = 224
 
 const rows = computed(() =>
   matches.value.slice(window_.value.start, window_.value.end).map((option, index) => ({
@@ -224,15 +228,6 @@ const rows = computed(() =>
     index: window_.value.start + index,
   })),
 )
-
-const padTop = computed(() => (virtual.value ? window_.value.start * rowHeight : 0))
-const padBottom = computed(() =>
-  virtual.value ? (matches.value.length - window_.value.end) * rowHeight : 0,
-)
-
-function onScroll(event: Event) {
-  scrollTop.value = (event.target as HTMLElement).scrollTop
-}
 
 /* ─── Choosing ─── */
 

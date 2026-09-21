@@ -91,6 +91,7 @@ const PUBLIC_API = [
   'BaseSlider',
   'ActivityGrid',
   'ScrollArea',
+  'VirtualList',
   'AvatarStack',
   'BaseCalendar',
   'BaseChip',

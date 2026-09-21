@@ -61,6 +61,11 @@ const {
 
 defineSlots<{ default: () => unknown }>()
 
+/* The scroll event does not bubble, so a parent cannot listen for it on the
+   wrapper. `VirtualList` needs it, and needs the element it came from, so
+   both are handed out rather than left to a template ref into our markup. */
+const emit = defineEmits<{ scroll: [event: Event] }>()
+
 const viewport = useTemplateRef<HTMLElement>('viewport')
 
 /** Anything that takes focus on its own, so the box does not need to. */
@@ -98,6 +103,11 @@ function measure() {
   hasFocusable.value = element.querySelector(FOCUSABLE) !== null
 }
 
+function onScroll(event: Event) {
+  measure()
+  emit('scroll', event)
+}
+
 /** The box itself is the way in only when nothing inside it is. */
 const isStop = computed(() => overflows.value && !hasFocusable.value)
 
@@ -122,6 +132,11 @@ watchEffect(() => {
 onScopeDispose(() => observer?.disconnect())
 
 useDragScroll(computed(() => (drag ? viewport.value : null)))
+
+defineExpose({
+  /** The element that actually scrolls, for a parent that has to measure it. */
+  viewport,
+})
 </script>
 
 <template>
@@ -133,7 +148,7 @@ useDragScroll(computed(() => (drag ? viewport.value : null)))
       :tabindex="isStop ? 0 : undefined"
       :role="isStop ? 'region' : undefined"
       :aria-label="isStop ? label : undefined"
-      @scroll="measure"
+      @scroll="onScroll"
     >
       <slot />
     </div>

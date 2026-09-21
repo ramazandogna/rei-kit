@@ -6,6 +6,7 @@ import { Plus } from 'lucide-vue-next'
 import {
   ActivityGrid,
   ScrollArea,
+  VirtualList,
   BaseAvatar,
   BaseButton,
   BaseCard,
@@ -76,6 +77,12 @@ const toast = useToast()
 const SCROLL_MONTHS = Array.from({ length: 12 }, (_, i) =>
   formatDate(new Date(2026, i, 1), { month: 'long' }),
 )
+
+/** Long enough that rendering all of it would be the reason to reach for it. */
+const MANY_ROWS = Array.from({ length: 5000 }, (_, index) => ({
+  id: index,
+  name: `Row ${index + 1}`,
+}))
 
 const YEAR = lastNDays(365)
 const LEVELS = ['bg-muted', 'bg-primary/25', 'bg-primary/50', 'bg-primary/75', 'bg-primary']
@@ -235,6 +242,27 @@ function onCommand(id: string) {
           </p>
         </ScrollArea>
         <PropTable name="ScrollArea" />
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">VirtualList</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          Five thousand rows, a few dozen of them in the page. The part that is usually dropped is
+          the reader's: a list rendered twenty at a time reads as a list of twenty, and as a
+          different one after every scroll — so each row carries its real place, and the empty space
+          standing in for the rest keeps the scrollbar honest about the length.
+        </p>
+        <VirtualList
+          :items="MANY_ROWS"
+          :row-height="36"
+          label="Five thousand rows"
+          class="border-hair max-h-56 rounded-xl border"
+        >
+          <template #default="{ item }">
+            <span class="text-ink flex h-full items-center px-3 text-sm">{{ item.name }}</span>
+          </template>
+        </VirtualList>
+        <PropTable name="VirtualList" />
       </BaseCard>
 
       <BaseCard class="mt-4">

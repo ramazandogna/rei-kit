@@ -165,6 +165,13 @@ export { useAnnounce, announce } from './composables/use-announce'
  * no i18n runtime and still has more than one direction.
  */
 export { textDirection } from './utils/direction'
+/**
+ * `elementDirection` and `horizontalStep`, for an app writing the keyboard
+ * behaviour the kit does not cover. `ArrowLeft` means "back through the
+ * list" only where the language runs left to right; read as a step, it
+ * means the same thing in both.
+ */
+export { elementDirection, horizontalStep } from './utils/direction'
 export type { TextDirection } from './utils/direction'
 export type { AnnounceOptions } from './composables/use-announce'
 export { default as AvatarStack } from './components/AvatarStack.vue'

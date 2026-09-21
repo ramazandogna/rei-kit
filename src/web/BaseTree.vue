@@ -3,6 +3,7 @@ import { ChevronRight } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
 import { useBoundValue } from '../composables/use-bound-value'
+import { horizontalStep } from '../utils/direction'
 import type { Component } from 'vue'
 
 export interface TreeNode<K extends string> {
@@ -137,14 +138,20 @@ function onKeydown(event: KeyboardEvent) {
       event.preventDefault()
       moveTo(active.value - 1)
       break
+    /* Deeper is the way the language runs — the branches indent towards the
+       end of the line, so in Arabic it is ArrowLeft that goes in. */
     case 'ArrowRight':
-      event.preventDefault()
-      // Open, then step in: the two halves of "go deeper".
-      if (hasChildren(row.node) && !isOpen(row.node)) setOpen(row.node, true)
-      else if (hasChildren(row.node)) moveTo(active.value + 1)
-      break
     case 'ArrowLeft': {
       event.preventDefault()
+      const inwards = horizontalStep(event.key, event.currentTarget as Element) === 1
+
+      if (inwards) {
+        // Open, then step in: the two halves of "go deeper".
+        if (hasChildren(row.node) && !isOpen(row.node)) setOpen(row.node, true)
+        else if (hasChildren(row.node)) moveTo(active.value + 1)
+        break
+      }
+
       if (hasChildren(row.node) && isOpen(row.node)) {
         setOpen(row.node, false)
         break

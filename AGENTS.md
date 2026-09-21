@@ -414,12 +414,23 @@ Pure, no Vue, no clock of their own.
 | `formatDate(date, Intl options)` / `setFormatLocale(tag)`     | follows the active locale; the i18n runtime sets it for you         |
 | `relativeDayLabel(key, today, { today, yesterday })`          | else the weekday                                                    |
 | `textDirection(localeTag)`                                    | `'ltr'` or `'rtl'`; the i18n runtime sets `dir` from it             |
+| `elementDirection(element)`                                   | `'ltr'` or `'rtl'` from the nearest `dir`, else the document        |
+| `horizontalStep(key, element)`                                | `ArrowLeft`/`ArrowRight` as `-1`/`1`, mirrored where the writing is |
 | `safeRedirect(queryValue)`                                    | same-origin paths only; rejects `//host`                            |
 | `toRedirectPath(fullPath)`                                    | drops the URL fragment before it becomes a query parameter          |
 | `downloadJson(data, filename)` / `tapFeedback(ms?)`           | `tapFeedback` is a safe no-op on iOS                                |
 | `isInstalled()` / `needsIosInstall()` / `isApplePortable()`   | install prompts                                                     |
 | `AppError` / `toAppError` / `registerErrorMapper`             | `kind` is `'conflict'\|'not-found'\|'network'\|'denied'\|'unknown'` |
 | `ensureSheetRoot()`                                           | `BaseSheet` calls it; exported for mounting the root earlier        |
+
+**`ArrowLeft` is not "previous".** It is "previous" only where the
+language runs left to right. A row of tabs in Arabic runs the other way, so
+the tab to the left of the current one is the *next* one — WAI-ARIA says so
+explicitly, and every roving-tabindex control in the kit walked backwards
+through itself until 2.23.0. Every one of them now reads the key through
+`horizontalStep`, and so should anything an app writes beside them. Nothing
+else catches this: the code type-checks, the styles are already logical, and
+the keys are the same keys.
 
 **The direction is not decoration.** Every logical property in the kit —
 every inset, every margin, `BaseDrawer`'s `start`/`end` — is inert until

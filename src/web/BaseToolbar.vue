@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef } from 'vue'
 
+import { horizontalStep } from '../utils/direction'
+
 /**
  * A row of controls that belong together: a formatting bar, a row of view
  * switches, the actions over a table.
@@ -51,17 +53,19 @@ function focusAt(index: number) {
 }
 
 function onKeydown(event: KeyboardEvent) {
-  const back = orientation === 'horizontal' ? 'ArrowLeft' : 'ArrowUp'
-  const forward = orientation === 'horizontal' ? 'ArrowRight' : 'ArrowDown'
   const list = controls()
   const current = list.indexOf(document.activeElement as HTMLElement)
 
-  if (event.key === back) {
+  /* A vertical toolbar's arrows are up and down, which mean the same thing
+     in every writing direction. A horizontal one's do not. */
+  const step =
+    orientation === 'horizontal'
+      ? horizontalStep(event.key, event.currentTarget as Element)
+      : ({ ArrowDown: 1, ArrowUp: -1 }[event.key] ?? 0)
+
+  if (step !== 0) {
     event.preventDefault()
-    focusAt(current - 1)
-  } else if (event.key === forward) {
-    event.preventDefault()
-    focusAt(current + 1)
+    focusAt(current + step)
   } else if (event.key === 'Home') {
     event.preventDefault()
     focusAt(0)

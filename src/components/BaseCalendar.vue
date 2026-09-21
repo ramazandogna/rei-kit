@@ -4,6 +4,7 @@ import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 
 import { addDays, fromDateKey, toDateKey, todayKey } from '../utils/date'
 import type { WeekStart } from '../utils/date'
+import { horizontalStep } from '../utils/direction'
 import { formatDate } from '../utils/format'
 
 export interface DateRange {
@@ -198,9 +199,13 @@ function shiftMonths(count: number) {
 
 function onKeydown(event: KeyboardEvent) {
   const key = event.key
+  /* A week runs the way the language does, so in Arabic the day to the left
+     of today is tomorrow. Up and down cross whole weeks and are the same
+     either way. */
+  const along = horizontalStep(key, event.currentTarget as Element)
   const jumps: Record<string, () => string> = {
-    ArrowLeft: () => addDays(focused.value, -1),
-    ArrowRight: () => addDays(focused.value, 1),
+    ArrowLeft: () => addDays(focused.value, along),
+    ArrowRight: () => addDays(focused.value, along),
     ArrowUp: () => addDays(focused.value, -7),
     ArrowDown: () => addDays(focused.value, 7),
     Home: () =>

@@ -2,6 +2,7 @@
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue'
 
 import BaseButton from '../components/BaseButton.vue'
+import { horizontalStep } from '../utils/direction'
 import { inertOutside } from '../utils/inert'
 
 /**
@@ -97,8 +98,12 @@ watch(
 onUnmounted(() => releaseInert?.())
 
 function onKeydown(event: KeyboardEvent) {
-  if (event.key === 'ArrowRight') emit('next')
-  if (event.key === 'ArrowLeft') emit('back')
+  /* Forward through the tour is forward through the line: the right arrow
+     usually, the left one where the language runs that way. */
+  const along = horizontalStep(event.key, event.currentTarget as Element)
+
+  if (along === 1) emit('next')
+  if (along === -1) emit('back')
   if (event.key === 'Escape') emit('dismiss')
 }
 </script>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, useTemplateRef } from 'vue'
 
+import { horizontalStep } from '../utils/direction'
+
 /**
  * Two panes and a handle between them — a list beside a preview, an editor
  * beside its output.
@@ -75,12 +77,14 @@ function onPointerUp(event: PointerEvent) {
 }
 
 function onKeydown(event: KeyboardEvent) {
-  const back = horizontal.value ? 'ArrowLeft' : 'ArrowUp'
-  const forward = horizontal.value ? 'ArrowRight' : 'ArrowDown'
+  /* The split is a percentage from the start of the line, so growing the
+     first pane is the arrow pointing at the end of it — which is the left
+     arrow where the language runs right to left. */
+  const along = horizontal.value
+    ? horizontalStep(event.key, event.currentTarget as Element)
+    : ({ ArrowDown: 1, ArrowUp: -1 }[event.key] ?? 0)
 
   const moves: Record<string, number> = {
-    [back]: split.value - step,
-    [forward]: split.value + step,
     Home: min,
     End: max,
     // Enter puts it back where it started, which is the undo a drag has no
@@ -88,7 +92,10 @@ function onKeydown(event: KeyboardEvent) {
     Enter: startedAt,
   }
 
-  const next = moves[event.key]
+  /* `along` is zero for the arrows this orientation does not use, and those
+     keys are left alone rather than swallowed: a vertical splitter must not
+     eat the left arrow. */
+  const next = along === 0 ? moves[event.key] : split.value + along * step
   if (next === undefined) return
 
   event.preventDefault()

@@ -1,6 +1,8 @@
 <script setup lang="ts" generic="K extends string">
 import { ref, useId } from 'vue'
 
+import { horizontalStep } from '../utils/direction'
+
 export interface TabPanel<K extends string> {
   key: K
   /** Already translated. */
@@ -62,8 +64,10 @@ function onKeydown(event: KeyboardEvent) {
   const last = items.length - 1
   let next: number | undefined
 
-  if (event.key === 'ArrowRight') next = index === last ? 0 : index + 1
-  else if (event.key === 'ArrowLeft') next = index === 0 ? last : index - 1
+  const step = horizontalStep(event.key, event.currentTarget as Element)
+
+  if (step === 1) next = index === last ? 0 : index + 1
+  else if (step === -1) next = index === 0 ? last : index - 1
   else if (event.key === 'Home') next = 0
   else if (event.key === 'End') next = last
   else return

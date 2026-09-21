@@ -45,7 +45,7 @@ const JS_CASES = [
     // what a virtual list usually costs as a dependency), 41.4 at 2.14
     // (the mega menu), 42.0 at 2.15 (the slider field and the tooltip's
     // pointer tracking -- 0.5 KB, most of it the field).
-    budget: 48, // 47.3 KB at 2.22.0: SkipLink, AnnounceHost, ErrorSummary.
+    budget: 50, // 48.0 KB at 2.23.0: PasswordInput, and the direction helpers every arrow key now reads through.
     code: ['index', 'web', 'app', 'pwa', 'motion']
       .map((entry) => `import * as ${entry} from '${dist(`${entry}.js`)}'\nconsole.log(${entry})`)
       .join('\n'),

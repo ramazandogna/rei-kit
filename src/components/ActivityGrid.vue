@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 
 import ScrollArea from './ScrollArea.vue'
 import { fromDateKey } from '../utils/date'
+import { elementDirection, horizontalStep } from '../utils/direction'
 import type { WeekStart } from '../utils/date'
 import { formatDate } from '../utils/format'
 
@@ -178,13 +179,12 @@ function onKeydown(event: KeyboardEvent) {
       event.preventDefault()
       moveTo(focused.value + 1)
       break
+    /* Weeks run the way the language does, so in Arabic the column to the
+       left of this one is the following week. */
     case 'ArrowLeft':
-      event.preventDefault()
-      step(-1)
-      break
     case 'ArrowRight':
       event.preventDefault()
-      step(1)
+      step(horizontalStep(event.key, event.currentTarget as Element))
       break
     case 'Home':
       event.preventDefault()
@@ -231,12 +231,8 @@ onMounted(() => {
    * `scrollWidth` there clamps to zero, which is the *start* — the grid
    * would have opened on the oldest week, which is the one thing this prop
    * exists to avoid, in the one direction nobody tests.
-   *
-   * Read off the document rather than the computed style: `direction` is
-   * inherited through the cascade, and what sets it here is an attribute
-   * one way or the other.
    */
-  const rtl = (element.closest('[dir]')?.getAttribute('dir') ?? document.dir) === 'rtl'
+  const rtl = elementDirection(element) === 'rtl'
   element.scrollLeft = rtl ? -element.scrollWidth : element.scrollWidth
 })
 </script>

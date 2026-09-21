@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, useId } from 'vue'
 
+import { horizontalStep } from '../utils/direction'
+
 /**
  * A short code typed one character per box — a sign-in code, a PIN.
  *
@@ -108,12 +110,11 @@ function onKeydown(event: KeyboardEvent, index: number) {
     if (target < 0) return
     write(model.value.slice(0, target) + model.value.slice(target + 1))
     focusCell(target)
-  } else if (event.key === 'ArrowLeft') {
+  } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     event.preventDefault()
-    focusCell(index - 1)
-  } else if (event.key === 'ArrowRight') {
-    event.preventDefault()
-    focusCell(index + 1)
+    /* The boxes are laid out the way the language runs, so in Arabic the
+       box to the left of this one is the next digit. */
+    focusCell(index + horizontalStep(event.key, event.currentTarget as Element))
   }
 }
 </script>

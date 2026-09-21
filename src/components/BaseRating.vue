@@ -2,6 +2,8 @@
 import { Star } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
+import { horizontalStep } from '../utils/direction'
+
 /**
  * A score out of five, given or shown.
  *
@@ -46,10 +48,13 @@ function pick(value: number) {
 }
 
 function onKeydown(event: KeyboardEvent) {
+  /* The stars run the way the language does, so the one to the left is the
+     higher score in Arabic. Up is always more. */
+  const along = horizontalStep(event.key, event.currentTarget as Element)
   const moves: Record<string, number> = {
-    ArrowRight: model.value + 1,
+    ArrowRight: model.value + along,
+    ArrowLeft: model.value + along,
     ArrowUp: model.value + 1,
-    ArrowLeft: model.value - 1,
     ArrowDown: model.value - 1,
     Home: 0,
     End: max,

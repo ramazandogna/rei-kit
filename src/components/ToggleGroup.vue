@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue'
 import type { Component } from 'vue'
 
+import { horizontalStep } from '../utils/direction'
+
 /**
  * A row of buttons that stay pressed — one at a time, or several at once.
  *
@@ -78,7 +80,11 @@ const tabStop = computed(() => {
 })
 
 function onKeydown(event: KeyboardEvent, index: number) {
-  const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key]
+  /* Down and up are absolute; left and right are not, and in a
+     right-to-left row the left-hand button is the next one. */
+  const step =
+    { ArrowDown: 1, ArrowUp: -1 }[event.key] ??
+    (horizontalStep(event.key, event.currentTarget as Element) || undefined)
   const enabled = buttons.value.filter((button) => !button.disabled)
   let target: HTMLButtonElement | undefined
 

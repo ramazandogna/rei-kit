@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import ActivityGrid from '../components/ActivityGrid.vue'
 
@@ -24,7 +24,59 @@ const mountGrid = (props: Record<string, unknown> = {}) =>
     attachTo: document.body,
   })
 
+/*
+ * jsdom has no layout, so a scrolling box has no width to be past. The
+ * opening scroll position is arithmetic on `scrollWidth`, so `scrollWidth`
+ * is what is supplied — the sign of the result is the whole assertion, and
+ * the sign does not need a real layout to be wrong.
+ */
+const SCROLL_WIDTH = 900
+
+function withWidth() {
+  Object.defineProperty(HTMLElement.prototype, 'scrollWidth', {
+    configurable: true,
+    get: () => SCROLL_WIDTH,
+  })
+}
+
+afterEach(() => {
+  delete (HTMLElement.prototype as unknown as Record<string, unknown>)['scrollWidth']
+  document.documentElement.removeAttribute('dir')
+  document.body.innerHTML = ''
+})
+
 describe('ActivityGrid', () => {
+  it('opens on the most recent weeks', () => {
+    withWidth()
+
+    const viewport = mountGrid().get('.rk-scroll-viewport').element
+
+    expect(viewport.scrollLeft).toBe(SCROLL_WIDTH)
+  })
+
+  /*
+   * The half that is only ever wrong in the direction nobody runs. A
+   * right-to-left box counts `scrollLeft` down from zero, so assigning
+   * `scrollWidth` clamps to zero — which is the oldest week, the one thing
+   * `startAtEnd` exists to avoid.
+   */
+  it('opens on the most recent weeks in a right-to-left page too', () => {
+    withWidth()
+    document.documentElement.setAttribute('dir', 'rtl')
+
+    const viewport = mountGrid().get('.rk-scroll-viewport').element
+
+    expect(viewport.scrollLeft).toBe(-SCROLL_WIDTH)
+  })
+
+  it('stays where it is when it is told not to', () => {
+    withWidth()
+
+    const viewport = mountGrid({ startAtEnd: false }).get('.rk-scroll-viewport')
+
+    expect(viewport.element.scrollLeft).toBe(0)
+  })
+
   it('lays weekdays down and weeks across, as a table', () => {
     const rows = mountGrid().findAll('tbody tr')
 

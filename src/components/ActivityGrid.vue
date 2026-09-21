@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 
+import ScrollArea from './ScrollArea.vue'
 import { fromDateKey } from '../utils/date'
 import type { WeekStart } from '../utils/date'
 import { formatDate } from '../utils/format'
@@ -60,7 +61,7 @@ const {
 
 const emit = defineEmits<{ select: [key: string] }>()
 
-const scroller = useTemplateRef<HTMLElement>('scroller')
+const scroller = useTemplateRef<InstanceType<typeof ScrollArea>>('scroller')
 const grid = useTemplateRef<HTMLElement>('grid')
 
 /** Where the keyboard is: an index into `cells`, not a date. */
@@ -219,12 +220,29 @@ function onClick(event: MouseEvent) {
 }
 
 onMounted(() => {
-  if (startAtEnd && scroller.value) scroller.value.scrollLeft = scroller.value.scrollWidth
+  if (!startAtEnd) return
+
+  const element = scroller.value?.viewport
+  if (!element) return
+
+  /*
+   * A right-to-left box counts `scrollLeft` down from zero, so its far end
+   * is the most negative value it takes rather than the largest. Assigning
+   * `scrollWidth` there clamps to zero, which is the *start* — the grid
+   * would have opened on the oldest week, which is the one thing this prop
+   * exists to avoid, in the one direction nobody tests.
+   *
+   * Read off the document rather than the computed style: `direction` is
+   * inherited through the cascade, and what sets it here is an attribute
+   * one way or the other.
+   */
+  const rtl = (element.closest('[dir]')?.getAttribute('dir') ?? document.dir) === 'rtl'
+  element.scrollLeft = rtl ? -element.scrollWidth : element.scrollWidth
 })
 </script>
 
 <template>
-  <div ref="scroller" class="rk-activity no-scrollbar">
+  <ScrollArea ref="scroller" axis="x" scrollbar="hidden" :label="label" class="rk-activity">
     <table
       ref="grid"
       class="rk-activity-table"
@@ -266,14 +284,10 @@ onMounted(() => {
         </tr>
       </tbody>
     </table>
-  </div>
+  </ScrollArea>
 </template>
 
 <style scoped>
-.rk-activity {
-  overflow-x: auto;
-}
-
 .rk-activity-table {
   border-collapse: separate;
   border-spacing: 2px;

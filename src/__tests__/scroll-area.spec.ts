@@ -99,6 +99,32 @@ describe('ScrollArea', () => {
     expect(viewport.attributes('tabindex')).toBe('0')
   })
 
+  it('ignores a disabled control, which is no way in either', async () => {
+    /* A row of buttons that are all disabled is exactly as unreachable as
+       a row of plain text, and the box is the only way to the far end of
+       it. This box counted them and denied itself the stop. */
+    const wrapper = mountArea({ axis: 'x' }, '<button type="button" disabled>bir</button>')
+    const viewport = wrapper.get('.rk-scroll-viewport')
+
+    size(viewport.element, { client: 100, scroll: 400, axis: 'x' })
+    await remeasure(wrapper)
+
+    expect(viewport.attributes('tabindex')).toBe('0')
+  })
+
+  it('still stands aside for one that is not', async () => {
+    const wrapper = mountArea(
+      { axis: 'x' },
+      '<button type="button" disabled>bir</button><button type="button">iki</button>',
+    )
+    const viewport = wrapper.get('.rk-scroll-viewport')
+
+    size(viewport.element, { client: 100, scroll: 400, axis: 'x' })
+    await remeasure(wrapper)
+
+    expect(viewport.attributes('tabindex')).toBeUndefined()
+  })
+
   it('fades only the edge that has content past it', async () => {
     const wrapper = mountArea({ axis: 'x' }, '<p>a very long line</p>')
     const viewport = wrapper.get('.rk-scroll-viewport')

@@ -2,6 +2,7 @@ import { nextTick, onBeforeUnmount, watch } from 'vue'
 import type { Ref } from 'vue'
 
 import { inertOutside } from '../utils/inert'
+import { focusableWithin } from '../utils/focusable'
 
 /**
  * What every modal surface has to do, in one place.
@@ -20,9 +21,6 @@ import { inertOutside } from '../utils/inert'
  * stops a screen reader's virtual cursor, which walks straight past a
  * keydown handler.
  */
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-
 export interface DialogShellOptions {
   /** Whether Escape and the scrim close it. */
   dismissible?: () => boolean
@@ -38,8 +36,7 @@ export function useDialogShell(
   let releaseInert: (() => void) | null = null
   let restoreTo: HTMLElement | null = null
 
-  const focusable = (): HTMLElement[] =>
-    panel.value ? Array.from(panel.value.querySelectorAll<HTMLElement>(FOCUSABLE)) : []
+  const focusable = (): HTMLElement[] => (panel.value ? focusableWithin(panel.value) : [])
 
   function onKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape' && dismissible()) {

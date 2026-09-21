@@ -27,6 +27,17 @@ defineSlots<{ default: () => unknown }>()
 const root = useTemplateRef<HTMLElement>('root')
 const at = ref(0)
 
+/*
+ * Its own, and not the kit's shared one, for a reason that is easy to undo
+ * by tidying: this container writes `tabindex` on the controls itself, so
+ * `[tabindex]:not([tabindex="-1"])` would match exactly the one control it
+ * has already put in the tab order. It would find one item and stop.
+ *
+ * The cost is that a custom control the app brings — a `div` with a
+ * `tabindex` of its own — is not picked up by the arrows. That is a real
+ * limit of roving over somebody else's markup: there is no way to tell the
+ * app's `tabindex="-1"` from the one this function wrote a moment ago.
+ */
 const FOCUSABLE = 'button:not([disabled]), a[href], input:not([disabled]), select, textarea'
 
 function controls(): HTMLElement[] {

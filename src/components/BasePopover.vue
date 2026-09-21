@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 
+import { FOCUSABLE } from '../utils/focusable'
+
 /**
  * A panel of anything — a form, a picker, a few settings — anchored to the
  * control that opened it.
@@ -70,9 +72,6 @@ const triggerProps = computed<PopoverTriggerProps>(() => ({
 function close() {
   open.value = false
 }
-
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 function trigger(): HTMLElement | null {
   return root.value?.querySelector<HTMLElement>('[data-rk-popover-trigger]') ?? null

@@ -2,6 +2,7 @@
 import { computed, onScopeDispose, ref, useTemplateRef, watchEffect } from 'vue'
 
 import { useDragScroll } from '../composables/use-drag-scroll'
+import { FOCUSABLE } from '../utils/focusable'
 
 /**
  * A box that scrolls, with the two things a hand-written one leaves out.
@@ -67,10 +68,6 @@ defineSlots<{ default: () => unknown }>()
 const emit = defineEmits<{ scroll: [event: Event] }>()
 
 const viewport = useTemplateRef<HTMLElement>('viewport')
-
-/** Anything that takes focus on its own, so the box does not need to. */
-const FOCUSABLE =
-  'a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])'
 
 const horizontal = computed(() => axis === 'x' || axis === 'both')
 const vertical = computed(() => axis === 'y' || axis === 'both')

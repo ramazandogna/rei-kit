@@ -5,12 +5,15 @@ the major is `0`, a minor may carry a breaking change and will say so here.
 
 ## 2.22.0 — 2026-09-21
 
-**Three Level A gaps, found by asking the kit's own question of the kit.**
+**What the kit's own gap test finds when it is turned on the kit.**
 
-The gap test in `AGENTS.md` points at the apps: a hand-written control in a
+The test in `AGENTS.md` points at the apps: a hand-written control in a
 file that already imports the kit. Turned on the kit itself it asks a
-different question — *which of the shapes it already ships creates a need
-it does not then answer?* — and these three were the answer.
+second question — _which of the shapes it already ships creates a need it
+does not then answer?_ — and between the two, this release is what they
+found. Four Level A gaps, one feature whose absence was producing a
+hand-written control inside the kit, and a whole writing direction the kit
+had been paying for and never receiving.
 
 ### Added
 
@@ -47,11 +50,32 @@ it does not then answer?* — and these three were the answer.
   changes, the view is replaced and nothing is announced at all. It also
   moves focus into the new view when `focus` names one — without that the
   next Tab starts again from the top of the document, past the whole
-  header, on every navigation. Register it *after* the title guard.
+  header, on every navigation. Register it _after_ the title guard.
+
+- **`ErrorSummary`** (`rei-kit`) — what a rejected form says at the top of
+  itself. `FormField` puts the reason beside the field, which is where it
+  belongs; what that cannot do is say the _submission_ failed. On a long
+  form the first rejected field is a screenful away and focus is still on
+  the submit button, so to a reader nothing happened when it was pressed.
+
+  Focused, not announced: `role="alert"` reads the whole list at somebody
+  whose focus is still on a button they cannot use. It focuses itself once,
+  on the way from valid to rejected, and never again on its own — a form
+  that re-validates as you type would otherwise drag focus out of the field
+  being corrected. `focus()` is exposed for the second submit.
 
 - **`textDirection(localeTag)`** (`rei-kit`) — `'ltr'` or `'rtl'` from a
   locale tag, reading the script subtag as well as the language, so
   `az-Arab-IR` and `az-Latn-AZ` answer differently.
+
+- **`BaseCheckbox` takes `indeterminate` and `labelHidden`.** A box that
+  stands for a list of others is neither on nor off. `indeterminate` is a
+  DOM property with no attribute form, so there is no markup for it — which
+  is why a select-all box is the one control every app writes by hand. The
+  kit's own `DataTable` did, for exactly that reason.
+
+- **`FormField` takes `fieldId`.** It generated its own id, so nothing
+  outside could address the control. Unset, it behaves exactly as before.
 
 ### Changed
 
@@ -63,9 +87,32 @@ it does not then answer?* — and these three were the answer.
   way, with every check green. Apps whose locales are all left-to-right see
   no change beyond an explicit `dir="ltr"`.
 
-- **`SkipLink` and `createRouteAnnouncer` share `focusTarget`.** The
-  `tabindex="-1"` trick is the same one and both fail the same invisible
-  way without it, so there is one copy of it.
+- **The kit had never actually been right-to-left.** Setting `dir` turned
+  the lights on: sixty-one physical declarations across twenty-odd
+  components — `padding-left`, `margin-right`, `text-align: left`, and
+  positioning. `BaseMenu`'s panel and `BasePopover`'s both had classes
+  literally named `is-start` and `is-end` written as `left: 0` and
+  `right: 0`. `BaseSwitch`'s knob would have left its track entirely,
+  `BaseTimeline`'s rail would have run through its own text,
+  `BaseCombobox`'s chevron would have sat on the value. Under `dir="ltr"`
+  every one of these computes to what it did before.
+
+  A guard came with it: one test per file that reads each `<style>` block
+  and names both the offence and the logical property it should have been.
+  Nothing else catches this — it type-checks, it renders, it passes axe,
+  and it is visible only to someone reading Arabic or Hebrew.
+
+- **`BaseTable` and `DataTable` scroll through `ScrollArea`.** Both
+  hand-wrote the same four lines, which after `CodeBlock` made four copies
+  of one pattern. The focus stop is now conditional: a table of links
+  already moves under the keyboard, and the unconditional stop both had was
+  a press for nothing on every one of them. `DataTable`'s boxes are
+  `BaseCheckbox`, so their names come from a real `<label for>` rather than
+  an `aria-label` — the name a reader hears is unchanged.
+
+- **`SkipLink`, `createRouteAnnouncer` and `ErrorSummary` share
+  `focusTarget`.** The `tabindex="-1"` trick is the same one in all three,
+  and each fails the same invisible way without it.
 
 ## 2.21.0 — 2026-09-21
 
@@ -89,7 +136,7 @@ it does not then answer?* — and these three were the answer.
 - **`VirtualList`** (`rei-kit`) — a long list where only the rows near the
   viewport are in the DOM. The half usually dropped is the reader's: ten
   thousand names rendered twenty at a time read as a list of twenty, and as
-  a *different* list after every scroll, so every row states its real place
+  a _different_ list after every scroll, so every row states its real place
   with `aria-setsize` and `aria-posinset`. Rows are a fixed `rowHeight`,
   which is what lets the window be a division rather than a measurement of
   every row, and what makes the empty space above and below exactly right.
@@ -132,7 +179,7 @@ it does not then answer?* — and these three were the answer.
 - **`BaseDrawer`** (`rei-kit/web`) — a panel in from the edge of a wide
   screen. `BaseSheet` belongs to a thumb: it arrives from the bottom and is
   pinned to the 430px shell column, so a desktop had nothing for the shape a
-  site keeps *beside* the page — filters, a cart, a menu that outgrew its
+  site keeps _beside_ the page — filters, a cart, a menu that outgrew its
   bar. `side` is `start` and `end` rather than left and right, so it follows
   the writing direction without the app asking.
 
@@ -254,7 +301,7 @@ it does not then answer?* — and these three were the answer.
   suits a feed, oldest first suits a trail, and both are the app's to
   decide.
 
-  It is not `BaseStepper`. A stepper is a process you are *in*, with a
+  It is not `BaseStepper`. A stepper is a process you are _in_, with a
   current step and steps ahead; a stepper drawn from history implies the
   reader can move through it.
 
@@ -406,7 +453,7 @@ renders anything.
 - **A right-aligned column's heading now moves with its figures**, in
   `BaseTable` and `DataTable`. `align: 'end'` put the class on the heading
   and the cells alike, but a table's own `.rk-table th { text-align: left }`
-  is one class *and* one element and outranked a bare `.is-end`, so only the
+  is one class _and_ one element and outranked a bare `.is-end`, so only the
   cells moved: a money column rendered as a heading on the far left with its
   numbers at the far right, reading as two columns. Nothing could catch it —
   the markup was right, the types were right, and the page rendered. A

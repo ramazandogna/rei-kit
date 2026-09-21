@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, useId } from 'vue'
 
+import { useAnchoredPanel } from '../composables/use-anchored-panel'
+
 /**
  * A card that appears beside something when you rest on it.
  *
@@ -51,6 +53,7 @@ const {
   openDelay?: number | undefined
   /** How long it survives the pointer leaving, so the card can be reached. */
   closeDelay?: number | undefined
+  /** Which side it prefers. It opens on the other when there is more room there. */
   placement?: 'top' | 'bottom' | undefined
 }>()
 
@@ -65,6 +68,15 @@ defineSlots<{
 
 const id = useId()
 const open = ref(false)
+
+const root = ref<HTMLElement | null>(null)
+const panel = ref<HTMLElement | null>(null)
+
+/* A hover card is supplementary, so one that opened off the bottom of the
+   window cost nothing anybody could see — which is exactly why it stayed
+   that way. `placement` is now the side it asks for rather than the side
+   it gets. */
+const { placed, shift } = useAnchoredPanel({ root, panel, open, side: placement })
 
 /* One timer for both directions: opening while a close is pending has to
    cancel it, or the card shuts a moment after it was asked to stay. */
@@ -131,6 +143,7 @@ onBeforeUnmount(clear)
 
 <template>
   <div
+    ref="root"
     class="rk-hovercard"
     @pointerenter="show"
     @pointerleave="hide"
@@ -143,8 +156,10 @@ onBeforeUnmount(clear)
     <div
       v-if="open"
       :id="id"
+      ref="panel"
       class="rk-hovercard-panel surface-raised"
-      :class="`is-${placement}`"
+      :class="`is-${placed}`"
+      :style="shift ? { '--rk-hovercard-shift': `${shift}px` } : undefined"
       role="group"
       :aria-label="label"
     >
@@ -161,6 +176,7 @@ onBeforeUnmount(clear)
 
 .rk-hovercard-panel {
   position: absolute;
+  transform: translateX(var(--rk-hovercard-shift, 0px));
   z-index: 40;
   inset-inline-start: 0;
   width: max-content;

@@ -5,6 +5,7 @@ import { h, nextTick } from 'vue'
 import BaseMenu from '../components/BaseMenu.vue'
 import BaseCombobox from '../components/BaseCombobox.vue'
 import BasePopover from '../components/BasePopover.vue'
+import BaseHoverCard from '../web/BaseHoverCard.vue'
 
 /**
  * Keeping an open panel on screen.
@@ -172,6 +173,26 @@ describe('an anchored panel stays on screen', () => {
     })
 
     expect(list.classes()).toContain('is-top')
+  })
+
+  /* Supplementary, so a card that opened off the bottom of the window cost
+     nothing anybody could see — which is why it stayed that way. */
+  it('BaseHoverCard flips too, and keeps its arrow with it', async () => {
+    const wrapper = mount(BaseHoverCard, {
+      props: { label: 'Profil' },
+      slots: { default: () => h('a', { href: '#' }, 'Ada'), card: () => h('p', 'kart') },
+      attachTo: document.body,
+    })
+
+    await wrapper.get('.rk-hovercard').trigger('focusin')
+
+    const panel = wrapper.get('[role="group"]')
+    await measure(wrapper.element as HTMLElement, { top: 700, bottom: 728 }, panel.element, {
+      height: 200,
+    })
+
+    // The arrow is drawn off `is-top` / `is-bottom`, so it moves with it.
+    expect(panel.classes()).toContain('is-top')
   })
 
   it('BasePopover flips the same way, which nothing had ever checked', async () => {

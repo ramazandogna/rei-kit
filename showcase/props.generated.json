@@ -923,7 +923,7 @@
         "name": "placement",
         "required": false,
         "type": "'top' | 'bottom'",
-        "description": "",
+        "description": "Which side it prefers. It opens on the other when there is more room there.",
         "default": "'bottom'"
       }
     ]

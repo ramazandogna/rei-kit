@@ -133,9 +133,9 @@ looks almost right.
   what you were reading and is dismissed by leaving it. A sheet arrives from
   the bottom edge, belongs to a thumb, and is pinned to the 430px shell column
   — so on a desktop it is narrow, and that is correct.
-- **An open panel stays on screen.** `BaseMenu`, `BasePopover` and
-  `BaseCombobox` all flip above their trigger when there is more room
-  there, and slide back in from the side of the window, re-measuring while
+- **An open panel stays on screen.** `BaseMenu`, `BasePopover`,
+  `BaseCombobox` and `BaseHoverCard` all flip above their trigger when
+  there is more room there, and slide back in from the side of the window, re-measuring while
   the page scrolls under them. `BaseDatePicker`, `TimePicker` and
   `ColorPicker` get it through the popover. Only the popover did before
   2.23.1, which is why a menu button near the bottom of a phone, or the

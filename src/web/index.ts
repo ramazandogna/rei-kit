@@ -33,6 +33,11 @@ export type { Crumb } from './BaseBreadcrumb.vue'
 export { default as BaseContextMenu } from './BaseContextMenu.vue'
 export { default as BaseDisclosure } from './BaseDisclosure.vue'
 /**
+ * `BaseHoverCard`, for when the answer is a thing rather than a sentence —
+ * which is where `aria-describedby`, and so `BaseTooltip`, stops working.
+ */
+export { default as BaseHoverCard } from './BaseHoverCard.vue'
+/**
  * `BaseDrawer`, the wide screen's answer to `BaseSheet`: a panel from the
  * edge, for what a site keeps beside the page rather than on top of it.
  */

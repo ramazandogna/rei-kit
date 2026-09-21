@@ -818,6 +818,41 @@
     ]
   },
   {
+    "name": "BaseHoverCard",
+    "entry": "rei-kit/web",
+    "summary": "A card that appears beside something when you rest on it.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the card for a screen reader. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "openDelay",
+        "required": false,
+        "type": "number",
+        "description": "How long a pointer has to rest before it opens, in ms.",
+        "default": "300"
+      },
+      {
+        "name": "closeDelay",
+        "required": false,
+        "type": "number",
+        "description": "How long it survives the pointer leaving, so the card can be reached.",
+        "default": "200"
+      },
+      {
+        "name": "placement",
+        "required": false,
+        "type": "'top' | 'bottom'",
+        "description": "",
+        "default": "'bottom'"
+      }
+    ]
+  },
+  {
     "name": "BaseInput",
     "entry": "rei-kit",
     "summary": "A text field with its label, hint and error already wired to it.",

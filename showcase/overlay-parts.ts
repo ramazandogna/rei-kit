@@ -53,6 +53,13 @@ export const OVERLAY_PARTS = [
       'Shown by :hover and :focus-within in the stylesheet, so it survives a prerendered page and a reader with scripting off. `follow` tracks the pointer instead, and is the one part of it that needs JavaScript.',
   },
   {
+    id: 'overlay-hovercard',
+    label: 'BaseHoverCard',
+    title: 'BaseHoverCard — when the answer is a thing, not a sentence',
+    pitch:
+      'A tooltip is wired with `aria-describedby`, which flattens whatever is inside it to text — right for a sentence, and the end of a card with a link in it. This keeps its contents real, and survives the pointer crossing the gap, which is the whole reason it is a component rather than two CSS rules.',
+  },
+  {
     id: 'overlay-popover',
     label: 'BasePopover',
     title: 'BasePopover — anything, beside its trigger',

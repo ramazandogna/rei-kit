@@ -151,6 +151,7 @@ const WEB_API = [
   'BaseBreadcrumb',
   'BaseContextMenu',
   'BaseDisclosure',
+  'BaseHoverCard',
   'BaseDrawer',
   'BaseModal',
   'BasePagination',

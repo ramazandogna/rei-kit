@@ -265,6 +265,38 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
       <PropTable name="BaseTooltip" />
     </article>
 
+    <!-- BaseHoverCard -->
+    <article :id="part('overlay-hovercard').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('overlay-hovercard').title }}</h3>
+        <p class="sc-part-pitch">{{ part('overlay-hovercard').pitch }}</p>
+      </header>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink-soft mb-3 text-sm">
+          Rest on the name — then move the pointer down into the card and press the link.
+        </p>
+        <BaseHoverCard label="About Ramazan">
+          <template #default="{ props }">
+            <BaseButton variant="link" v-bind="props">@ramazandogna</BaseButton>
+          </template>
+          <template #card>
+            <div class="flex gap-3">
+              <BaseAvatar label="Ramazan Dogan" />
+              <div>
+                <p class="text-ink text-sm font-medium">Ramazan Dogan</p>
+                <p class="text-ink-soft mt-1 text-xs leading-relaxed">
+                  Builds rei-kit and the three apps on it.
+                </p>
+                <a class="text-primary mt-2 inline-block text-xs" href="#overlays">A real link</a>
+              </div>
+            </div>
+          </template>
+        </BaseHoverCard>
+      </BaseCard>
+      <PropTable name="BaseHoverCard" />
+    </article>
+
     <!-- BasePopover -->
     <article :id="part('overlay-popover').id" class="sc-part">
       <header class="sc-part-head">

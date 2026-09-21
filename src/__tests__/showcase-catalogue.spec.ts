@@ -260,3 +260,42 @@ describe('the benchmark the evidence section reads', () => {
     }
   })
 })
+
+/**
+ * Every component says what it is where the editor can read it.
+ *
+ * The reasoning for each part of this kit is in three places a consumer
+ * never opens: the component's own source, `AGENTS.md`, and the showcase.
+ * The place they *are* looking is the autocomplete list in their editor,
+ * and eighty-five of the hundred and five said nothing there — because a
+ * doc comment inside `<script setup>` does not survive into the `.d.ts`.
+ * Only a comment above the export does.
+ *
+ * So the summary the catalogue already holds is carried to the export as
+ * well, and this keeps them in step. Hovering `BaseTable` should not be
+ * the one way of learning about it that fails.
+ */
+describe('the editor sees what the catalogue knows', () => {
+  const ENTRIES = [
+    'src/index.ts',
+    'src/web/index.ts',
+    'src/app/index.ts',
+    'src/pwa/index.ts',
+    'src/motion/index.ts',
+  ]
+
+  it.each(ENTRIES)('%s documents every component it exports', (entry) => {
+    const lines = readFileSync(entry, 'utf8').split('\n')
+    const silent: string[] = []
+
+    lines.forEach((line, index) => {
+      const match = /^export \{ default as (\w+) \}/.exec(line)
+      if (!match) return
+
+      const above = (lines[index - 1] ?? '').trim()
+      if (!above.endsWith('*/')) silent.push(match[1]!)
+    })
+
+    expect(silent).toEqual([])
+  })
+})

@@ -12,11 +12,17 @@
  */
 export { default as AuthForm } from './AuthForm.vue'
 export type { AuthFormLabels, AuthFormValues } from './auth-form'
+/** The frame every sign-in screen sits in. */
 export { default as AuthShell } from './AuthShell.vue'
+/** The one action the app is built around, reachable from every screen. */
 export { default as FabButton } from './FabButton.vue'
+/** Choosing the interface language, from a settings row. */
 export { default as LocaleSheet } from './LocaleSheet.vue'
+/** A floating note that the connection has gone. */
 export { default as OfflineBanner } from './OfflineBanner.vue'
+/** The phone frame the whole app sits inside. */
 export { default as TabShell } from './TabShell.vue'
+/** The frame an onboarding guide runs inside. */
 export { default as TourShell } from './TourShell.vue'
 
 export { createAuthGuard, createRouteAnnouncer, createTitleGuard } from './guards'

@@ -12,6 +12,12 @@
 export { useInstall, watchInstallability } from './use-install'
 export { useSnooze } from './use-snooze'
 
+/**
+ * The card that offers to install the app, and remembers being turned
+ * down.
+ */
 export { default as InstallPrompt } from './InstallPrompt.vue'
+/** The way back to installing after the card has been dismissed. */
 export { default as InstallSettings } from './InstallSettings.vue'
+/** The card that says a new version is waiting. */
 export { default as UpdatePrompt } from './UpdatePrompt.vue'

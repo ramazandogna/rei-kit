@@ -84,19 +84,32 @@ export type { Toast, ToastAction, ToastOptions, ToastTone } from './composables/
 export type { VisualViewportRect } from './composables/use-visual-viewport'
 
 // ── Components ─────────────────────────────────────────────────────────────
+/** The person, in the corner where the account lives. */
 export { default as BaseAvatar } from './components/BaseAvatar.vue'
+/** A message the reader has to take in before carrying on. */
 export { default as BaseAlert } from './components/BaseAlert.vue'
+/** A small standing label: a level, a state, a count. */
 export { default as BaseBadge } from './components/BaseBadge.vue'
+/** The kit's button, and — when asked — its link. */
 export { default as BaseButton } from './components/BaseButton.vue'
+/** A text field with its label, hint and error already wired to it. */
 export { default as BaseInput } from './components/BaseInput.vue'
+/** A list of actions behind one control. */
 export { default as BaseMenu } from './components/BaseMenu.vue'
+/** Pins the sheet to the area the keyboard has left visible. */
 export { default as BaseSheet } from './components/BaseSheet.vue'
+/** A surface with a border, and optionally a head and a foot. */
 export { default as BaseCard } from './components/BaseCard.vue'
+/** A field you type into to narrow a list, then choose from it. */
 export { default as BaseCombobox } from './components/BaseCombobox.vue'
 export type { ComboboxOption } from './components/BaseCombobox.vue'
+/** A single checkbox, with its label beside it. */
 export { default as BaseCheckbox } from './components/BaseCheckbox.vue'
+/** A set of radios, and the reason there is no `BaseRadio`. */
 export { default as BaseRadioGroup } from './components/BaseRadioGroup.vue'
+/** A native `<select>`, wearing the kit's field. */
 export { default as BaseSelect } from './components/BaseSelect.vue'
+/** A value picked from a range, where roughly right is the point. */
 export { default as BaseSlider } from './components/BaseSlider.vue'
 
 /**
@@ -104,29 +117,51 @@ export { default as BaseSlider } from './components/BaseSlider.vue'
  * on it. See `SliderField.vue` for why both carry the same name.
  */
 export { default as SliderField } from './components/SliderField.vue'
+/** Work in progress, with no idea how much is left. */
 export { default as BaseSpinner } from './components/BaseSpinner.vue'
+/** A setting that takes effect the moment it is touched. */
 export { default as BaseSwitch } from './components/BaseSwitch.vue'
+/** Rows of data, with the parts a hand-written `<table>` leaves out. */
 export { default as BaseTable } from './components/BaseTable.vue'
 export type { Column } from './components/BaseTable.vue'
+/** A multi-line field. */
 export { default as BaseTextarea } from './components/BaseTextarea.vue'
+/** A list with nothing in it yet, said kindly. */
 export { default as EmptyState } from './components/EmptyState.vue'
+/** A label, a hint, an error, and the wiring between them. */
 export { default as FormField } from './components/FormField.vue'
+/** Keeps one broken screen from taking the whole app down. */
 export { default as ErrorBoundary } from './components/ErrorBoundary.vue'
+/** One measure, centred, with the page's gutters. */
 export { default as PageContainer } from './components/PageContainer.vue'
+/** The bar at the top of a screen: a title with room either side of it. */
 export { default as PageHeader } from './components/PageHeader.vue'
+/** How far through something somebody is. */
 export { default as ProgressBar } from './components/ProgressBar.vue'
+/** One plan in a pricing table. */
 export { default as PriceCard } from './components/PriceCard.vue'
+/** A pill heading for a group of things. */
 export { default as SectionHeading } from './components/SectionHeading.vue'
+/** A row of mutually exclusive choices. */
 export { default as SegmentedControl } from './components/SegmentedControl.vue'
+/** A titled run of settings rows. */
 export { default as SettingsGroup } from './components/SettingsGroup.vue'
+/** One line in a settings card. */
 export { default as SettingsRow } from './components/SettingsRow.vue'
+/** A length starts with a digit, a dot, or opens a CSS function. */
 export { default as SkeletonList } from './components/SkeletonList.vue'
+/** One number, with what it means and which way it is going. */
 export { default as StatCard } from './components/StatCard.vue'
+/** Where the toasts land. One of these, at the app root. */
 export { default as ToastHost } from './components/ToastHost.vue'
+/** A small coloured dot, optionally labelled. */
 export { default as ToneDot } from './components/ToneDot.vue'
 export type { Tone } from './components/SectionHeading.vue'
+/** A flat language switcher for screens with no Settings behind them. */
 export { default as LocaleLinks } from './components/LocaleLinks.vue'
+/** Sign in with Google, in Google's own clothes. */
 export { default as GoogleButton } from './components/GoogleButton.vue'
+/** The floating bottom bar. */
 export { default as TabBar } from './components/TabBar.vue'
 export type { TabItem } from './components/TabBar.vue'
 /**
@@ -141,6 +176,7 @@ export { default as ActivityGrid } from './components/ActivityGrid.vue'
  * it, rather than a picture with a sentence describing it.
  */
 export { default as BarChart } from './components/BarChart.vue'
+/** Parts of a whole. */
 export { default as DonutChart } from './components/DonutChart.vue'
 /**
  * `ScrollArea`, a scrolling box with the two things a hand-written one
@@ -182,16 +218,32 @@ export { textDirection } from './utils/direction'
 export { elementDirection, horizontalStep } from './utils/direction'
 export type { TextDirection } from './utils/direction'
 export type { AnnounceOptions } from './composables/use-announce'
+/**
+ * The people on a thing, overlapped: who is in a conversation, who shares
+ * a list.
+ */
 export { default as AvatarStack } from './components/AvatarStack.vue'
+/** A month of days, for choosing one or a stretch of them. */
 export { default as BaseCalendar } from './components/BaseCalendar.vue'
+/**
+ * A short label with, when it is one of a set someone assembled, a way to
+ * take it off: a filter, a recipient, a tag.
+ */
 export { default as BaseChip } from './components/BaseChip.vue'
+/** A keyboard key, or a chord of them: `⌘ K`, `Ctrl Shift P`. */
 export { default as BaseKbd } from './components/BaseKbd.vue'
+/** A list you choose from, open on the page. */
 export { default as BaseListbox } from './components/BaseListbox.vue'
 export type { ListboxOption } from './components/BaseListbox.vue'
+/** A link in a sentence — the one thing a button is not. */
 export { default as BaseLink } from './components/BaseLink.vue'
+/** A score out of five, given or shown. */
 export { default as BaseRating } from './components/BaseRating.vue'
+/** A line between things — with, when it helps, a word on it. */
 export { default as BaseSeparator } from './components/BaseSeparator.vue'
+/** One grey box standing in for content that has not arrived. */
 export { default as BaseSkeleton } from './components/BaseSkeleton.vue'
+/** A colour, as a hex value. */
 export { default as ColorPicker } from './components/ColorPicker.vue'
 export type { ColorSwatch } from './components/ColorPicker.vue'
 /**
@@ -199,25 +251,49 @@ export type { ColorSwatch } from './components/ColorPicker.vue'
  * focusable when it scrolls, or the end of a long line is unreachable.
  */
 export { default as CodeBlock } from './components/CodeBlock.vue'
+/** Copies a piece of text, and says that it did. */
 export { default as CopyButton } from './components/CopyButton.vue'
+/**
+ * Pairs of "what it is" and "what it says": the summary at the top of a
+ * detail page, the facts under an invoice.
+ */
 export { default as DescriptionList } from './components/DescriptionList.vue'
 export type { DescriptionItem } from './components/DescriptionList.vue'
+/** Files, dropped on or chosen from a real file input. */
 export { default as FileDrop } from './components/FileDrop.vue'
+/** A field that holds several short values: recipients, labels, skills. */
 export { default as TagsInput } from './components/TagsInput.vue'
+/** A time of day, chosen from two columns. */
 export { default as TimePicker } from './components/TimePicker.vue'
+/** What happened, in order, on a rail. */
 export { default as BaseTimeline } from './components/BaseTimeline.vue'
 export type { TimelineEvent } from './components/BaseTimeline.vue'
 export type { DateRange } from './components/BaseCalendar.vue'
+/** A date, or a stretch of dates, chosen from a calendar in a popover. */
 export { default as BaseDatePicker } from './components/BaseDatePicker.vue'
 export type { DatePreset } from './components/BaseDatePicker.vue'
+/** "Are you sure?", asked beside the button that asked it. */
 export { default as BasePopconfirm } from './components/BasePopconfirm.vue'
+/**
+ * A panel of anything — a form, a picker, a few settings — anchored to the
+ * control that opened it.
+ */
 export { default as BasePopover } from './components/BasePopover.vue'
 export type { PopoverTriggerProps } from './components/BasePopover.vue'
+/** A row of buttons that stay pressed — one at a time, or several at once. */
 export { default as ToggleGroup } from './components/ToggleGroup.vue'
+/** A number, typed or stepped — a quantity, a price, a count of minutes. */
 export { default as NumberInput } from './components/NumberInput.vue'
+/** A short code typed one character per box — a sign-in code, a PIN. */
 export { default as PinInput } from './components/PinInput.vue'
+/** A password field you can look at. */
 export { default as PasswordInput } from './components/PasswordInput.vue'
+/** Progress as a ring — for a small space, a card's corner, a goal. */
 export { default as CircularProgress } from './components/CircularProgress.vue'
+/**
+ * Where someone is in a process of several steps — a sign-up, a checkout,
+ * a form split into pages.
+ */
 export { default as BaseStepper } from './components/BaseStepper.vue'
 export type { StepperStep } from './components/BaseStepper.vue'
 

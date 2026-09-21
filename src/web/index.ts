@@ -16,6 +16,7 @@
 export { default as BaseAccordion } from './BaseAccordion.vue'
 export type { AccordionItem } from './BaseAccordion.vue'
 
+/** Where this page sits, and the way back up. */
 export { default as BaseBreadcrumb } from './BaseBreadcrumb.vue'
 export type { Crumb } from './BaseBreadcrumb.vue'
 
@@ -31,6 +32,7 @@ export type { Crumb } from './BaseBreadcrumb.vue'
  * Menu key, or it is a set of actions a keyboard cannot reach at all.
  */
 export { default as BaseContextMenu } from './BaseContextMenu.vue'
+/** One section that opens and closes. */
 export { default as BaseDisclosure } from './BaseDisclosure.vue'
 /**
  * `BaseHoverCard`, for when the answer is a thing rather than a sentence —
@@ -52,6 +54,7 @@ export { default as BaseDrawer } from './BaseDrawer.vue'
  */
 export { default as BaseModal } from './BaseModal.vue'
 
+/** Moving between pages of a list. */
 export { default as BasePagination } from './BasePagination.vue'
 
 /**
@@ -75,11 +78,20 @@ export type { DataColumn, TableSort } from './DataTable.vue'
  */
 export { default as BaseSplitter } from './BaseSplitter.vue'
 
+/**
+ * A row of controls that belong together: a formatting bar, a row of view
+ * switches, the actions over a table.
+ */
 export { default as BaseToolbar } from './BaseToolbar.vue'
 
+/**
+ * A tree of things that contain things: folders, a category list, a table
+ * of contents.
+ */
 export { default as BaseTree } from './BaseTree.vue'
 export type { TreeNode } from './BaseTree.vue'
 
+/** Two lists and the way between them: what is available, what is chosen. */
 export { default as TransferList } from './TransferList.vue'
 
 /**
@@ -89,14 +101,21 @@ export { default as TransferList } from './TransferList.vue'
  */
 export { default as ResponsiveDialog } from './ResponsiveDialog.vue'
 
+/** Sections of one page, one visible at a time. */
 export { default as BaseTabs } from './BaseTabs.vue'
 export type { TabPanel } from './BaseTabs.vue'
 
+/** A short label that appears beside a control. */
 export { default as BaseTooltip } from './BaseTooltip.vue'
 
+/**
+ * A wide site's navigation, where a section has more in it than a row can
+ * hold: columns of links under a heading, opened from the bar.
+ */
 export { default as MegaMenu } from './MegaMenu.vue'
 export type { MegaMenuColumn, MegaMenuItem, MegaMenuLink } from './MegaMenu.vue'
 
+/** The primary navigation of a wide site. */
 export { default as NavLinks } from './NavLinks.vue'
 export type { NavLinkItem } from './NavLinks.vue'
 

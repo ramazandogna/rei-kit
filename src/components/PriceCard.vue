@@ -50,21 +50,26 @@ const {
    The ring is handed to the surface as a variable rather than set as a
    `border-color` class. The surface draws its own border, and two utilities
    setting the same property would be decided by stylesheet order. */
+/* The icon box takes the tone as its ground and `ink` for whatever is in
+   it. The slot is the app's, so the kit cannot know whether it holds a
+   decorative glyph or a letter somebody has to read — and a role written on
+   a wash of itself is unreadable either way. The ring and the soft panel
+   still carry the tone. */
 const TONE = {
   neutral: {
     ring: '',
     soft: 'bg-muted text-ink-soft',
-    icon: 'bg-primary/10 text-primary',
+    icon: 'bg-primary/10 text-ink',
   },
   warm: {
     ring: '[--surface-border-color:color-mix(in_oklab,var(--color-warning)_40%,transparent)]',
     soft: 'bg-warning/15 text-ink',
-    icon: 'bg-warning/15 text-warning',
+    icon: 'bg-warning/15 text-ink',
   },
   cool: {
     ring: '[--surface-border-color:color-mix(in_oklab,var(--color-accent)_38%,transparent)]',
     soft: 'bg-accent/12 text-ink',
-    icon: 'bg-accent/12 text-accent',
+    icon: 'bg-accent/12 text-ink',
   },
 } as const
 

@@ -284,7 +284,9 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
           <ul class="effects">
             <li class="effect">
               <span class="effect-demo">
-                <span class="text-positive animate-pulse-soft text-sm font-semibold">● Live</span>
+                <span class="text-ink animate-pulse-soft text-sm font-semibold"
+                  ><span class="text-positive" aria-hidden="true">●</span> Live</span
+                >
               </span>
               <code>animate-pulse-soft</code>
               <span class="effect-use">a status that is on</span>

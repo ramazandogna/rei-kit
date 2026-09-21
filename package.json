@@ -108,7 +108,7 @@
     "palettes:check": "node scripts/build-palettes.mjs --check",
     "type-check:showcase": "vue-tsc -p tsconfig.showcase.json --noEmit",
     "type-check:strict": "vue-tsc -p tsconfig.strict.json --noEmit",
-    "test:browser": "playwright test"
+    "test:browser": "pnpm showcase:build && playwright test"
   },
   "peerDependencies": {
     "@supabase/supabase-js": "^2.0.0",

@@ -76,6 +76,110 @@ describe('no component carries a colour of its own', () => {
   })
 })
 
+/**
+ * A role is never written on a wash of itself.
+ *
+ * `bg-positive/12` with `text-positive` is the obvious way to build a
+ * coloured badge and it is unreadable by construction: a twelve per cent
+ * wash of a colour over a surface is still nearly that surface, so the pair
+ * lands between 1.5 and 4.3 to one depending on the palette. It shipped in
+ * `BaseBadge`, `BaseChip` and `BaseListbox` and nothing caught it — the
+ * palette numbers compare token against token and the wash is neither, and
+ * the jsdom audit has contrast switched off because there is no layout.
+ *
+ * The answer the kit settled on is `text-ink` on the wash, with the role
+ * carrying the ground and the edge. This is the check that keeps it there,
+ * because the wrong version is the one that looks right in a diff.
+ */
+describe('no role is written on a wash of itself', () => {
+  const ROLES = ['primary', 'accent', 'positive', 'negative', 'warning']
+
+  const files = ['src/components', 'src/app', 'src/web', 'src/pwa', 'src/motion'].flatMap((dir) =>
+    readdirSync(dir)
+      .filter((f) => f.endsWith('.vue'))
+      .map((f) => `${dir}/${f}`),
+  )
+
+  it.each(files)('%s', (file) => {
+    const code = read(file)
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/^\s*\/\/.*$/gm, '')
+
+    const offences: string[] = []
+
+    /* Whole opening tags rather than bare class attributes, so an element
+       that is `aria-hidden` can be left alone: a decorative icon in a
+       tinted circle is not text and WCAG does not measure it. */
+    const tags = [...code.matchAll(/<[a-zA-Z][^>]*>/g)].map(([tag]) => tag)
+
+    /* And the class lists that never appear in a tag, because the component
+       keeps them in a tone map and binds it — which is how `BaseBadge`
+       carried this fault while a scan of its template saw nothing.
+ 
+       A map is read through one indirection (`const skin = computed(() =>
+       TONES[tone])`, then `:class="skin"`), so the binding is followed one
+       step to find the element it lands on. That is what tells a badge's
+       tones from an alert's marks: the marks go on an `aria-hidden` span,
+       and a decorative icon in a tinted circle is not text. */
+    const script = code.slice(0, code.indexOf('</script>') + 1)
+
+    const literals = [...script.matchAll(/const (\w+) = \{([^}]*)\}/g)].flatMap(([, map, body]) => {
+      const bound = new RegExp(`const (\\w+) = computed\\(\\(\\) => ${map}\\[`).exec(script)?.[1]
+      const target = bound
+        ? tags.find((tag) => new RegExp(`:class="[^"]*\\b${bound}\\b`).test(tag))
+        : undefined
+
+      if (target?.includes('aria-hidden="true"')) return []
+
+      return [...body.matchAll(/'([^']*)'|"([^"]*)"/g)].map(
+        ([, single, double]) => single ?? double ?? '',
+      )
+    })
+
+    for (const role of ROLES) {
+      const wash = new RegExp(`\\bbg-${role}/\\d`)
+      const words = new RegExp(`\\btext-${role}\\b`)
+
+      for (const tag of tags) {
+        if (tag.includes('aria-hidden="true"')) continue
+        if (wash.test(tag) && words.test(tag)) {
+          offences.push(`bg-${role}/… with text-${role} — write text-ink on the wash`)
+        }
+      }
+
+      for (const literal of literals) {
+        if (wash.test(literal) && words.test(literal)) {
+          offences.push(`bg-${role}/… with text-${role} — write text-ink on the wash`)
+        }
+      }
+
+      /* And the stylesheet form, rule by rule, carrying its selector so the
+         same `aria-hidden` exemption applies: a class used only on a
+         decorative icon is not text either.
+
+         The `color:` has to start a declaration. Without that anchor,
+         `border-color: var(--color-…)` matches on its own tail — two of the
+         three this found the first time it ran were exactly that. */
+      for (const [, selector, body] of code.matchAll(/([.#][\w-][^{}]*?)\{([^{}]*)\}/g)) {
+        const washed = new RegExp(`background:[^;]*color-mix\\([^;]*--color-${role}\\b`).test(body)
+        const written = new RegExp(`(?:^|[;{])\\s*color:\\s*var\\(--color-${role}\\)`).test(body)
+        if (!washed || !written) continue
+
+        const names = [...selector.matchAll(/\.([\w-]+)/g)].map(([, name]) => name)
+        const decorative = names.some((name) =>
+          tags.some((tag) => tag.includes(name) && tag.includes('aria-hidden="true"')),
+        )
+        if (decorative) continue
+
+        offences.push(`a --color-${role} wash written in --color-${role} — use --color-ink`)
+      }
+    }
+
+    expect([...new Set(offences)]).toEqual([])
+  })
+})
+
 describe('palettes', () => {
   it('ship ten, each with both modes and a four-colour swatch', () => {
     expect(PALETTES).toHaveLength(10)

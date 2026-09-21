@@ -22,7 +22,7 @@
   --color-surface: #ffffff;
   --color-muted: #ddf4e7;
   --color-ink: #0f2229;
-  --color-ink-soft: #5c7480;
+  --color-ink-soft: #586f7b;
   --color-hair: #e1edea;
 
   /* ---------------------------------------------------------------------
@@ -72,7 +72,7 @@
   --color-primary: #26667f;
   --color-accent: #124170;
   --color-positive: #67c090;
-  --color-negative: #c9463b;
+  --color-negative: #c7453a;
   --color-warning: #d89a3e;
 
   --color-on-primary: #ffffff;
@@ -87,7 +87,7 @@
     --color-primary: #26667f;
     --color-accent: #124170;
     --color-positive: #67c090;
-    --color-negative: #c9463b;
+    --color-negative: #c7453a;
     --color-warning: #d89a3e;
 
     --color-on-primary: #ffffff;

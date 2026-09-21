@@ -397,6 +397,15 @@ Depth: `--shadow-card`, `--shadow-raised`, `--shadow-overlay`,
 Motion: `--ease-standard`, `--ease-sheet`, `--duration-fast|base|slow|slower`.
 Dark mode is class-based: `.dark` on `<html>` — `useTheme` does it.
 
+**A role never writes on a wash of itself.** `bg-positive/12` with
+`text-positive` is the obvious way to build a coloured badge and it is
+unreadable by construction — a faint wash of a colour over a surface is
+still nearly that colour, and the pair measured between 1.5 and 4.3 to one
+across the ten palettes. The ground and the edge carry the role; `text-ink`
+carries the words. `BaseBadge`, `BaseChip`, `BaseAlert`, `BaseListbox` and
+`PriceCard` all do this, a test fails on the other version, and an element
+that is `aria-hidden` is exempt because a decorative glyph is not text.
+
 **Write `text-on-primary`, never `text-white`, on a filled role.** White on the
 kit's own warning colour measured 2.3:1; a palette with a light primary sets its
 `on-primary` dark and every component follows.

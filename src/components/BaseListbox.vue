@@ -220,8 +220,12 @@ function onKeydown(event: KeyboardEvent) {
   background: var(--color-muted);
 }
 
+/* The chosen row is its tinted ground, its weight and its tick — not a
+   primary-coloured label on a ten per cent tint of primary, which is the
+   same fault `BaseBadge` had: a faint wash of a colour is still nearly that
+   colour, and the pair measured 4.16:1. */
 .rk-listbox-option.is-chosen {
-  color: var(--color-primary);
+  color: var(--color-ink);
   font-weight: 500;
 }
 

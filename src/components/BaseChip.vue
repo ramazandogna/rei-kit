@@ -110,29 +110,36 @@ const emit = defineEmits<{ remove: []; select: [] }>()
 
 /* The tones tint rather than fill: a row of chips in five solid colours is a
    row where nothing stands out. The selected one fills, and that is the point
-   of it. */
+   of it.
+ 
+   The ground and the edge carry the role; `ink` carries the words. Two of
+   these used to write the role straight onto a tint of itself and the other
+   two mixed it most of the way there, which is the same fault by degrees —
+   a browser measured the warning chip at 4.13:1. There is one answer to
+   this in the kit now, and `BaseBadge`, `BaseAlert` and `BaseListbox` give
+   the same one. */
 .rk-chip.tone-primary {
   background: color-mix(in oklab, var(--color-primary) 12%, transparent);
   border-color: color-mix(in oklab, var(--color-primary) 25%, transparent);
-  color: var(--color-primary);
+  color: var(--color-ink);
 }
 
 .rk-chip.tone-success {
   background: color-mix(in oklab, var(--color-positive) 14%, transparent);
   border-color: color-mix(in oklab, var(--color-positive) 28%, transparent);
-  color: color-mix(in oklab, var(--color-positive) 80%, var(--color-ink));
+  color: var(--color-ink);
 }
 
 .rk-chip.tone-warning {
   background: color-mix(in oklab, var(--color-warning) 16%, transparent);
   border-color: color-mix(in oklab, var(--color-warning) 30%, transparent);
-  color: color-mix(in oklab, var(--color-warning) 75%, var(--color-ink));
+  color: var(--color-ink);
 }
 
 .rk-chip.tone-danger {
   background: color-mix(in oklab, var(--color-negative) 12%, transparent);
   border-color: color-mix(in oklab, var(--color-negative) 26%, transparent);
-  color: var(--color-negative);
+  color: var(--color-ink);
 }
 
 .rk-chip-remove {

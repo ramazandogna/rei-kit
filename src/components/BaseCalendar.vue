@@ -447,9 +447,13 @@ watch(
 }
 
 /* A day from the month either side: still reachable, visibly not this month. */
+/* `ink-soft` and nothing else. It used to carry `opacity: 0.55` on top,
+   which took a colour that clears AA down to 2.2:1 — and these are real
+   buttons with real labels, reachable by script and read out by name, not
+   decoration. The softer ink is already the difference between this month
+   and the next. */
 .rk-cal-day.is-outside {
   color: var(--color-ink-soft);
-  opacity: 0.55;
 }
 
 .rk-cal-day.is-inside {

@@ -27,7 +27,7 @@ export default defineConfig({
   reporter: process.env['CI'] ? 'github' : 'list',
 
   use: {
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: 'http://localhost:4173',
     /* The page is long and every component is on it; a small window would
        leave most of them outside the layout axe measures against. */
     viewport: { width: 1440, height: 1200 },
@@ -35,10 +35,12 @@ export default defineConfig({
 
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 
+  /* Serves what is already built: `pnpm test:browser` does the building, so
+     a slow build cannot be mistaken for a server that never came up. */
   webServer: {
-    command: 'pnpm showcase:build && pnpm exec vite preview --config vite.showcase.config.ts --port 4173 --strictPort',
-    url: 'http://127.0.0.1:4173',
+    command: 'pnpm exec vite preview --config vite.showcase.config.ts --port 4173 --strictPort',
+    url: 'http://localhost:4173',
     reuseExistingServer: !process.env['CI'],
-    timeout: 180_000,
+    timeout: 60_000,
   },
 })

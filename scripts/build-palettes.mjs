@@ -105,21 +105,94 @@ export const PAIRINGS = [
   ['ink', 'surface', 4.5],
   ['inkSoft', 'surface', 4.5],
   ['inkSoft', 'canvas', 4.5],
+  /* `muted` is a ground the kit writes on constantly and nobody had listed:
+     a segmented control's inactive segment, an avatar stack's "+2", a
+     neutral badge. A real browser found `inkSoft` on it at 4.26 in five of
+     the twenty palette-and-mode combinations, with every check green. */
+  ['ink', 'muted', 4.5],
+  ['inkSoft', 'muted', 4.5],
   ['onPrimary', 'primary', 4.5],
   ['onAccent', 'accent', 4.5],
   ['onPositive', 'positive', 4.5],
   ['onNegative', 'negative', 4.5],
   ['onWarning', 'warning', 4.5],
-  ['primary', 'surface', 3],
+  /* 4.5 and not 3. The comment above said `primary` is "mostly" a
+     non-text element, and "mostly" was doing the work: `BaseLink` paints a
+     link with it, `MegaMenu` its active top item, `TabBar` its active
+     label. A browser measured a Solarized link at 3.53:1. A role that is
+     ever a word is held to the line for words. */
+  ['primary', 'surface', 4.5],
+  ['primary', 'canvas', 4.5],
+  /* `negative` is the one filled role the kit also renders as *text*, in
+     `FormField` and `BaseRadioGroup`: the sentence that says why a form was
+     rejected. It failed in six of twenty and nothing said so, because the
+     list above only ever asked about `onNegative` on `negative`.
+
+     The other roles are fills. `positive`, `warning` and `accent` appear as
+     a colour only on things that are `aria-hidden` — a toast's icon, an
+     alert's mark — so they are held to nothing here. An app that writes
+     `text-warning` on a surface is outside what these numbers cover, and
+     `AGENTS.md` says so. */
+  ['negative', 'surface', 4.5],
+  ['negative', 'canvas', 4.5],
 ]
+
+/**
+ * The grounds the kit paints that are not a token.
+ *
+ * `BaseBadge`, `BaseChip`, `BaseAlert` and `BaseListbox` all lay a faint
+ * wash of a role over a surface and write on it. Those grounds are the
+ * reason this list exists at all: they are neither `surface` nor the role,
+ * so a check that only ever compares one token against another cannot see
+ * them, and a browser found the kit writing on them at 1.46:1.
+ *
+ * The strongest and the faintest wash the kit uses. In between is between.
+ */
+const TINTS = [0.16, 0.08]
+const TINTED_ON = ['primary', 'positive', 'negative', 'warning']
+
+function mix(hex, over, alpha) {
+  const parts = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
+  const [r, g, b] = parts(hex)
+  const ground = parts(over)
+
+  return `#${[r, g, b]
+    .map((v, i) => Math.round(v * alpha + ground[i] * (1 - alpha)).toString(16).padStart(2, '0'))
+    .join('')}`
+}
+
+/** Every pairing, including the washes, for one palette in one mode. */
+export function checks(colours) {
+  const out = PAIRINGS.filter(([fg, bg]) => colours[fg] && colours[bg]).map(([fg, bg, min]) => ({
+    fg: colours[fg],
+    bg: colours[bg],
+    min,
+    label: `${fg} on ${bg}`,
+  }))
+
+  for (const role of TINTED_ON) {
+    for (const alpha of TINTS) {
+      for (const ground of ['surface', 'canvas']) {
+        out.push({
+          fg: colours.ink,
+          bg: mix(colours[role], colours[ground], alpha),
+          min: 4.5,
+          label: `ink on ${role}/${Math.round(alpha * 100)} over ${ground}`,
+        })
+      }
+    }
+  }
+
+  return out
+}
 
 export function failures(resolved) {
   const out = []
   for (const palette of resolved) {
     for (const mode of ['light', 'dark']) {
-      for (const [fg, bg, min] of PAIRINGS) {
-        const ratio = contrast(palette[mode][fg], palette[mode][bg])
-        if (ratio < min) out.push({ palette: palette.name, mode, fg, bg, ratio, min })
+      for (const { fg, bg, min, label } of checks(palette[mode])) {
+        const ratio = contrast(fg, bg)
+        if (ratio < min) out.push({ palette: palette.name, mode, fg: label, bg: '', ratio, min })
       }
     }
   }
@@ -179,7 +252,7 @@ if (invoked && process.argv.includes('--check')) {
   const bad = failures(resolved)
   for (const f of bad) {
     console.log(
-      `${f.palette.padEnd(12)} ${f.mode.padEnd(5)} ${f.fg} on ${f.bg}: ${f.ratio.toFixed(2)} < ${f.min}`,
+      `${f.palette.padEnd(12)} ${f.mode.padEnd(5)} ${f.fg}${f.bg ? ` on ${f.bg}` : ''}: ${f.ratio.toFixed(2)} < ${f.min}`,
     )
   }
   console.log(bad.length ? `\n${bad.length} failing pairing(s)` : 'every pairing passes')

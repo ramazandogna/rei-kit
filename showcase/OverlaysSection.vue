@@ -14,7 +14,7 @@ import {
   SectionHeading,
   useToast,
 } from '../src/index'
-import { BaseModal, BaseTooltip, ResponsiveDialog } from '../src/web/index'
+import { BaseDrawer, BaseModal, BaseTooltip, ResponsiveDialog } from '../src/web/index'
 import { OVERLAY_PARTS } from './overlay-parts'
 import type { OverlayPartId } from './overlay-parts'
 import PropTable from './PropTable.vue'
@@ -36,6 +36,14 @@ const menuOpen = ref(false)
 const askDelete = ref(false)
 const onlyUnpaid = ref(true)
 const thisMonth = ref(false)
+
+const drawer = ref(false)
+const drawerSide = ref<'start' | 'end' | 'top' | 'bottom'>('end')
+
+function openDrawer(side: 'start' | 'end' | 'top' | 'bottom') {
+  drawerSide.value = side
+  drawer.value = true
+}
 
 const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
 </script>
@@ -121,6 +129,43 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
         </BaseSheet>
       </BaseCard>
       <PropTable name="BaseSheet" />
+    </article>
+
+    <!-- BaseDrawer -->
+    <article :id="part('overlay-drawer').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('overlay-drawer').title }}</h3>
+        <p class="sc-part-pitch">{{ part('overlay-drawer').pitch }}</p>
+      </header>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink-soft mb-3 text-sm">
+          Try each edge: the panel keeps its contract, only the edge changes.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <BaseButton
+            v-for="edge in ['start', 'end', 'top', 'bottom'] as const"
+            :key="edge"
+            variant="secondary"
+            size="sm"
+            @click="openDrawer(edge)"
+          >
+            {{ edge }}
+          </BaseButton>
+        </div>
+
+        <BaseDrawer v-model="drawer" :side="drawerSide" title="Filters" close-label="Close">
+          <div class="flex flex-col gap-3">
+            <BaseSwitch v-model="onlyUnpaid" label="Only unpaid" />
+            <BaseSwitch v-model="thisMonth" label="This month" />
+          </div>
+          <template #actions>
+            <BaseButton variant="ghost" @click="drawer = false">Clear</BaseButton>
+            <BaseButton @click="drawer = false">Apply</BaseButton>
+          </template>
+        </BaseDrawer>
+      </BaseCard>
+      <PropTable name="BaseDrawer" />
     </article>
 
     <!-- BaseMenu -->

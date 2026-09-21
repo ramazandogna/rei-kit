@@ -150,6 +150,7 @@ const WEB_API = [
   'BaseAccordion',
   'BaseBreadcrumb',
   'BaseDisclosure',
+  'BaseDrawer',
   'BaseModal',
   'BasePagination',
   'BaseSplitter',

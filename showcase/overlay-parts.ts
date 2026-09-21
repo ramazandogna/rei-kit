@@ -25,6 +25,13 @@ export const OVERLAY_PARTS = [
       'The same job on a phone, where the top of the screen is out of reach and the bottom is where the thumb already is. It looks narrow on a desktop because it is pinned to the app shell’s column — on a phone that column is the whole screen.',
   },
   {
+    id: 'overlay-drawer',
+    label: 'BaseDrawer',
+    title: 'BaseDrawer — arrives from the side',
+    pitch:
+      'What a wide screen keeps beside the page rather than on top of it: filters, a cart, a menu that outgrew its bar. `side` is `start` and `end`, not left and right, so it follows the writing direction on its own.',
+  },
+  {
     id: 'overlay-menu',
     label: 'BaseMenu',
     title: 'BaseMenu — a short list of actions',

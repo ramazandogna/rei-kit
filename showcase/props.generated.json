@@ -755,6 +755,48 @@
     ]
   },
   {
+    "name": "BaseDrawer",
+    "entry": "rei-kit/web",
+    "summary": "A panel that comes in from the edge of a wide screen.",
+    "props": [
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "Names the dialog. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "closeLabel",
+        "required": true,
+        "type": "string",
+        "description": "Accessible name of the close button. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "side",
+        "required": false,
+        "type": "'start' | 'end' | 'top' | 'bottom'",
+        "description": "Which edge it comes from. `start` and `end` follow the writing direction.",
+        "default": "'end'"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "string",
+        "description": "How far it reaches in from that edge — a width on the sides, a height on the top and bottom. Any CSS length.",
+        "default": "'22rem'"
+      },
+      {
+        "name": "dismissible",
+        "required": false,
+        "type": "boolean",
+        "description": "Escape and the scrim close it. Off for something half filled in.",
+        "default": "true"
+      }
+    ]
+  },
+  {
     "name": "BaseInput",
     "entry": "rei-kit",
     "summary": "A text field with its label, hint and error already wired to it.",

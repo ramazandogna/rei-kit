@@ -27,6 +27,11 @@ export type { Crumb } from './BaseBreadcrumb.vue'
  * accordion cannot know about.
  */
 export { default as BaseDisclosure } from './BaseDisclosure.vue'
+/**
+ * `BaseDrawer`, the wide screen's answer to `BaseSheet`: a panel from the
+ * edge, for what a site keeps beside the page rather than on top of it.
+ */
+export { default as BaseDrawer } from './BaseDrawer.vue'
 
 /**
  * `BaseModal`, beside `BaseSheet` rather than named `Modal` on its own.

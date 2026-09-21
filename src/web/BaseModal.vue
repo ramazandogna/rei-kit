@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { ref } from 'vue'
 
-import { inertOutside } from '../utils/inert'
+import { useDialogShell } from '../composables/use-dialog-shell'
 
 /**
  * A dialog that arrives from nowhere.
@@ -65,74 +65,16 @@ defineSlots<{
 }>()
 
 const panel = ref<HTMLElement | null>(null)
-/** Who had focus before this opened, so it can be given back. */
-let restoreTo: HTMLElement | null = null
-/** Gives the page behind back; set while open. */
-let releaseInert: (() => void) | null = null
 
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-
-function focusable(): HTMLElement[] {
-  if (!panel.value) return []
-
-  return Array.from(panel.value.querySelectorAll<HTMLElement>(FOCUSABLE))
-}
-
-function onKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape' && dismissible) {
-    event.stopPropagation()
-    open.value = false
-
-    return
-  }
-
-  if (event.key !== 'Tab') return
-
-  const items = focusable()
-  if (items.length === 0) return event.preventDefault()
-
-  const first = items[0]!
-  const last = items[items.length - 1]!
-  const active = document.activeElement
-
-  // The wrap has to be done by hand: the browser's own Tab order is the whole
-  // document, and the dialog is only part of it.
-  if (event.shiftKey && (active === first || !panel.value?.contains(active))) {
-    event.preventDefault()
-    last.focus()
-  } else if (!event.shiftKey && active === last) {
-    event.preventDefault()
-    first.focus()
-  }
-}
-
-watch(open, async (isOpen) => {
-  if (isOpen) {
-    restoreTo = document.activeElement as HTMLElement | null
-    document.body.style.overflow = 'hidden'
-    await nextTick()
-    // The Tab wrap above keeps focus cycling; `inert` is what also stops a
-    // screen reader's virtual cursor, which walks past keydown handlers.
-    if (panel.value) releaseInert = inertOutside(panel.value)
-    // The panel itself when it holds nothing focusable, so focus is at least
-    // inside the dialog rather than behind it.
-    ;(focusable()[0] ?? panel.value)?.focus()
-  } else {
-    document.body.style.overflow = ''
-    // Before focus goes back: an inert element cannot take it.
-    releaseInert?.()
-    releaseInert = null
-    restoreTo?.focus()
-    restoreTo = null
-  }
-})
-
-// A dialog unmounted while open would otherwise leave the page unscrollable,
-// with nothing on screen to explain why.
-onBeforeUnmount(() => {
-  if (open.value) document.body.style.overflow = ''
-  releaseInert?.()
+/*
+ * Trapping Tab, stopping Escape, making the page behind inert and handing
+ * focus back are the same job in every modal surface, and each step has an
+ * order that matters. It lives in `useDialogShell` so the drawer does not
+ * carry a second copy to keep correct.
+ */
+const { onKeydown } = useDialogShell(open, panel, {
+  dismissible: () => dismissible,
+  onClose: () => (open.value = false),
 })
 </script>
 

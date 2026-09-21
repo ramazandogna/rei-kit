@@ -626,6 +626,15 @@ Four checks hold that line, and each catches something the others cannot:
   rendering differs between a Mac and a Linux runner, so the pictures would
   fail on arrival for a reason that has nothing to do with the change.
 
+**A new component also needs a doc comment above its export**, in the entry
+file, and `showcase-catalogue.spec.ts` fails without one. Not pedantry: a
+doc comment inside `<script setup>` does not survive into the `.d.ts`, so
+the reasoning written at the top of the component reaches nobody who
+installs the package. Only the comment above the export does. Eighty-five
+of the hundred and five said nothing in an editor until 2.24.0, while
+saying it at length in three places a consumer never opens. Keep it to the
+summary line; the argument belongs in the component.
+
 A new component also needs its sample, `showcase/examples/<Name>.vue`.
 `examples.spec.ts` fails without one, and fails on a prop, model or event the
 component does not have, or a required prop left out — the type-check cannot

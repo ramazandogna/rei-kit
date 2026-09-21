@@ -40,18 +40,44 @@ you have to do.
 
 ## Next
 
-**A real browser, ahead of more components.** Everything here is audited in
-jsdom, which has no layout — so two of the things most often claimed about a
-component kit are the two still unmeasured: **contrast** and **focus
-order**. The axe rules for both are switched off rather than left to pass
-quietly, and the palettes are checked by measuring their pairings instead.
-Closing that means Playwright and a CI job, which is a dependency and a
-minute on every push; it is the next decision rather than the next commit.
+**Being usable, ahead of having more.** The kit has 105 components and one
+user. "What most people need" is not answerable from here — every gap found
+so far came from the three apps in this family or from a new measuring
+instrument, and both are inside signals. Building more without outside
+signal is guessing, and every guess costs maintenance, a documentation row,
+a test and a slice of the stylesheet budget for ever.
 
-- **A carousel** is still the only component under consideration, below.
-- The showcase has an evidence section as of 2.23.0 — the size table and the
-  checks — because a gallery can show what exists and cannot show what it
-  costs or whether the rules are enforced.
+So the order is:
+
+1. **Make it answerable.** Somebody who has installed it must be able to get
+   from "I need a table" to working code without opening the repository.
+   That is not polish, it is the only thing that turns the question above
+   into data.
+2. **Then components, driven by what people actually ask for.** The gap test
+   still runs; it just stops being the only source.
+3. **Then readability** — and mostly consistency and navigability rather
+   than more prose. Some files are getting long and the comments with them.
+4. **Then size, only where measurement points.** It points at one place, and
+   only one: `styles.css`, 20 KB of the flat 23, plain scoped CSS that
+   Tailwind cannot shake out. Splitting it per component would fix the small
+   app's dead weight and cost the two-line install. That is a 3.0
+   conversation, not a 2.x one.
+
+**What "answerable" is missing, measured 2026-09-22.** Hovering a component
+said nothing for 85 of the 105, because a doc comment inside `<script setup>`
+never reaches the `.d.ts` — only a comment above the export does. Fixed, and
+held by a test. Three things remain:
+
+- **Which of two neighbours to reach for** is written well in `AGENTS.md`
+  and not at all in an editor. `BaseTable` or `DataTable`, `BaseSheet` or
+  `BaseModal` or `BaseDrawer`, `BaseSelect` or `BaseCombobox` — about
+  twenty-five pairs.
+- **A working example in the editor.** `showcase/examples/<Name>.vue` exists
+  for all 105 and is type-checked, so an `@example` generated from it would
+  be documentation proven to compile. Few kits can say that.
+- **A path from install to a screen.** The showcase is a gallery: it shows
+  what exists, not how to build something. The first ten minutes should end
+  with one real screen and the moment where changing the palette changes it.
 
 ## Under consideration
 
@@ -66,7 +92,12 @@ kit should have it.
 
 - **A `create-rei-app` or a framework module.** This stays a kit you install
   next to Tailwind. Every layer on top is a layer that has to keep up with
-  the tools underneath it.
+  the tools underneath it. That includes **`vite-ssg`**, which is an app's
+  build choice and not this package's business. The kit's side of prerender
+  is a promise — no module touches `window` or `document` on import — and
+  that promise is measured: `ssr.spec.ts` in the suite, and Kakehashi's real
+  `vite-ssg build` in `consumer.yml` on every release, which jsdom cannot
+  stand in for because it supplies the very `document` a server lacks.
 - **A base library underneath.** No Radix, no Reka, no Headless UI. The
   patterns here are implemented against the ARIA authoring practices
   directly, which is why each component can say what it does and why.

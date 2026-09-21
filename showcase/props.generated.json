@@ -491,6 +491,20 @@
         "type": "'sm' | 'md'",
         "description": "`md` is a setting: a line the reader came here to change, in ink. `sm` is an aside — \"remember me\" under a sign-in form, \"show the ones I have learned\" above a list — quieter and tighter. The two are not a guess. Of the five hand-written checkboxes across the three consuming apps, four were the aside and one was the setting, and they differed in exactly these two ways.",
         "default": "'md'"
+      },
+      {
+        "name": "indeterminate",
+        "required": false,
+        "type": "boolean",
+        "description": "Neither checked nor unchecked: some of what this box stands for is. It is a DOM property and not an attribute, so it cannot be written in markup and there is no `indeterminate=\"\"` to set — which is why a \"select all\" box on top of a list is the one checkbox every app ends up writing by hand. The kit's own `DataTable` did, for exactly this reason. It is presentation only: the value underneath is still `true` or `false`, and pressing the box resolves it.",
+        "default": "false"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "Hides the words but keeps them as the accessible name. For a box in a table header or a list row whose surroundings already say what it is — dropping the label would leave the control named nothing at all.",
+        "default": "false"
       }
     ]
   },

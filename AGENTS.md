@@ -220,7 +220,13 @@ looks almost right.
   which is most loading states. The primitive is for the ones it does not
   cover: an avatar, a heading, a chart.
 - **`BaseCheckbox` or `BaseSwitch`.** A checkbox states an intention something
-  else commits; a switch is the commit, with no Save after it.
+  else commits; a switch is the commit, with no Save after it. A box that
+  stands for a list of others takes `indeterminate` — neither on nor off,
+  because some of them are. It is a DOM property with no markup for it,
+  which is why a select-all box is the one control every app writes by
+  hand; the kit's own `DataTable` did, until `BaseCheckbox` grew it.
+  `labelHidden` is for a box in a table cell whose row already says what it
+  is — dropping the label instead leaves it named nothing at all.
 - **`BaseAccordion` or `BaseDisclosure`.** The accordion owns the list. When
   the list is the app's — rows staggered as they scroll in, interleaved with
   anything else — use one disclosure per row.

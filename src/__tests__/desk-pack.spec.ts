@@ -38,6 +38,51 @@ describe('DataTable', () => {
   const bodyText = (wrapper: ReturnType<typeof mount>) =>
     wrapper.findAll('tbody tr').map((row) => row.findAll('td')[0]!.text())
 
+  const selectProps = {
+    selectable: true,
+    selectAllLabel: 'Hepsini seç',
+    rowLabel: (row: (typeof rows)[number]) => `${row.name} satırı`,
+  }
+
+  const headBox = (wrapper: ReturnType<typeof mount>) =>
+    wrapper.get('thead input[type="checkbox"]').element as HTMLInputElement
+
+  /**
+   * The select-all box is the one control in the kit that has a third
+   * appearance and only two values, and `indeterminate` is a DOM property
+   * with no markup for it. That combination is why every app writes this
+   * box by hand — including, until now, this one.
+   */
+  it('marks the select-all box as partial when some rows are chosen', () => {
+    const wrapper = build({ ...selectProps, selected: [rows[0]!.id] })
+
+    expect(headBox(wrapper).indeterminate).toBe(true)
+    expect(headBox(wrapper).checked).toBe(false)
+  })
+
+  it('checks it outright when every row is chosen', () => {
+    const wrapper = build({ ...selectProps, selected: rows.map((row) => row.id) })
+
+    expect(headBox(wrapper).checked).toBe(true)
+    expect(headBox(wrapper).indeterminate).toBe(false)
+  })
+
+  it('leaves it plain when nothing is chosen', () => {
+    const wrapper = build({ ...selectProps, selected: [] })
+
+    expect(headBox(wrapper).checked).toBe(false)
+    expect(headBox(wrapper).indeterminate).toBe(false)
+  })
+
+  it('names every box, though none of them shows its words', () => {
+    const wrapper = build({ ...selectProps, selected: [] })
+
+    // A box in a table cell whose label was simply dropped is a control a
+    // reader hears as nothing at all.
+    expect(wrapper.get('thead .sr-only').text()).toBe('Hepsini seç')
+    expect(wrapper.get('tbody .sr-only').text()).toBe(`${rows[0]!.name} satırı`)
+  })
+
   it('says which column is sorted, in the way a screen reader reads', async () => {
     const wrapper = build()
     const first = wrapper.findAll('th')[0]!
@@ -85,12 +130,21 @@ describe('DataTable', () => {
       selected: [],
     })
 
-    expect(wrapper.find('[aria-label="Ada satırını seç"]').exists()).toBe(true)
+    /* The name comes from a real `<label for>` now rather than an
+       `aria-label`, because the boxes are `BaseCheckbox` — so it is found
+       by the words, which is also what a reader hears. */
+    const named = (text: string) =>
+      wrapper
+        .findAll('label')
+        .find((label) => label.text() === text)!
+        .get('input')
 
-    await wrapper.find('[aria-label="Ömer satırını seç"]').trigger('change')
+    expect(named('Ada satırını seç').exists()).toBe(true)
+
+    await named('Ömer satırını seç').setValue(true)
     expect(wrapper.emitted('update:selected')!.at(-1)).toEqual([['a']])
 
-    await wrapper.find('[aria-label="Hepsini seç"]').trigger('change')
+    await named('Hepsini seç').setValue(true)
     expect(wrapper.emitted('update:selected')!.at(-1)).toEqual([['a', 'b', 'c']])
   })
 

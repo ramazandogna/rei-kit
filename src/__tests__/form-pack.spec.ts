@@ -627,3 +627,57 @@ describe('a row that can be chosen', () => {
     expect(off.classes()).toContain('bg-transparent')
   })
 })
+
+describe('BaseCheckbox, neither on nor off', () => {
+  /**
+   * `indeterminate` is a DOM property and not an attribute: there is no
+   * markup for it, so it cannot be set the way everything else in a
+   * template is. That is why a "select all" box is the one control every
+   * app writes by hand — the kit's own DataTable did, until this landed.
+   */
+  it('sets the property, which is the only way there is to set it', () => {
+    const box = mount(BaseCheckbox, {
+      props: { label: 'Hepsini seç', indeterminate: true },
+    }).get('input').element as HTMLInputElement
+
+    expect(box.indeterminate).toBe(true)
+    // There is no attribute to look for, and asserting on one would pass
+    // while the box looked unchecked to everybody.
+    expect(box.hasAttribute('indeterminate')).toBe(false)
+  })
+
+  it('leaves the value alone: the mark is presentation, not a third state', () => {
+    const wrapper = mount(BaseCheckbox, {
+      props: { label: 'Hepsini seç', modelValue: false, indeterminate: true },
+    })
+
+    expect((wrapper.get('input').element as HTMLInputElement).checked).toBe(false)
+  })
+
+  it('drops the mark when it is told to', async () => {
+    const wrapper = mount(BaseCheckbox, {
+      props: { label: 'Hepsini seç', indeterminate: true },
+    })
+
+    await wrapper.setProps({ indeterminate: false })
+
+    expect((wrapper.get('input').element as HTMLInputElement).indeterminate).toBe(false)
+  })
+
+  it('keeps its label as a name when it hides the words', () => {
+    const wrapper = mount(BaseCheckbox, {
+      props: { label: 'Hepsini seç', labelHidden: true },
+    })
+
+    // Hidden, not absent: dropping the words would leave the box named
+    // nothing at all, which is what a raw box in a table header usually is.
+    expect(wrapper.get('span').classes()).toContain('sr-only')
+    expect(wrapper.get('span').text()).toBe('Hepsini seç')
+  })
+
+  it('shows its words by default', () => {
+    const wrapper = mount(BaseCheckbox, { props: { label: 'Beni hatırla' } })
+
+    expect(wrapper.get('span').classes()).not.toContain('sr-only')
+  })
+})

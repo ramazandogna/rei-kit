@@ -19,6 +19,8 @@ const {
   hint = '',
   disabled = false,
   size = 'md',
+  indeterminate = false,
+  labelHidden = false,
 } = defineProps<{
   label: string
   error?: string | undefined
@@ -34,6 +36,25 @@ const {
    * they differed in exactly these two ways.
    */
   size?: 'sm' | 'md' | undefined
+  /**
+   * Neither checked nor unchecked: some of what this box stands for is.
+   *
+   * It is a DOM property and not an attribute, so it cannot be written in
+   * markup and there is no `indeterminate=""` to set — which is why a
+   * "select all" box on top of a list is the one checkbox every app ends up
+   * writing by hand. The kit's own `DataTable` did, for exactly this
+   * reason.
+   *
+   * It is presentation only: the value underneath is still `true` or
+   * `false`, and pressing the box resolves it.
+   */
+  indeterminate?: boolean | undefined
+  /**
+   * Hides the words but keeps them as the accessible name. For a box in a
+   * table header or a list row whose surroundings already say what it is —
+   * dropping the label would leave the control named nothing at all.
+   */
+  labelHidden?: boolean | undefined
 }>()
 
 const model = defineModel<boolean>({ default: false })
@@ -54,18 +75,25 @@ const describedBy = computed(() => {
     <label
       :for="id"
       class="flex items-center"
-      :class="[size === 'sm' ? 'gap-2' : 'gap-3', disabled ? 'opacity-50' : 'cursor-pointer']"
+      :class="[
+        labelHidden ? '' : size === 'sm' ? 'gap-2' : 'gap-3',
+        disabled ? 'opacity-50' : 'cursor-pointer',
+      ]"
     >
       <input
         :id="id"
         v-model="model"
         type="checkbox"
         :disabled="disabled"
+        :indeterminate="indeterminate"
         :aria-invalid="Boolean(error)"
         :aria-describedby="describedBy"
         class="accent-primary focus-visible:outline-primary size-4 shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2"
       />
-      <span class="text-sm" :class="size === 'sm' ? 'text-ink-soft' : 'text-ink'">
+      <span
+        class="text-sm"
+        :class="[labelHidden ? 'sr-only' : '', size === 'sm' ? 'text-ink-soft' : 'text-ink']"
+      >
         {{ label }}
       </span>
     </label>

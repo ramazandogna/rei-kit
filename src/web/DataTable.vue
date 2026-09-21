@@ -2,6 +2,7 @@
 import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-vue-next'
 import { computed } from 'vue'
 
+import BaseCheckbox from '../components/BaseCheckbox.vue'
 import BaseSkeleton from '../components/BaseSkeleton.vue'
 import type { Column } from '../components/BaseTable.vue'
 
@@ -152,13 +153,16 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
       <thead>
         <tr>
           <th v-if="selectable" scope="col" class="rk-data-pick">
-            <input
-              type="checkbox"
-              class="rk-data-box focus-ring"
-              :checked="allChosen"
+            <!-- The kit's own box, now that it has `indeterminate`. Writing
+                 this by hand was the only reason it did not, and a
+                 hand-written control in a file that imports the kit is a
+                 gap in the kit every time. -->
+            <BaseCheckbox
+              :model-value="allChosen"
               :indeterminate="someChosen"
-              :aria-label="selectAllLabel"
-              @change="toggleAll"
+              :label="selectAllLabel!"
+              label-hidden
+              @update:model-value="toggleAll"
             />
           </th>
 
@@ -209,12 +213,11 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
           :class="{ 'is-chosen': selected.includes(keyOf(row, index)) }"
         >
           <td v-if="selectable" class="rk-data-pick">
-            <input
-              type="checkbox"
-              class="rk-data-box focus-ring"
-              :checked="selected.includes(keyOf(row, index))"
-              :aria-label="rowLabel!(row)"
-              @change="toggleRow(keyOf(row, index))"
+            <BaseCheckbox
+              :model-value="selected.includes(keyOf(row, index))"
+              :label="rowLabel!(row)"
+              label-hidden
+              @update:model-value="toggleRow(keyOf(row, index))"
             />
           </td>
 
@@ -349,12 +352,6 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
 .rk-data-pick {
   width: 2.75rem;
   padding-inline-end: 0;
-}
-
-.rk-data-box {
-  width: 1rem;
-  height: 1rem;
-  accent-color: var(--color-primary);
 }
 
 .rk-data-empty {

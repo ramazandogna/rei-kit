@@ -13,9 +13,11 @@ far it bends to your design — rather than for the size of its catalogue.
 So the numbers are measured, not claimed, and CI fails when they move:
 
 - Size budgets per entry point, built with Vite the way an app builds.
-- A benchmark in `bench/` that bundles the same three components against five
-  other kits — and writes its numbers to a file the showcase reads, so the
-  comparison on the site cannot say something the benchmark did not produce.
+- A benchmark in `bench/` that bundles the same components against five other
+  kits, at three components and at ten, because one case is how a size
+  comparison lies in either direction. It writes its numbers to a file the
+  README and the showcase both read, so neither can say something the
+  benchmark did not produce.
 - A component count asserted against the generated catalogue, in every place
   it is written down.
 

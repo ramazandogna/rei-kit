@@ -228,19 +228,26 @@ describe('the showcase menu', () => {
  */
 describe('the benchmark the evidence section reads', () => {
   const results = JSON.parse(readFileSync('bench/results.json', 'utf8')) as {
-    case: string
     measured: string
-    rows: { name: string; js: number; css: number }[]
+    suites: { id: string; label: string; rows: { name: string; js: number; css: number }[] }[]
   }
 
-  it('is there, and holds every kit the bench builds', () => {
-    const cases = readdirSync('bench/cases')
-      .filter((file) => file.endsWith('.js'))
-      .map((file) => file.replace('.js', ''))
+  it('holds both cases, and every kit in each', () => {
+    /* Two suites on purpose. One case is how a size comparison lies in
+       either direction: three components is the case least favourable to a
+       flat stylesheet, and ten is where the two shapes separate. */
+    expect(results.suites.map((suite) => suite.id).sort()).toEqual(['ten', 'three'])
 
-    expect(cases.length).toBeGreaterThanOrEqual(6)
-    for (const kit of cases) {
-      expect(results.rows.some((row) => row.name.startsWith(kit))).toBe(true)
+    for (const suite of results.suites) {
+      const dir = suite.id === 'three' ? 'bench/cases' : 'bench/cases-ten'
+      const kits = readdirSync(dir)
+        .filter((file) => file.endsWith('.js'))
+        .map((file) => file.replace('.js', ''))
+
+      expect(kits.length).toBeGreaterThanOrEqual(6)
+      for (const kit of kits) {
+        expect(suite.rows.some((row) => row.name.startsWith(kit))).toBe(true)
+      }
     }
   })
 
@@ -248,6 +255,8 @@ describe('the benchmark the evidence section reads', () => {
     /* A stale row is the failure mode that matters: the page would show a
        number for a build nobody ships. */
     const version = JSON.parse(readFileSync('package.json', 'utf8')).version as string
-    expect(results.rows.some((row) => row.name === `rei-kit ${version}`)).toBe(true)
+    for (const suite of results.suites) {
+      expect(suite.rows.some((row) => row.name === `rei-kit ${version}`)).toBe(true)
+    }
   })
 })

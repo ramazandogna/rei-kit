@@ -58,10 +58,12 @@ course site share one kit and look nothing alike.
 
 ### 2. The smallest of six, measured, with the trade stated
 
-3.3 KB of JavaScript for a button, an input and a modal — against 27.3 to
-70.3 for the five kits below. The table is in [Small, and
-measured](#small-and-measured), the script is in `bench/`, and it says what
-it does not measure.
+At ten components — a real screen — **31.1 KB against 104 to 195** for the
+five kits measured beside it. The gap is not the total, it is the slope:
+seven components past the first three cost this kit 5 KB and cost them 60 to
+125, because the stylesheet here is flat and theirs is inside the JavaScript.
+The tables are in [Small, and measured](#small-and-measured), the script is
+in `bench/`, and it says what it does not measure.
 
 ### 3. Every claim is a test that fails
 
@@ -144,9 +146,12 @@ the app, and not a matter of taste.
 
 ## Small, and measured
 
-A button, a text input and a modal: the three parts every product has.
-Bundled with each kit and set up the way its own docs recommend first, with
-styles included and Vue left out. Minified, gzip -9:
+Two cases, because one is how a size comparison lies in either direction.
+Each kit is bundled the way its own docs set it up first, with styles
+included and Vue left out. Minified, gzip -9:
+
+**Three components** — a button, a text input and a modal. The smallest real
+app, and the case *least* favourable to this kit:
 
 | Kit                  |         JS |         CSS |       Total |
 | -------------------- | ---------: | ----------: | ----------: |
@@ -157,27 +162,45 @@ styles included and Vue left out. Minified, gzip -9:
 | ant-design-vue 4.2.6 |    70.3 KB |           — |     70.3 KB |
 | vuetify 4.2.1        |    44.0 KB |     34.3 KB |     78.4 KB |
 
-Read the two columns differently, because they behave differently.
+**Ten components** — the same three plus a select, a checkbox, a switch, tabs,
+a data table, a tooltip and a card. A screen rather than a demo:
 
-The JavaScript is only what those three components need: each one is its own
-tree-shakeable module and there are no runtime dependencies at all. Naive UI,
-PrimeVue and Ant Design put their styles in the JavaScript, which is why
-their CSS column is empty and their JS column is not.
+| Kit                  |         JS |         CSS |        Total |
+| -------------------- | ---------: | ----------: | -----------: |
+| **rei-kit 2.23.0**   | **8.3 KB** | **22.8 KB** | **31.1 KB**  |
+| element-plus 2.14.6  |    90.1 KB |     14.0 KB |    104.1 KB  |
+| naive-ui 2.45.3      |   132.4 KB |           — |    132.4 KB  |
+| primevue 5.0.1       |   135.8 KB |           — |    135.8 KB  |
+| vuetify 4.2.1        |    96.7 KB |     44.1 KB |    140.7 KB  |
+| ant-design-vue 4.2.6 |   195.4 KB |           — |    195.4 KB  |
 
-rei-kit's CSS column is the entire `mobile.css` preset — the stylesheet for
-**all 103 components, all four materials and all ten palettes** — and it is
-the same 22.8 KB whether an app imports three components or every one of
-them. That is the trade this kit makes on purpose: a flat stylesheet you pay
-for once, against per-component JavaScript you pay for each time. It is also
-why this table moved from 18.4 KB at 2.4.0 to 26.1 KB today while the kit
-went from 59 components to 103 — the CSS grew, the JavaScript for these three
-did not.
+**The slope is the point, not the total.** Seven more components cost this kit
+**5 KB**, because the stylesheet does not move and only the JavaScript grows.
+The kits that put their styles in the JavaScript have no flat part at all, so
+the same seven cost them **60 to 125 KB**. A quarter smaller at three
+components; **3.3× smaller at ten**.
 
-What is **not** claimed here: nobody has measured the other five at twenty
-components, so this table says what it says and no more. Run it yourself:
-`cd bench && npm install && npm run bench`. Nuxt UI is left out because it
-builds through its own Nuxt or Vite module and cannot be bundled the same
-way.
+That is the trade, stated rather than left to be inferred: rei-kit's CSS
+column is the entire `mobile.css` preset — all 103 components, four materials,
+ten palettes — and it is the same 22.8 KB whether an app imports three
+components or every one of them. An app using very little of the kit carries
+stylesheet it does not need; an app using a screenful stops paying anything
+much for the next one. Which is why the three-component table above is the one
+to be sceptical of, and it is still the one this kit wins.
+
+The JavaScript is only what those components need: each is its own
+tree-shakeable module and there are no runtime dependencies. Naive UI,
+PrimeVue and Ant Design put their styles in the JavaScript, which is why their
+CSS column is empty and their JS column is not.
+
+**What this does not say:** nothing has been measured past ten components, and
+these are ten components *imported* rather than an app using them. The
+ten-component row uses this kit's `DataTable` rather than its plainer
+`BaseTable`, because the other five bring a data grid and the comparable part
+is the one with sorting and selection — the heavier of the two. Run it
+yourself: `cd bench && npm install && npm run bench`; it writes the numbers
+this README and the showcase both read. Nuxt UI is left out because it builds
+through its own Nuxt or Vite module and cannot be bundled the same way.
 
 The kit's own sizes are a budget, not a boast: `pnpm size` bundles a
 one-button app, the three-part app and an app using everything, and `check`

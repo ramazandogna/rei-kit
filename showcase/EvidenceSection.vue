@@ -35,15 +35,29 @@ interface Row {
 
 const kb = (bytes: number) => `${(bytes / 1024).toFixed(1)} KB`
 
-const rows = computed<Row[]>(() =>
-  bench.rows.map((row) => ({
-    kit: row.name,
-    js: kb(row.js),
-    css: row.css === 0 ? '—' : kb(row.css),
-    total: kb(row.js + row.css),
-    ours: row.name.startsWith('rei-kit'),
+const suites = computed(() =>
+  bench.suites.map((suite) => ({
+    id: suite.id,
+    label: suite.label,
+    rows: suite.rows.map<Row>((row) => ({
+      kit: row.name,
+      js: kb(row.js),
+      css: row.css === 0 ? '—' : kb(row.css),
+      total: kb(row.js + row.css),
+      ours: row.name.startsWith('rei-kit'),
+    })),
   })),
 )
+
+/** How many times the total of the runner-up is, in the ten-component case. */
+const lead = computed(() => {
+  const rows = bench.suites.find((suite) => suite.id === 'ten')?.rows ?? []
+  const ours = rows.find((row) => row.name.startsWith('rei-kit'))
+  const next = rows.find((row) => !row.name.startsWith('rei-kit'))
+  if (!ours || !next) return null
+
+  return ((next.js + next.css) / (ours.js + ours.css)).toFixed(1)
+})
 
 const columns: readonly Column<Row>[] = [
   { key: 'kit', label: 'Kit' },
@@ -109,22 +123,41 @@ const GUARDS = [
     <BaseCard class="mt-8">
       <h3 class="text-ink text-lg font-semibold">The smallest of six, measured</h3>
       <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
-        A button, a text input and a modal — the three parts every product has — bundled with each
-        kit the way its own documentation sets it up. Minified, gzip level 9, Vue excluded.
+        Two cases, because one is how a size comparison lies in either direction. Three components
+        is the smallest real app and the case <em>least</em> favourable to this kit. Ten adds a
+        select, a checkbox, a switch, tabs, a data table, a tooltip and a card — a screen rather
+        than a demo. Each kit is bundled the way its own documentation sets it up, styles included.
+        Minified, gzip level 9, Vue excluded.
       </p>
 
-      <div class="mt-5">
-        <BaseTable :columns="columns" :rows="rows" caption="Bundle size by kit" caption-hidden>
-          <template #kit="{ row }">
-            <span class="inline-flex items-center gap-2" :class="row.ours ? 'font-semibold' : ''">
-              <ToneDot v-if="row.ours" fill="bg-primary" label="This kit" />
-              {{ row.kit }}
-            </span>
-          </template>
-        </BaseTable>
+      <div v-for="suite in suites" :key="suite.id" class="mt-6">
+        <h4 class="text-ink text-sm font-semibold">{{ suite.label }}</h4>
+        <div class="mt-2">
+          <BaseTable
+            :columns="columns"
+            :rows="suite.rows"
+            :caption="`Bundle size by kit — ${suite.label}`"
+            caption-hidden
+          >
+            <template #kit="{ row }">
+              <span class="inline-flex items-center gap-2" :class="row.ours ? 'font-semibold' : ''">
+                <ToneDot v-if="row.ours" fill="bg-primary" label="This kit" />
+                {{ row.kit }}
+              </span>
+            </template>
+          </BaseTable>
+        </div>
       </div>
 
       <div class="text-ink-soft mt-5 max-w-[62ch] space-y-3 text-sm leading-relaxed">
+        <p>
+          <strong class="text-ink">The slope is the point, not the total.</strong> Seven more
+          components cost this kit 5 KB, because the stylesheet does not move and only the
+          JavaScript grows. For the kits that put their styles in the JavaScript there is no flat
+          part at all, so the same seven cost them between 60 and 125 KB. The gap goes from a
+          quarter smaller at three components to
+          <strong class="text-ink">{{ lead }}× smaller at ten</strong>.
+        </p>
         <p>
           <strong class="text-ink">Read the two columns differently.</strong> The JavaScript is only
           what those three components need: each one is its own tree-shakeable module, and there are
@@ -138,9 +171,13 @@ const GUARDS = [
           per-component JavaScript paid for each time.
         </p>
         <p>
-          <strong class="text-ink">What this does not say:</strong> nobody has measured the other
-          five at twenty components, so the table says what it says and no more. Run it yourself
-          with
+          <strong class="text-ink">What this does not say:</strong> nothing has been measured past
+          ten components, and these are ten components imported rather than an app using them, so
+          the table says what it says and no more. The ten-component row uses this kit's
+          <code class="text-ink">DataTable</code> rather than its plainer
+          <code class="text-ink">BaseTable</code>, because the other five bring a data grid and the
+          comparable part is the one that has sorting and selection — it is the heavier of the two.
+          Run it yourself with
           <code class="text-ink">cd bench &amp;&amp; npm install &amp;&amp; npm run bench</code>; it
           writes the numbers this page reads. Measured {{ bench.measured }}.
         </p>

@@ -7,6 +7,7 @@ import {
   BaseCheckbox,
   BaseCombobox,
   BaseInput,
+  BaseButton,
   BaseListbox,
   BaseRadioGroup,
   BaseSelect,
@@ -15,6 +16,7 @@ import {
   BaseTextarea,
   ColorPicker,
   FileDrop,
+  ErrorSummary,
   FormField,
   NumberInput,
   PinInput,
@@ -41,6 +43,21 @@ import { NEUTRAL } from './tones'
  * looking for a switch only that it was further down.
  */
 const toast = useToast()
+
+const signupEmail = ref('')
+const signupPassword = ref('')
+const signupErrors = ref<Record<string, string>>({})
+
+const SIGNUP_LABELS: Record<string, string> = { email: 'E-posta', password: 'Parola' }
+const signupFieldId = (field: string) => `signup-${field}`
+
+function submitSignup() {
+  const found: Record<string, string> = {}
+  if (!signupEmail.value.includes('@')) found['email'] = 'Geçerli bir e-posta girin'
+  if (signupPassword.value.length < 8) found['password'] = 'En az 8 karakter olmalı'
+
+  signupErrors.value = found
+}
 
 const email = ref('')
 const note = ref('')
@@ -173,6 +190,16 @@ const CODE: Record<FormPartId, string> = {
   <template #default="{ id, describedBy, invalid }">
     <input :id="id" :aria-describedby="describedBy" :aria-invalid="invalid" />
   </template>
+</FormField>`,
+  'form-error-summary': `<ErrorSummary
+  :errors="errors"
+  title="Düzeltilmesi gereken alanlar var"
+  :label-for="(field) => LABELS[field]"
+  :field-id="(field) => \`signup-\${field}\`"
+/>
+
+<FormField label="E-posta" :error="errors.email" field-id="signup-email">
+  <template #default="slot"><input v-bind="slot" /></template>
 </FormField>`,
   'form-select': `<BaseSelect
   v-model="currency"
@@ -340,6 +367,61 @@ const CODE: Record<FormPartId, string> = {
           <CodeBlock :code="CODE['form-field']" lang="html" />
         </div>
         <PropTable name="FormField" />
+      </article>
+
+      <article :id="part('form-error-summary').id" class="sc-part">
+        <header class="sc-part-head">
+          <h3 class="sc-part-name">{{ part('form-error-summary').title }}</h3>
+          <p class="sc-part-pitch">{{ part('form-error-summary').pitch }}</p>
+        </header>
+        <div class="sc-part-row">
+          <BaseCard>
+            <form class="flex flex-col gap-3" novalidate @submit.prevent="submitSignup">
+              <ErrorSummary
+                :errors="signupErrors"
+                title="Düzeltilmesi gereken alanlar var"
+                :label-for="(field) => SIGNUP_LABELS[field] ?? field"
+                :field-id="signupFieldId"
+                :fields="['email', 'password']"
+              />
+              <FormField
+                label="E-posta"
+                :error="signupErrors['email']"
+                :field-id="signupFieldId('email')"
+              >
+                <template #default="{ id, describedBy, invalid }">
+                  <input
+                    :id="id"
+                    v-model="signupEmail"
+                    type="email"
+                    :aria-describedby="describedBy"
+                    :aria-invalid="invalid"
+                    class="border-hair bg-surface text-ink rounded-card h-11 w-full border px-3 text-base"
+                  />
+                </template>
+              </FormField>
+              <FormField
+                label="Parola"
+                :error="signupErrors['password']"
+                :field-id="signupFieldId('password')"
+              >
+                <template #default="{ id, describedBy, invalid }">
+                  <input
+                    :id="id"
+                    v-model="signupPassword"
+                    type="password"
+                    :aria-describedby="describedBy"
+                    :aria-invalid="invalid"
+                    class="border-hair bg-surface text-ink rounded-card h-11 w-full border px-3 text-base"
+                  />
+                </template>
+              </FormField>
+              <BaseButton type="submit" class="self-start">Kaydol</BaseButton>
+            </form>
+          </BaseCard>
+          <CodeBlock :code="CODE['form-error-summary']" lang="html" />
+        </div>
+        <PropTable name="ErrorSummary" />
       </article>
 
       <article :id="part('form-select').id" class="sc-part">

@@ -29,6 +29,7 @@ const {
   error = '',
   hint = '',
   labelHidden = false,
+  fieldId = undefined,
   size = 'md',
 } = defineProps<{
   label: string
@@ -49,18 +50,25 @@ const {
    * leave the control with no accessible name at all.
    */
   labelHidden?: boolean | undefined
+  /**
+   * The control's `id`, when the app needs to address it from outside —
+   * an `ErrorSummary` linking to the field it is about, a label elsewhere
+   * on the page. Generated when it is not given, which is almost always.
+   */
+  fieldId?: string | undefined
 }>()
 
-const id = useId()
-const errorId = `${id}-error`
-const hintId = `${id}-hint`
+const generated = useId()
+const id = computed(() => fieldId ?? generated)
+const errorId = computed(() => `${id.value}-error`)
+const hintId = computed(() => `${id.value}-hint`)
 
 /* One description at a time, and the error wins. Announcing the hint as well
    buries the reason the field was rejected under advice the reader has already
    had. */
 const describedBy = computed(() => {
-  if (error) return errorId
-  if (hint) return hintId
+  if (error) return errorId.value
+  if (hint) return hintId.value
   return undefined
 })
 </script>

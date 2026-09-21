@@ -55,6 +55,14 @@ export const FORM_PARTS = [
       'When the control is yours — an editor, a masked field, something from another library — this supplies the label, the hint, the error and the ids that tie them together, and hands them to you in a slot.',
   },
   {
+    id: 'form-error-summary',
+    group: 'form',
+    label: 'ErrorSummary',
+    title: 'ErrorSummary — what a rejected form says at the top of itself',
+    pitch:
+      'FormField puts the reason beside the field; what that cannot do is say the submission failed at all. On a long form the first rejected field is a screenful away and focus is still on the submit button, so to a reader nothing happened when it was pressed. This is the answer to “did that work?”, and a way into each field in one press. Focused rather than announced: role="alert" would read the list at somebody whose focus is still on a button they cannot use.',
+  },
+  {
     id: 'form-select',
     group: 'form',
     label: 'BaseSelect',

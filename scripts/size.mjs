@@ -45,7 +45,7 @@ const JS_CASES = [
     // what a virtual list usually costs as a dependency), 41.4 at 2.14
     // (the mega menu), 42.0 at 2.15 (the slider field and the tooltip's
     // pointer tracking -- 0.5 KB, most of it the field).
-    budget: 47, // 46.4 KB at 2.21.0: ScrollArea and VirtualList.
+    budget: 48, // 47.3 KB at 2.22.0: SkipLink, AnnounceHost, ErrorSummary.
     code: ['index', 'web', 'app', 'pwa', 'motion']
       .map((entry) => `import * as ${entry} from '${dist(`${entry}.js`)}'\nconsole.log(${entry})`)
       .join('\n'),
@@ -64,7 +64,8 @@ const CSS_CASES = [
     // Raised with the number that moved it: 12.1 KB at 2.2, 14.4 at 2.6
     // (the calendar), 16.6 at 2.8 (the data table and the command menu),
     // 18.0 at 2.14 (the mega menu's panel and columns).
-    budget: 20, // 19.1 KB at 2.19.0: the drawer and the context menu.
+    budget: 21, // 20.0 KB at 2.22.0: the error summary, and logical properties
+    // are longer to spell than the physical ones they replaced.
     imports: ['tokens.css', 'shell/mobile.css', 'styles.css'],
     source: true,
   },

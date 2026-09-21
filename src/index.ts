@@ -152,6 +152,11 @@ export { default as VirtualList } from './components/VirtualList.vue'
  * list, a route that changed, a draft that saved itself.
  */
 export { default as AnnounceHost } from './components/AnnounceHost.vue'
+/**
+ * `ErrorSummary`, the answer to "did that work?" at the top of a rejected
+ * form — and a way from there into each field in one press.
+ */
+export { default as ErrorSummary } from './components/ErrorSummary.vue'
 export { useAnnounce, announce } from './composables/use-announce'
 /**
  * `textDirection`, because every logical property and every `start`/`end`

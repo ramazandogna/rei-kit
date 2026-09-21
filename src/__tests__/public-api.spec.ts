@@ -93,6 +93,7 @@ const PUBLIC_API = [
   'ScrollArea',
   'VirtualList',
   'AnnounceHost',
+  'ErrorSummary',
   'useAnnounce',
   'announce',
   'textDirection',

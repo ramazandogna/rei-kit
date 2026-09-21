@@ -2455,6 +2455,48 @@
     ]
   },
   {
+    "name": "ErrorSummary",
+    "entry": "rei-kit",
+    "summary": "What a rejected form says at the top of itself.",
+    "props": [
+      {
+        "name": "errors",
+        "required": true,
+        "type": "Readonly<Record<string, string>>",
+        "description": "Field name to message, as `fieldErrors` returns it.",
+        "default": ""
+      },
+      {
+        "name": "title",
+        "required": true,
+        "type": "string",
+        "description": "Heads the summary, e.g. \"Düzeltilmesi gereken 2 alan var\". Already translated.",
+        "default": ""
+      },
+      {
+        "name": "labelFor",
+        "required": true,
+        "type": "(field: string) => string",
+        "description": "A field's name as the reader knows it. The kit has no words of its own.",
+        "default": ""
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "((field: string) => string)",
+        "description": "A field's `id`, to link to. Pass the same one to that `FormField`'s `fieldId`, or the link points at nothing and the reader is left at the top of a form they cannot navigate.",
+        "default": "(field: string)"
+      },
+      {
+        "name": "fields",
+        "required": false,
+        "type": "readonly string[]",
+        "description": "The order to read them in, when the object's own order is not the form's.",
+        "default": "undefined"
+      }
+    ]
+  },
+  {
     "name": "FabButton",
     "entry": "rei-kit/app",
     "summary": "The one action the app is built around, reachable from every screen.",
@@ -2577,6 +2619,13 @@
         "type": "boolean",
         "description": "Hides the label visually but keeps it for assistive tech. For fields whose surrounding row already names them — dropping the label entirely would leave the control with no accessible name at all.",
         "default": "false"
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "The control's `id`, when the app needs to address it from outside — an `ErrorSummary` linking to the field it is about, a label elsewhere on the page. Generated when it is not given, which is almost always.",
+        "default": "undefined"
       }
     ]
   },

@@ -3,6 +3,55 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.19.0 — 2026-09-21
+
+**Four parts a kit should have had, and three faults finding them.**
+
+### Added
+
+- **`BaseDrawer`** (`rei-kit/web`) — a panel in from the edge of a wide
+  screen. `BaseSheet` belongs to a thumb: it arrives from the bottom and is
+  pinned to the 430px shell column, so a desktop had nothing for the shape a
+  site keeps *beside* the page — filters, a cart, a menu that outgrew its
+  bar. `side` is `start` and `end` rather than left and right, so it follows
+  the writing direction without the app asking.
+
+- **`BaseContextMenu`** (`rei-kit/web`) — the menu a right-click opens, and
+  **Shift+F10 and the Menu key**, which is the half that is usually missing
+  because it is the half with no mouse in it. Opened from the keyboard it
+  anchors to the focused element, since there are no coordinates to take.
+
+- **`BaseHoverCard`** (`rei-kit/web`) — for when the answer is a thing
+  rather than a sentence. A tooltip is wired with `aria-describedby`, which
+  flattens what is inside it to text: a card with a name, an avatar and a
+  link would read as one run-on string and the link could not be reached at
+  all. The delays are the component — a card that goes the moment the
+  pointer leaves the trigger is a card whose contents can never be used.
+
+- **`CodeBlock`** (`rei-kit`) — a sample as written. No highlighting and no
+  `v-html`: a code sample is the one place where what is written is exactly
+  what is meant, and colour would be a parser in every bundle or a promise
+  about the string nobody can keep. An app that wants it highlights the
+  sample itself and puts the result in the slot.
+
+### Fixed
+
+- **`CodeBlock` is a focus stop while it can scroll.** A box that scrolls
+  sideways and cannot take focus cannot be scrolled by a keyboard at all —
+  the end of a long line is unreachable and nothing on screen says so. The
+  showcase's own code blocks had exactly that, on every sample on the page;
+  fixed there too. Under `wrap` there is nothing to scroll, so the stop goes.
+
+### Changed
+
+- **`BaseModal` and `BaseMenu` share their behaviour rather than copying
+  it.** Trapping Tab, stopping Escape, making the page behind inert and
+  handing focus back is now `useDialogShell`; the `role="menu"` keyboard
+  contract is `useMenuKeys`. Each step has an order that is not obvious —
+  releasing `inert` after restoring focus drops it on the body, because an
+  inert element cannot take focus — and that was worth writing once. Both
+  components moved with their own tests unchanged.
+
 ## 2.18.1 — 2026-09-21
 
 **Two ARIA faults, and the check that can see them.**

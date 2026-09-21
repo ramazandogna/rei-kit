@@ -5,6 +5,7 @@ import { Plus } from 'lucide-vue-next'
 
 import {
   ActivityGrid,
+  ScrollArea,
   BaseAvatar,
   BaseButton,
   BaseCard,
@@ -17,6 +18,7 @@ import {
   ErrorBoundary,
   PriceCard,
   SectionHeading,
+  formatDate,
   lastNDays,
   useToast,
 } from '../src/index'
@@ -70,6 +72,11 @@ const toast = useToast()
 
 /* A year of made-up busyness, from the date itself: a demo that randomised
    it would redraw differently on every render. */
+/* Long enough to overflow the card, which is the whole point of the demo. */
+const SCROLL_MONTHS = Array.from({ length: 12 }, (_, i) =>
+  formatDate(new Date(2026, i, 1), { month: 'long' }),
+)
+
 const YEAR = lastNDays(365)
 const LEVELS = ['bg-muted', 'bg-primary/25', 'bg-primary/50', 'bg-primary/75', 'bg-primary']
 const busyness = (key: string) => (key.charCodeAt(9) + key.charCodeAt(8)) % 5
@@ -208,6 +215,26 @@ function onCommand(id: string) {
           @select="toast.info(dayLabel($event))"
         />
         <PropTable name="ActivityGrid" />
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">ScrollArea</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          A scrolling box with the two things a hand-written one leaves out. The scrollbar is hidden
+          here, as every app hides it on a row like this — so the fade at the end is the only sign
+          left that there is more along it, and it tracks the real scroll position. Nothing inside
+          takes focus, so the box becomes a named stop of its own: Tab onto it and the arrows move
+          it. A row of buttons would not get that stop, because Tab already scrolls the next one
+          into view.
+        </p>
+        <ScrollArea axis="x" scrollbar="hidden" label="The months">
+          <p class="flex gap-4 whitespace-nowrap">
+            <span v-for="month in SCROLL_MONTHS" :key="month" class="text-ink-soft text-sm">
+              {{ month }}
+            </span>
+          </p>
+        </ScrollArea>
+        <PropTable name="ScrollArea" />
       </BaseCard>
 
       <BaseCard class="mt-4">

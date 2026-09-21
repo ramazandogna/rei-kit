@@ -134,6 +134,12 @@ export type { TabItem } from './components/TabBar.vue'
  * the picture's order, and one tab stop rather than three hundred odd.
  */
 export { default as ActivityGrid } from './components/ActivityGrid.vue'
+/**
+ * `ScrollArea`, a scrolling box with the two things a hand-written one
+ * leaves out: a fade at whichever edge has more content past it, and a
+ * focus stop — but only when nothing inside it can take focus.
+ */
+export { default as ScrollArea } from './components/ScrollArea.vue'
 export { default as AvatarStack } from './components/AvatarStack.vue'
 export { default as BaseCalendar } from './components/BaseCalendar.vue'
 export { default as BaseChip } from './components/BaseChip.vue'

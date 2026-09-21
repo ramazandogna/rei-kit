@@ -3233,6 +3233,48 @@
     ]
   },
   {
+    "name": "ScrollArea",
+    "entry": "rei-kit",
+    "summary": "A box that scrolls, with the two things a hand-written one leaves out.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the box, e.g. \"Categories\". Required because this becomes a region a reader can land in, and an unnamed region is announced as nothing at all. It is only used when that happens, so it costs nothing in the common case.",
+        "default": ""
+      },
+      {
+        "name": "axis",
+        "required": false,
+        "type": "'x' | 'y' | 'both'",
+        "description": "Which way it scrolls.",
+        "default": "'y'"
+      },
+      {
+        "name": "scrollbar",
+        "required": false,
+        "type": "'auto' | 'hidden'",
+        "description": "`hidden` takes the native bar away; the fades stay either way.",
+        "default": "'auto'"
+      },
+      {
+        "name": "fade",
+        "required": false,
+        "type": "boolean",
+        "description": "The gradient at an edge with more content past it.",
+        "default": "true"
+      },
+      {
+        "name": "drag",
+        "required": false,
+        "type": "boolean",
+        "description": "Drag to scroll sideways, for a page that has claimed horizontal gestures.",
+        "default": "false"
+      }
+    ]
+  },
+  {
     "name": "SectionHeading",
     "entry": "rei-kit",
     "summary": "A pill heading for a group of things.",

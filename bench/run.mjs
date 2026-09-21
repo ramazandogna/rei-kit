@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from 'node:fs'
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { gzipSync } from 'node:zlib'
 import { build } from 'vite'
@@ -57,7 +57,9 @@ for (const name of cases) {
       .filter((file) => file.endsWith(extension))
       .reduce((total, file) => total + gzip(readFileSync(`${outDir}/${file}`)), 0)
 
-  const version = JSON.parse(readFileSync(here(`node_modules/${name}/package.json`), 'utf8')).version
+  const version = JSON.parse(
+    readFileSync(here(`node_modules/${name}/package.json`), 'utf8'),
+  ).version
   rows.push({ name: `${name} ${version}`, js: sum('.js'), css: sum('.css') })
 }
 
@@ -71,3 +73,16 @@ for (const { name, js, css } of rows) {
   )
 }
 console.log('')
+
+/*
+ * Written out as well as printed, because the showcase reads it.
+ *
+ * A comparison table typed into a page by hand is a comparison table that
+ * is wrong by the next release — this one went from 18.4 KB to 26.1 KB
+ * while nobody edited it. Re-running the bench is now what updates the
+ * page, and a test fails if the file is missing.
+ */
+writeFileSync(
+  here('results.json'),
+  `${JSON.stringify({ case: 'Button + Input + Modal', measured: new Date().toISOString().slice(0, 10), rows }, null, 2)}\n`,
+)

@@ -1,0 +1,36 @@
+{
+  "case": "Button + Input + Modal",
+  "measured": "2026-09-21",
+  "rows": [
+    {
+      "name": "rei-kit 2.23.0",
+      "js": 3392,
+      "css": 23377
+    },
+    {
+      "name": "element-plus 2.14.6",
+      "js": 27907,
+      "css": 6166
+    },
+    {
+      "name": "naive-ui 2.45.3",
+      "js": 52378,
+      "css": 0
+    },
+    {
+      "name": "primevue 5.0.1",
+      "js": 54923,
+      "css": 0
+    },
+    {
+      "name": "ant-design-vue 4.2.6",
+      "js": 72026,
+      "css": 0
+    },
+    {
+      "name": "vuetify 4.2.1",
+      "js": 45088,
+      "css": 35164
+    }
+  ]
+}

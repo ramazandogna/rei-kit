@@ -215,3 +215,39 @@ describe('the showcase menu', () => {
     expect(missing, `no element carries: ${missing.join(', ')}`).toEqual([])
   })
 })
+
+/**
+ * The comparison table on the page is a file, not a paragraph.
+ *
+ * It is the one claim on the site about something other than this kit, so
+ * it is the one most worth being unable to fake. `bench/run.mjs` writes
+ * `results.json` and `EvidenceSection.vue` reads it, which means the page
+ * cannot say a number the benchmark did not produce — and a table typed in
+ * by hand is a table that is wrong by the next release. This one silently
+ * went from 18.4 KB to 26.1 KB while nobody edited it.
+ */
+describe('the benchmark the evidence section reads', () => {
+  const results = JSON.parse(readFileSync('bench/results.json', 'utf8')) as {
+    case: string
+    measured: string
+    rows: { name: string; js: number; css: number }[]
+  }
+
+  it('is there, and holds every kit the bench builds', () => {
+    const cases = readdirSync('bench/cases')
+      .filter((file) => file.endsWith('.js'))
+      .map((file) => file.replace('.js', ''))
+
+    expect(cases.length).toBeGreaterThanOrEqual(6)
+    for (const kit of cases) {
+      expect(results.rows.some((row) => row.name.startsWith(kit))).toBe(true)
+    }
+  })
+
+  it('measured the version of this kit that is being published', () => {
+    /* A stale row is the failure mode that matters: the page would show a
+       number for a build nobody ships. */
+    const version = JSON.parse(readFileSync('package.json', 'utf8')).version as string
+    expect(results.rows.some((row) => row.name === `rei-kit ${version}`)).toBe(true)
+  })
+})

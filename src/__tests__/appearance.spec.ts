@@ -54,6 +54,26 @@ describe('no component carries a colour of its own', () => {
 
     expect(code.match(/#[0-9a-f]{3,8}\b/gi) ?? []).toEqual([])
   })
+
+  /*
+   * The other half of the same rule, and the one that had only ever been
+   * written down.
+   *
+   * `text-white` on a filled role is not a colour a palette can follow. It
+   * is also wrong today: white on the kit's own warning measured 2.3:1,
+   * which is why `on-warning` is dark. A palette with a light primary sets
+   * its `on-primary` dark and every component follows — unless a component
+   * spelled the colour out, in which case it follows nothing and there is
+   * nothing on screen to say so.
+   */
+  it.each(files)('%s writes text-on-*, not the colour itself', (file) => {
+    const code = read(file)
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/^\s*\/\/.*$/gm, '')
+
+    expect(code.match(/\btext-(white|black)\b/g) ?? []).toEqual([])
+  })
 })
 
 describe('palettes', () => {

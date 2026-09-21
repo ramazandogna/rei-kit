@@ -41,6 +41,69 @@ Three apps run on it and no two resemble each other. Every component is typed,
 tested, themed by role rather than by colour, and carries the reasoning for its
 own awkward decisions in the source.
 
+## What is different here
+
+Four things, and each one is a number or a file you can open rather than an
+adjective.
+
+### 1. Three axes, not one theme
+
+Most kits give you a theme: change it and everything changes together.
+This one separates **what a surface is made of** from **what colour it is**
+from **light or dark** — 4 materials × 10 palettes × 2 modes, each switched
+by its own attribute, and a product may hand any of the three to its own
+users. There is no hex value inside a component, and a test fails if one
+appears. That is what lets a phone journal, a phone ledger and a wide
+course site share one kit and look nothing alike.
+
+### 2. The smallest of six, measured, with the trade stated
+
+3.3 KB of JavaScript for a button, an input and a modal — against 27.3 to
+70.3 for the five kits below. The table is in [Small, and
+measured](#small-and-measured), the script is in `bench/`, and it says what
+it does not measure.
+
+### 3. Every claim is a test that fails
+
+This is the part that is hard to see from outside and is most of the work.
+The kit does not assert that it is accessible or stable; it has checks that
+go red, and several of them exist nowhere else:
+
+| The check                        | What it catches that nothing else does                                                                                                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`direction-styles.spec.ts`**   | One case per file, reading each stylesheet for a property that picks a side — `padding-left` where `padding-inline-start` was meant — and for a one-sided gradient with no right-to-left counterpart. It found 61 on its first run.          |
+| **`direction-keys.spec.ts`**     | One case per control, pressing **ArrowLeft in a right-to-left document** and asserting it went *forward*. Ten components were walking backwards through themselves. It type-checks, it renders, it passes axe, and only an Arabic reader sees it. |
+| **`examples-axe.spec.ts`**       | axe on all 103 usage examples, **and again with each one opened** — a menu, a dialog, a combobox list is exactly where the ARIA lives and where a closed-state audit says nothing.                                                           |
+| **`focus.spec.ts`**              | Reads every component for a focus ring. A missing one compiles, renders and passes every other check.                                                                                                                                       |
+| **`public-api.spec.ts`**         | Names every runtime export of all six entries. A kit compiles fine without an export nothing inside it calls.                                                                                                                               |
+| **`type-surface.ts`**            | Re-exports every published type and is type-checked twice, because a test cannot see types — they are gone by the time one runs.                                                                                                            |
+| **`showcase-catalogue.spec.ts`** | Fails if a component has no usage sample, no description, no behaviour test, or no row in `AGENTS.md`. The documentation cannot fall behind the package.                                                                                     |
+| **`appearance.spec.ts`**         | One case per component for a hex value, and one for a `text-white` on a filled role — neither is a colour a palette can follow, and white on the kit's own warning measures 2.3:1. Plus a frozen `shadow-card` where the runtime token was meant, and a `cubic-bezier` pasted in where a material's easing should reach. |
+| **`consumer.yml`**               | Packs the real tarball, installs it into all three apps and runs each one's whole gate. The only check that imports the package the way an app does.                                                                                         |
+| **`pnpm size`**                  | Six budgets. The build fails when one grows past its line, and raising it has to say why in the commit.                                                                                                                                     |
+
+**1301 tests across 57 files**, and every guard added is verified by being
+broken first — the commit says what failed when it was removed. That habit
+is what found the two cases in `anchored-panel.spec.ts` that were passing
+with the feature deleted, and the comment in `BasePopover` that had
+described the wrong behaviour since the day it was written.
+
+### 4. The kit has no language of its own
+
+Every visible string is a required prop. A component with an English
+default would ship English into an app that has none, and it would do it
+silently. That is also why `PasswordInput` asks for one label rather than
+four, and why `ActivityGrid` takes `levelFor` instead of deciding whether
+four of something is a lot.
+
+### What is deliberately not here
+
+No `create-rei-app`, no Nuxt module, no base library underneath — the
+primitives are ours, so there is no second project's roadmap between a bug
+and its fix. No charts, no icons of its own, no copy. And no claim that has
+not been measured: contrast and focus order still need a real browser, and
+until that exists this file says so rather than implying otherwise.
+
 ## Why it exists
 
 **The kit distributes decisions, not a look.** Three apps run on it and no two
@@ -87,20 +150,34 @@ styles included and Vue left out. Minified, gzip -9:
 
 | Kit                  |         JS |         CSS |       Total |
 | -------------------- | ---------: | ----------: | ----------: |
-| **rei-kit 2.4.0**    | **3.1 KB** | **15.2 KB** | **18.4 KB** |
+| **rei-kit 2.23.0**   | **3.3 KB** | **22.8 KB** | **26.1 KB** |
 | element-plus 2.14.6  |    27.3 KB |      6.0 KB |     33.3 KB |
 | naive-ui 2.45.3      |    51.2 KB |           — |     51.2 KB |
 | primevue 5.0.1       |    53.6 KB |           — |     53.6 KB |
 | ant-design-vue 4.2.6 |    70.3 KB |           — |     70.3 KB |
 | vuetify 4.2.1        |    44.0 KB |     34.3 KB |     78.4 KB |
 
-rei-kit's CSS column is the whole `mobile.css` preset: the stylesheet for
-**every** component, all four materials and all ten palettes. The JavaScript
-is only what the three need, because each component is its own
-tree-shakeable module and there are no runtime dependencies. Naive UI, PrimeVue and Ant Design put their styles in the
-JavaScript. Run it yourself: `cd bench && npm install && npm run bench`.
-Nuxt UI is left out because it builds through its own Nuxt or Vite module and
-cannot be bundled the same way.
+Read the two columns differently, because they behave differently.
+
+The JavaScript is only what those three components need: each one is its own
+tree-shakeable module and there are no runtime dependencies at all. Naive UI,
+PrimeVue and Ant Design put their styles in the JavaScript, which is why
+their CSS column is empty and their JS column is not.
+
+rei-kit's CSS column is the entire `mobile.css` preset — the stylesheet for
+**all 103 components, all four materials and all ten palettes** — and it is
+the same 22.8 KB whether an app imports three components or every one of
+them. That is the trade this kit makes on purpose: a flat stylesheet you pay
+for once, against per-component JavaScript you pay for each time. It is also
+why this table moved from 18.4 KB at 2.4.0 to 26.1 KB today while the kit
+went from 59 components to 103 — the CSS grew, the JavaScript for these three
+did not.
+
+What is **not** claimed here: nobody has measured the other five at twenty
+components, so this table says what it says and no more. Run it yourself:
+`cd bench && npm install && npm run bench`. Nuxt UI is left out because it
+builds through its own Nuxt or Vite module and cannot be bundled the same
+way.
 
 The kit's own sizes are a budget, not a boast: `pnpm size` bundles a
 one-button app, the three-part app and an app using everything, and `check`
@@ -124,14 +201,14 @@ Each claim here is enforced by something that fails, not by a promise.
 
 ## Status
 
-**v2.19.0 — three consumers.**
+**v2.23.0 — three consumers.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Components   | 103 (`AuthForm`, `BaseTable`, `BaseCombobox`, `BaseSlider`, `TabShell`, `BaseModal`, `BaseTabs`, `BaseTooltip`, `BasePagination`, `BaseBreadcrumb`, `BaseDisclosure`, `BaseAccordion`, `NavLinks`, `OfflineBanner`, `FabButton`, `BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseSwitch`, `BaseRadioGroup`, `BaseMenu`, `BaseAvatar`, `BaseSpinner`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
-| Composables  | 16 (`useToast`, `useTheme`, `useMaterial`, `usePalette`, `useToday`, `useMediaQuery`, `useInstall`, `watchInstallability`, `createTabTransition`, `useThemeSync`, `useVisualViewport`, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| Utilities    | 33 (`applyTheme`, `applyMaterial`, `applyPalette`, `MATERIALS`, `PALETTES`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/supabase`, `rei-kit/mobile.css`, `rei-kit/web.css`, and each stylesheet on its own                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Composables  | 14 (`useToast`, `useTheme`, `useMaterial`, `usePalette`, `useToday`, `useMediaQuery`, `useOnline`, `useInstall`, `useSnooze`, `useThemeSync`, `useVisualViewport`, `useDragScroll`, `useDebouncedCallback`, `useAnnounce`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Utilities    | 48 functions and 5 constants (`applyTheme`, `applyMaterial`, `applyPalette`, `MATERIALS`, `PALETTES`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/motion`, `rei-kit/supabase`, `rei-kit/mobile.css`, `rei-kit/web.css`, and each stylesheet on its own                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 | Consumers | [Hibi](https://github.com/ramazandogna/hibi) · [Kakei](https://github.com/ramazandogna/kakei) · [Kakehashi](https://github.com/ramazandogna/kakehashi-nihongo) |
 
@@ -542,9 +619,15 @@ Pushing a `v*` tag runs the full check and publishes to npm. Nothing publishes
 from a branch, so `main` can move without shipping.
 
 ```sh
+cd bench && npm run bench && cd ..   # the site's comparison table reads this
 pnpm version minor
 git push --follow-tags
 ```
+
+The benchmark step is not optional and not a courtesy: `showcase-catalogue.spec.ts`
+fails when `bench/results.json` names a version other than the one being
+published, because the evidence section on the site reads that file. A
+comparison table nobody re-ran is a claim about a build nobody ships.
 
 Then write the release into `PATCHNOTES.md` — what a consumer gains, and what
 they have to do to take it.

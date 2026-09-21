@@ -3,6 +3,42 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.21.0 — 2026-09-21
+
+**Two parts that were already in the codebase, one of them twice.**
+
+### Added
+
+- **`ScrollArea`** (`rei-kit`) — a scrolling box with the two things a
+  hand-written one leaves out. All three apps hide the scrollbar on a
+  horizontal row, because a native bar under a 40px strip of chips is
+  louder than the strip; what goes with it is the only sign on screen that
+  there is more along the row. So the fade comes back, at whichever edge
+  has content past it, driven by the real scroll position and gone entirely
+  when everything fits.
+
+  It also becomes a named focus stop — but only when it overflows **and**
+  holds nothing focusable. That is the `CodeBlock` fault generalised, and
+  it is conditional on purpose: a row of buttons already moves under the
+  keyboard, and a stop of its own would cost a press on every row.
+
+- **`VirtualList`** (`rei-kit`) — a long list where only the rows near the
+  viewport are in the DOM. The half usually dropped is the reader's: ten
+  thousand names rendered twenty at a time read as a list of twenty, and as
+  a *different* list after every scroll, so every row states its real place
+  with `aria-setsize` and `aria-posinset`. Rows are a fixed `rowHeight`,
+  which is what lets the window be a division rather than a measurement of
+  every row, and what makes the empty space above and below exactly right.
+
+### Changed
+
+- **`BaseCombobox` shares the windowing arithmetic rather than owning it.**
+  It had the only copy, written out in place; `VirtualList` would have been
+  a second one, and the half that drifts silently is the padding, which is
+  all that keeps a scrollbar honest about the length of a list. Both now
+  read from one internal `useVirtualWindow`. The refactor is arithmetic,
+  not render: the combobox's own tests pass unchanged.
+
 ## 2.20.0 — 2026-09-21
 
 **A year at a glance.**

@@ -601,6 +601,27 @@
     ]
   },
   {
+    "name": "BaseContextMenu",
+    "entry": "rei-kit/web",
+    "summary": "The menu a right-click opens, on whatever it was opened over.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the menu for a screen reader. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "Leaves the browser's own menu alone — for a text field, or a link.",
+        "default": "false"
+      }
+    ]
+  },
+  {
     "name": "BaseDatePicker",
     "entry": "rei-kit",
     "summary": "A date, or a stretch of dates, chosen from a calendar in a popover.",

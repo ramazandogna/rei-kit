@@ -26,6 +26,11 @@ export type { Crumb } from './BaseBreadcrumb.vue'
  * scrolls in, interleaved with something else, or built from a source the
  * accordion cannot know about.
  */
+/**
+ * `BaseContextMenu`, the right-click menu — which is also Shift+F10 and the
+ * Menu key, or it is a set of actions a keyboard cannot reach at all.
+ */
+export { default as BaseContextMenu } from './BaseContextMenu.vue'
 export { default as BaseDisclosure } from './BaseDisclosure.vue'
 /**
  * `BaseDrawer`, the wide screen's answer to `BaseSheet`: a panel from the

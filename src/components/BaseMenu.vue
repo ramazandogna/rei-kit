@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 
+import { useMenuKeys } from '../composables/use-menu-keys'
+
 /**
  * A list of actions behind one control.
  *
@@ -55,24 +57,10 @@ const trigger = ref<HTMLElement | null>(null)
 
 const id = useId()
 
-function items(): HTMLElement[] {
-  if (!panel.value) return []
-
-  return Array.from(panel.value.querySelectorAll<HTMLElement>('[role="menuitem"]'))
-}
-
-function focusAt(index: number) {
-  const list = items()
-  if (list.length === 0) return
-
-  // Wrapping, because a list with no edges is faster than one you fall off.
-  const wrapped = (index + list.length) % list.length
-  list[wrapped]?.focus()
-}
-
-function currentIndex(): number {
-  return items().indexOf(document.activeElement as HTMLElement)
-}
+const { items: menuItems, onKeydown: onMenuKeydown } = useMenuKeys({
+  panel,
+  onClose: () => (open.value = false),
+})
 
 function onKeydown(event: KeyboardEvent) {
   if (!open.value) {
@@ -86,34 +74,7 @@ function onKeydown(event: KeyboardEvent) {
     return
   }
 
-  switch (event.key) {
-    case 'Escape':
-      event.preventDefault()
-      open.value = false
-      break
-    case 'ArrowDown':
-      event.preventDefault()
-      focusAt(currentIndex() + 1)
-      break
-    case 'ArrowUp':
-      event.preventDefault()
-      focusAt(currentIndex() - 1)
-      break
-    case 'Home':
-      event.preventDefault()
-      focusAt(0)
-      break
-    case 'End':
-      event.preventDefault()
-      focusAt(items().length - 1)
-      break
-    case 'Tab':
-      // Tab leaves the menu rather than cycling inside it. This is the one
-      // place a menu differs from a dialog, and getting it backwards traps
-      // somebody in a list of links.
-      open.value = false
-      break
-  }
+  onMenuKeydown(event)
 }
 
 function onDocumentPointer(event: Event) {
@@ -133,7 +94,7 @@ watch(
     if (isOpen) {
       document.addEventListener('pointerdown', onDocumentPointer)
       await nextTick()
-      items()[0]?.focus()
+      menuItems()[0]?.focus()
     } else {
       document.removeEventListener('pointerdown', onDocumentPointer)
       // Only take focus back if it is still inside the menu; otherwise the menu

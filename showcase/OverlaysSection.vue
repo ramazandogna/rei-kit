@@ -14,7 +14,13 @@ import {
   SectionHeading,
   useToast,
 } from '../src/index'
-import { BaseDrawer, BaseModal, BaseTooltip, ResponsiveDialog } from '../src/web/index'
+import {
+  BaseContextMenu,
+  BaseDrawer,
+  BaseModal,
+  BaseTooltip,
+  ResponsiveDialog,
+} from '../src/web/index'
 import { OVERLAY_PARTS } from './overlay-parts'
 import type { OverlayPartId } from './overlay-parts'
 import PropTable from './PropTable.vue'
@@ -185,6 +191,42 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
         </BaseMenu>
       </BaseCard>
       <PropTable name="BaseMenu" />
+    </article>
+
+    <!-- BaseContextMenu -->
+    <article :id="part('overlay-context').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('overlay-context').title }}</h3>
+        <p class="sc-part-pitch">{{ part('overlay-context').pitch }}</p>
+      </header>
+
+      <BaseCard class="mt-4">
+        <BaseContextMenu label="Row actions">
+          <template #default="{ props }">
+            <button
+              type="button"
+              class="border-hair/70 rounded-card text-ink-soft focus-ring grid h-24 w-full place-items-center border border-dashed text-sm"
+              v-bind="props"
+            >
+              Right-click here — or focus this and press Shift+F10
+            </button>
+          </template>
+
+          <template #items="{ close }">
+            <button type="button" role="menuitem" @click="(toast.success('Renamed'), close())">
+              Rename
+            </button>
+            <button type="button" role="menuitem" @click="(toast.info('Duplicated'), close())">
+              Duplicate
+            </button>
+            <hr />
+            <button type="button" role="menuitem" @click="(toast.danger('Deleted'), close())">
+              Delete
+            </button>
+          </template>
+        </BaseContextMenu>
+      </BaseCard>
+      <PropTable name="BaseContextMenu" />
     </article>
 
     <!-- BaseTooltip -->

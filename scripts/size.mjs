@@ -64,7 +64,7 @@ const CSS_CASES = [
     // Raised with the number that moved it: 12.1 KB at 2.2, 14.4 at 2.6
     // (the calendar), 16.6 at 2.8 (the data table and the command menu),
     // 18.0 at 2.14 (the mega menu's panel and columns).
-    budget: 19,
+    budget: 20, // 19.1 KB at 2.19.0: the drawer and the context menu.
     imports: ['tokens.css', 'shell/mobile.css', 'styles.css'],
     source: true,
   },

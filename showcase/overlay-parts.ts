@@ -39,6 +39,13 @@ export const OVERLAY_PARTS = [
       'Not a dialog at all: the arrows move between items, Home and End jump to the ends, and Tab *leaves* rather than trapping you. Getting that backwards traps somebody in a list of links.',
   },
   {
+    id: 'overlay-context',
+    label: 'BaseContextMenu',
+    title: 'BaseContextMenu — the menu a right-click opens',
+    pitch:
+      'And Shift+F10, and the Menu key. That is the whole reason this is a kit part: the half that breaks is the half with no mouse in it, and a right-click menu without a keyboard is a set of actions some readers simply do not have.',
+  },
+  {
     id: 'overlay-tooltip',
     label: 'BaseTooltip',
     title: 'BaseTooltip — a label, not a layer',

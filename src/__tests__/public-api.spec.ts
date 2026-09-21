@@ -149,6 +149,7 @@ const PUBLIC_API = [
 const WEB_API = [
   'BaseAccordion',
   'BaseBreadcrumb',
+  'BaseContextMenu',
   'BaseDisclosure',
   'BaseDrawer',
   'BaseModal',

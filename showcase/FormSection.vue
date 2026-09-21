@@ -19,6 +19,7 @@ import {
   ErrorSummary,
   FormField,
   NumberInput,
+  PasswordInput,
   PinInput,
   PALETTES,
   SectionHeading,
@@ -60,6 +61,7 @@ function submitSignup() {
 }
 
 const email = ref('')
+const password = ref('')
 const note = ref('')
 const currency = ref<string | undefined>()
 const country = ref<'tr' | 'jp' | 'de' | ''>('')
@@ -184,6 +186,13 @@ const CODE: Record<FormPartId, string> = {
   type="email"
   placeholder="you@example.com"
   error="That address is already in use."
+/>`,
+  'form-password': `<PasswordInput
+  v-model="password"
+  label="Password"
+  toggle-label="Show password"
+  hint="At least 12 characters."
+  autocomplete="new-password"
 />`,
   'form-textarea': `<BaseTextarea v-model="note" label="Note" :rows="3" />`,
   'form-field': `<FormField label="Your own control" hint="The wiring, not the input.">
@@ -322,16 +331,34 @@ const CODE: Record<FormPartId, string> = {
         <div class="sc-part-row">
           <BaseCard>
             <BaseInput v-model="email" label="Email" type="email" placeholder="you@example.com" />
-            <BaseInput
-              class="mt-4"
-              label="Password"
-              type="password"
-              error="Must be at least 10 characters."
-            />
           </BaseCard>
           <CodeBlock :code="CODE['form-input']" lang="html" />
         </div>
         <PropTable name="BaseInput" />
+      </article>
+
+      <article :id="part('form-password').id" class="sc-part">
+        <header class="sc-part-head">
+          <h3 class="sc-part-name">{{ part('form-password').title }}</h3>
+          <p class="sc-part-pitch">{{ part('form-password').pitch }}</p>
+        </header>
+        <div class="sc-part-row">
+          <BaseCard>
+            <PasswordInput
+              v-model="password"
+              label="Password"
+              toggle-label="Show password"
+              hint="At least 12 characters."
+              autocomplete="new-password"
+            />
+            <p class="text-ink-soft mt-3 text-xs">
+              Press the eye, then Tab: focus has not moved, and the button is still named the same
+              thing. The state is what changed, and the state is what is read out.
+            </p>
+          </BaseCard>
+          <CodeBlock :code="CODE['form-password']" lang="html" />
+        </div>
+        <PropTable name="PasswordInput" />
       </article>
 
       <article :id="part('form-textarea').id" class="sc-part">

@@ -40,6 +40,14 @@ export const FORM_PARTS = [
       'The label, the hint and the error are all wired to the field by id, so an error is read out with the field rather than sitting near it in red.',
   },
   {
+    id: 'form-password',
+    group: 'form',
+    label: 'PasswordInput',
+    title: 'PasswordInput — the one field you cannot read back',
+    pitch:
+      'A password is hidden from the person typing it, on the device where typing is least reliable. The toggle is a real button with a real name and a pressed state — because the version every app writes by hand is a span, or a button with no type that submits the form when you look at your own password.',
+  },
+  {
     id: 'form-textarea',
     group: 'form',
     label: 'BaseTextarea',

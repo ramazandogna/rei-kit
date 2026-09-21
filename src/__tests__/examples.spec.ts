@@ -54,6 +54,21 @@ const camel = (name: string) => name.replace(/-(\w)/g, (_, c: string) => c.toUpp
 
 /** Attributes any component takes through fallthrough, and every element takes. */
 const FALLTHROUGH = /^(class|style|key|id|ref|role|title|lang|tabindex|aria-.+|data-.+)$/
+
+/*
+ * Attributes a component may take because it said so.
+ *
+ * `BaseInput`, `BaseButton` and `PasswordInput` intersect their props with a
+ * native element's and pass them through `$attrs`, which is the whole reason
+ * an app can put `autocomplete` on a password field without the kit
+ * declaring a prop for every attribute an input has. Those pass-throughs are
+ * written `/* @vue-ignore *\/`, so the type checker is looking away — this
+ * list is the only thing between the examples and a plausible-looking
+ * attribute that does nothing, so it is spelled out rather than opened up,
+ * and it applies only to the components that opted in.
+ */
+const NATIVE_ATTRS =
+  /^(autocomplete|placeholder|inputmode|required|disabled|readonly|name|maxlength|minlength|pattern|autofocus|form)$/
 const NATIVE_EVENTS = new Set(['click'])
 
 type Node = {
@@ -120,6 +135,7 @@ describe('usage examples', () => {
 
         const source = sources.get(component.name) ?? ''
         const known = new Set(component.props.map((p) => p.name))
+        const takesNativeAttrs = /HTMLAttributes/.test(source)
         const modelNames = models(source)
         const eventNames = new Set([...emits(source), ...NATIVE_EVENTS])
         const given = new Set<string>()
@@ -128,7 +144,7 @@ describe('usage examples', () => {
            prop, and only an undeclared one falls through to the element. */
         const check = (name: string, written: string) => {
           if (known.has(camel(name))) given.add(camel(name))
-          else if (!FALLTHROUGH.test(name)) {
+          else if (!FALLTHROUGH.test(name) && !(takesNativeAttrs && NATIVE_ATTRS.test(name))) {
             problems.push(`${example.name}: <${component.name} ${written}>`)
           }
         }

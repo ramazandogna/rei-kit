@@ -120,6 +120,7 @@ const PUBLIC_API = [
   'CircularProgress',
   'NumberInput',
   'PinInput',
+  'PasswordInput',
   'ToggleGroup',
   'BaseSpinner',
   'BaseSwitch',

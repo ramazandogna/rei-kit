@@ -380,6 +380,11 @@
     "js": "<script setup>\nimport { BaseButton, PageHeader } from 'rei-kit'\n</script>\n\n<template>\n  <PageHeader title=\"Settings\">\n    <template #right>\n      <BaseButton size=\"sm\" variant=\"ghost\">Done</BaseButton>\n    </template>\n  </PageHeader>\n</template>\n"
   },
   {
+    "name": "PasswordInput",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { PasswordInput } from 'rei-kit'\n\nconst password = ref('')\n</script>\n\n<template>\n  <PasswordInput\n    v-model=\"password\"\n    label=\"Password\"\n    toggle-label=\"Show password\"\n    hint=\"At least 12 characters.\"\n    autocomplete=\"new-password\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { PasswordInput } from 'rei-kit'\n\nconst password = ref('')\n</script>\n\n<template>\n  <PasswordInput\n    v-model=\"password\"\n    label=\"Password\"\n    toggle-label=\"Show password\"\n    hint=\"At least 12 characters.\"\n    autocomplete=\"new-password\"\n  />\n</template>\n"
+  },
+  {
     "name": "PinInput",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { PinInput } from 'rei-kit'\n\nconst code = ref('')\n\nfunction verify(value: string) {\n  // Send the code — it fires once, when the last box is filled.\n  console.log(value)\n}\n</script>\n\n<template>\n  <PinInput\n    v-model=\"code\"\n    label=\"Verification code\"\n    :cell-label=\"(n, total) => `Digit ${n} of ${total}`\"\n    @complete=\"verify\"\n  />\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { PinInput } from 'rei-kit'\n\nconst code = ref('')\n\nfunction verify(value) {\n  // Send the code — it fires once, when the last box is filled.\n  console.log(value)\n}\n</script>\n\n<template>\n  <PinInput\n    v-model=\"code\"\n    label=\"Verification code\"\n    :cell-label=\"(n, total) => `Digit ${n} of ${total}`\"\n    @complete=\"verify\"\n  />\n</template>\n"

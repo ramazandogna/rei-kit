@@ -3085,6 +3085,69 @@
     ]
   },
   {
+    "name": "PasswordInput",
+    "entry": "rei-kit",
+    "summary": "A password field you can look at.",
+    "props": [
+      {
+        "name": "modelValue",
+        "required": false,
+        "type": "string",
+        "description": "The value, with `v-model`.",
+        "default": "''"
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "toggleLabel",
+        "required": true,
+        "type": "string",
+        "description": "The toggle's name, e.g. \"Show password\". It does not change: the control is pressed while the password is visible, and that state is what a screen reader reads out.",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "The input's `id`, for an `ErrorSummary` that links to this field.",
+        "default": "undefined"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "",
+        "default": "'md'"
+      }
+    ]
+  },
+  {
     "name": "PinInput",
     "entry": "rei-kit",
     "summary": "A short code typed one character per box — a sign-in code, a PIN.",

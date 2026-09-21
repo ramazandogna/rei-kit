@@ -95,6 +95,7 @@ const PUBLIC_API = [
   'AnnounceHost',
   'useAnnounce',
   'announce',
+  'textDirection',
   'AvatarStack',
   'BaseCalendar',
   'BaseChip',

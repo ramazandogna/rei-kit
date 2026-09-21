@@ -153,6 +153,14 @@ export { default as VirtualList } from './components/VirtualList.vue'
  */
 export { default as AnnounceHost } from './components/AnnounceHost.vue'
 export { useAnnounce, announce } from './composables/use-announce'
+/**
+ * `textDirection`, because every logical property and every `start`/`end`
+ * prop in the kit is inert until the document says which way the language
+ * runs. The i18n runtime sets `dir` from it; this is for an app that has
+ * no i18n runtime and still has more than one direction.
+ */
+export { textDirection } from './utils/direction'
+export type { TextDirection } from './utils/direction'
 export type { AnnounceOptions } from './composables/use-announce'
 export { default as AvatarStack } from './components/AvatarStack.vue'
 export { default as BaseCalendar } from './components/BaseCalendar.vue'

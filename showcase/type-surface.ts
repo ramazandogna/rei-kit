@@ -44,6 +44,7 @@ export type {
   TimelineEvent,
   Toast,
   AnnounceOptions,
+  TextDirection,
   ToastAction,
   ToastOptions,
   ToastTone,

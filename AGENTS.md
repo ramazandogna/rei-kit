@@ -380,12 +380,21 @@ Pure, no Vue, no clock of their own.
 | `eachDayOfYear(year)` / `leadingBlanks(key, weekStartsOn)`    | calendar grids                                                      |
 | `formatDate(date, Intl options)` / `setFormatLocale(tag)`     | follows the active locale; the i18n runtime sets it for you         |
 | `relativeDayLabel(key, today, { today, yesterday })`          | else the weekday                                                    |
+| `textDirection(localeTag)`                                    | `'ltr'` or `'rtl'`; the i18n runtime sets `dir` from it             |
 | `safeRedirect(queryValue)`                                    | same-origin paths only; rejects `//host`                            |
 | `toRedirectPath(fullPath)`                                    | drops the URL fragment before it becomes a query parameter          |
 | `downloadJson(data, filename)` / `tapFeedback(ms?)`           | `tapFeedback` is a safe no-op on iOS                                |
 | `isInstalled()` / `needsIosInstall()` / `isApplePortable()`   | install prompts                                                     |
 | `AppError` / `toAppError` / `registerErrorMapper`             | `kind` is `'conflict'\|'not-found'\|'network'\|'denied'\|'unknown'` |
 | `ensureSheetRoot()`                                           | `BaseSheet` calls it; exported for mounting the root earlier        |
+
+**The direction is not decoration.** Every logical property in the kit —
+every inset, every margin, `BaseDrawer`'s `start`/`end` — is inert until
+`dir` is set on the document. `createI18nRuntime` sets it, from the active
+locale, alongside `lang`. An app with no i18n runtime and more than one
+direction sets it itself, with `textDirection`; an app that never sets it
+at all gets a layout mirrored the wrong way the day it adds Arabic, with
+every check green.
 
 **Never use `toISOString()` for a date key.** It is UTC, so a late-evening
 entry lands on tomorrow for anyone east of Greenwich. That is what

@@ -1,6 +1,7 @@
 import { computed, ref, watchEffect } from 'vue'
 import { createI18n } from 'vue-i18n'
 
+import { textDirection } from '../utils/direction'
 import { setFormatLocale } from '../utils/format'
 
 /** What the user picked. `system` re-reads the browser on every launch. */
@@ -161,12 +162,19 @@ export function createI18nRuntime<L extends string, Schema extends Record<string
 
   // Keeps vue-i18n, `Intl` and the document in step. `lang` matters beyond
   // tidiness: it drives hyphenation, font fallback and screen readers.
+  //
+  // `dir` matters more. The kit is built on logical properties and
+  // `start`/`end` props the whole way through, and every one of them is
+  // inert until the document says which way the language runs — so an app
+  // that adds Arabic would get the entire layout mirrored the wrong way
+  // while every check stayed green.
   watchEffect(() => {
     core.locale.value = activeLocale.value
     setFormatLocale(intlLocale.value)
 
     if (typeof document !== 'undefined') {
       document.documentElement.lang = activeLocale.value
+      document.documentElement.dir = textDirection(intlLocale.value)
     }
   })
 

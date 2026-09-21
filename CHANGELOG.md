@@ -3,6 +3,70 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.22.0 — 2026-09-21
+
+**Three Level A gaps, found by asking the kit's own question of the kit.**
+
+The gap test in `AGENTS.md` points at the apps: a hand-written control in a
+file that already imports the kit. Turned on the kit itself it asks a
+different question — *which of the shapes it already ships creates a need
+it does not then answer?* — and these three were the answer.
+
+### Added
+
+- **`SkipLink`** (`rei-kit/web`) — the first thing in the tab order,
+  invisible until it has focus. The kit ships `NavLinks` and `MegaMenu`,
+  which is to say the same header on every page, so it ships exactly the
+  thing that makes bypassing a repeated block necessary. That is WCAG
+  2.4.1, Level A.
+
+  The half usually broken is the one that matters: `<a href="#main">`
+  scrolls the page and, in most browsers, leaves focus on itself — still
+  inside the header — so the next Tab is the second nav item and the link
+  has done nothing while looking like it worked. This moves focus itself,
+  giving the target `tabindex="-1"` on the way: focusable by script, never
+  by Tab, and left behind so a second skip still works. It is clipped
+  rather than hidden, because `display: none` takes it out of the tab order
+  and then nobody can reach it at all.
+
+- **`AnnounceHost` and `useAnnounce`** (`rei-kit`) — saying something to a
+  reader when nothing on screen has changed enough to say it. The kit had
+  live regions in a dozen components already, but each belongs to something
+  on screen; what had no home is a filter that narrowed a list to three, a
+  route that changed, a draft that saved itself. On screen those are
+  obvious. To a reader they are silence.
+
+  Three failure modes it avoids, all of them silent: the region exists from
+  mount rather than arriving together with its first message, the same
+  sentence twice is still said twice, and polite is the default so
+  assertive stays worth interrupting for.
+
+- **`createRouteAnnouncer`** (`rei-kit/app`) — the other half of
+  `createTitleGuard`. Setting `document.title` is what a browser announces
+  on a real page load; a single-page app has no page load, so the title
+  changes, the view is replaced and nothing is announced at all. It also
+  moves focus into the new view when `focus` names one — without that the
+  next Tab starts again from the top of the document, past the whole
+  header, on every navigation. Register it *after* the title guard.
+
+- **`textDirection(localeTag)`** (`rei-kit`) — `'ltr'` or `'rtl'` from a
+  locale tag, reading the script subtag as well as the language, so
+  `az-Arab-IR` and `az-Latn-AZ` answer differently.
+
+### Changed
+
+- **`createI18nRuntime` sets `dir` on the document, not only `lang`.** This
+  is the widest quiet fault the kit had: it is built on logical properties
+  and `start`/`end` props the whole way through, and every one of them is
+  inert until the document says which way the language runs. An app that
+  added Arabic would have rendered its entire layout mirrored the wrong
+  way, with every check green. Apps whose locales are all left-to-right see
+  no change beyond an explicit `dir="ltr"`.
+
+- **`SkipLink` and `createRouteAnnouncer` share `focusTarget`.** The
+  `tabindex="-1"` trick is the same one and both fail the same invisible
+  way without it, so there is one copy of it.
+
 ## 2.21.0 — 2026-09-21
 
 **Two parts that were already in the codebase, one of them twice.**

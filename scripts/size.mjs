@@ -70,8 +70,10 @@ const CSS_CASES = [
   },
   /* Raised with the number that moved them: 20.2/19.9 KB at 2.11, 21.1/20.8
      at 2.16 (the colour picker's well, hex field and swatches). */
-  { name: 'mobile.css preset', budget: 22, imports: ['mobile.css'], source: false },
-  { name: 'web.css preset', budget: 22, imports: ['web.css'], source: false },
+  { name: 'mobile.css preset', budget: 23, // 22.1 KB at 2.19.0: CodeBlock and the drawer.
+ imports: ['mobile.css'], source: false },
+  { name: 'web.css preset', budget: 23, // 22.1 KB at 2.19.0: CodeBlock and the drawer.
+ imports: ['web.css'], source: false },
 ]
 
 const kb = (bytes) => (bytes / 1024).toFixed(1)

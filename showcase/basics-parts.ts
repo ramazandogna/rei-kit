@@ -65,6 +65,13 @@ export const BASICS_PARTS = [
     pitch:
       'Copies, says it copied, and says so out loud as well as in the label. It carries a failure state because a clipboard write is refused more often than anyone expects.',
   },
+  {
+    id: 'basics-code',
+    label: 'CodeBlock',
+    title: 'CodeBlock — a sample as written',
+    pitch:
+      'No highlighting and no `v-html`: a code sample is the one place where what is written is exactly what is meant. When it scrolls sideways it is a named focus stop, because a scrolling box a keyboard cannot reach is a line whose end nobody can see.',
+  },
 ] as const
 
 export type BasicsPartId = (typeof BASICS_PARTS)[number]['id']

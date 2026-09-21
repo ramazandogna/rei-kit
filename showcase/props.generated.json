@@ -2015,6 +2015,55 @@
     ]
   },
   {
+    "name": "CodeBlock",
+    "entry": "rei-kit",
+    "summary": "A sample of code, as written.",
+    "props": [
+      {
+        "name": "code",
+        "required": true,
+        "type": "string",
+        "description": "The sample itself. Shown exactly as given.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the block, e.g. \"Installing the package\". Required because this is a region a reader can land in, and an unnamed one is announced as nothing at all.",
+        "default": ""
+      },
+      {
+        "name": "language",
+        "required": false,
+        "type": "string",
+        "description": "Shown in the corner, e.g. `bash`, `ts`. Not used to highlight anything.",
+        "default": "undefined"
+      },
+      {
+        "name": "wrap",
+        "required": false,
+        "type": "boolean",
+        "description": "Break long lines instead of scrolling sideways.",
+        "default": "false"
+      },
+      {
+        "name": "copyLabel",
+        "required": false,
+        "type": "string",
+        "description": "Given together with `copiedLabel`, adds a copy button. Already translated.",
+        "default": "undefined"
+      },
+      {
+        "name": "copiedLabel",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "undefined"
+      }
+    ]
+  },
+  {
     "name": "ColorPicker",
     "entry": "rei-kit",
     "summary": "A colour, as a hex value.",

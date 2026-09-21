@@ -99,6 +99,7 @@ const PUBLIC_API = [
   'BaseSeparator',
   'BaseSkeleton',
   'ColorPicker',
+  'CodeBlock',
   'CopyButton',
   'DescriptionList',
   'FileDrop',

@@ -74,8 +74,18 @@ async function copy() {
         </button>
       </div>
     </div>
+    <!-- A focus stop, and named.
+
+         These samples scroll sideways, and a scrolling box that cannot take
+         focus cannot be scrolled with a keyboard at all: the end of a long
+         line was unreachable on every sample on this page. `rei-kit`'s own
+         `CodeBlock` does this for an app; the page has its own block for the
+         TS/JS switch and the fixed height, so it has to do it here too. -->
     <pre
       class="cb-pre"
+      tabindex="0"
+      role="region"
+      :aria-label="`${file ?? lang} sample`"
       :style="lines ? { height: `calc(${lines} * 1.6em + 1.75rem)` } : undefined"
     ><code v-html="coloured" /></pre>
   </div>
@@ -169,6 +179,11 @@ async function copy() {
 
 .cb-pre :deep(.tok-punct) {
   color: var(--color-ink-soft);
+}
+
+.cb-pre:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
 }
 
 .cb-pre {

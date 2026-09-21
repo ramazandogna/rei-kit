@@ -3,6 +3,9 @@ import { ref } from 'vue'
 
 import {
   AvatarStack,
+  // Aliased: this page has its own CodeBlock, with the TS/JS switch and the
+  // fixed height the docs need. The kit is what an app would reach for.
+  CodeBlock as KitCodeBlock,
   BaseCard,
   BaseChip,
   BaseKbd,
@@ -38,6 +41,11 @@ const PEOPLE = [
   { name: 'Ravi Patel' },
   { name: 'Sara Yilmaz' },
 ]
+
+const SAMPLE = `pnpm add rei-kit
+# then, in src/assets/main.css
+@import 'tailwindcss';
+@import 'rei-kit/web.css';`
 
 const part = (id: BasicsPartId) => BASICS_PARTS.find((one) => one.id === id)!
 
@@ -84,6 +92,13 @@ const CODE: Record<BasicsPartId, string> = {
 <BaseRating :model-value="4" readonly size="sm" ... />`,
   'basics-link': `Read the <BaseLink href="/install">install guide</BaseLink>,
 or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
+  'basics-code': `<CodeBlock
+  :code="install"
+  label="Installing the package"
+  language="bash"
+  copy-label="Copy the snippet"
+  copied-label="Copied"
+/>`,
   'basics-copy': `<CopyButton
   text="pnpm add rei-kit"
   copy-label="Copy the command"
@@ -297,6 +312,28 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
         <CodeBlock :code="CODE['basics-copy']" lang="html" />
       </div>
       <PropTable name="CopyButton" />
+    </article>
+
+    <!-- CodeBlock -->
+    <article :id="part('basics-code').id" class="sc-part">
+      <header class="sc-part-head">
+        <h3 class="sc-part-name">{{ part('basics-code').title }}</h3>
+        <p class="sc-part-pitch">{{ part('basics-code').pitch }}</p>
+      </header>
+      <BaseCard class="mt-4">
+        <KitCodeBlock
+          :code="SAMPLE"
+          label="Installing the package"
+          language="bash"
+          copy-label="Copy the snippet"
+          copied-label="Copied"
+        />
+        <p class="text-ink-soft mt-3 text-xs">
+          Tab onto it: it takes focus because it scrolls, and the arrows then move it. With
+          <code class="text-xs">wrap</code> there is nothing to scroll, so it stops being a stop.
+        </p>
+      </BaseCard>
+      <PropTable name="CodeBlock" />
     </article>
   </section>
 </template>

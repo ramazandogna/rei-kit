@@ -141,6 +141,11 @@ export { default as BaseSeparator } from './components/BaseSeparator.vue'
 export { default as BaseSkeleton } from './components/BaseSkeleton.vue'
 export { default as ColorPicker } from './components/ColorPicker.vue'
 export type { ColorSwatch } from './components/ColorPicker.vue'
+/**
+ * `CodeBlock`, a sample as written — no highlighting and no `v-html`, and
+ * focusable when it scrolls, or the end of a long line is unreachable.
+ */
+export { default as CodeBlock } from './components/CodeBlock.vue'
 export { default as CopyButton } from './components/CopyButton.vue'
 export { default as DescriptionList } from './components/DescriptionList.vue'
 export type { DescriptionItem } from './components/DescriptionList.vue'

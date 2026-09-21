@@ -34,15 +34,22 @@ session, which is the rule that produced 0.5.2, 0.5.3, 0.6.1, 0.9.1, 0.12.1, 0.1
   third picked ten — a product decision, which the rule keeps in the app. With
   `fieldErrors` shipped, what is left in each app is fourteen lines stating its
   own password policy. It ships if a fourth app writes the same fourteen.
-- **`formatCurrency` / `formatNumber`.** One consumer has 186 lines of money
-  handling — minor units, `bigint` arithmetic, `Intl` — and only its currency
-  list is product-specific. The kit ships `formatDate` and nothing else.
-- **A sentinel in `styles.css`** that warns in development when one of the four
-  CSS lines is missing. The failure is currently silent: the build stays green
-  and the components render unstyled.
-- **`BaseRadioGroup` and `size="lg"`** have no users. They stay — a primitive
-  set is complete by construction — but if a second release passes without
-  either being reached for, the shape is probably wrong rather than unneeded.
+- **`formatCurrency`.** One consumer has 186 lines of money handling — minor
+  units, `bigint` arithmetic, `Intl` — and only its currency list is
+  product-specific. `formatNumber` shipped in 2.3.0; money did not, because
+  minor units and rounding are where a ledger's own decisions live.
+- ~~**A sentinel in `styles.css`**~~ that warns when a CSS line is missing.
+  Dropped in 2.2.0: the one-line preset removed the four lines it was
+  guarding, and `pnpm size` compiles each preset and looks for component
+  classes, so the silent failure it was for cannot happen without a red
+  check. A runtime warning is not worth its cost once nothing can reach it.
+- **`BaseRadioGroup` and `size="lg"`** had no users when this was written,
+  and the note said that if a second release passed without either being
+  reached for, the shape was probably wrong rather than unneeded. Twenty
+  have. They stay anyway, and the reason has changed rather than survived:
+  a kit is built for the ecosystem, not for the three apps that happen to
+  exist here, and `AGENTS.md` now says so as a rule. Call-site counting was
+  the wrong test.
 
 ### Not planned
 
@@ -59,6 +66,172 @@ test that mounts it — enforced by a test, so the next one cannot arrive
 without.
 
 ---
+
+## 2.23.0
+
+**You gain `PasswordInput`** — the one field whose value is hidden from the
+person typing it, with a reveal that is a real button.
+
+```vue
+<PasswordInput
+  v-model="password"
+  label="Password"
+  toggle-label="Show password"
+  autocomplete="new-password"
+/>
+```
+
+One label, not two: the button keeps its name and carries `aria-pressed`,
+because a name that changes under a focus that has not moved is not
+reliably re-read. If you hand-wrote one of these, check yours for the three
+that usually go wrong — a `<button>` with no `type` submits the form when
+somebody looks at their own password, a `<span>` is not focusable at all,
+and the characters appearing is visual feedback only.
+
+**Your right-to-left layouts work.** If your app has an RTL locale, this is
+the release to take. The kit is written in logical properties throughout and
+none of them did anything until 2.22.0 set `dir` on the document; this
+release is the rest of it, which no stylesheet scanner could see:
+
+- **The arrow keys were mirrored in ten components.** `ArrowLeft` means
+  "back through the list" only left to right. `ToggleGroup`, `BaseTabs`,
+  `BaseToolbar`, `BaseCalendar`, `BaseRating`, `PinInput`, `BaseTree`,
+  `BaseSplitter`, `TourShell` and `ActivityGrid` were all walking backwards
+  through themselves.
+- **`BaseSplitter` was dragged the wrong way**, so its handle ran away from
+  the pointer.
+- **`BaseSlider`'s filled track** ran from the left while the thumb started
+  on the right.
+- **`ActivityGrid` opened on the oldest week** instead of the newest.
+
+**You also gain `elementDirection(element)` and `horizontalStep(key, element)`**,
+which is what the kit reads those keys through. If you have written a roving
+tabindex of your own beside the kit's, it needs the same answer.
+
+**Action required:** none, and nothing changes in a left-to-right app — the
+1148 tests that existed before this release still pass unaltered. If you
+support an RTL locale and were working around the old behaviour, remove the
+workaround.
+
+## 2.22.0
+
+**You gain four things a keyboard or a screen reader needs**, each of which
+an app had to write by hand:
+
+- **`SkipLink`** (`rei-kit/web`) — WCAG 2.4.1, Level A. The bare
+  `<a href="#main">` most sites ship scrolls the page and leaves focus
+  inside the header, so the next Tab is the second nav item and the link has
+  done nothing while looking like it worked. This moves focus itself.
+- **`AnnounceHost` + `announce()`** — for what has no component: a filter
+  that narrowed a list to three, a draft that saved itself. Render one
+  `AnnounceHost` per app. It is not for anything visible.
+- **`createRouteAnnouncer`** (`rei-kit/app`) — the other half of
+  `createTitleGuard`. A single-page app has no page load, so the title
+  changes, the view is replaced and a reader is told nothing. Register it
+  **after** the title guard.
+- **`ErrorSummary`** — what a rejected form says at the top of itself.
+  Give each `FormField` a `fieldId` and hand the summary the same function,
+  or its links point at nothing.
+
+**`BaseCheckbox` takes `indeterminate`** — the select-all box every app
+writes by hand, because it is a DOM property with no markup for it — and
+`labelHidden`, for a box in a row that already says what it is.
+
+**`createI18nRuntime` now sets `dir` as well as `lang`.** This is the one to
+know about. Every logical property in the kit was inert without it, so an
+app that added Arabic would have rendered mirrored the wrong way with every
+check green.
+
+**Action required:** if you set `dir` yourself, you can stop. If your app is
+left-to-right only, you will see an explicit `dir="ltr"` appear on `<html>`
+and nothing else change.
+
+## 2.21.0
+
+**You gain `ScrollArea` and `VirtualList`.**
+
+`ScrollArea` is the box you were writing with `overflow-auto` and
+`no-scrollbar`: it puts back the only sign on screen that there is more
+along the row, as a fade at whichever edge has content past it. It becomes
+a named focus stop **only** when it overflows and holds nothing focusable —
+a row of buttons already moves under the keyboard.
+
+`VirtualList` renders only the rows near the viewport, and every row still
+states its real place with `aria-setsize` and `aria-posinset`. Ten thousand
+names rendered twenty at a time otherwise read as a list of twenty, and as a
+*different* list after each scroll.
+
+**Action required:** none. `BaseTable`, `DataTable` and `CodeBlock` scroll
+through `ScrollArea` now; their focus stop became conditional, so a table of
+links no longer costs a Tab press for nothing.
+
+## 2.20.0
+
+**You gain `ActivityGrid`** — a year of days as a shape you can read at a
+glance: a streak, a gap, a habit.
+
+```vue
+<ActivityGrid
+  :days="lastNDays(365)"
+  label="Your year"
+  :level-for="(key) => LEVELS[count(key)]"
+  :day-label="(key) => `${format(key)}: ${count(key)} entries`"
+/>
+```
+
+It is a real `<table>` — weekdays down, weeks across — because the
+column-flowing CSS grid everyone writes first puts the DOM in a different
+order from the picture, and every keyboard laid over it afterwards then
+describes a shape that is not on screen. The whole year is one tab stop.
+`levelFor` returns a class: the kit does not know whether four of something
+is a lot.
+
+**Action required:** none. If you have a year heatmap of your own, this
+replaces it.
+
+## 2.19.0
+
+**You gain four parts a kit should have had.**
+
+- **`BaseDrawer`** (`rei-kit/web`) — a panel in from the edge of a wide
+  screen, for what a site keeps *beside* the page: filters, a cart, a menu
+  that outgrew its bar. `BaseSheet` belongs to a thumb and is pinned to the
+  430px shell column, so a desktop had nothing for this shape. `side` is
+  `start`/`end`, so it follows the writing direction without you asking.
+- **`BaseContextMenu`** (`rei-kit/web`) — the right-click menu, **and
+  Shift+F10 and the Menu key**, which is the half usually missing because
+  it is the half with no mouse in it. Without those, the actions in it do
+  not exist for anyone not holding a mouse.
+- **`BaseHoverCard`** (`rei-kit/web`) — for when the answer is a *thing*
+  rather than a sentence. A tooltip is wired with `aria-describedby`, which
+  flattens its contents to text: a card with a name, an avatar and a link
+  would read as one run-on string and the link could not be reached at all.
+- **`CodeBlock`** (`rei-kit`) — a sample as written, with no highlighting
+  and no `v-html`. Highlight it yourself and put the result in the slot.
+
+**Two faults fixed that you may have copied.** `CodeBlock` is a focus stop
+while it can scroll — a box that scrolls sideways and cannot take focus
+cannot be scrolled by a keyboard at all, and the end of a long line is
+simply unreachable. And `BaseModal` and `BaseMenu` now share their
+behaviour through `useDialogShell` and `useMenuKeys` instead of copying it.
+
+**Action required:** none.
+
+## 2.18.1
+
+**Two ARIA faults fixed, both invisible on screen.**
+
+- **`BaseCalendar` told a reader nothing about which day was chosen.**
+  `aria-selected` sat on the day `<button>`, and `role="button"` does not
+  support it, so it was dropped on the floor. It belongs to the `gridcell`
+  around it, which is where it is now.
+- **`BaseRating` put focus somewhere a reader could not follow.** The stars
+  were `<button>`s inside `role="slider"`, hidden with `aria-hidden`. A
+  mouse press moved focus onto an element hidden from the accessibility
+  tree, taking the slider's own focus ring with it. They are spans now.
+
+**Action required:** none. Nothing moves and the pointer behaves exactly as
+before — both were keyed off a class, never off the attribute.
 
 ## 2.18.0
 

@@ -14,7 +14,8 @@ So the numbers are measured, not claimed, and CI fails when they move:
 
 - Size budgets per entry point, built with Vite the way an app builds.
 - A benchmark in `bench/` that bundles the same three components against five
-  other kits.
+  other kits — and writes its numbers to a file the showcase reads, so the
+  comparison on the site cannot say something the benchmark did not produce.
 - A component count asserted against the generated catalogue, in every place
   it is written down.
 
@@ -22,27 +23,33 @@ If something here is ever untrue, that is a bug worth reporting.
 
 ## Done recently
 
-| Version | What                                                                       |
-| ------- | -------------------------------------------------------------------------- |
-| 2.18.0  | `CommandMenu` matches every word, so two-word searches find things         |
-| 2.17.0  | `BaseTimeline` — a record of what happened, on a rail                      |
-| 2.16.0  | `ColorPicker` — the platform's own picker, painted                         |
-| 2.15.0  | `SliderField`, and a tooltip that can follow the pointer                   |
-| 2.14.0  | `MegaMenu` — a disclosure, not a `role="menu"`                             |
-| 2.13.0  | `BaseCombobox`: several answers, a list from a server, a virtual window    |
-| 2.12.0  | Table columns whose heading goes where their figures go                    |
+| Version | What                                                                              |
+| ------- | --------------------------------------------------------------------------------- |
+| 2.23.0  | `PasswordInput`, and the arrow keys mirrored in the ten controls that had them wrong |
+| 2.22.0  | `SkipLink`, `AnnounceHost`, `createRouteAnnouncer`, `ErrorSummary` — and `dir` on the document at last |
+| 2.21.0  | `ScrollArea` and `VirtualList`, both already written by hand inside the kit       |
+| 2.20.0  | `ActivityGrid` — a year of days, as a real table                                  |
+| 2.19.0  | `BaseDrawer`, `BaseContextMenu`, `BaseHoverCard`, `CodeBlock`                     |
+| 2.18.0  | `CommandMenu` matches every word, so two-word searches find things                |
+| 2.17.0  | `BaseTimeline` — a record of what happened, on a rail                             |
 
 `CHANGELOG.md` has the reasoning; `PATCHNOTES.md` has what you gain and what
 you have to do.
 
 ## Next
 
-**Trust and onboarding, ahead of more components.** The barrier is not the
-size of the catalogue — it is that somebody arriving cannot tell in a minute
-whether this fits, and cannot tell at all whether it is maintained.
+**A real browser, ahead of more components.** Everything here is audited in
+jsdom, which has no layout — so two of the things most often claimed about a
+component kit are the two still unmeasured: **contrast** and **focus
+order**. The axe rules for both are switched off rather than left to pass
+quietly, and the palettes are checked by measuring their pairings instead.
+Closing that means Playwright and a CI job, which is a dependency and a
+minute on every push; it is the next decision rather than the next commit.
 
-- The showcase keeps growing sections faster than it grows a way around
-  them. Several are still a card holding four components.
+- **A carousel** is still the only component under consideration, below.
+- The showcase has an evidence section as of 2.23.0 — the size table and the
+  checks — because a gallery can show what exists and cannot show what it
+  costs or whether the rules are enforced.
 
 ## Under consideration
 

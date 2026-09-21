@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { BaseCard, BaseTable, SectionHeading, ToneDot } from '../src/index'
+import { BarChart, BaseCard, BaseTable, DonutChart, SectionHeading, ToneDot } from '../src/index'
 import type { Column } from '../src/index'
 import bench from '../bench/results.json'
 import { NEUTRAL } from './tones'
@@ -48,6 +48,36 @@ const suites = computed(() =>
     })),
   })),
 )
+
+/*
+ * The same numbers as bars, drawn with the kit's own `BarChart`.
+ *
+ * Two things at once, and the second is the reason it is here rather than
+ * a picture: the table below says it, and the chart is the kit drawing its
+ * own measurement of itself. The bars scale from zero and every number is
+ * printed beside its bar, so the picture cannot say anything the table
+ * does not — which matters more here than anywhere else on the page,
+ * because this is the one chart with something to gain by exaggerating.
+ */
+const chart = computed(() =>
+  (bench.suites.find((suite) => suite.id === 'ten')?.rows ?? []).map((row) => ({
+    key: row.name,
+    label: row.name.replace(/ [\d.]+$/, ''),
+    value: (row.js + row.css) / 1024,
+    ours: row.name.startsWith('rei-kit'),
+  })),
+)
+
+/** What this kit's own stylesheet is made of, measured from `dist`. */
+const STYLESHEET = [
+  { key: 'components', label: 'Component styles', value: 20.0 },
+  { key: 'tokens', label: 'Tokens and utilities', value: 4.4 },
+  { key: 'palettes', label: 'Ten palettes, both modes', value: 2.1 },
+  { key: 'motion', label: 'Motion', value: 1.2 },
+  { key: 'materials', label: 'Four materials', value: 0.3 },
+]
+
+const TONES = ['text-primary', 'text-accent', 'text-positive', 'text-warning', 'text-ink-soft']
 
 /** How many times the total of the runner-up is, in the ten-component case. */
 const lead = computed(() => {
@@ -130,6 +160,24 @@ const GUARDS = [
         Minified, gzip level 9, Vue excluded.
       </p>
 
+      <div class="mt-6">
+        <h4 class="text-ink text-sm font-semibold">Ten components, total</h4>
+        <div class="mt-3">
+          <BarChart
+            :series="chart"
+            label="Total bundle size at ten components, by kit"
+            :value-label="(value) => `${value.toFixed(1)} KB`"
+            :fill="(item) => (item.ours ? 'bg-positive' : 'bg-muted')"
+          />
+        </div>
+        <p class="text-ink-soft mt-3 max-w-[62ch] text-xs leading-relaxed">
+          Drawn with this kit's own <code class="text-ink">BarChart</code>, from the same file the
+          tables below read. It is a real table underneath — every kit a row heading, every number
+          printed beside its bar — and the scale starts at zero, which is the only reason a chart on
+          a page like this one is worth looking at.
+        </p>
+      </div>
+
       <div v-for="suite in suites" :key="suite.id" class="mt-6">
         <h4 class="text-ink text-sm font-semibold">{{ suite.label }}</h4>
         <div class="mt-2">
@@ -182,6 +230,32 @@ const GUARDS = [
           writes the numbers this page reads. Measured {{ bench.measured }}.
         </p>
       </div>
+    </BaseCard>
+
+    <BaseCard class="mt-6">
+      <h3 class="text-ink text-lg font-semibold">Where the flat 23 KB goes</h3>
+      <p class="text-ink-soft mt-2 max-w-[62ch] text-sm leading-relaxed">
+        The flat column, broken up. Nearly all of it is one file — every component's scoped styles,
+        shipped whole, because they are plain CSS with no utility classes for Tailwind to shake out.
+        That is what an app using three components carries and an app using ninety does not pay
+        again.
+      </p>
+
+      <div class="mt-5">
+        <DonutChart
+          :slices="STYLESHEET"
+          label="What the mobile.css preset is made of"
+          :value-label="(value) => `${value.toFixed(1)} KB`"
+          :fill="(_, index) => TONES[index % TONES.length]!"
+        />
+      </div>
+
+      <p class="text-ink-soft mt-5 max-w-[62ch] text-sm leading-relaxed">
+        Bars above and a ring here on purpose: the six kits need ranking, which is lengths, and
+        these five are parts of one number, which is what a ring is for. Reaching for the ring to
+        rank things is the most common chart mistake there is, and
+        <code class="text-ink">AGENTS.md</code> says so where the components are described.
+      </p>
     </BaseCard>
 
     <BaseCard class="mt-6">

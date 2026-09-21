@@ -135,6 +135,14 @@ export type { TabItem } from './components/TabBar.vue'
  */
 export { default as ActivityGrid } from './components/ActivityGrid.vue'
 /**
+ * `BarChart` and `DonutChart`: the two shapes the kit's own dashboard
+ * vocabulary — `StatCard`, `ProgressBar`, `ActivityGrid` — creates a need
+ * for and did not answer. Both are the data as text with a picture beside
+ * it, rather than a picture with a sentence describing it.
+ */
+export { default as BarChart } from './components/BarChart.vue'
+export { default as DonutChart } from './components/DonutChart.vue'
+/**
  * `ScrollArea`, a scrolling box with the two things a hand-written one
  * leaves out: a fade at whichever edge has more content past it, and a
  * focus stop — but only when nothing inside it can take focus.

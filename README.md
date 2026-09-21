@@ -1,6 +1,6 @@
 # rei-kit
 
-**One kit. Every look.** 103 accessible components for Vue 3 and Tailwind 4.
+**One kit. Every look.** 105 accessible components for Vue 3 and Tailwind 4.
 Change the **material** with one attribute and the **palette** with another —
 every component follows, and none of them knows your brand.
 
@@ -58,7 +58,7 @@ course site share one kit and look nothing alike.
 
 ### 2. The smallest of six, measured, with the trade stated
 
-At ten components — a real screen — **31.1 KB against 104 to 195** for the
+At ten components — a real screen — **31.3 KB against 104 to 195** for the
 five kits measured beside it. The gap is not the total, it is the slope:
 seven components past the first three cost this kit 5 KB and cost them 60 to
 125, because the stylesheet here is flat and theirs is inside the JavaScript.
@@ -75,7 +75,7 @@ go red, and several of them exist nowhere else:
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **`direction-styles.spec.ts`**   | One case per file, reading each stylesheet for a property that picks a side — `padding-left` where `padding-inline-start` was meant — and for a one-sided gradient with no right-to-left counterpart. It found 61 on its first run.          |
 | **`direction-keys.spec.ts`**     | One case per control, pressing **ArrowLeft in a right-to-left document** and asserting it went *forward*. Ten components were walking backwards through themselves. It type-checks, it renders, it passes axe, and only an Arabic reader sees it. |
-| **`examples-axe.spec.ts`**       | axe on all 103 usage examples, **and again with each one opened** — a menu, a dialog, a combobox list is exactly where the ARIA lives and where a closed-state audit says nothing.                                                           |
+| **`examples-axe.spec.ts`**       | axe on all 105 usage examples, **and again with each one opened** — a menu, a dialog, a combobox list is exactly where the ARIA lives and where a closed-state audit says nothing.                                                           |
 | **`focus.spec.ts`**              | Reads every component for a focus ring. A missing one compiles, renders and passes every other check.                                                                                                                                       |
 | **`public-api.spec.ts`**         | Names every runtime export of all six entries. A kit compiles fine without an export nothing inside it calls.                                                                                                                               |
 | **`type-surface.ts`**            | Re-exports every published type and is type-checked twice, because a test cannot see types — they are gone by the time one runs.                                                                                                            |
@@ -102,7 +102,9 @@ four of something is a lot.
 
 No `create-rei-app`, no Nuxt module, no base library underneath — the
 primitives are ours, so there is no second project's roadmap between a bug
-and its fix. No charts, no icons of its own, no copy. And no claim that has
+and its fix. No icons of its own, no copy, and no chart library — `BarChart`
+and `DonutChart` draw a series and a composition, and an app that needs axes,
+time scales or stacking reaches for something built for that. And no claim that has
 not been measured: contrast and focus order still need a real browser, and
 until that exists this file says so rather than implying otherwise.
 
@@ -155,7 +157,7 @@ app, and the case *least* favourable to this kit:
 
 | Kit                  |         JS |         CSS |       Total |
 | -------------------- | ---------: | ----------: | ----------: |
-| **rei-kit 2.23.0**   | **3.3 KB** | **22.8 KB** | **26.1 KB** |
+| **rei-kit 2.23.0**   | **3.3 KB** | **23.1 KB** | **26.4 KB** |
 | element-plus 2.14.6  |    27.3 KB |      6.0 KB |     33.3 KB |
 | naive-ui 2.45.3      |    51.2 KB |           — |     51.2 KB |
 | primevue 5.0.1       |    53.6 KB |           — |     53.6 KB |
@@ -167,7 +169,7 @@ a data table, a tooltip and a card. A screen rather than a demo:
 
 | Kit                  |         JS |         CSS |        Total |
 | -------------------- | ---------: | ----------: | -----------: |
-| **rei-kit 2.23.0**   | **8.3 KB** | **22.8 KB** | **31.1 KB**  |
+| **rei-kit 2.23.0**   | **8.3 KB** | **23.1 KB** | **31.3 KB**  |
 | element-plus 2.14.6  |    90.1 KB |     14.0 KB |    104.1 KB  |
 | naive-ui 2.45.3      |   132.4 KB |           — |    132.4 KB  |
 | primevue 5.0.1       |   135.8 KB |           — |    135.8 KB  |
@@ -175,14 +177,14 @@ a data table, a tooltip and a card. A screen rather than a demo:
 | ant-design-vue 4.2.6 |   195.4 KB |           — |    195.4 KB  |
 
 **The slope is the point, not the total.** Seven more components cost this kit
-**5 KB**, because the stylesheet does not move and only the JavaScript grows.
+**4.9 KB**, because the stylesheet does not move and only the JavaScript grows.
 The kits that put their styles in the JavaScript have no flat part at all, so
 the same seven cost them **60 to 125 KB**. A quarter smaller at three
 components; **3.3× smaller at ten**.
 
 That is the trade, stated rather than left to be inferred: rei-kit's CSS
-column is the entire `mobile.css` preset — all 103 components, four materials,
-ten palettes — and it is the same 22.8 KB whether an app imports three
+column is the entire `mobile.css` preset — all 105 components, four materials,
+ten palettes — and it is the same 23.1 KB whether an app imports three
 components or every one of them. An app using very little of the kit carries
 stylesheet it does not need; an app using a screenful stops paying anything
 much for the next one. Which is why the three-component table above is the one
@@ -212,7 +214,7 @@ Each claim here is enforced by something that fails, not by a promise.
 
 | Standard                                 | How it is held                                                                                                                                                                                                                                                                                                                          |
 | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Open for extension, closed for edits** | A new look is a token, a material or a palette — never an edit to a component. Materials and palettes restyle all 103 without touching one, and a test fails if a component holds a colour.                                                                                                                                              |
+| **Open for extension, closed for edits** | A new look is a token, a material or a palette — never an edit to a component. Materials and palettes restyle all 105 without touching one, and a test fails if a component holds a colour.                                                                                                                                              |
 | **Single responsibility**                | One part, one job. Label-and-error wiring lives in `FormField`, not in five inputs; taking the page behind a layer out of reach lives in one helper the modal, the sheet and the guide share.                                                                                                                                           |
 | **Depend on roles, not values**          | Components read `primary`, `surface`, `--shadow-card` — never a hex or a pixel shadow. An app's brand wins in both modes, tested.                                                                                                                                                                                                       |
 | **WAI-ARIA Authoring Practices**         | Menus, comboboxes, tabs, sliders, dialogs and accordions follow their APG pattern: arrows move, Tab leaves, Escape closes, focus returns. Behaviour tests drive each with the keyboard.                                                                                                                                                 |
@@ -228,7 +230,7 @@ Each claim here is enforced by something that fails, not by a promise.
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Components   | 103 (`AuthForm`, `BaseTable`, `BaseCombobox`, `BaseSlider`, `TabShell`, `BaseModal`, `BaseTabs`, `BaseTooltip`, `BasePagination`, `BaseBreadcrumb`, `BaseDisclosure`, `BaseAccordion`, `NavLinks`, `OfflineBanner`, `FabButton`, `BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseSwitch`, `BaseRadioGroup`, `BaseMenu`, `BaseAvatar`, `BaseSpinner`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
+| Components   | 105 (`AuthForm`, `BaseTable`, `BaseCombobox`, `BaseSlider`, `TabShell`, `BaseModal`, `BaseTabs`, `BaseTooltip`, `BasePagination`, `BaseBreadcrumb`, `BaseDisclosure`, `BaseAccordion`, `NavLinks`, `OfflineBanner`, `FabButton`, `BaseButton`, `BaseCard`, `BaseInput`, `BaseSelect`, `BaseTextarea`, `BaseCheckbox`, `BaseSwitch`, `BaseRadioGroup`, `BaseMenu`, `BaseAvatar`, `BaseSpinner`, `BaseAlert`, `BaseBadge`, `BaseSheet`, `ProgressBar`, `PriceCard`, `ToastHost`, `TabBar`, `GoogleButton`, `LocaleLinks`, `LocaleSheet`, `AuthShell`, `TourShell`, `InstallPrompt`, `UpdatePrompt`, `InstallSettings`, `SkeletonList`, `PageContainer`, `ErrorBoundary`, etc.) |
 | Composables  | 14 (`useToast`, `useTheme`, `useMaterial`, `usePalette`, `useToday`, `useMediaQuery`, `useOnline`, `useInstall`, `useSnooze`, `useThemeSync`, `useVisualViewport`, `useDragScroll`, `useDebouncedCallback`, `useAnnounce`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | Utilities    | 48 functions and 5 constants (`applyTheme`, `applyMaterial`, `applyPalette`, `MATERIALS`, `PALETTES`, `formatDate`, `fieldErrors`, `toAuthMessageKey`, `createAuthGuard`, `createQueryDefaults`, `createWriteReport`, `toRedirectPath`, `Supabase error mapper`, i18n runtime, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | Entry Points | `rei-kit`, `rei-kit/app`, `rei-kit/web`, `rei-kit/pwa`, `rei-kit/motion`, `rei-kit/supabase`, `rei-kit/mobile.css`, `rei-kit/web.css`, and each stylesheet on its own                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |

@@ -90,6 +90,8 @@ const PUBLIC_API = [
   'BaseSheet',
   'BaseSlider',
   'ActivityGrid',
+  'BarChart',
+  'DonutChart',
   'ScrollArea',
   'VirtualList',
   'AnnounceHost',

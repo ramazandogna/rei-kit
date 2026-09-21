@@ -25,6 +25,11 @@
     "js": "<script setup>\nimport { AvatarStack } from 'rei-kit'\n\nconst people = [\n  { name: 'Aiko Tanaka' },\n  { name: 'Kenji Mori' },\n  { name: 'Mei Lin' },\n  { name: 'Ravi Patel' },\n  { name: 'Sara Yilmaz' },\n]\n</script>\n\n<template>\n  <AvatarStack :people=\"people\" :max=\"3\" label=\"Shared with 5 people\" />\n</template>\n"
   },
   {
+    "name": "BarChart",
+    "ts": "<script setup lang=\"ts\">\nimport { BarChart } from 'rei-kit'\n\nconst SIZES = [\n  { key: 'rei', label: 'rei-kit', value: 31.1 },\n  { key: 'element', label: 'element-plus', value: 104.1 },\n  { key: 'naive', label: 'naive-ui', value: 132.4 },\n]\n</script>\n\n<template>\n  <BarChart\n    :series=\"SIZES\"\n    label=\"Bundle size, ten components\"\n    :value-label=\"(kb) => `${kb.toFixed(1)} KB`\"\n    :fill=\"(item) => (item.key === 'rei' ? 'bg-positive' : 'bg-muted')\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { BarChart } from 'rei-kit'\n\nconst SIZES = [\n  { key: 'rei', label: 'rei-kit', value: 31.1 },\n  { key: 'element', label: 'element-plus', value: 104.1 },\n  { key: 'naive', label: 'naive-ui', value: 132.4 },\n]\n</script>\n\n<template>\n  <BarChart\n    :series=\"SIZES\"\n    label=\"Bundle size, ten components\"\n    :value-label=\"(kb) => `${kb.toFixed(1)} KB`\"\n    :fill=\"(item) => (item.key === 'rei' ? 'bg-positive' : 'bg-muted')\"\n  />\n</template>\n"
+  },
+  {
     "name": "BaseAccordion",
     "ts": "<script setup lang=\"ts\">\nimport { BaseAccordion } from 'rei-kit/web'\n\nconst faq = [\n  { key: 'price', title: 'How much does it cost?' },\n  { key: 'export', title: 'Can I export my data?' },\n]\n</script>\n\n<template>\n  <BaseAccordion :items=\"faq\">\n    <template #default=\"{ item }\">\n      <p v-if=\"item.key === 'price'\">Free while in beta.</p>\n      <p v-else>Yes, from the settings page.</p>\n    </template>\n  </BaseAccordion>\n</template>\n",
     "js": "<script setup>\nimport { BaseAccordion } from 'rei-kit/web'\n\nconst faq = [\n  { key: 'price', title: 'How much does it cost?' },\n  { key: 'export', title: 'Can I export my data?' },\n]\n</script>\n\n<template>\n  <BaseAccordion :items=\"faq\">\n    <template #default=\"{ item }\">\n      <p v-if=\"item.key === 'price'\">Free while in beta.</p>\n      <p v-else>Yes, from the settings page.</p>\n    </template>\n  </BaseAccordion>\n</template>\n"
@@ -288,6 +293,11 @@
     "name": "DescriptionList",
     "ts": "<script setup lang=\"ts\">\nimport { BaseBadge, DescriptionList } from 'rei-kit'\n\nconst items = [\n  { key: 'status', term: 'Status' },\n  { term: 'Created', description: '12 September 2026' },\n  { term: 'Total', description: '₺1,240' },\n]\n</script>\n\n<template>\n  <DescriptionList :items=\"items\" layout=\"inline\">\n    <template #status><BaseBadge tone=\"success\">Paid</BaseBadge></template>\n  </DescriptionList>\n</template>\n",
     "js": "<script setup>\nimport { BaseBadge, DescriptionList } from 'rei-kit'\n\nconst items = [\n  { key: 'status', term: 'Status' },\n  { term: 'Created', description: '12 September 2026' },\n  { term: 'Total', description: '₺1,240' },\n]\n</script>\n\n<template>\n  <DescriptionList :items=\"items\" layout=\"inline\">\n    <template #status><BaseBadge tone=\"success\">Paid</BaseBadge></template>\n  </DescriptionList>\n</template>\n"
+  },
+  {
+    "name": "DonutChart",
+    "ts": "<script setup lang=\"ts\">\nimport { DonutChart } from 'rei-kit'\n\nconst PARTS = [\n  { key: 'components', label: 'Component styles', value: 19.8 },\n  { key: 'tokens', label: 'Tokens', value: 4.6 },\n  { key: 'palettes', label: 'Palettes', value: 2.2 },\n  { key: 'motion', label: 'Motion', value: 1.3 },\n]\n\nconst TONES = ['text-primary', 'text-accent', 'text-positive', 'text-warning']\n</script>\n\n<template>\n  <DonutChart\n    :slices=\"PARTS\"\n    label=\"What the stylesheet is made of\"\n    :value-label=\"(kb) => `${kb.toFixed(1)} KB`\"\n    :fill=\"(_, index) => TONES[index % TONES.length]!\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { DonutChart } from 'rei-kit'\n\nconst PARTS = [\n  { key: 'components', label: 'Component styles', value: 19.8 },\n  { key: 'tokens', label: 'Tokens', value: 4.6 },\n  { key: 'palettes', label: 'Palettes', value: 2.2 },\n  { key: 'motion', label: 'Motion', value: 1.3 },\n]\n\nconst TONES = ['text-primary', 'text-accent', 'text-positive', 'text-warning']\n</script>\n\n<template>\n  <DonutChart\n    :slices=\"PARTS\"\n    label=\"What the stylesheet is made of\"\n    :value-label=\"(kb) => `${kb.toFixed(1)} KB`\"\n    :fill=\"(_, index) => TONES[index % TONES.length]!\"\n  />\n</template>\n"
   },
   {
     "name": "EmptyState",

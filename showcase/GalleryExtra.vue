@@ -5,6 +5,8 @@ import { Plus } from 'lucide-vue-next'
 
 import {
   ActivityGrid,
+  BarChart,
+  DonutChart,
   ScrollArea,
   AnnounceHost,
   VirtualList,
@@ -59,6 +61,17 @@ const ROWS = [
   { name: 'Books', date: '09 Sep', amount: '₺430' },
   { name: 'Subscription', date: '01 Sep', amount: '₺89' },
 ]
+
+/* One set of numbers for both charts, which is also the point of having
+   two: the same data, once compared and once composed. */
+const SPEND = [
+  { key: 'rent', label: 'Rent', value: 9400 },
+  { key: 'food', label: 'Food', value: 3150 },
+  { key: 'transport', label: 'Transport', value: 1280 },
+  { key: 'books', label: 'Books', value: 430 },
+]
+
+const TONES = ['text-primary', 'text-accent', 'text-positive', 'text-warning']
 
 const firstDisclosure = ref(false)
 
@@ -232,6 +245,41 @@ function onCommand(id: string) {
           @select="toast.info(dayLabel($event))"
         />
         <PropTable name="ActivityGrid" />
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">BarChart</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          Values compared. It is a real table — every label a row heading, every number printed
+          beside its bar — so the data reads with the picture switched off, and the bars are hidden
+          from a screen reader that has already been told the number. The scale starts at zero and
+          there is no prop to change that: an axis starting part-way up is how a true set of numbers
+          is used to say something false.
+        </p>
+        <BarChart
+          :series="SPEND"
+          label="September spending by category"
+          :value-label="(value) => `${value} ₺`"
+          :fill="(item) => (item.key === 'rent' ? 'bg-primary' : 'bg-muted')"
+        />
+        <PropTable name="BarChart" />
+      </BaseCard>
+
+      <BaseCard class="mt-4">
+        <p class="text-ink text-sm font-medium">DonutChart</p>
+        <p class="text-ink-soft mt-1 mb-3 text-xs">
+          Parts of a whole — and not the one to reach for when things need ranking, because judging
+          two angles is harder than judging two lengths. The ring is hidden from a screen reader and
+          the legend beside it carries every name and number, so there is no hand-written
+          description to go stale.
+        </p>
+        <DonutChart
+          :slices="SPEND"
+          label="September spending by category"
+          :value-label="(value) => `${value} ₺`"
+          :fill="(_, index) => TONES[index % TONES.length]!"
+        />
+        <PropTable name="DonutChart" />
       </BaseCard>
 
       <BaseCard class="mt-4">

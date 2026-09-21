@@ -145,6 +145,55 @@
     ]
   },
   {
+    "name": "BarChart",
+    "entry": "rei-kit",
+    "summary": "A row of values, compared.",
+    "props": [
+      {
+        "name": "series",
+        "required": true,
+        "type": "readonly T[]",
+        "description": "The rows, in the order they should read.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the chart, e.g. \"Bundle size by kit\". Becomes its caption.",
+        "default": ""
+      },
+      {
+        "name": "valueLabel",
+        "required": true,
+        "type": "(value: number, item: T) => string",
+        "description": "How a value reads, e.g. `(kb) => `${kb} KB``. The kit has no units.",
+        "default": ""
+      },
+      {
+        "name": "fill",
+        "required": false,
+        "type": "((item: T, index: number) => string)",
+        "description": "A class for one row's bar, e.g. `bg-positive`.",
+        "default": "()"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "The top of the scale. Defaults to the largest value present.",
+        "default": "undefined"
+      },
+      {
+        "name": "animate",
+        "required": false,
+        "type": "boolean",
+        "description": "Grow the bars when the chart first scrolls into view.",
+        "default": "true"
+      }
+    ]
+  },
+  {
     "name": "BaseAccordion",
     "entry": "rei-kit/web",
     "summary": "A list that opens one section at a time.",
@@ -2430,6 +2479,48 @@
         "type": "'stacked' | 'inline'",
         "description": "`inline` puts the term beside its value; `stacked` puts it above.",
         "default": "'stacked'"
+      }
+    ]
+  },
+  {
+    "name": "DonutChart",
+    "entry": "rei-kit",
+    "summary": "Parts of a whole.",
+    "props": [
+      {
+        "name": "slices",
+        "required": true,
+        "type": "readonly T[]",
+        "description": "The parts, in the order they should read around the ring.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the chart, e.g. \"What the stylesheet is made of\".",
+        "default": ""
+      },
+      {
+        "name": "valueLabel",
+        "required": true,
+        "type": "(value: number, item: T) => string",
+        "description": "How a value reads, e.g. `(kb) => `${kb} KB``. The kit has no units.",
+        "default": ""
+      },
+      {
+        "name": "fill",
+        "required": true,
+        "type": "(item: T, index: number) => string",
+        "description": "A class for one slice, e.g. `text-primary` — it paints the stroke.",
+        "default": ""
+      },
+      {
+        "name": "thickness",
+        "required": false,
+        "type": "number",
+        "description": "How thick the ring is, as a percentage of its radius.",
+        "default": "14"
       }
     ]
   },

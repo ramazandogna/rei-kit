@@ -3,6 +3,99 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.23.0 — 2026-09-21
+
+**The direction was never only a stylesheet.**
+
+2.22.0 set `dir` on the document and found sixty-one physical CSS
+declarations behind it, with a scanner to keep them out. This release is
+what that scanner cannot see: a key, a number and a gradient. Plus the
+field the kit had been shipping half of since it shipped `AuthForm`.
+
+### Added
+
+- **`PasswordInput`** (`rei-kit`) — the kit already shipped `AuthForm` and
+  `BaseInput type="password"`, which is to say it shipped the field and not
+  the thing every app then adds to it. Its own showcase proved the point:
+  the form section drew a password field by hand, in a file that imports
+  the kit.
+
+  A password is the only field in a form whose value is hidden from the
+  person typing it, on the device where typing is least reliable, and a
+  generated password pasted into a phone cannot be verified at all without
+  this. Three ways the hand-written version breaks, all of which compile: a
+  `<button>` with no `type`, which inside a form defaults to `submit`, so
+  looking at your own password submits it half typed; a `<span>`, which is
+  not focusable and named nothing; and a change nobody is told about.
+
+  The third is answered as a toggle button — one name plus `aria-pressed` —
+  rather than the more common swapped "Show"/"Hide" name. A name that
+  changes under a focus that has not moved is not reliably re-read, which
+  is why every implementation of the swapped version ends up adding a live
+  region and two more sentences on top of it. It also asks the app for one
+  string instead of four, which matters in a kit with no language of its
+  own.
+
+- **`elementDirection(element)` and `horizontalStep(key, element)`**
+  (`rei-kit`) — the direction of the page, and `ArrowLeft`/`ArrowRight` as
+  a direction of travel rather than a key name. Exported because an app
+  writing its own roving tabindex beside the kit's needs the same answer,
+  and it is not something anyone gets right by accident.
+
+### Fixed
+
+- **`ArrowLeft` is not "previous".** It is "previous" only where the
+  language runs left to right. A row of tabs in Arabic runs the other way,
+  so the tab to the *left* of the current one is the next one — WAI-ARIA
+  says so in as many words. Ten controls read `ArrowRight` as "forward"
+  unconditionally, so every roving-tabindex part of the kit walked
+  backwards through itself the moment the language did: `ToggleGroup`,
+  `BaseTabs`, `BaseToolbar`, `BaseCalendar` (whose arrow crossed a day the
+  wrong way), `BaseRating`, `PinInput`, `BaseTree` (where the arrows are in
+  and out of a branch, and indentation follows the writing direction too),
+  `BaseSplitter`, `TourShell` and `ActivityGrid`.
+
+  Left-to-right behaviour is unchanged, which the existing 1148 tests say
+  without a line altered. The guard is a case per component that presses
+  ArrowLeft in a right-to-left document and asserts it went forward; two of
+  them did not fail when the fix was removed, because with only two tabs
+  the list wraps onto itself and both directions land on the same one, and
+  those now use three.
+
+- **`BaseSlider`'s filled track was on the wrong side.** It paints its own
+  WebKit track, so the fill ran from the left while the native thumb
+  started on the right: the bar filled away from the handle. Firefox needed
+  nothing, because `::-moz-range-progress` is positioned by the engine.
+
+  CSS has no logical keyword for a gradient, so the rule is "write it
+  twice", as `BaseSwitch`'s `translateX` already was. The scanner now asks
+  any file with a one-sided sideways gradient for a `[dir='rtl']`
+  counterpart, and works out for itself which gradients are one-sided —
+  `BaseMarquee`'s mask reads the same mirrored and is not asked for a
+  second rule it would write identically.
+
+- **`ActivityGrid` opened on the oldest week in a right-to-left page.** A
+  right-to-left box counts `scrollLeft` down from zero, so assigning
+  `scrollWidth` clamps to zero — which is the start, and the one thing
+  `startAtEnd` exists to avoid. It is arithmetic rather than a property, so
+  nothing in 2.22.0 could have caught it.
+
+### Changed
+
+- **`ActivityGrid` scrolls through `ScrollArea`.** The fifth hand-written
+  scrolling box, and the clearest case for the component that replaced the
+  other four: a year is wider than any screen and the grid hides its
+  scrollbar, so nothing on screen said there was more along the row. No
+  focus stop is added — a cell already carries the roving tabindex, which
+  is exactly the condition `ScrollArea` checks for.
+
+- **One slow axe case can no longer fail every case after it.** axe-core is
+  a module-level singleton whose in-flight flag is cleared by a run
+  finishing, not by whoever was waiting for it walking away — so a case
+  that hit the timeout took the next hundred with it, under a message
+  naming none of the components involved. Runs are now chained rather than
+  raced. This is a test-suite change with no effect on the package.
+
 ## 2.22.0 — 2026-09-21
 
 **What the kit's own gap test finds when it is turned on the kit.**

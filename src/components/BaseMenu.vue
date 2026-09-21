@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 
+import { useAnchoredPanel } from '../composables/use-anchored-panel'
 import { useMenuKeys } from '../composables/use-menu-keys'
 
 /**
@@ -17,6 +18,11 @@ import { useMenuKeys } from '../composables/use-menu-keys'
  * The hand-written menu this replaces declared the role and had none of the
  * behaviour. That is the usual shape of the bug — the roles are the part people
  * remember, because they are the part you can see in the markup.
+ *
+ * It opens above its trigger when there is no room below — a menu button
+ * near the bottom of a window is the common case, not the awkward one, and
+ * the panel that ran off the screen still rendered, still passed axe, and
+ * still had every item in it.
  *
  * So: focus moves into the menu on open and back to the trigger on close,
  * ArrowUp/ArrowDown move and wrap, Home and End jump, Escape closes, and a
@@ -57,6 +63,8 @@ const trigger = ref<HTMLElement | null>(null)
 
 const id = useId()
 
+const { placed, shift, place, reset } = useAnchoredPanel({ root, panel, open })
+
 const { items: menuItems, onKeydown: onMenuKeydown } = useMenuKeys({
   panel,
   onClose: () => (open.value = false),
@@ -93,7 +101,9 @@ watch(
 
     if (isOpen) {
       document.addEventListener('pointerdown', onDocumentPointer)
+      reset()
       await nextTick()
+      place()
       menuItems()[0]?.focus()
     } else {
       document.removeEventListener('pointerdown', onDocumentPointer)
@@ -133,7 +143,8 @@ onBeforeUnmount(() => {
       :id="id"
       ref="panel"
       class="rk-menu-panel surface-overlay"
-      :class="`is-${align}`"
+      :class="[`is-${align}`, `is-${placed}`]"
+      :style="shift ? { '--rk-menu-shift': `${shift}px` } : undefined"
       role="menu"
     >
       <slot />
@@ -159,12 +170,22 @@ onBeforeUnmount(() => {
 
 .rk-menu-panel {
   position: absolute;
-  top: calc(100% + 0.5rem);
   z-index: 50;
+  /* The slide is a translate rather than an inset, so it composes with the
+     `is-start`/`is-end` edge the caller asked for instead of replacing it. */
+  transform: translateX(var(--rk-menu-shift, 0px));
   min-width: 12rem;
   overflow: hidden;
   border-radius: var(--radius-card);
   padding: 0.375rem;
+}
+
+.rk-menu-panel.is-bottom {
+  top: calc(100% + 0.5rem);
+}
+
+.rk-menu-panel.is-top {
+  bottom: calc(100% + 0.5rem);
 }
 
 .rk-menu-panel.is-end {

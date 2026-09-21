@@ -133,6 +133,12 @@ looks almost right.
   what you were reading and is dismissed by leaving it. A sheet arrives from
   the bottom edge, belongs to a thumb, and is pinned to the 430px shell column
   — so on a desktop it is narrow, and that is correct.
+- **An open panel stays on screen.** `BaseMenu` and `BasePopover` both
+  flip above their trigger when there is more room there, and slide back in
+  from the side of the window, re-measuring while the page scrolls under
+  them. `BaseMenu` did not until 2.23.1, which is why a menu button near
+  the bottom of a phone opened a list that ran off the screen.
+
 - **`BaseMenu`, `BasePopover` or `BaseModal`.** A menu is a list of actions:
   arrows move through it. A popover holds anything — a few settings, a
   picker — next to the control that opened it, and the page stays usable. A

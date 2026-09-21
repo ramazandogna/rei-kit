@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 
+import { useAnchoredPanel } from '../composables/use-anchored-panel'
 import { FOCUSABLE } from '../utils/focusable'
 
 /**
@@ -56,10 +57,7 @@ const id = useId()
 const root = ref<HTMLElement | null>(null)
 const panel = ref<HTMLElement | null>(null)
 
-/** Where it actually opened, after measuring. */
-const placed = ref(side)
-/** Pixels slid sideways to stay on screen. */
-const shift = ref(0)
+const { placed, shift, place, reset } = useAnchoredPanel({ root, panel, open, side })
 
 const triggerProps = computed<PopoverTriggerProps>(() => ({
   'aria-expanded': open.value,
@@ -77,27 +75,6 @@ function trigger(): HTMLElement | null {
   return root.value?.querySelector<HTMLElement>('[data-rk-popover-trigger]') ?? null
 }
 
-/**
- * Measured once it is on screen, because only then is there a size to
- * measure. Flips first, then slides: a panel that fits neither above nor
- * below keeps the side it asked for, where it is at least attached.
- */
-function place() {
-  if (!panel.value || typeof window === 'undefined') return
-
-  const rect = panel.value.getBoundingClientRect()
-  const anchor = root.value!.getBoundingClientRect()
-  const below = window.innerHeight - anchor.bottom
-  const above = anchor.top
-
-  if (side === 'bottom' && rect.height > below && above > below) placed.value = 'top'
-  if (side === 'top' && rect.height > above && below > above) placed.value = 'bottom'
-
-  const margin = 8
-  if (rect.right > window.innerWidth - margin) shift.value = window.innerWidth - margin - rect.right
-  if (rect.left + shift.value < margin) shift.value = margin - rect.left
-}
-
 function onKeydown(event: KeyboardEvent) {
   if (event.key !== 'Escape' || !open.value) return
 
@@ -113,17 +90,6 @@ function onFocusout(event: FocusEvent) {
   if (next && root.value && !root.value.contains(next)) close()
 }
 
-/* Re-measured while it is open: the page can scroll or the window change
-   size under an open panel, and one that stays where it opened ends up
-   attached to nothing. Passive and capturing, so a scroll inside any
-   ancestor counts. */
-function watchViewport(on: boolean) {
-  if (typeof window === 'undefined') return
-  const method = on ? 'addEventListener' : 'removeEventListener'
-  window[method]('resize', place)
-  window[method]('scroll', place, true)
-}
-
 function onDocumentPointer(event: Event) {
   if (root.value && !root.value.contains(event.target as Node)) close()
 }
@@ -135,16 +101,11 @@ watch(
 
     if (!isOpen) {
       document.removeEventListener('pointerdown', onDocumentPointer)
-      watchViewport(false)
       return
     }
 
     document.addEventListener('pointerdown', onDocumentPointer)
-    watchViewport(true)
-    // Reset before it renders, so it is measured where it asked to be rather
-    // than where it ended up last time.
-    placed.value = side
-    shift.value = 0
+    reset()
     await nextTick()
     place()
     const first = panel.value?.querySelector<HTMLElement>(FOCUSABLE)
@@ -157,7 +118,6 @@ onBeforeUnmount(() => {
   if (typeof document !== 'undefined') {
     document.removeEventListener('pointerdown', onDocumentPointer)
   }
-  watchViewport(false)
 })
 </script>
 

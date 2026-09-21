@@ -63,7 +63,7 @@ const trigger = ref<HTMLElement | null>(null)
 
 const id = useId()
 
-const { placed, shift, place, reset } = useAnchoredPanel({ root, panel, open })
+const { placed, shift } = useAnchoredPanel({ root, panel, open })
 
 const { items: menuItems, onKeydown: onMenuKeydown } = useMenuKeys({
   panel,
@@ -101,9 +101,7 @@ watch(
 
     if (isOpen) {
       document.addEventListener('pointerdown', onDocumentPointer)
-      reset()
       await nextTick()
-      place()
       menuItems()[0]?.focus()
     } else {
       document.removeEventListener('pointerdown', onDocumentPointer)

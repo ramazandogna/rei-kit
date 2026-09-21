@@ -57,7 +57,7 @@ const id = useId()
 const root = ref<HTMLElement | null>(null)
 const panel = ref<HTMLElement | null>(null)
 
-const { placed, shift, place, reset } = useAnchoredPanel({ root, panel, open, side })
+const { placed, shift } = useAnchoredPanel({ root, panel, open, side })
 
 const triggerProps = computed<PopoverTriggerProps>(() => ({
   'aria-expanded': open.value,
@@ -105,9 +105,7 @@ watch(
     }
 
     document.addEventListener('pointerdown', onDocumentPointer)
-    reset()
     await nextTick()
-    place()
     const first = panel.value?.querySelector<HTMLElement>(FOCUSABLE)
     ;(first ?? panel.value)?.focus()
   },

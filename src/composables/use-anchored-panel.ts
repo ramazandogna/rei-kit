@@ -1,4 +1,4 @@
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import type { Ref } from 'vue'
 
 /** Above the anchor or below it. */
@@ -87,7 +87,28 @@ export function useAnchoredPanel({
     shift.value = 0
   }
 
-  watch(open, (isOpen) => listen(isOpen), { immediate: true })
+  /*
+   * The opening is handled here rather than left to each caller, because
+   * three of them open from more than one place: `BaseCombobox` opens on a
+   * keystroke, on an arrow and on a press, and a panel measured at two of
+   * those three is a panel that is usually right.
+   *
+   * Reset before the tick, measure after it: the panel has no size until
+   * it has rendered, and it must be measured where it asked to be rather
+   * than where it ended up the last time it was open.
+   */
+  watch(
+    open,
+    async (isOpen) => {
+      listen(isOpen)
+      if (!isOpen) return
+
+      reset()
+      await nextTick()
+      place()
+    },
+    { immediate: true },
+  )
 
   onBeforeUnmount(() => listen(false))
 

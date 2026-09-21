@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h, nextTick } from 'vue'
 
 import BaseMenu from '../components/BaseMenu.vue'
+import BaseCombobox from '../components/BaseCombobox.vue'
 import BasePopover from '../components/BasePopover.vue'
 
 /**
@@ -59,6 +60,18 @@ const popover = () =>
     slots: {
       trigger: () => h('button', { type: 'button' }, 'Aç'),
       default: () => h('p', 'içerik'),
+    },
+    attachTo: document.body,
+  })
+
+const combobox = () =>
+  mount(BaseCombobox, {
+    props: {
+      label: 'Şehir',
+      options: [
+        { value: 'ist', label: 'İstanbul' },
+        { value: 'ank', label: 'Ankara' },
+      ],
     },
     attachTo: document.body,
   })
@@ -143,6 +156,22 @@ describe('an anchored panel stays on screen', () => {
     })
 
     expect(panel.attributes('style')).toBeUndefined()
+  })
+
+  /* A combobox is usually the last question before the button, which is
+     to say near the bottom of the form. */
+  it('BaseCombobox opens its list upwards near the bottom of a form', async () => {
+    const wrapper = combobox()
+
+    await wrapper.get('input').trigger('focus')
+    await wrapper.get('input').trigger('keydown', { key: 'ArrowDown' })
+
+    const list = wrapper.get('[role="listbox"]')
+    await measure(wrapper.element as HTMLElement, { top: 700, bottom: 728 }, list.element, {
+      height: 200,
+    })
+
+    expect(list.classes()).toContain('is-top')
   })
 
   it('BasePopover flips the same way, which nothing had ever checked', async () => {

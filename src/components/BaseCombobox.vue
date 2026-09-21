@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 
 import { useBoundValue } from '../composables/use-bound-value'
+import { useAnchoredPanel } from '../composables/use-anchored-panel'
 import { useVirtualWindow } from '../composables/use-virtual-window'
 import BaseSkeleton from './BaseSkeleton.vue'
 
@@ -156,6 +157,11 @@ const query = ref('')
 const highlighted = ref(0)
 const root = ref<HTMLElement | null>(null)
 const list = ref<HTMLElement | null>(null)
+
+/* A field near the bottom of a form is where a combobox usually is — the
+   last question before the button — so the list opens above it when that
+   is where the room is. */
+const { placed, shift } = useAnchoredPanel({ root, panel: list, open })
 
 const single = computed(() => (multiple.value ? undefined : chosenOptions.value[0]))
 
@@ -430,6 +436,8 @@ onBeforeUnmount(() => {
       ref="list"
       role="listbox"
       class="rk-combo-list surface-overlay"
+      :class="`is-${placed}`"
+      :style="shift ? { '--rk-combo-shift': `${shift}px` } : undefined"
       :aria-label="label"
       :aria-multiselectable="multiple ? true : undefined"
       :aria-busy="loading ? true : undefined"
@@ -584,13 +592,21 @@ onBeforeUnmount(() => {
 
 .rk-combo-list {
   position: absolute;
-  top: calc(100% - 1.25rem);
   z-index: 50;
+  transform: translateX(var(--rk-combo-shift, 0px));
   max-height: 14rem;
   width: 100%;
   overflow-y: auto;
   border-radius: var(--radius-card);
   padding: 0.25rem;
+}
+
+.rk-combo-list.is-bottom {
+  top: calc(100% - 1.25rem);
+}
+
+.rk-combo-list.is-top {
+  bottom: calc(100% - 1.25rem);
 }
 
 .rk-combo-option {

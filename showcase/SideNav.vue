@@ -234,7 +234,7 @@ function go(id: string) {
   min-height: 0;
   flex: 1;
   overflow-y: auto;
-  padding-right: 0.5rem;
+  padding-inline-end: 0.5rem;
   padding-bottom: 2rem;
   scrollbar-width: thin;
 }
@@ -296,10 +296,10 @@ function go(id: string) {
 }
 
 .sc-nav-link.is-sub {
-  margin-left: 0.75rem;
-  border-left: 1px solid var(--color-hair);
+  margin-inline-start: 0.75rem;
+  border-inline-start: 1px solid var(--color-hair);
   border-radius: 0 var(--radius-cell) var(--radius-cell) 0;
-  padding-left: 0.625rem;
+  padding-inline-start: 0.625rem;
   font-size: 0.75rem;
 }
 
@@ -328,7 +328,7 @@ function go(id: string) {
 .sc-nav-link.is-active::before {
   content: '';
   position: absolute;
-  left: -0.375rem;
+  inset-inline-start: -0.375rem;
   top: 0.375rem;
   bottom: 0.375rem;
   width: 2px;
@@ -413,7 +413,7 @@ function go(id: string) {
     top: 0;
     z-index: 56;
     width: min(19rem, 85vw);
-    border-left: 1px solid var(--color-hair);
+    border-inline-start: 1px solid var(--color-hair);
     background: var(--color-canvas);
     padding: 1rem 0.75rem 5rem 1rem;
     transform: translateX(100%);

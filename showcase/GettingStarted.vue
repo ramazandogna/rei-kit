@@ -443,14 +443,14 @@ const pie = (swatch: readonly string[]) =>
 
 .gs-step-copy {
   position: relative;
-  padding-left: 2.75rem;
+  padding-inline-start: 2.75rem;
 }
 
 /* The step number, drawn by the list itself so it can never skip one. */
 .gs-step-copy::before {
   content: counter(step);
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   top: -0.125rem;
   display: grid;
   width: 1.875rem;

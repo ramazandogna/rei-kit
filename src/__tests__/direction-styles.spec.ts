@@ -24,6 +24,15 @@ import { readFileSync, readdirSync } from 'node:fs'
 
 const DIRS = ['components', 'web', 'app', 'pwa', 'motion']
 
+/*
+ * The showcase is scanned too, and not for tidiness.
+ *
+ * The page carries a button that mirrors it, which is the only evidence
+ * anyone has that the kit works right to left — a claim in a README is not
+ * one. A demo page whose own chrome breaks under that button would be
+ * evidence of the opposite, so its stylesheets are held to the rule they
+ * are there to demonstrate.
+ */
 const files = [
   ...DIRS.flatMap((dir) =>
     readdirSync(`src/${dir}`)
@@ -33,6 +42,12 @@ const files = [
         source: readFileSync(`src/${dir}/${name}`, 'utf8'),
       })),
   ),
+  ...readdirSync('showcase')
+    .filter((name) => name.endsWith('.vue'))
+    .map((name) => ({
+      name: `showcase/${name}`,
+      source: readFileSync(`showcase/${name}`, 'utf8'),
+    })),
   ...readdirSync('src/styles')
     .filter((name) => name.endsWith('.css') && !name.startsWith('_'))
     .map((name) => ({
@@ -194,7 +209,8 @@ describe('every side is a logical one', () => {
 
   it('is looking at the files it thinks it is', () => {
     // A scan that quietly found nothing to scan would pass for ever.
-    expect(files.length).toBeGreaterThan(80)
+    expect(files.length).toBeGreaterThan(100)
+    expect(files.some(({ name }) => name === 'showcase/SideNav.vue')).toBe(true)
     expect(files.some(({ name }) => name === 'components/BaseSwitch.vue')).toBe(true)
   })
 

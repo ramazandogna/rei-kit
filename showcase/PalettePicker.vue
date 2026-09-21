@@ -167,7 +167,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onOutside))
 
 .pp-panel {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   top: calc(100% + 0.625rem);
   z-index: 70;
   width: min(22rem, calc(100vw - 2rem));

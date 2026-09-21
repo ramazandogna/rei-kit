@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import { MATERIALS, useMaterial, useTheme } from '../src/index'
 import type { Material } from '../src/index'
@@ -11,6 +11,14 @@ import PalettePicker from './PalettePicker.vue'
  * Built from the kit's own tokens and switched with the kit's own composables,
  * so everything on this page is proof of the thing it demonstrates — the
  * controls change as you use them.
+ *
+ * The direction switch beside them is not a fourth axis. A palette, a
+ * material and a mode are choices a product makes; which way the writing
+ * runs is a fact about the language, and in a real app `createI18nRuntime`
+ * sets it from the active locale. It is here because a page that claims to
+ * work right to left and cannot be seen doing it is not evidence of
+ * anything — every component below mirrors under this button, the arrow
+ * keys included.
  */
 const material = useMaterial()
 const theme = useTheme()
@@ -32,6 +40,16 @@ const isDark = computed(() => {
 function toggleTheme() {
   theme.value = isDark.value ? 'light' : 'dark'
 }
+
+/* Not persisted, unlike the three axes: it is a thing to try, not a
+   preference, and a reader who lands on a mirrored page tomorrow with no
+   memory of pressing this would think the site was broken. */
+const rtl = ref(false)
+
+function toggleDirection() {
+  rtl.value = !rtl.value
+  document.documentElement.dir = rtl.value ? 'rtl' : 'ltr'
+}
 </script>
 
 <template>
@@ -52,6 +70,16 @@ function toggleTheme() {
     </div>
 
     <PalettePicker />
+
+    <button
+      type="button"
+      class="ab-dir control"
+      aria-label="Right to left"
+      :aria-pressed="rtl"
+      @click="toggleDirection"
+    >
+      RTL
+    </button>
 
     <button
       type="button"
@@ -115,7 +143,22 @@ function toggleTheme() {
   color: var(--color-on-primary);
 }
 
+.ab-dir {
+  border-radius: 9999px;
+  padding: 0.3125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+}
+
+.ab-dir[aria-pressed='true'] {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
 .ab-material:focus-visible,
+.ab-dir:focus-visible,
 .ab-theme:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;

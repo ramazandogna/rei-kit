@@ -3,6 +3,26 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.20.0 — 2026-09-21
+
+**A year at a glance.**
+
+### Added
+
+- **`ActivityGrid`** (`rei-kit`) — a long stretch of days as a grid you read
+  for a shape: a streak, a gap, a habit. It is a real `<table>`, weekdays
+  down and weeks across, because the column-flowing CSS grid everyone
+  writes first puts the DOM in a different order from the picture, and
+  every keyboard and reader laid over it afterwards then describes a shape
+  that is not on screen. The whole year is one tab stop — arrows move
+  between days, Home and End reach the ends — because a grid of focusable
+  cells costs a keyboard a year of presses to get past a picture.
+  `levelFor` returns a class, the same contract as `ToneDot`'s `fill`: the
+  kit does not know whether four of something is a lot.
+
+  It was found the way the others were: Hibi had written the whole thing by
+  hand in a file that already imports the kit.
+
 ## 2.19.0 — 2026-09-21
 
 **Four parts a kit should have had, and three faults finding them.**

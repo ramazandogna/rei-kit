@@ -49,15 +49,15 @@ const rest = computed(() => Math.max(0, people.length - shown.value.length))
 /* Overlapped by a third, with a ring in the page's own colour so each face
    keeps an edge against the one under it — on any material. */
 .rk-stack-item + .rk-stack-item {
-  margin-left: -0.5rem;
+  margin-inline-start: -0.5rem;
 }
 
 .rk-stack.is-sm .rk-stack-item + .rk-stack-item {
-  margin-left: -0.5rem;
+  margin-inline-start: -0.5rem;
 }
 
 .rk-stack.is-lg .rk-stack-item + .rk-stack-item {
-  margin-left: -0.875rem;
+  margin-inline-start: -0.875rem;
 }
 
 .rk-stack-item {

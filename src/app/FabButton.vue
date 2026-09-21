@@ -67,8 +67,8 @@ function press() {
   align-items: center;
   gap: 0.375rem;
   border-radius: 9999px;
-  padding-left: 1rem;
-  padding-right: 1.25rem;
+  padding-inline-start: 1rem;
+  padding-inline-end: 1.25rem;
   color: var(--color-on-primary);
   background: var(--color-primary);
   transition: transform var(--duration-fast);

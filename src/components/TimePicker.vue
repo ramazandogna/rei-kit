@@ -173,7 +173,7 @@ function pickMinute(next: string | undefined) {
   gap: 0.5rem;
   border-radius: var(--radius-card);
   padding: 0 0.75rem;
-  text-align: left;
+  text-align: start;
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
   color: var(--color-ink);

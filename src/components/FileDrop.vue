@@ -224,7 +224,7 @@ const count = computed(() => model.value.length)
 }
 
 .rk-drop-size {
-  margin-left: auto;
+  margin-inline-start: auto;
   flex-shrink: 0;
   font-size: 0.75rem;
   font-variant-numeric: tabular-nums;

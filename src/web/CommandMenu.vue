@@ -339,7 +339,7 @@ const indexOf = (item: CommandItem<Id>) => flat.value.indexOf(item)
 }
 
 .rk-command-hint {
-  margin-left: auto;
+  margin-inline-start: auto;
   flex-shrink: 0;
   font-size: 0.75rem;
   color: var(--color-ink-soft);

@@ -115,7 +115,7 @@ defineSlots<{
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-left: 1.5rem;
+  padding-inline-start: 1.5rem;
 }
 
 /* Stops short of both ends: a line running past the first and last dots
@@ -124,7 +124,7 @@ defineSlots<{
   position: absolute;
   top: 0.5rem;
   bottom: 0.75rem;
-  left: 0.25rem;
+  inset-inline-start: 0.25rem;
   width: 1px;
   background: var(--color-hair);
 }
@@ -136,7 +136,7 @@ defineSlots<{
 .rk-timeline-marker {
   position: absolute;
   top: 0.125rem;
-  left: -1.5rem;
+  inset-inline-start: -1.5rem;
   display: grid;
   place-items: center;
 }

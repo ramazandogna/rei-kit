@@ -324,7 +324,7 @@ onBeforeUnmount(() => {
 .rk-mega-panel {
   position: absolute;
   top: calc(100% + 0.5rem);
-  left: 0;
+  inset-inline-start: 0;
   z-index: 50;
   width: 100%;
   border-radius: var(--radius-card);

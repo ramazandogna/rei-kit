@@ -128,7 +128,7 @@ const keyFor = (row: Row, index: number) => (rowKey ? String(row[rowKey]) : inde
 
 .rk-table-caption {
   padding-bottom: 0.75rem;
-  text-align: left;
+  text-align: start;
   font-size: 0.8125rem;
   color: var(--color-ink-soft);
 }
@@ -146,7 +146,7 @@ const keyFor = (row: Row, index: number) => (rowKey ? String(row[rowKey]) : inde
 .rk-table th {
   border-bottom: 1px solid var(--color-hair);
   padding: 0.625rem 0.75rem;
-  text-align: left;
+  text-align: start;
   font-weight: 500;
   color: var(--color-ink-soft);
   white-space: nowrap;
@@ -169,7 +169,7 @@ const keyFor = (row: Row, index: number) => (rowKey ? String(row[rowKey]) : inde
    two columns — a heading on the left and its numbers far off to the right. */
 .rk-table th.is-end,
 .rk-table td.is-end {
-  text-align: right;
+  text-align: end;
   font-variant-numeric: tabular-nums;
 }
 
@@ -180,7 +180,7 @@ const keyFor = (row: Row, index: number) => (rowKey ? String(row[rowKey]) : inde
 
 .rk-table th.is-start,
 .rk-table td.is-start {
-  text-align: left;
+  text-align: start;
 }
 
 .is-nowrap {

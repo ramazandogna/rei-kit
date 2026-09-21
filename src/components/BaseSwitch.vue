@@ -101,7 +101,7 @@ function toggle() {
 
 .rk-switch-knob {
   position: absolute;
-  left: 0.1875rem;
+  inset-inline-start: 0.1875rem;
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 9999px;
@@ -114,6 +114,13 @@ function toggle() {
 
 .rk-switch.is-on .rk-switch-knob {
   transform: translateX(1.125rem);
+}
+
+/* `translateX` has no logical form, so the one direction-dependent value in
+   the kit that cannot be written logically is written twice. Without this
+   the knob leaves the track entirely in a right-to-left layout. */
+[dir='rtl'] .rk-switch.is-on .rk-switch-knob {
+  transform: translateX(-1.125rem);
 }
 
 @media (prefers-reduced-motion: reduce) {

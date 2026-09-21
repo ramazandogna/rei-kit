@@ -577,7 +577,7 @@ onBeforeUnmount(() => {
 
 .rk-combo-toggle {
   position: absolute;
-  right: 0.5rem;
+  inset-inline-end: 0.5rem;
   color: var(--color-ink-soft);
   font-size: 0.75rem;
 }

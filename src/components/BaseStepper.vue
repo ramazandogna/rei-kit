@@ -133,15 +133,15 @@ function state(index: number) {
 
 .is-horizontal .rk-step:not(:last-child)::after {
   top: 0.875rem;
-  left: calc(1.75rem + 0.5rem);
-  right: 0.5rem;
+  inset-inline-start: calc(1.75rem + 0.5rem);
+  inset-inline-end: 0.5rem;
   height: 2px;
 }
 
 .is-vertical .rk-step:not(:last-child)::after {
   top: 2.125rem;
   bottom: 0.25rem;
-  left: 0.8125rem;
+  inset-inline-start: 0.8125rem;
   width: 2px;
 }
 
@@ -155,7 +155,7 @@ function state(index: number) {
   gap: 0.625rem;
   width: 100%;
   border-radius: var(--radius-cell);
-  text-align: left;
+  text-align: start;
 }
 
 .is-horizontal .rk-step-body {

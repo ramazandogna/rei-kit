@@ -137,7 +137,7 @@ onBeforeUnmount(stop)
   display: inline-block;
   width: 0.08em;
   height: 1em;
-  margin-left: 0.06em;
+  margin-inline-start: 0.06em;
   vertical-align: -0.12em;
   background: currentColor;
   animation: rk-type-blink 1s steps(1) infinite;

@@ -168,11 +168,11 @@ onBeforeUnmount(() => {
 }
 
 .rk-menu-panel.is-end {
-  right: 0;
+  inset-inline-end: 0;
 }
 
 .rk-menu-panel.is-start {
-  left: 0;
+  inset-inline-start: 0;
 }
 
 /* The items belong to the caller, so this styles them by role rather than by
@@ -182,7 +182,7 @@ onBeforeUnmount(() => {
   width: 100%;
   border-radius: var(--radius-cell);
   padding: 0.5rem 0.75rem;
-  text-align: left;
+  text-align: start;
   font-size: 0.875rem;
   color: var(--color-ink);
   transition: background-color var(--duration-fast);

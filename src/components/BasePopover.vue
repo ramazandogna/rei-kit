@@ -214,11 +214,11 @@ onBeforeUnmount(() => {
 }
 
 .rk-popover-panel.is-start {
-  left: 0;
+  inset-inline-start: 0;
 }
 
 .rk-popover-panel.is-end {
-  right: 0;
+  inset-inline-end: 0;
 }
 
 .rk-popover-panel.is-center {

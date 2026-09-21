@@ -197,7 +197,7 @@ function clear() {
   height: 2.75rem;
   align-items: center;
   border-radius: var(--radius-card);
-  padding-right: 0.375rem;
+  padding-inline-end: 0.375rem;
 }
 
 .rk-date-field {
@@ -209,7 +209,7 @@ function clear() {
   gap: 0.5rem;
   border-radius: var(--radius-card);
   padding: 0 0.75rem;
-  text-align: left;
+  text-align: start;
   font-size: 1rem;
   color: var(--color-ink);
 }
@@ -264,15 +264,15 @@ function clear() {
   min-width: 8rem;
   flex-direction: column;
   gap: 2px;
-  border-right: 1px solid var(--surface-border-color);
-  padding-right: 0.75rem;
+  border-inline-end: 1px solid var(--surface-border-color);
+  padding-inline-end: 0.75rem;
 }
 
 .rk-date-preset {
   width: 100%;
   border-radius: var(--radius-cell);
   padding: 0.375rem 0.5rem;
-  text-align: left;
+  text-align: start;
   font-size: 0.8125rem;
   color: var(--color-ink);
   transition: background-color var(--duration-fast) var(--ease-standard);
@@ -290,9 +290,9 @@ function clear() {
   .rk-date-presets {
     flex-direction: row;
     flex-wrap: wrap;
-    border-right: 0;
+    border-inline-end: 0;
     border-bottom: 1px solid var(--surface-border-color);
-    padding-right: 0;
+    padding-inline-end: 0;
     padding-bottom: 0.5rem;
   }
 

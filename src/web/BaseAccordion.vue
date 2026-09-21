@@ -128,7 +128,7 @@ function toggle(key: K) {
   justify-content: space-between;
   gap: 1.5rem;
   padding: 1.25rem 0;
-  text-align: left;
+  text-align: start;
   transition: color var(--duration-fast);
 }
 

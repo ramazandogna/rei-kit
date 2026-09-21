@@ -262,7 +262,7 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
 
 .rk-data-caption {
   padding-bottom: 0.5rem;
-  text-align: left;
+  text-align: start;
   font-size: 0.8125rem;
   color: var(--color-ink-soft);
 }
@@ -279,7 +279,7 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
 .rk-data th {
   border-bottom: 1px solid var(--color-hair);
   padding: 0.625rem 0.75rem;
-  text-align: left;
+  text-align: start;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -315,7 +315,7 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
    follows the heading's alignment and carries the arrow with it. */
 .rk-data th.is-end,
 .rk-data td.is-end {
-  text-align: right;
+  text-align: end;
   font-variant-numeric: tabular-nums;
 }
 
@@ -326,7 +326,7 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
 
 .rk-data th.is-start,
 .rk-data td.is-start {
-  text-align: left;
+  text-align: start;
 }
 
 .is-nowrap {
@@ -348,7 +348,7 @@ const columnCount = computed(() => columns.length + (selectable.value ? 1 : 0))
 
 .rk-data-pick {
   width: 2.75rem;
-  padding-right: 0;
+  padding-inline-end: 0;
 }
 
 .rk-data-box {

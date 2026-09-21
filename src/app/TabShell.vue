@@ -112,7 +112,7 @@ defineSlots<{
 .rk-screen-aside {
   position: absolute;
   bottom: 1.5rem;
-  left: 1.5rem;
+  inset-inline-start: 1.5rem;
   display: none;
   flex-direction: column;
   gap: 0.25rem;

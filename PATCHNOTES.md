@@ -67,6 +67,51 @@ without.
 
 ---
 
+## 2.24.0
+
+**Take this one if you use `BaseMenu`, `BaseCombobox` or `BaseHoverCard`
+anywhere below the fold.** All three pinned their panel under the trigger,
+so a menu button near the bottom of a window opened a list that ran off the
+screen. They flip above now, slide back in from the window edge, and
+re-measure while the page scrolls under them. `BasePopover` already did;
+`BaseDatePicker`, `TimePicker` and `ColorPicker` had it through the popover.
+
+**And if you use `ScrollArea` or `VirtualList` with a height.**
+`class="max-h-56"` on `ScrollArea` did nothing — it landed on the wrapper
+and the viewport grew to its contents. For `VirtualList` that was worse than
+spilling: it sizes its window from that box, so it rendered every row of the
+list. If you worked around this with a wrapper `div` of your own, you can
+drop it.
+
+**You gain `BarChart` and `DonutChart`.**
+
+```vue
+<BarChart
+  :series="spend"
+  label="September spending"
+  :value-label="(value) => `${value} ₺`"
+  :fill="(item) => (item.key === 'rent' ? 'bg-primary' : 'bg-muted')"
+/>
+```
+
+`BarChart` is a real table underneath — every label a row heading, every
+number printed beside its bar — so the data reads with the picture switched
+off. Its scale starts at zero and no prop changes that. `DonutChart` hides
+the ring and puts every name and value in the legend beside it. Bars
+compare, the ring composes; reach for bars when things need ranking.
+
+Neither is a chart library. No axes, no legends of their own, no time
+scales, no stacking.
+
+**Two smaller fixes you may have copied.** `ScrollArea` counted a disabled
+button as a way in, so a box holding only disabled controls denied itself
+the focus stop that was its only way in. And the dialog trap skipped
+`<summary>`, so a `<details>` inside a dialog let Tab out of it.
+
+**Action required:** none. Nothing renders differently for the same input in
+a left-to-right page with an unconstrained scroll area — and if yours was
+constrained, it now behaves the way you wrote it.
+
 ## 2.23.0
 
 **You gain `PasswordInput`** — the one field whose value is hidden from the

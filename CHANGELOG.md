@@ -3,6 +3,133 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.24.0 — 2026-09-21
+
+**Four panels that opened off the screen, and the kit drawing its own numbers.**
+
+The release is mostly what the kit's gap test found when it was pointed at
+the kit's own overlays: it shipped one component that kept an open panel on
+screen and four that did not.
+
+### Added
+
+- **`BarChart` and `DonutChart`** (`rei-kit`) — the kit ships `StatCard`,
+  `ProgressBar`, `CircularProgress`, `NumberTicker` and `ActivityGrid`,
+  which is a dashboard vocabulary with no way to draw a series. A stat card
+  beside a trend with nothing to draw the trend is exactly the shape that
+  creates a need the kit does not answer.
+
+  Both are the data as text with a picture beside it, rather than a picture
+  with a sentence describing it. `BarChart` is a real `<table>` — every
+  label a row heading, every number printed beside its bar, the bars
+  `aria-hidden` because a reader who has been told "104.1 KB" does not also
+  need "graphic". `DonutChart` hides the ring and puts every name and value
+  in the legend. The alternative both avoid is the `role="img"` with a
+  hand-written description, which is wrong the first time the data changes
+  and says nothing when it does.
+
+  **`BarChart`'s scale starts at zero and there is no prop to change it.**
+  `max` raises the ceiling; nothing lowers the floor. An axis starting
+  part-way up is the most common way a true set of numbers is used to say
+  something false. Colours come from `fill`, the same contract as
+  `ToneDot`'s and `ActivityGrid`'s `levelFor`.
+
+  Neither is a chart library: no axes, no legends of their own, no time
+  scales, no stacking. `AGENTS.md` says which to reach for — bars compare,
+  the ring composes, and reaching for the ring to rank things is the most
+  common chart mistake there is.
+
+- **`elementDirection` and `horizontalStep` gained a third caller**, and
+  `ScrollArea` gained the height behaviour every caller assumed it had.
+
+### Fixed
+
+- **`BaseMenu`, `BaseCombobox` and `BaseHoverCard` opened off the bottom of
+  the screen.** Each pinned its panel under its trigger, so a menu button
+  near the bottom of a window — a row action, the `…` on a card, anything
+  at all on a phone — opened a list that ran past the edge. A combobox is
+  usually the last question before the submit button, which is to say near
+  the bottom of the form. A hover card is supplementary, so one that opened
+  somewhere you cannot see cost nothing anybody would report, which is why
+  it stayed that way longest.
+
+  The arithmetic was inside `BasePopover`, which is how one of the four came
+  to have it. It is now `useAnchoredPanel`: flip to the roomier side, slide
+  back in from the window edge, re-measure while the page scrolls under it,
+  and let go of the listeners on close. `BaseDatePicker`, `TimePicker` and
+  `ColorPicker` had it all along through the popover.
+
+  Writing the first test this code has ever had found two things. jsdom
+  reports every box as zero, so the flip had never been given a layout to
+  work on — and `BasePopover` carried a comment claiming a panel that fits
+  neither way keeps the side it asked for. It never did. The rule is "more
+  room wins", which shows more of the panel; the comment is gone and both
+  sides of the real rule are under test.
+
+- **A height written on `ScrollArea` did nothing, and `VirtualList` rendered
+  all five thousand rows.** `class="max-h-56"` lands on the wrapper, which
+  is the outermost element the component renders and the only thing a caller
+  can write. The viewport carried `max-height: 100%`, and a percentage
+  height resolves against the parent's *height*, which is `auto`; a parent
+  with only a `max-height` gives it nothing to resolve against, so the rule
+  was inert.
+
+  Spilling is the visible half. `VirtualList` sizes its window from that
+  box's `clientHeight`, so an unconstrained viewport reported the height of
+  the whole list, every row counted as near the viewport, and all of them
+  rendered — the component's purpose inverted by the one line every caller
+  writes. The wrapper is a flex column now and the viewport is
+  `flex: 1 1 auto` with `min-height: 0`; the second half is the one that
+  gets dropped, because a flex item's default `min-height: auto` refuses to
+  shrink below its content. `VirtualList` also observes its own box, so a
+  window resize no longer leaves it rendering to a height it measured once.
+
+- **`ScrollArea` counted a disabled button as a way in.** Four places in the
+  kit asked what the keyboard can reach and each had written its own
+  selector, so they had drifted. A box holding nothing but disabled buttons
+  is exactly as unreachable as one holding plain text, and the box is the
+  only way to its far end — but it denied itself the focus stop. The shared
+  selector also picks up `summary`, which the dialog trap did not: a
+  `<details>` heading takes focus, so a trap that skipped one let Tab out of
+  the dialog.
+
+- **`text-white` on a filled role is now a test rather than a sentence.**
+  The rule was in `AGENTS.md` and nowhere else. White on this kit's own
+  warning measures 2.3:1, which is why `on-warning` is dark — and why
+  spelling the colour out defeats the palette that would have followed.
+
+### Changed
+
+- **The benchmark has a ten-component case.** One case is how a size
+  comparison lies in either direction: three components is the case *least*
+  favourable to a flat stylesheet, and it was the only number anyone had, so
+  "the CSS does not grow" rested on a mechanism rather than a measurement.
+
+  At ten — the same three plus a select, a checkbox, a switch, tabs, a data
+  table, a tooltip and a card — this kit is 31.3 KB against 104.1 for the
+  next. Seven components cost it 4.9 KB and cost the others 60 to 125,
+  because only its JavaScript grows.
+
+  Two choices made against this kit rather than for it: the ten-component
+  case uses `DataTable` and not the plainer `BaseTable`, because the others
+  bring a data grid and the comparable part is the heavier one; and
+  element-plus imports each component's own style entry, the documented
+  on-demand path, because hand-listing theme-chalk files misses the
+  transitive styles silently.
+
+- **The showcase mirrors itself.** A button sets `dir="rtl"` on the
+  document, so the right-to-left work in 2.22.0 and 2.23.0 can be seen
+  rather than read about. It turned up nine physical declarations in the
+  demo page's own stylesheets, which would have mirrored the components
+  correctly inside a page whose navigation came apart. The scanner reads
+  `showcase/` now as well.
+
+- **The showcase has an evidence section**, and the page argues in order:
+  what it is, what is different about it, where that leaves it against the
+  others, then how to install it. The comparison is drawn with the kit's own
+  `BarChart` from the file the benchmark writes, and a test fails if that
+  file names a version other than the one being published.
+
 ## 2.23.0 — 2026-09-21
 
 **The direction was never only a stylesheet.**

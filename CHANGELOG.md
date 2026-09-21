@@ -3,6 +3,89 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## 2.25.0 — 2026-09-22
+
+**What a real browser found, and the instruments that found it.**
+
+Everything in this kit was audited in jsdom, which has no layout — so the
+two things most often claimed about a component kit were the two it could
+not measure: contrast, and whether a focus ring is actually drawn. Both now
+have a runner, and the first run found a badge at 1.46:1.
+
+### A note on the version
+
+This is a minor and it changes what some components render for the same
+input, which the rule at the bottom of this file reserves for a major. It
+goes out anyway, and the reasoning is worth writing down: a badge nobody
+can read is a defect rather than a design, and holding the fix for the next
+major would mean shipping 1.46:1 for months while the palettes sat in the
+package looking fine. **Apps will see small colour shifts** — six palettes
+moved values, and tinted badges and chips now carry dark text rather than
+coloured. Nothing moves position, nothing changes size.
+
+### Added
+
+- **`pnpm test:browser`** — Playwright against the built showcase, which
+  already renders every component in every material and palette. Its own
+  command, not part of `pnpm check`, and not in CI: font rendering differs
+  between a Mac and a Linux runner, so stored pictures would fail on arrival
+  for a reason that has nothing to do with the change.
+
+  Three things it answers that nothing else can. **Contrast as painted**,
+  across every material and palette. **Whether a focus ring is really
+  drawn** — the jsdom check reads every component for a ring and cannot tell
+  one that paints nothing from one that works; set the shared `focus-ring`
+  utility to `outline: 0` and the source test stays green while this goes
+  red. And **ten stored pictures** of the shapes that carry the most layout,
+  which replace the instruction to open three apps and compare by eye.
+
+### Fixed
+
+- **A role was written on a wash of itself, in five components.**
+  `bg-positive/12` with `text-positive` is the obvious way to build a
+  coloured badge and it is unreadable by construction: a faint wash of a
+  colour over a surface is still nearly that colour. `BaseBadge` measured
+  1.46:1 at worst across the palettes, `BaseChip` 4.13, `BaseListbox` 4.16
+  on its chosen row, `PriceCard` on its icon box. The ground and the edge
+  carry the role now and `text-ink` carries the words — which `BaseAlert`'s
+  body already did, so the badge was the odd one out rather than the rule.
+
+- **`BaseCalendar`'s other-month days were 2.2:1** — `ink-soft`, which
+  clears AA, with `opacity: 0.55` laid over it. They are real buttons with
+  real labels, not decoration.
+
+- **Twenty-two palette values moved, across six palettes.** The pairing list
+  had ten entries and every fault here was an eleventh: `ink` and `inkSoft`
+  on `muted`, which is a ground the kit writes on constantly; `negative` as
+  *text*, which is `FormField`'s rejection message and failed in six of
+  twenty; `primary` as *text*, held to 3:1 because it is "mostly" not a
+  word, while `BaseLink` paints links with it; and `ink` on a role's wash,
+  which is a computed ground and so not a pairing between two tokens at all.
+
+  Most of the large moves are dark-mode `negative` in Nord, Solarized and
+  Gruvbox, which had reused their light-mode red on a dark ground. `rei` has
+  carried separate values since it was written; those three had not.
+
+### Changed
+
+- **Every component says what it is where an editor can read it.** A doc
+  comment inside `<script setup>` does not survive into the `.d.ts` — only a
+  comment above the export does — so eighty-five of the hundred and five
+  said nothing in an autocomplete list while saying it at length in three
+  places a consumer never opens. The summary the catalogue already required
+  is carried to the export, and a test keeps them in step.
+
+- **The checks know what the browser found.** This is the part that matters
+  more than the fixes. The palette script now mixes the washes the kit
+  actually paints and asks about them, and `appearance.spec.ts` reads every
+  component for a role written on a wash of itself — in a class list, in a
+  `<style>` rule, and in a tone map bound through one indirection, which is
+  where `BaseBadge` was hiding it. An `aria-hidden` element is exempt,
+  because a decorative icon in a tinted circle is not text.
+
+  `pnpm check` 1,333 → 1,443 tests. `pnpm test:browser` 7 passing of 28 →
+  42 of 42.
+
 ## 2.24.0 — 2026-09-21
 
 **Four panels that opened off the screen, and the kit drawing its own numbers.**

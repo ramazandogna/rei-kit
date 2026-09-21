@@ -67,6 +67,38 @@ without.
 
 ---
 
+## 2.25.0
+
+**Take this one, and expect small colour shifts.** A real browser audit
+found this kit shipping unreadable text in five components and six palettes
+below WCAG AA. Fixing it changes what some parts render:
+
+- **Tinted badges and chips carry dark text now**, not coloured. A
+  `BaseBadge tone="success"` was green-on-faint-green at 1.46:1 in the worst
+  palette. The colour has not gone anywhere — it is the ground and the
+  border, which is what `BaseAlert` always did.
+- **`BaseCalendar`'s other-month days are no longer dimmed** by an opacity
+  on top of an already-soft ink.
+- **Six palettes moved values** — Rei, Nord, Solarized, Gruvbox, Tokyo Night
+  and Rosé Pine. Mostly their dark-mode red, which was their light-mode red
+  reused on a dark ground.
+
+Nothing moves position and nothing changes size. If you have screenshots in
+your own tests, regenerate them.
+
+**You gain `pnpm test:browser`** if you work on the kit: contrast as
+painted, whether a focus ring is really drawn, and ten stored pictures of
+the shapes that carry the most layout. It replaces opening three apps and
+comparing by eye.
+
+**Your editor explains the kit now.** Hovering a component used to say
+nothing for 85 of the 105, because a doc comment inside `<script setup>`
+never reaches the `.d.ts`. It does now.
+
+**Action required:** none in code. Look at any screen where you use
+`BaseBadge`, `BaseChip` or a coloured `PriceCard` icon, and regenerate
+visual baselines if you keep them.
+
 ## 2.24.0
 
 **Take this one if you use `BaseMenu`, `BaseCombobox` or `BaseHoverCard`

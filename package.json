@@ -1,6 +1,6 @@
 {
   "name": "rei-kit",
-  "version": "2.24.0",
+  "version": "2.25.0",
   "description": "One kit, every look. 105 accessible Vue 3 + Tailwind 4 components, four materials (quiet, glass, brutal, soft) and ten WCAG-checked palettes, each switched with one attribute.",
   "keywords": [
     "vue",
@@ -26,7 +26,7 @@
     "design-tokens"
   ],
   "license": "MIT",
-  "author": "Ramazan Do\u011fan",
+  "author": "Ramazan Doğan",
   "homepage": "https://ramazandogna.github.io/rei-kit/",
   "repository": {
     "type": "git",

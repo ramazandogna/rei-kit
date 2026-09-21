@@ -97,6 +97,101 @@ describe('every side is a logical one', () => {
     expect(offences(source)).toEqual([])
   })
 
+  /*
+   * A gradient that runs sideways picks a side, and CSS has no logical
+   * keyword for it — `to inline-end` does not exist. So the rule cannot be
+   * "write it logically"; it is "write it twice", the same answer
+   * `BaseSwitch`'s `translateX` got.
+   *
+   * `ScrollArea`'s fades are the ones that matter — the fade at the edge
+   * with more content past it is the only sign on screen that there is
+   * more — and `BaseSlider` paints its own WebKit track, which would have
+   * filled from the left while the thumb started on the right.
+   */
+  const SIDEWAYS = /linear-gradient\(\s*to (left|right)\s*,/g
+
+  /* To the matching bracket, not to the first one: every stop in the kit is
+     a `var()`, so a regex that stops at `)` reads one colour and calls the
+     gradient symmetric. That is how this rule found nothing the first time
+     it ran. */
+  function stopsAt(source: string, from: number) {
+    let depth = 1
+
+    for (let at = from; at < source.length; at += 1) {
+      if (source[at] === '(') depth += 1
+      else if (source[at] === ')') {
+        depth -= 1
+        if (depth === 0) return source.slice(from, at)
+      }
+    }
+
+    return source.slice(from)
+  }
+
+  /**
+   * A gradient that reads the same mirrored, which many masks do.
+   *
+   * `to right, transparent, black 8%, black 92%, transparent` is the same
+   * picture either way round: reverse the stops and take each position
+   * from the far end, and you have what you started with. Such a gradient
+   * picks no side, so asking it to be written twice would be asking for
+   * two identical rules.
+   */
+  function symmetric(stops: string) {
+    const parts = stops
+      .split(',')
+      .map((stop) => stop.trim())
+      .filter(Boolean)
+
+    const mirrored = parts
+      .map((stop) => {
+        const at = /^(.*?)\s+([\d.]+)%$/.exec(stop)
+        return at ? `${at[1]} ${100 - Number(at[2])}%` : stop
+      })
+      .reverse()
+
+    return parts.join('|') === mirrored.join('|')
+  }
+
+  function sideways(source: string) {
+    const block = styles(source)
+
+    return [...block.matchAll(SIDEWAYS)]
+      .map((match) => stopsAt(block, match.index + match[0].length))
+      .filter((stops) => !symmetric(stops))
+  }
+
+  it.each(files.filter(({ source }) => sideways(source).length > 0))(
+    '$name paints sideways, so it says what right-to-left looks like',
+    ({ source }) => {
+      expect(styles(source)).toMatch(/\[dir='rtl'\]/)
+    },
+  )
+
+  it('is looking at sideways gradients at all', () => {
+    // Two today: `ScrollArea`'s fades and `BaseSlider`'s WebKit track. If
+    // this reaches zero the rule above has stopped running.
+    expect(files.filter(({ source }) => sideways(source).length > 0).length).toBeGreaterThanOrEqual(
+      2,
+    )
+  })
+
+  it('does not ask a symmetric mask to be written twice', () => {
+    expect(
+      sideways(
+        '<style>\n.x {\n  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);\n}\n</style>',
+      ),
+    ).toEqual([])
+  })
+
+  it('does ask a one-sided one', () => {
+    expect(
+      sideways(
+        '<style>\n.x {\n  background: linear-gradient(to right, black, transparent);\n}\n</style>',
+      ),
+    ).toHaveLength(1)
+  })
+
   it('is looking at the files it thinks it is', () => {
     // A scan that quietly found nothing to scan would pass for ever.
     expect(files.length).toBeGreaterThan(80)

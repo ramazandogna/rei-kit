@@ -129,6 +129,19 @@ const filled = computed(() => {
   );
 }
 
+/* A gradient has no logical direction, so the one hand-painted track in the
+   kit is written twice. Firefox needs no counterpart: `::-moz-range-progress`
+   is positioned by the engine, which already knows which way the input runs.
+   Only WebKit's track is painted here, and it would have filled from the
+   left while the thumb started on the right. */
+[dir='rtl'] .rk-slider-input::-webkit-slider-runnable-track {
+  background: linear-gradient(
+    to left,
+    var(--color-primary) var(--rk-slider-filled, 0%),
+    var(--color-hair) var(--rk-slider-filled, 0%)
+  );
+}
+
 .rk-slider-input::-moz-range-track {
   height: 0.375rem;
   border-radius: 9999px;

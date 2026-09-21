@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { focusTarget } from '../utils/focus-target'
+
 /**
  * "Skip to content" — the first thing in the tab order, hidden until it has
  * focus.
@@ -41,19 +43,12 @@ const { for: targetId, label } = defineProps<{
 }>()
 
 function skip(event: MouseEvent) {
-  const target = document.getElementById(targetId)
-  if (!target) return
-
-  event.preventDefault()
-
-  /* Focusable by script, never by Tab. Without it the browser scrolls and
-     leaves focus in the header, which is the whole failure this exists to
-     avoid. */
-  if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
-
-  // `focus()` scrolls the target into view on its own, which is why there
-  // is no `scrollIntoView` beside it.
-  target.focus()
+  /* `focusTarget` is shared with `createRouteAnnouncer`, which fails the
+     same invisible way without it. A target that was never focusable is
+     given `tabindex="-1"` on the way: reachable by script, never by Tab. */
+  if (focusTarget(targetId)) event.preventDefault()
+  // Not prevented when the target is missing, so the browser's own fragment
+  // handling still runs rather than the link swallowing the press.
 }
 </script>
 

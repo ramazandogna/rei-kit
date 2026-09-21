@@ -188,6 +188,7 @@ const APP_API = [
   'createAuthGuard',
   'createQueryDefaults',
   'createTabTransition',
+  'createRouteAnnouncer',
   'createTitleGuard',
   'createWriteReport',
   'fieldErrors',

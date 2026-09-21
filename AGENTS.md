@@ -248,6 +248,14 @@ looks almost right.
   worked. This moves focus itself, giving the target `tabindex="-1"` on the
   way — focusable by script, never by Tab.
 
+- **`createRouteAnnouncer`.** The other half of `createTitleGuard`. A real
+  page load announces the new title; a single-page app has no page load, so
+  the title changes, the view is replaced and for a reader **nothing
+  happened** — they are still in content that is no longer on screen. This
+  announces the new page and, given `focus`, moves focus into it, so the
+  next Tab does not start again from the top of the header. Register it
+  _after_ the title guard, or it announces the page that was just left.
+
 - **`AnnounceHost` and `announce()`, or a live region of your own.** The kit
   has a live region in a dozen components already, but each belongs to
   something on screen. `announce()` is for what has no component: a filter
@@ -406,7 +414,7 @@ every redirect through `toRedirectPath` for this reason.
 open overnight keeps writing to yesterday.
 
 `rei-kit/app` adds `createTabTransition`, `useThemeSync`, `createAuthGuard`,
-`createTitleGuard`, `createQueryDefaults`, `createWriteReport` and
+`createTitleGuard`, `createRouteAnnouncer`, `createQueryDefaults`, `createWriteReport` and
 `fieldErrors`. `rei-kit/pwa` adds `useInstall` and `useSnooze`.
 
 ## i18n

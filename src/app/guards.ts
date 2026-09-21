@@ -1,5 +1,12 @@
-import type { NavigationGuard, NavigationHookAfter, RouteLocationRaw } from 'vue-router'
+import type {
+  NavigationGuard,
+  NavigationHookAfter,
+  RouteLocationNormalized,
+  RouteLocationRaw,
+} from 'vue-router'
 
+import { announce } from '../composables/use-announce'
+import { focusTarget } from '../utils/focus-target'
 import { safeRedirect, toRedirectPath } from '../utils/redirect'
 
 export type AuthGuardOptions = {
@@ -100,5 +107,65 @@ export function createTitleGuard(suffix: string, separator = '·'): NavigationHo
     const title = to.meta['title']
 
     document.title = title ? `${String(title)} ${separator} ${suffix}` : suffix
+  }
+}
+
+/**
+ * Saying, and showing, that the page changed.
+ *
+ * `createTitleGuard` above sets `document.title`, which is what a browser
+ * announces on a real page load. A single-page app has no page load: the
+ * title changes, the view is replaced, and for a screen reader **nothing
+ * happened**. The reader is still wherever it was, reading content that is
+ * no longer on screen. So the kit ships the guard that creates the
+ * situation, and this is the other half of it.
+ *
+ * Two things happen, and they are separate failures:
+ *
+ * **The new page is announced**, through `announce()` — so the app needs
+ * one `AnnounceHost` rendered for it to reach anyone.
+ *
+ * **Focus moves to the new view**, if `focus` names one. Without that,
+ * focus is on the link in the nav that was just re-rendered, or has fallen
+ * back to `<body>`, and the next Tab starts again from the top of the
+ * document — past the whole header, on every navigation.
+ *
+ * The first navigation is skipped. The browser's own page load already
+ * announced the page, and saying it again is the reader hearing the title
+ * twice before they have done anything.
+ *
+ * Register it **after** `createTitleGuard`, or it announces the title of
+ * the page that was just left.
+ *
+ * @example
+ * ```ts
+ * router.afterEach(createTitleGuard('Kakei'))
+ * router.afterEach(createRouteAnnouncer({ focus: 'main' }))
+ * ```
+ */
+export function createRouteAnnouncer(
+  options: {
+    /** The `id` of the new view, usually the page's `<main>`. */
+    focus?: string | undefined
+    /**
+     * What to say. The document title by default, which is what
+     * `createTitleGuard` has just set and what a page load would have read.
+     */
+    message?: ((to: RouteLocationNormalized) => string) | undefined
+  } = {},
+): NavigationHookAfter {
+  const { focus, message } = options
+  let first = true
+
+  return (to) => {
+    if (first) {
+      first = false
+      return
+    }
+
+    if (focus !== undefined) focusTarget(focus)
+
+    const said = message ? message(to) : document.title
+    if (said) announce(said)
   }
 }

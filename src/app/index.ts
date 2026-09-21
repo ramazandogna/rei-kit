@@ -19,7 +19,7 @@ export { default as OfflineBanner } from './OfflineBanner.vue'
 export { default as TabShell } from './TabShell.vue'
 export { default as TourShell } from './TourShell.vue'
 
-export { createAuthGuard, createTitleGuard } from './guards'
+export { createAuthGuard, createRouteAnnouncer, createTitleGuard } from './guards'
 export type { AuthGuardOptions } from './guards'
 
 export { createQueryDefaults } from './query-defaults'

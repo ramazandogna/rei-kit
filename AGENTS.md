@@ -606,8 +606,25 @@ Four checks hold that line, and each catches something the others cannot:
   an app does. Kakehashi's build is `vite-ssg build`, so this is also the real
   prerender; `ssr.spec.ts` cannot stand in for it, because jsdom supplies the
   very `document` a server lacks.
-- **Visual comparison** of the three apps before and after, because a lost focus
-  ring or a heading that stopped growing passes every one of the above.
+- **`pnpm test:browser`** — the two questions jsdom cannot answer, and the one
+  a person used to answer by opening three apps and comparing. Contrast as
+  painted, across every material and palette. Whether a focus ring is really
+  drawn, which a source-reading test cannot tell from one that paints
+  nothing. And ten stored pictures of the shapes that carry the most layout,
+  because a heading that stopped growing or a padding that collapsed passes
+  every other check here.
+
+  **Do not open the three apps to look at them.** That was the instruction
+  until 2.24.0 and it was the wrong one: it is slow, it is done under time
+  pressure by the person least able to notice a five-pixel change, and the
+  showcase already renders every component in every material and palette, so
+  it is a superset of what those apps put on screen. `consumer.yml` runs
+  their test suites; this runs their looks. Open an app when it breaks, not
+  on principle.
+
+  `pnpm test:browser -u` accepts a new look on purpose. It is not in CI: font
+  rendering differs between a Mac and a Linux runner, so the pictures would
+  fail on arrival for a reason that has nothing to do with the change.
 
 A new component also needs its sample, `showcase/examples/<Name>.vue`.
 `examples.spec.ts` fails without one, and fails on a prop, model or event the

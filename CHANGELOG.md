@@ -74,6 +74,13 @@ field the kit had been shipping half of since it shipped `AuthForm`.
   `BaseMarquee`'s mask reads the same mirrored and is not asked for a
   second rule it would write identically.
 
+- **`BaseSplitter` was dragged the wrong way.** Its value is a percentage
+  from the *start* of the line, and the start is the right-hand edge where
+  the language runs that way — so the handle ran away from the pointer.
+  Mirroring the arrows without this would have left one control whose two
+  halves disagreed: the keyboard growing the first pane and the pointer
+  shrinking it.
+
 - **`ActivityGrid` opened on the oldest week in a right-to-left page.** A
   right-to-left box counts `scrollLeft` down from zero, so assigning
   `scrollWidth` clamps to zero — which is the start, and the one thing

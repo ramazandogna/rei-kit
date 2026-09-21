@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, useTemplateRef } from 'vue'
 
-import { horizontalStep } from '../utils/direction'
+import { elementDirection, horizontalStep } from '../utils/direction'
 
 /**
  * Two panes and a handle between them — a list beside a preview, an editor
@@ -55,7 +55,16 @@ function moveTo(point: number) {
   const box = root.value?.getBoundingClientRect()
   if (!box) return
 
-  const ratio = horizontal.value ? (point - box.left) / box.width : (point - box.top) / box.height
+  /* `split` is a percentage from the *start* of the line, and the start is
+     the right-hand edge where the language runs that way. Without this the
+     handle would run away from the pointer — and, since 2.23.0 mirrored the
+     arrows, disagree with its own keyboard. */
+  const alongX =
+    elementDirection(root.value) === 'rtl'
+      ? (box.right - point) / box.width
+      : (point - box.left) / box.width
+
+  const ratio = horizontal.value ? alongX : (point - box.top) / box.height
 
   split.value = clamp(Math.round(ratio * 100))
 }

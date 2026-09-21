@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { h } from 'vue'
+import { h, nextTick } from 'vue'
 
 import ActivityGrid from '../components/ActivityGrid.vue'
 import BaseCalendar from '../components/BaseCalendar.vue'
@@ -228,5 +228,47 @@ describe('the arrow keys, right to left', () => {
 
     // A column is a week, so one step along is seven days later.
     expect(wrapper.get('[tabindex="0"][data-day]').attributes('data-day')).toBe('2026-01-08')
+  })
+})
+
+/**
+ * The pointer has a direction too.
+ *
+ * `BaseSplitter` is the one control here that is dragged as well as
+ * pressed, and its value is a percentage from the *start* of the line. Get
+ * this wrong after mirroring the arrows and the two halves of one control
+ * disagree: the keyboard grows the first pane and the pointer shrinks it.
+ */
+describe('the pointer, right to left', () => {
+  it('BaseSplitter: dragging towards the start grows the first pane', async () => {
+    document.documentElement.setAttribute('dir', 'rtl')
+
+    const wrapper = mount(BaseSplitter, {
+      props: { label: 'Bölücü', modelValue: 50 },
+      attachTo: document.body,
+    })
+
+    const root = wrapper.element as HTMLElement
+    /* jsdom lays nothing out, so the box is supplied: 200px wide, starting
+       at x = 0. In a right-to-left page its start edge is x = 200. */
+    root.getBoundingClientRect = () =>
+      ({ left: 0, right: 200, width: 200, top: 0, bottom: 100, height: 100 }) as DOMRect
+
+    const handle = wrapper.get('[role="separator"]').element
+    handle.setPointerCapture = () => {}
+
+    /* `trigger` builds a MouseEvent whose `clientX` is read-only, so the
+       events are constructed rather than described. */
+    const at = (type: string, clientX: number) =>
+      handle.dispatchEvent(
+        new MouseEvent(type, { bubbles: true, clientX }) as unknown as PointerEvent,
+      )
+
+    at('pointerdown', 200)
+    at('pointermove', 150)
+    await nextTick()
+
+    // 150 is 50px in from the right-hand edge, which is a quarter along.
+    expect(wrapper.emitted('update:modelValue')!.at(-1)).toEqual([25])
   })
 })

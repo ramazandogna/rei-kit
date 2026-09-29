@@ -3,6 +3,7 @@ import { computed } from 'vue'
 
 import CodeBlock from './CodeBlock.vue'
 import examples from './examples.generated.json'
+import PropPlayground from './PropPlayground.vue'
 import catalogue from './props.generated.json'
 import PropTable from './PropTable.vue'
 
@@ -60,6 +61,7 @@ const exampleFor = (name: string) => examples.find((example) => example.name ===
             :js="exampleFor(item.name)!.js"
             :file="`${item.name}Example.vue`"
           />
+          <PropPlayground :name="item.name" />
           <PropTable :name="item.name" />
         </article>
       </div>

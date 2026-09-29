@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useBoundValue } from '../composables/use-bound-value'
 import FormField from './FormField.vue'
+import { useFieldAttrs } from '../composables/use-field-attrs'
 
 /**
  * A multi-line field.
@@ -11,6 +12,8 @@ import FormField from './FormField.vue'
  * own resize handle, which the writer controls.
  */
 defineOptions({ inheritAttrs: false })
+
+const { fieldClass, fieldStyle, controlAttrs } = useFieldAttrs()
 
 const {
   modelValue = undefined,
@@ -63,7 +66,15 @@ const model = useBoundValue(
 </script>
 
 <template>
-  <FormField :label="label" :error="error" :hint="hint" :label-hidden="labelHidden" :size="size">
+  <FormField
+    :class="fieldClass"
+    :style="fieldStyle"
+    :label="label"
+    :error="error"
+    :hint="hint"
+    :label-hidden="labelHidden"
+    :size="size"
+  >
     <template #default="{ id, describedBy, invalid }">
       <textarea
         :id="id"
@@ -71,7 +82,7 @@ const model = useBoundValue(
         :rows="rows"
         :aria-invalid="invalid"
         :aria-describedby="describedBy"
-        v-bind="$attrs"
+        v-bind="controlAttrs"
         :class="[
           variant === 'unstyled'
             ? ''

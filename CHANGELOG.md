@@ -3,6 +3,28 @@
 Notable changes per release. Versions follow [semver](https://semver.org); while
 the major is `0`, a minor may carry a breaking change and will say so here.
 
+## Unreleased
+
+**Breaking — `class` on the three text fields.**
+
+`BaseInput`, `BaseTextarea` and `PasswordInput` are the only components that
+set `inheritAttrs: false`, which is what lets `placeholder`, `autocomplete`
+and `inputmode` reach the inner control instead of piling up on a wrapper
+that cannot use them. `class` and `style` were going with them, so
+`class="mt-4"` — written meaning "space this field" — landed on the input,
+below the label and inside the field's own box. It looked almost right,
+which is why it lasted.
+
+They now land on the field, which is where Vue puts a component's class
+everywhere else in this kit. Every other attribute still reaches the
+control.
+
+**What to do.** Search for `class` on those three components. A layout class
+(`mt-*`, `mb-*`, `col-span-*`, `flex-1`) was already doing the wrong thing
+and is now doing the right one — no change needed. A class meant for the
+input itself (`w-32`, `text-center`, `font-mono`) now sizes or styles the
+field instead, and has to move onto the control another way.
+
 ## 2.25.0 — 2026-09-22
 
 **What a real browser found, and the instruments that found it.**

@@ -293,6 +293,15 @@ looks almost right.
   under a focus that has not moved is not reliably re-read, and a pressed
   state is.
 
+- **A `class` on a field goes to the field.** `BaseInput`, `BaseTextarea`
+  and `PasswordInput` set `inheritAttrs: false` so that `placeholder`,
+  `autocomplete` and `inputmode` reach the inner control rather than a
+  wrapper that cannot use them. `class` and `style` are the exception and
+  are split back out onto the field, because that is where Vue puts them on
+  every other component in the kit. Until this changed they went with the
+  rest, so `class="mt-4"` spaced the input from its own label instead of
+  spacing the field.
+
 - **`BaseCheckbox` or `BaseSwitch`.** A checkbox states an intention something
   else commits; a switch is the commit, with no Save after it. A box that
   stands for a list of others takes `indeterminate` — neither on nor off,

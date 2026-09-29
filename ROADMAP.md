@@ -50,7 +50,7 @@ Audited against the repository on 2026-09-29, not from memory. Five marks:
 | --- | --- | --- |
 | Theming | ✅ | Three axes — palette, material, mode — with ten palettes measured against AA in both modes. Redefine a token and every component follows. |
 | Tokens | 🟡 | Colour and depth are complete. There are exactly three radii and no spacing token, so "make the corners sharper here" has no lever below the whole app. |
-| `class` on a component | 🔧 | Fine for 66 of 69, via Vue's fallthrough. `BaseInput`, `BaseTextarea` and `PasswordInput` set `inheritAttrs: false` and bind `$attrs` to the inner `<input>`, so a caller's class lands on the field rather than its wrapper, in a list that already has `w-full`. |
+| `class` on a component | ✅ | Lands on the component's root everywhere, including the three fields that set `inheritAttrs: false` — they used to send it to the inner control. Held by `field-attrs.spec.ts`. |
 | Composition | 🟡 | `variant="unstyled"` on five components, `defineSlots` on twelve. Enough for the three apps here; thin for an app whose design does not resemble any of them. |
 | Playground | ❌ | The showcase renders every component in every material and palette, and no prop can be changed. `props.generated.json` already holds every prop, type and default, so the panel has its data source and needs no second tool. |
 | Coverage | ✅ | 105 components. Form, feedback, navigation, overlay and data display are past the usual list. `Label`, `InputGroup` and `AspectRatio` are the honest omissions. |
@@ -68,10 +68,6 @@ a test and a slice of the stylesheet budget for ever.
 
 ### P0 — what blocks somebody evaluating the kit
 
-- **The `class` fallthrough on the three fields.** A live bug: the class a
-  caller writes goes somewhere they did not mean, and whether it wins is
-  decided by stylesheet order rather than by them. This is the kit fighting
-  the developer, which is the one thing it must not do.
 - **An interactive playground**, built into the existing showcase from
   `props.generated.json`. Not Storybook and not Ladle: both mean a second
   build and a second component registry, and the catalogue that exists here

@@ -2,9 +2,12 @@
 import type { InputHTMLAttributes } from 'vue'
 
 import FormField from './FormField.vue'
+import { useFieldAttrs } from '../composables/use-field-attrs'
 import { useBoundValue } from '../composables/use-bound-value'
 
 defineOptions({ inheritAttrs: false })
+
+const { fieldClass, fieldStyle, controlAttrs } = useFieldAttrs()
 
 /**
  * A text field with its label, hint and error already wired to it.
@@ -107,7 +110,15 @@ const model = useBoundValue<T>(
 </script>
 
 <template>
-  <FormField :label="label" :error="error" :hint="hint" :label-hidden="labelHidden" :size="size">
+  <FormField
+    :class="fieldClass"
+    :style="fieldStyle"
+    :label="label"
+    :error="error"
+    :hint="hint"
+    :label-hidden="labelHidden"
+    :size="size"
+  >
     <template #default="{ id, describedBy, invalid }">
       <input
         :id="id"
@@ -115,7 +126,7 @@ const model = useBoundValue<T>(
         :type="type"
         :aria-invalid="invalid"
         :aria-describedby="describedBy"
-        v-bind="$attrs"
+        v-bind="controlAttrs"
         :class="[
           variant === 'unstyled'
             ? ''

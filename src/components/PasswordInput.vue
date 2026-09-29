@@ -3,8 +3,11 @@ import { Eye, EyeOff } from 'lucide-vue-next'
 import { ref, type InputHTMLAttributes } from 'vue'
 
 import FormField from './FormField.vue'
+import { useFieldAttrs } from '../composables/use-field-attrs'
 
 defineOptions({ inheritAttrs: false })
+
+const { fieldClass, fieldStyle, controlAttrs } = useFieldAttrs()
 
 /**
  * A password field you can look at.
@@ -90,6 +93,8 @@ const CONTROL_CLASS = 'h-11 text-base'
 
 <template>
   <FormField
+    :class="fieldClass"
+    :style="fieldStyle"
     :label="label"
     :error="error"
     :hint="hint"
@@ -107,7 +112,7 @@ const CONTROL_CLASS = 'h-11 text-base'
           :aria-describedby="describedBy"
           autocapitalize="none"
           :spellcheck="false"
-          v-bind="$attrs"
+          v-bind="controlAttrs"
           class="control text-ink rounded-card focus-visible:outline-primary w-full ps-3 pe-11 focus-visible:outline-2 focus-visible:outline-offset-1"
           :class="[CONTROL_CLASS, invalid ? 'border-negative' : '']"
           @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"

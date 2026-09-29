@@ -152,7 +152,7 @@ const GUARDS = [
   },
   {
     file: 'showcase-catalogue.spec.ts',
-    what: 'Fails if a component has no usage sample, no description, no behaviour test, or no row in AGENTS.md. The documentation cannot fall behind the package.',
+    what: 'Fails if a component has no usage sample, no description, or no behaviour test. The documentation cannot fall behind the package.',
   },
   {
     file: 'consumer.yml',

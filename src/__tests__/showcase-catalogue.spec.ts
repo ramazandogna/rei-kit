@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 import * as kit from '../index'
@@ -22,6 +22,12 @@ type Entry = { name: string; summary: string; props: { name: string }[] }
 // test instead of passing it.
 execFileSync('node', ['scripts/extract-props.mjs'], { cwd: process.cwd() })
 const catalogue = JSON.parse(readFileSync('showcase/props.generated.json', 'utf8')) as Entry[]
+
+/* `AGENTS.md` is kept out of the published repository, so a clone has the
+   package without it and these checks have nothing to read. They still run
+   where the file is -- the working copy it is maintained in, which is the
+   only place it can go stale. */
+const agents = existsSync('AGENTS.md') ? readFileSync('AGENTS.md', 'utf8') : null
 
 /** Every export that is a component — an object with a render or a setup. */
 function components(module: Record<string, unknown>): string[] {
@@ -96,15 +102,14 @@ describe('the showcase catalogue', () => {
     expect(unmounted).toEqual([])
   })
 
-  it('lists every component in AGENTS.md', () => {
+  it.skipIf(!agents)('lists every component in AGENTS.md', () => {
     /* It said "twenty-two components" for thirty-one releases, and told
        assistants to add a DOM node the kit had learned to create itself.
        A file written for tools is read by tools, which do not notice it is
        stale -- they just write the wrong code with confidence. */
-    const agents = readFileSync('AGENTS.md', 'utf8')
     const missing = catalogue
       .map((entry) => entry.name)
-      .filter((name) => !agents.includes(`\`${name}\``))
+      .filter((name) => !agents!.includes(`\`${name}\``))
 
     expect(missing).toEqual([])
   })
@@ -115,9 +120,9 @@ describe('the showcase catalogue', () => {
        it is checked like one. */
     const stated = [
       ['README.md', readFileSync('README.md', 'utf8')],
-      ['AGENTS.md', readFileSync('AGENTS.md', 'utf8')],
       ['package.json', readFileSync('package.json', 'utf8')],
       ['showcase/index.html', readFileSync('showcase/index.html', 'utf8')],
+      ...(agents ? [['AGENTS.md', agents]] : []),
     ].flatMap(([file, text]) =>
       [...text!.matchAll(/\b(\d+) (?=accessible|components across)|Components +\| (\d+) \(/g)].map(
         ([, a, b]) => [file, Number(a ?? b)],

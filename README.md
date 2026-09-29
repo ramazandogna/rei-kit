@@ -79,7 +79,7 @@ go red, and several of them exist nowhere else:
 | **`focus.spec.ts`**              | Reads every component for a focus ring. A missing one compiles, renders and passes every other check.                                                                                                                                       |
 | **`public-api.spec.ts`**         | Names every runtime export of all six entries. A kit compiles fine without an export nothing inside it calls.                                                                                                                               |
 | **`type-surface.ts`**            | Re-exports every published type and is type-checked twice, because a test cannot see types — they are gone by the time one runs.                                                                                                            |
-| **`showcase-catalogue.spec.ts`** | Fails if a component has no usage sample, no description, no behaviour test, or no row in `AGENTS.md`. The documentation cannot fall behind the package.                                                                                     |
+| **`showcase-catalogue.spec.ts`** | Fails if a component has no usage sample, no description, or no behaviour test. The documentation cannot fall behind the package.                                                                                     |
 | **`appearance.spec.ts`**         | One case per component for a hex value, and one for a `text-white` on a filled role — neither is a colour a palette can follow, and white on the kit's own warning measures 2.3:1. Plus a frozen `shadow-card` where the runtime token was meant, and a `cubic-bezier` pasted in where a material's easing should reach. |
 | **`consumer.yml`**               | Packs the real tarball, installs it into all three apps and runs each one's whole gate. The only check that imports the package the way an app does.                                                                                         |
 | **`pnpm size`**                  | Six budgets. The build fails when one grows past its line, and raising it has to say why in the commit.                                                                                                                                     |
@@ -662,9 +662,7 @@ they have to do to take it.
 | File                                   | What it answers                                                          |
 | -------------------------------------- | ------------------------------------------------------------------------ |
 | [CONTRIBUTING.md](CONTRIBUTING.md)      | How to set it up, the one command CI runs, and what a new component needs |
-| [ROADMAP.md](ROADMAP.md)                | What is next, what is being weighed up, and what this will never do       |
 | [SECURITY.md](SECURITY.md)              | How to report a vulnerability, and what the package does and does not do  |
-| [AGENTS.md](AGENTS.md)                  | The design document: which part to reach for, and the mistakes that compile |
 | [CHANGELOG.md](CHANGELOG.md)            | Why each change was made                                                  |
 | [PATCHNOTES.md](PATCHNOTES.md)          | What you gain per release, and what you have to do to take it             |
 

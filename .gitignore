@@ -23,3 +23,7 @@ coverage
 # Playwright
 test-results
 playwright-report
+
+# Kept out of the published repository, maintained in the working copy
+AGENTS.md
+ROADMAP.md

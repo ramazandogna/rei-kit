@@ -34,9 +34,10 @@ you renamed will pass the first two and fail the third.
 
 ## Adding a component
 
-Read `AGENTS.md` first. It is written for assistants but it is the real
-design document: what belongs in the kit, which near-neighbour to reach for,
-and the mistakes that compile. The rules that catch people out:
+Open an issue first and say what you are building — a lot of what looks
+missing is already here under a name you would not have guessed, and the
+answer usually comes with which near-neighbour to reach for. The rules that
+catch people out:
 
 - **The kit has no language of its own.** Every visible string is a required
   prop. A component with an English default ships English into an app that
@@ -59,8 +60,8 @@ A new component also needs:
 1. An export in the right entry (`src/index.ts`, `src/web/index.ts`, …) and a
    line in `public-api.spec.ts` — plus a line in `showcase/type-surface.ts`
    for every type it exports, which is how types are guarded at all.
-2. A row in the entry table in `AGENTS.md`, and usually a line in "which one
-   to reach for" — that section is the one thing a prop table cannot say.
+2. A description, which becomes the component's doc comment above its export
+   — a comment inside `<script setup>` never reaches the `.d.ts`.
 3. A usage sample at `showcase/examples/<Name>.vue`, which is type-checked and
    validated against the component's real props.
 4. A behaviour test. Every component is mounted by one; a test asserts that.

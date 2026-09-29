@@ -256,6 +256,26 @@ describe('the benchmark the evidence section reads', () => {
     }
   })
 
+  it('is the same table the README prints', () => {
+    /* The showcase reads `results.json`, so the page cannot say a number the
+       benchmark did not produce. The README is markdown and reads nothing —
+       its two tables were typed in, and nothing compared them to anything.
+       That is the failure this benchmark exists to prevent, one level up:
+       the numbers most people see are the ones in the README. */
+    const readme = readFileSync('README.md', 'utf8')
+
+    for (const suite of results.suites) {
+      for (const row of suite.rows) {
+        /* Bytes in the file, kibibytes on both pages — the same conversion
+           `bench/run.mjs` and `EvidenceSection.vue` do. */
+        const total = `${((row.js + row.css) / 1024).toFixed(1)} KB`
+        const printed = readme.includes(row.name) && readme.includes(total)
+
+        expect(printed, `${row.name} at ${total} is not in README.md`).toBe(true)
+      }
+    }
+  })
+
   it('measured the version of this kit that is being published', () => {
     /* A stale row is the failure mode that matters: the page would show a
        number for a build nobody ships. */

@@ -1,30 +1,25 @@
 # Changelog
 
-Notable changes per release. Versions follow [semver](https://semver.org); while
-the major is `0`, a minor may carry a breaking change and will say so here.
+Notable changes per release. Versions follow [semver](https://semver.org): a
+minor adds, a patch fixes, and neither changes what a component renders for
+the same input. A breaking change waits for a major and arrives with its
+reason here.
 
-## Unreleased
+## 3.0.0 — 2026-09-29
 
-**A radius is a role, like a colour is.**
+**Where a value you write goes.**
 
-`--radius-control` (12px) joins `cell`, `card` and `shell`. It existed
-already and had no name: four components wrote `rounded-xl` for the same
-shape — a segment, an icon tile inside a card — which is Tailwind's 12px
-and not any of this kit's radii. `BaseSheet` had `28px` written out. So an
-app that set `--radius-card: 0` got square cards holding rounded tiles,
-and nothing on screen said why.
+Two things in this kit quietly sent a value somewhere other than where it
+was written, and both had survived because the result looked almost right.
+Neither could be fixed without changing what a component renders for the
+same input, which is what a major is for. There is nothing else in this
+release: no removed export, no renamed prop, no new dependency, and the
+install is the same two lines.
 
-A test now fails on a raw radius utility in a component. `rounded-full`
-stays allowed, because a pill is a shape rather than a size and has to
-survive whatever radius an app picks; an arbitrary value built from a token
-is allowed too, which is how the sheet keeps nesting two pixels inside the
-shell it sits in.
+The gallery also gained something worth having on the way past — see the
+end.
 
-Two corners move by a pixel or two as a result: a `variant="link"` button
-(2px → 3px, now `cell`) and nothing else. The four `rounded-xl` shapes are
-byte-for-byte what they were.
-
-**Breaking — `class` on the three text fields.**
+### Breaking — `class` on the three text fields
 
 `BaseInput`, `BaseTextarea` and `PasswordInput` are the only components that
 set `inheritAttrs: false`, which is what lets `placeholder`, `autocomplete`
@@ -43,6 +38,37 @@ control.
 and is now doing the right one — no change needed. A class meant for the
 input itself (`w-32`, `text-center`, `font-mono`) now sizes or styles the
 field instead, and has to move onto the control another way.
+
+### Breaking — a radius is a role, like a colour is
+
+`--radius-control` (12px) joins `cell`, `card` and `shell`. It existed
+already and had no name: four components wrote `rounded-xl` for the same
+shape — a segment, an icon tile inside a card — which is Tailwind's 12px
+and not any of this kit's radii. `BaseSheet` had `28px` written out. So an
+app that set `--radius-card: 0` got square cards holding rounded tiles,
+and nothing on screen said why.
+
+A test now fails on a raw radius utility in a component. `rounded-full`
+stays allowed, because a pill is a shape rather than a size and has to
+survive whatever radius an app picks; an arbitrary value built from a token
+is allowed too, which is how the sheet keeps nesting two pixels inside the
+shell it sits in.
+
+**What to do.** Almost certainly nothing. One corner moves: a
+`variant="link"` button goes from 2px to 3px. The four `rounded-xl` shapes
+are byte-for-byte what they were, and so is the sheet. If your app writes a
+raw `rounded-*` beside a kit component it still works — the check is on this
+package's own components, not on yours.
+
+### And one addition
+
+**A playground on the documentation.** Forty-two components can now be
+driven by their props on the docs page: change `variant`, `size`,
+`disabled`, and watch both the component and the code beside it follow.
+Every control is derived from the same generated catalogue the prop table
+reads, so a component that grows a variant grows a button for it without
+anybody adding one, and the playground cannot offer a prop the component
+does not have.
 
 ## 2.25.0 — 2026-09-22
 

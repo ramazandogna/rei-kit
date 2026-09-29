@@ -79,7 +79,7 @@ before you push.
 
 ## Commits and versions
 
-Since 1.0.0 a minor adds and a patch fixes. **Neither removes an export,
+A minor adds and a patch fixes. **Neither removes an export,
 renames a prop, or changes what a component renders for the same input.** A
 breaking change waits for the next major and arrives with its reason in
 `CHANGELOG.md`.

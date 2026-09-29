@@ -157,7 +157,7 @@ app, and the case *least* favourable to this kit:
 
 | Kit                  |         JS |         CSS |       Total |
 | -------------------- | ---------: | ----------: | ----------: |
-| **rei-kit 2.25.0**   | **3.3 KB** | **23.1 KB** | **26.4 KB** |
+| **rei-kit 3.0.0**    | **3.4 KB** | **23.1 KB** | **26.5 KB** |
 | element-plus 2.14.6  |    27.3 KB |      6.0 KB |     33.3 KB |
 | naive-ui 2.45.3      |    51.2 KB |           — |     51.2 KB |
 | primevue 5.0.1       |    53.6 KB |           — |     53.6 KB |
@@ -169,7 +169,7 @@ a data table, a tooltip and a card. A screen rather than a demo:
 
 | Kit                  |         JS |         CSS |        Total |
 | -------------------- | ---------: | ----------: | -----------: |
-| **rei-kit 2.25.0**   | **8.3 KB** | **23.1 KB** | **31.3 KB**  |
+| **rei-kit 3.0.0**    | **8.4 KB** | **23.1 KB** | **31.4 KB**  |
 | element-plus 2.14.6  |    90.1 KB |     14.0 KB |    104.1 KB  |
 | naive-ui 2.45.3      |   132.4 KB |           — |    132.4 KB  |
 | primevue 5.0.1       |   135.8 KB |           — |    135.8 KB  |
@@ -177,7 +177,7 @@ a data table, a tooltip and a card. A screen rather than a demo:
 | ant-design-vue 4.2.6 |   195.4 KB |           — |    195.4 KB  |
 
 **The slope is the point, not the total.** Seven more components cost this kit
-**4.9 KB**, because the stylesheet does not move and only the JavaScript grows.
+**5.0 KB**, because the stylesheet does not move and only the JavaScript grows.
 The kits that put their styles in the JavaScript have no flat part at all, so
 the same seven cost them **60 to 125 KB**. A quarter smaller at three
 components; **3.3× smaller at ten**.
@@ -226,7 +226,7 @@ Each claim here is enforced by something that fails, not by a promise.
 
 ## Status
 
-**v2.25.0 — three consumers.**
+**v3.0.0 — three consumers.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

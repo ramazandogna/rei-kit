@@ -67,6 +67,41 @@ without.
 
 ---
 
+## 3.0.0
+
+**Take this one. It is a major because two values moved, not because the kit
+did.** No export was removed, no prop renamed, nothing was added as a
+dependency, and the install is still the same two lines. Upgrading is a
+version bump for almost every app.
+
+**What you gain.** A value you write now goes where you wrote it.
+
+- **`class` and `style` on `BaseInput`, `BaseTextarea` and `PasswordInput`
+  land on the field.** They used to go to the `<input>` inside it, so
+  `class="mt-4"` spaced the input from its own label instead of spacing the
+  field. Every other attribute — `placeholder`, `autocomplete`, `inputmode`
+  — still reaches the control, which is the whole reason those three route
+  attributes at all.
+- **Corners follow the radius tokens.** Five components were writing
+  Tailwind's sizes (`rounded-xl`, `rounded-[28px]`) rather than this kit's
+  roles, so an app that set `--radius-card: 0` got square cards holding
+  rounded tiles. There is a new role, `--radius-control` (12px), for the
+  shape four of them were drawing by hand.
+- **A playground on the documentation.** Forty-two components can be driven
+  by their props on the docs page — change `variant` or `size` and both the
+  component and the code beside it follow.
+
+**What you have to do.**
+
+1. **Search for `class` and `style` on those three components.** A layout
+   class (`mt-*`, `mb-*`, `col-span-*`, `flex-1`) was already landing in the
+   wrong place and now lands in the right one — leave it. A class meant for
+   the input itself (`w-32`, `text-center`, `font-mono`) now applies to the
+   field, and has to move.
+2. **Nothing for the radii.** One corner changes: a `variant="link"` button
+   goes from 2px to 3px. The other four shapes are byte-for-byte what they
+   were.
+
 ## 2.25.0
 
 **Take this one, and expect small colour shifts.** A real browser audit

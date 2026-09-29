@@ -67,7 +67,7 @@ function select(value: string) {
       <li v-for="row in rows" :key="row.value">
         <BaseButton
           variant="row"
-          class="rounded-xl"
+          class="rounded-control"
           :pressed="model === row.value"
           @click="select(row.value)"
         >

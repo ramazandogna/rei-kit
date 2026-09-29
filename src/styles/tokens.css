@@ -37,7 +37,20 @@
   /* ~68 characters. Longer and the eye loses the line it was returning to. */
   --measure-reading: 68ch;
 
+  /* ---------------------------------------------------------------------
+     Radii, named for what they wrap rather than for how big they are.
+
+     `--radius-control` is the fourth, and it existed before it had a name:
+     four components wrote `rounded-xl` for the same shape — a segment, an
+     icon tile inside a card — which is Tailwind's own 12px and not this
+     kit's. It meant an app setting `--radius-card: 0` got square cards with
+     rounded tiles inside them, and nothing said why. A test now fails on a
+     raw radius utility for that reason. `rounded-full` stays allowed: a
+     pill is a shape, not a size, and it has to survive every radius an app
+     picks.
+     --------------------------------------------------------------------- */
   --radius-cell: 3px;
+  --radius-control: 12px;
   --radius-card: 16px;
   --radius-shell: 30px;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;

@@ -41,7 +41,7 @@ const emit = defineEmits<{ click: [] }>()
     <div class="flex items-center gap-3">
       <span
         v-if="icon"
-        class="bg-muted text-ink-soft flex size-9 shrink-0 items-center justify-center rounded-xl"
+        class="bg-muted text-ink-soft rounded-control flex size-9 shrink-0 items-center justify-center"
         aria-hidden="true"
       >
         <component :is="icon" class="size-[18px]" />

@@ -74,6 +74,40 @@ describe('no component carries a colour of its own', () => {
 
     expect(code.match(/\btext-(white|black)\b/g) ?? []).toEqual([])
   })
+
+  /*
+   * The same rule, one axis over.
+   *
+   * A radius is a role here — `cell`, `control`, `card`, `shell` — for the
+   * reason a colour is: an app redefines the token and every corner in the
+   * kit follows. Four components wrote `rounded-xl` for the same shape, an
+   * icon tile inside a card, which is Tailwind's 12px and not any of this
+   * kit's radii. Nothing was visibly wrong until an app set
+   * `--radius-card: 0` and got square cards holding rounded tiles, with no
+   * way to find out why.
+   *
+   * `rounded-full` is allowed and is not an exception: a pill is a shape
+   * rather than a size, and it has to stay a pill at every radius an app
+   * chooses.
+   */
+  it.each(files)('%s reaches for a radius role, not a raw size', (file) => {
+    const code = read(file)
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/^\s*\/\/.*$/gm, '')
+
+    const ROLES = ['cell', 'control', 'card', 'shell', 'full', 'none']
+    /* An arbitrary value is read whole, brackets and all, so that one built
+       from a token — `rounded-t-[calc(var(--radius-shell)-2px)]`, which is a
+       sheet nesting inside the shell it sits in — passes, while the `28px`
+       it replaced does not. */
+    const raw = (code.match(/\brounded(?:-[trbles]{1,2})?-(?:\[[^\]]*\]|[a-z0-9]+)/g) ?? []).filter(
+      (utility) =>
+        !ROLES.some((role) => utility.endsWith(`-${role}`)) && !utility.includes('var(--radius-'),
+    )
+
+    expect(raw).toEqual([])
+  })
 })
 
 /**

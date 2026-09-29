@@ -286,7 +286,7 @@ const shell = computed(() => {
 
 const radius = computed(() => {
   if (variant === 'unstyled') return ''
-  if (variant === 'link') return 'rounded-xs'
+  if (variant === 'link') return 'rounded-cell'
   return pill ? 'rounded-full' : 'rounded-card'
 })
 

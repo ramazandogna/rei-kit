@@ -112,7 +112,7 @@ onUnmounted(() => {
             aria-modal="true"
             :aria-label="title"
             tabindex="-1"
-            class="sheet-panel surface-overlay relative flex max-h-[94%] min-h-[56dvh] flex-col rounded-t-[28px] outline-none"
+            class="sheet-panel surface-overlay relative flex max-h-[94%] min-h-[56dvh] flex-col rounded-t-[calc(var(--radius-shell)-2px)] outline-none"
           >
             <div class="flex shrink-0 justify-center pt-3" aria-hidden="true">
               <span class="bg-hair h-1.5 w-10 rounded-full" />

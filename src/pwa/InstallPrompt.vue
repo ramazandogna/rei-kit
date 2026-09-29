@@ -60,7 +60,7 @@ async function install() {
       class="border-positive/25 bg-positive/5 rounded-card flex gap-3 border p-3.5"
     >
       <span
-        class="bg-positive/15 text-positive flex size-10 shrink-0 items-center justify-center rounded-xl"
+        class="bg-positive/15 text-positive rounded-control flex size-10 shrink-0 items-center justify-center"
         aria-hidden="true"
       >
         <component :is="needsManualSteps ? Share : Download" class="size-5" />

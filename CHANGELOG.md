@@ -5,6 +5,25 @@ the major is `0`, a minor may carry a breaking change and will say so here.
 
 ## Unreleased
 
+**A radius is a role, like a colour is.**
+
+`--radius-control` (12px) joins `cell`, `card` and `shell`. It existed
+already and had no name: four components wrote `rounded-xl` for the same
+shape — a segment, an icon tile inside a card — which is Tailwind's 12px
+and not any of this kit's radii. `BaseSheet` had `28px` written out. So an
+app that set `--radius-card: 0` got square cards holding rounded tiles,
+and nothing on screen said why.
+
+A test now fails on a raw radius utility in a component. `rounded-full`
+stays allowed, because a pill is a shape rather than a size and has to
+survive whatever radius an app picks; an arbitrary value built from a token
+is allowed too, which is how the sheet keeps nesting two pixels inside the
+shell it sits in.
+
+Two corners move by a pixel or two as a result: a `variant="link"` button
+(2px → 3px, now `cell`) and nothing else. The four `rounded-xl` shapes are
+byte-for-byte what they were.
+
 **Breaking — `class` on the three text fields.**
 
 `BaseInput`, `BaseTextarea` and `PasswordInput` are the only components that

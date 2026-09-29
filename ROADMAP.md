@@ -27,6 +27,8 @@ If something here is ever untrue, that is a bug worth reporting.
 
 | Version | What                                                                              |
 | ------- | --------------------------------------------------------------------------------- |
+| 2.25.0  | No role written on a wash of itself; 22 palette values raised to AA                |
+| 2.24.0  | `pnpm test:browser`, and a doc comment on all 105 exports                          |
 | 2.23.0  | `PasswordInput`, and the arrow keys mirrored in the ten controls that had them wrong |
 | 2.22.0  | `SkipLink`, `AnnounceHost`, `createRouteAnnouncer`, `ErrorSummary` — and `dir` on the document at last |
 | 2.21.0  | `ScrollArea` and `VirtualList`, both already written by hand inside the kit       |
@@ -38,7 +40,24 @@ If something here is ever untrue, that is a bug worth reporting.
 `CHANGELOG.md` has the reasoning; `PATCHNOTES.md` has what you gain and what
 you have to do.
 
-## Next
+
+## Where it stands
+
+Audited against the repository on 2026-09-29, not from memory. Five marks:
+✅ done · 🟡 partial · ❌ missing · 🔧 needs work · 🔍 undecided.
+
+| Area | | |
+| --- | --- | --- |
+| Theming | ✅ | Three axes — palette, material, mode — with ten palettes measured against AA in both modes. Redefine a token and every component follows. |
+| Tokens | 🟡 | Colour and depth are complete. There are exactly three radii and no spacing token, so "make the corners sharper here" has no lever below the whole app. |
+| `class` on a component | 🔧 | Fine for 66 of 69, via Vue's fallthrough. `BaseInput`, `BaseTextarea` and `PasswordInput` set `inheritAttrs: false` and bind `$attrs` to the inner `<input>`, so a caller's class lands on the field rather than its wrapper, in a list that already has `w-full`. |
+| Composition | 🟡 | `variant="unstyled"` on five components, `defineSlots` on twelve. Enough for the three apps here; thin for an app whose design does not resemble any of them. |
+| Playground | ❌ | The showcase renders every component in every material and palette, and no prop can be changed. `props.generated.json` already holds every prop, type and default, so the panel has its data source and needs no second tool. |
+| Coverage | ✅ | 105 components. Form, feedback, navigation, overlay and data display are past the usual list. `Label`, `InputGroup` and `AspectRatio` are the honest omissions. |
+| Accessibility | ✅ | Axe over every example, contrast and focus rings in a real browser, arrow keys mirrored for RTL. |
+| Contribution | ✅ | `CONTRIBUTING.md`, `SECURITY.md`, a PR template, and issue templates including one for a gap. |
+
+## Priorities
 
 **Being usable, ahead of having more.** The kit has 105 components and one
 user. "What most people need" is not answerable from here — every gap found
@@ -47,42 +66,48 @@ instrument, and both are inside signals. Building more without outside
 signal is guessing, and every guess costs maintenance, a documentation row,
 a test and a slice of the stylesheet budget for ever.
 
-So the order is:
+### P0 — what blocks somebody evaluating the kit
 
-1. **Make it answerable.** Somebody who has installed it must be able to get
-   from "I need a table" to working code without opening the repository.
-   That is not polish, it is the only thing that turns the question above
-   into data.
-2. **Then components, driven by what people actually ask for.** The gap test
-   still runs; it just stops being the only source.
-3. **Then readability** — and mostly consistency and navigability rather
-   than more prose. Some files are getting long and the comments with them.
-4. **Then size, only where measurement points.** It points at one place, and
-   only one: `styles.css`, 20 KB of the flat 23, plain scoped CSS that
-   Tailwind cannot shake out. Splitting it per component would fix the small
-   app's dead weight and cost the two-line install. That is a 3.0
-   conversation, not a 2.x one.
+- **The `class` fallthrough on the three fields.** A live bug: the class a
+  caller writes goes somewhere they did not mean, and whether it wins is
+  decided by stylesheet order rather than by them. This is the kit fighting
+  the developer, which is the one thing it must not do.
+- **An interactive playground**, built into the existing showcase from
+  `props.generated.json`. Not Storybook and not Ladle: both mean a second
+  build and a second component registry, and the catalogue that exists here
+  is generated and already cannot go stale. A developer must be able to
+  change `variant`, `size` and `disabled` and see the result — that is the
+  difference between reading about a kit and trying one.
 
-**What "answerable" is missing, measured 2026-09-22.** Hovering a component
-said nothing for 85 of the 105, because a doc comment inside `<script setup>`
-never reaches the `.d.ts` — only a comment above the export does. Fixed, and
-held by a test. Three things remain:
+### P1 — customization, where measurement says it is thin
 
-- **Which of two neighbours to reach for** is written well in `AGENTS.md`
-  and not at all in an editor. `BaseTable` or `DataTable`, `BaseSheet` or
-  `BaseModal` or `BaseDrawer`, `BaseSelect` or `BaseCombobox` — about
-  twenty-five pairs.
-- **A working example in the editor.** `showcase/examples/<Name>.vue` exists
-  for all 105 and is type-checked, so an `@example` generated from it would
-  be documentation proven to compile. Few kits can say that.
-- **A path from install to a screen.** The showcase is a gallery: it shows
-  what exists, not how to build something. The first ten minutes should end
-  with one real screen and the moment where changing the palette changes it.
+Keep the token names. `--color-*`, `--radius-*` and `--shadow-*` are what
+every component reads and what three apps have redefined; renaming them to
+`--ui-*` would break every consumer to change a prefix. The work is the
+missing part, not the naming:
+
+- A radius scale, so a component can be reshaped without reshaping the app.
+- Spacing tokens, for the same reason.
+- Per-component override: decide whether it is a CSS hook, like the existing
+  `--surface-shadow`, or a prop. The hook pattern is already here and works;
+  prefer extending it to inventing a second mechanism.
+
+### P2 — the small parts that are genuinely absent
+
+`Label`, `InputGroup`, `AspectRatio`. Small, unglamorous, and each answers a
+shape an app writes by hand today.
+
+### P3 — not now
+
+Splitting `styles.css` per component. Measurement points at one place and
+only one: 20 KB of the flat 23, plain scoped CSS that Tailwind cannot shake
+out. Splitting it would end the dead weight in a small app and cost the
+two-line install. That is a 3.0 conversation.
 
 ## Under consideration
 
-Each of these is here rather than in "next" because it is not yet clear the
-kit should have it.
+Each of these is here rather than in a priority because it is not yet clear
+the kit should have it.
 
 - **A carousel.** Often the wrong answer: a horizontal list with scroll-snap
   and `useDragScroll` is usually better, and is already possible. It goes in
@@ -90,6 +115,13 @@ kit should have it.
 
 ## Not planned
 
+- **Layout primitives — `Stack`, `Grid`, `Flex`, and the rest.** Tailwind is
+  the layout primitive. A `<Stack>` wrapping `flex flex-col gap-4` earns
+  nothing and costs a catalogue row, a test and a documentation line for
+  ever.
+- **A `--ui-*` token migration.** The token system exists, is documented and
+  has three apps depending on it. Renaming is a breaking change with no
+  feature in it.
 - **A `create-rei-app` or a framework module.** This stays a kit you install
   next to Tailwind. Every layer on top is a layer that has to keep up with
   the tools underneath it. That includes **`vite-ssg`**, which is an app's
@@ -106,6 +138,18 @@ kit should have it.
 - **Design decisions inside components.** No colour values, no copy, no
   icons. A test fails on a hex in a component, and that is what lets three
   apps that look nothing alike share one part.
+
+## Two lessons worth keeping
+
+**Shipping a version is half the work; adopting it is the other half, and
+that is the half that finds the gaps.** Four early releases came from trying
+to move an app onto the kit, not from reading the components. Closing a
+phase because the kit published is how the first one went wrong.
+
+**Tools are at saturation.** 1,443 tests, a browser audit, two RTL scanners
+and stored pictures — every one of them found a real fault, and the risk now
+runs the other way. A library's worth is not how many checks it has but how
+many people it makes faster. The weight belongs on being used.
 
 ## How to change what is here
 

@@ -16,8 +16,6 @@ coverage
 .npmrc
 
 # Yerel analiz raporu — yayınlanmaz
-REI-KIT-ANALIZ.md
-REI-KIT-PLAN.md
 
 # Assistant workspace. Never part of the package or the history.
 .claude/

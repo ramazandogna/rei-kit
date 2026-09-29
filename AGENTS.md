@@ -13,6 +13,55 @@ working usage sample for every component is in `showcase/examples/<Name>.vue`
 copy from there rather than guessing a prop. This file carries what cannot be
 read off a type: which part to reach for, and the mistakes that compile.
 
+## If you are working on this repository
+
+Everything below this section is written for an agent *using* the kit in an
+app. This section is for an agent *changing* the kit.
+
+**Read these, in this order, and nothing else by reflex:**
+
+1. This file.
+2. `ROADMAP.md` — the single roadmap: where the kit stands, what is next,
+   what it will not do. There is no second plan file; if you remember one,
+   it was deleted on purpose.
+3. The source of the thing you are changing, and its tests.
+
+Do not open `CHANGELOG.md`, `PATCHNOTES.md` or the showcase to start a task.
+They are records, not instructions. Reach for one when the task is about it.
+
+**Working rules:**
+
+- **Check the repository before believing a plan.** If the roadmap says
+  something is missing and it is not, do not build it twice — fix the
+  roadmap. If the roadmap proposes an approach the architecture has already
+  solved better, take the better one and fix the roadmap.
+- **The commit author is the project owner.** No co-author trailer, no
+  assistant signature, no generated-by line.
+- **Conventional commits, one change each**, and short: `feat: add switch
+  component`, not a paragraph.
+- **Comments in English, and only where they earn it.** Explain why, never
+  what the line already says. Prefer code that needs no comment.
+- **No debug logging in a finished change.** A stray `console.log` is not a
+  style issue; it ships.
+- **`pnpm check` before every commit and every push.** Format, lint, three
+  type-checks, the tests, the build and the size budgets.
+- **Extend the pattern that is there.** A working architecture is not
+  rewritten because a different one would be tidier. Refactor when it
+  actually blocks the change, and know which problem it solves.
+- **Stay inside the task.** Adding a component is not an invitation to
+  rewrite the styling layer.
+
+**Stop and ask** before an architectural change that is hard to undo, a
+breaking change to the published API, deleting a batch of files, anything
+that could break a consuming app, a security-relevant decision, or a change
+of the roadmap's direction. Everything smaller — extending a pattern, a
+small refactor, a test, an example, an import, removing a debug log — is
+yours to finish without asking.
+
+**When a task is done:** run the tests, update the documentation the change
+touched, update `ROADMAP.md` if the situation moved, commit, and report in a
+few lines — what, why, test status, and the next sensible piece of work.
+
 ## What this is
 
 A Vue 3 + Tailwind 4 component kit. 105 components across six entry points,

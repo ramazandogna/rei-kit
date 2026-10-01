@@ -56,9 +56,17 @@ users. There is no hex value inside a component, and a test fails if one
 appears. That is what lets a phone journal, a phone ledger and a wide
 course site share one kit and look nothing alike.
 
+One component can leave the system without forking it: set the token on that
+element. `[--radius-card:0px]` squares one card, `[--spacing:0.35rem]`
+tightens one, `[--surface-shadow:var(--shadow-raised)]` lifts one. A class
+cannot do this — `class="rounded-[2px]"` against the kit's `rounded-card`
+silently renders at 16px, because two utilities of equal specificity are
+resolved by Tailwind's output order rather than by you. The showcase
+demonstrates both, including the one that does not work.
+
 ### 2. The smallest of six, measured, with the trade stated
 
-At ten components — a real screen — **31.3 KB against 104 to 195** for the
+At ten components — a real screen — **31.4 KB against 104 to 195** for the
 five kits measured beside it. The gap is not the total, it is the slope:
 seven components past the first three cost this kit 5 KB and cost them 60 to
 125, because the stylesheet here is flat and theirs is inside the JavaScript.

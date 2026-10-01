@@ -9,6 +9,7 @@ import CommandPalette from './CommandPalette.vue'
 import AppearanceBar from './AppearanceBar.vue'
 import AxesSection from './AxesSection.vue'
 import EvidenceSection from './EvidenceSection.vue'
+import OverrideSection from './OverrideSection.vue'
 import BasicsSection from './BasicsSection.vue'
 import FormSection from './FormSection.vue'
 import GalleryExtra from './GalleryExtra.vue'
@@ -162,6 +163,7 @@ const percent = computed(() => Math.round((progress.value / 28) * 100))
            hero's own "Get started" button. -->
       <HeroSection />
       <AxesSection />
+      <OverrideSection />
       <EvidenceSection />
       <GettingStarted />
 

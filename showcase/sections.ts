@@ -15,6 +15,7 @@ import { OVERLAY_PARTS } from './overlay-parts'
  */
 export const SECTIONS = [
   { id: 'axes', label: 'Themes: materials & palettes' },
+  { id: 'override', label: 'Customise one component' },
   { id: 'evidence', label: 'Evidence: size and guards' },
   { id: 'start', label: 'Get started' },
   { id: 'action', label: 'Action' },

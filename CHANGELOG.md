@@ -5,6 +5,28 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased
+
+**`BaseInput` takes something attached to it.**
+
+Two slots, `#prefix` and `#suffix`: a currency mark, a unit, a button. The
+kit had been proving it needed them — `PasswordInput` positions a toggle
+over the field and `NumberInput` two steppers, both written by hand — while
+an app that wanted "₺" in front of an amount had to rebuild the whole field
+to get it, and lost the generated id, the label's `for` and
+`aria-describedby` on the way.
+
+Given either slot the border and the ground move to a wrapper and the input
+goes transparent inside it, so the edge encloses the addon at whatever width
+it is, and the focus ring is drawn on the group. Given neither, the field
+renders exactly as before — so this is additive, and `variant="unstyled"`
+has no surface to attach anything to and does not grow one.
+
+What goes in a slot is the app's, including whether a reader hears it: a `₺`
+beside a field labelled "Amount" is decoration and belongs behind
+`aria-hidden`, while a unit that is the only place "kilograms" appears
+belongs in the label instead. The kit cannot tell those apart.
+
 ## 3.0.0 — 2026-09-29
 
 **Where a value you write goes.**

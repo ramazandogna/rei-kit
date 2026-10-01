@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T extends string | number | undefined = string">
+import { computed, useSlots } from 'vue'
 import type { InputHTMLAttributes } from 'vue'
 
 import FormField from './FormField.vue'
@@ -88,6 +89,12 @@ const {
    native picker rather than a caret, and does not trigger the zoom. */
 const CONTROL_CLASS = 'h-11 text-base'
 
+/* `unstyled` is "the wiring without the paint", so it has no surface to
+   attach anything to; an addon there would be the paint coming back. */
+const slots = useSlots()
+
+const grouped = computed(() => variant !== 'unstyled' && Boolean(slots.prefix || slots.suffix))
+
 /**
  * A number field's value is a number.
  *
@@ -100,6 +107,31 @@ const CONTROL_CLASS = 'h-11 text-base'
  * bound: a `ref('')` gets strings back and a `ref(0)` numbers, and a
  * `string | undefined` from a form library is accepted as it is.
  */
+/**
+ * Something attached to the field: a currency mark, a unit, a button.
+ *
+ * Both of these were written by hand inside this kit before they were a
+ * slot — `PasswordInput` positions a toggle over the field and `NumberInput`
+ * two steppers — and an app that wanted "€" in front of an amount had to
+ * rebuild the whole field to get it, losing the label wiring and
+ * `aria-describedby` on the way. That is the gap test, with the kit itself
+ * as the app.
+ *
+ * Given either slot, the border and the ground move to a wrapper and the
+ * input goes transparent inside it, so the edge encloses the addon whatever
+ * width it is. With neither, the field renders exactly as it did before the
+ * slots existed.
+ *
+ * **What goes in them is yours, including whether it is read out.** A `€`
+ * beside a field labelled "Amount" is decoration and belongs behind
+ * `aria-hidden`; a unit that is the only place "kilograms" appears is not,
+ * and belongs in the label instead. The kit cannot tell which it is.
+ */
+defineSlots<{
+  prefix?: () => unknown
+  suffix?: () => unknown
+}>()
+
 const emit = defineEmits<{ 'update:modelValue': [value: T] }>()
 // The destructured prop is typed by T's constraint, not by T itself — a
 // limit of destructuring in a generic component — so it is narrowed here.
@@ -120,7 +152,36 @@ const model = useBoundValue<T>(
     :size="size"
   >
     <template #default="{ id, describedBy, invalid }">
+      <!-- The grouped shape: the wrapper is the control, the input is bare
+           inside it. `has-[:focus-visible]` rather than `focus-within` so a
+           mouse press does not ring the whole group, which is how the rest
+           of the kit behaves. -->
+      <div
+        v-if="grouped"
+        class="control rounded-card has-focus-visible:outline-primary flex items-stretch overflow-hidden has-focus-visible:outline-2 has-focus-visible:outline-offset-1"
+        :class="[CONTROL_CLASS, invalid ? 'border-negative' : '']"
+      >
+        <span v-if="$slots.prefix" class="text-ink-soft flex shrink-0 items-center ps-3">
+          <slot name="prefix" />
+        </span>
+
+        <input
+          :id="id"
+          v-model="model"
+          :type="type"
+          :aria-invalid="invalid"
+          :aria-describedby="describedBy"
+          v-bind="controlAttrs"
+          class="text-ink min-w-0 flex-1 bg-transparent px-3 text-base focus-visible:outline-none"
+        />
+
+        <span v-if="$slots.suffix" class="text-ink-soft flex shrink-0 items-center pe-3">
+          <slot name="suffix" />
+        </span>
+      </div>
+
       <input
+        v-else
         :id="id"
         v-model="model"
         :type="type"

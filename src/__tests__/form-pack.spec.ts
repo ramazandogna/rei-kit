@@ -481,6 +481,58 @@ describe('the fields without their surface', () => {
     expect(wrapper.get(`#${input.attributes('aria-describedby')}`).text()).toBe('Geçersiz')
   })
 
+  describe('an addon attached to the field', () => {
+    /* Both of these were hand-written inside this kit before they were a
+       slot — the password toggle and the number steppers — and an app that
+       wanted a currency mark had to rebuild the field to get one, losing
+       the label wiring with it. */
+    it('moves the surface to a wrapper so the edge encloses the addon', () => {
+      const wrapper = mount(BaseInput, {
+        props: { label: 'Ağırlık' },
+        slots: { suffix: '<span aria-hidden="true">kg</span>' },
+      })
+
+      const input = wrapper.get('input')
+      expect(input.classes()).toContain('bg-transparent')
+      expect(input.classes()).not.toContain('control')
+      expect(wrapper.get('div.control').classes()).toContain('rounded-card')
+      expect(wrapper.text()).toContain('kg')
+    })
+
+    it('keeps the label wired to the input, not to the wrapper', () => {
+      /* The whole reason this is a slot rather than something the app
+         rebuilds: the field's wiring survives having something attached. */
+      const wrapper = mount(BaseInput, {
+        props: { label: 'Tutar', hint: 'Vergi dahil' },
+        slots: { prefix: '<span aria-hidden="true">₺</span>' },
+      })
+
+      const input = wrapper.get('input')
+      expect(wrapper.get('label').attributes('for')).toBe(input.attributes('id'))
+      expect(wrapper.get(`#${input.attributes('aria-describedby')}`).text()).toBe('Vergi dahil')
+    })
+
+    it('renders the plain field when no addon is given', () => {
+      /* The shape only changes for a caller who asked for it; this is what
+         keeps the slots from being a breaking change. */
+      const input = mount(BaseInput, { props: { label: 'E-posta' } }).get('input')
+
+      expect(input.classes()).toContain('control')
+      expect(input.classes()).not.toContain('bg-transparent')
+    })
+
+    it('does not grow a surface for `unstyled` to hang it on', () => {
+      // `unstyled` is the wiring without the paint; an addon's border would
+      // be the paint coming back.
+      const wrapper = mount(BaseInput, {
+        props: { label: 'Ara', variant: 'unstyled' },
+        slots: { suffix: '<span>↵</span>' },
+      })
+
+      expect(wrapper.find('div.control').exists()).toBe(false)
+    })
+  })
+
   it('holds the 16px line even with no surface', () => {
     // The zoom is caused by the font size, not by the border.
     expect(

@@ -61,6 +61,7 @@ function submitSignup() {
 }
 
 const email = ref('')
+const weight = ref(0)
 const password = ref('')
 const note = ref('')
 const currency = ref<string | undefined>()
@@ -186,7 +187,12 @@ const CODE: Record<FormPartId, string> = {
   type="email"
   placeholder="you@example.com"
   error="That address is already in use."
-/>`,
+/>
+
+<!-- a unit attached to the field: the border encloses both -->
+<BaseInput v-model="weight" label="Weight in kilograms" type="number">
+  <template #suffix><span aria-hidden="true">kg</span></template>
+</BaseInput>`,
   'form-password': `<PasswordInput
   v-model="password"
   label="Password"
@@ -331,6 +337,9 @@ const CODE: Record<FormPartId, string> = {
         <div class="sc-part-row">
           <BaseCard>
             <BaseInput v-model="email" label="Email" type="email" placeholder="you@example.com" />
+            <BaseInput v-model="weight" label="Weight in kilograms" type="number" class="mt-3">
+              <template #suffix><span aria-hidden="true">kg</span></template>
+            </BaseInput>
           </BaseCard>
           <CodeBlock :code="CODE['form-input']" lang="html" />
         </div>

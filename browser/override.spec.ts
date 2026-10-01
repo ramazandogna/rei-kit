@@ -57,3 +57,46 @@ test.describe('a token set on one element', () => {
     await expect(attempted).toHaveCSS('border-top-left-radius', '16px')
   })
 })
+
+/**
+ * The two things about an attached addon that jsdom cannot answer.
+ *
+ * `form-pack.spec.ts` checks that the surface moves to the wrapper and the
+ * label stays wired, which is readable from the markup. Whether the border
+ * actually encloses the addon, and whether the ring the group declares is
+ * really painted when the input inside it has keyboard focus, are both
+ * questions about layout and paint.
+ */
+test.describe('an input with something attached', () => {
+  test('the border encloses the addon rather than ending before it', async ({ page }) => {
+    await page.goto('/')
+    const group = page.locator('#form-input div.control')
+    const addon = group.locator('span[aria-hidden="true"]')
+
+    const [box, mark] = await Promise.all([group.boundingBox(), addon.boundingBox()])
+
+    expect(box).not.toBeNull()
+    expect(mark).not.toBeNull()
+    /* Inside the group's box on both sides. The failure this guards is an
+       addon sitting outside a border that stopped at the input's edge,
+       which is what happens if the surface is left on the input. */
+    expect(mark!.x).toBeGreaterThan(box!.x)
+    expect(mark!.x + mark!.width).toBeLessThanOrEqual(box!.x + box!.width)
+  })
+
+  test('the ring is painted on the group when the input is focused', async ({ page }) => {
+    await page.goto('/')
+    const group = page.locator('#form-input div.control')
+
+    const outline = () => group.evaluate((el) => getComputedStyle(el).outlineStyle)
+
+    /* `outline-style`, not `outline-width`: a browser computes a width even
+       for an outline it is not drawing, so the width alone reads as a ring
+       on an element that has none. */
+    expect(await outline()).toBe('none')
+
+    await group.locator('input').focus()
+
+    expect(await outline()).toBe('solid')
+  })
+})

@@ -111,8 +111,8 @@
   },
   {
     "name": "BaseInput",
-    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseInput } from 'rei-kit'\n\nconst email = ref('')\n</script>\n\n<template>\n  <BaseInput v-model=\"email\" label=\"Email\" type=\"email\" hint=\"We never share it.\" />\n</template>\n",
-    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseInput } from 'rei-kit'\n\nconst email = ref('')\n</script>\n\n<template>\n  <BaseInput v-model=\"email\" label=\"Email\" type=\"email\" hint=\"We never share it.\" />\n</template>\n"
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseInput } from 'rei-kit'\n\nconst email = ref('')\nconst weight = ref(0)\n</script>\n\n<template>\n  <BaseInput v-model=\"email\" label=\"Email\" type=\"email\" hint=\"We never share it.\" />\n\n  <!-- A unit attached to the field. It is `aria-hidden` because the label\n       already says what the number is; a mark that is the only place the\n       unit appears belongs in the label instead. -->\n  <BaseInput v-model=\"weight\" label=\"Weight in kilograms\" type=\"number\">\n    <template #suffix><span aria-hidden=\"true\">kg</span></template>\n  </BaseInput>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseInput } from 'rei-kit'\n\nconst email = ref('')\nconst weight = ref(0)\n</script>\n\n<template>\n  <BaseInput v-model=\"email\" label=\"Email\" type=\"email\" hint=\"We never share it.\" />\n\n  <!-- A unit attached to the field. It is `aria-hidden` because the label\n       already says what the number is; a mark that is the only place the\n       unit appears belongs in the label instead. -->\n  <BaseInput v-model=\"weight\" label=\"Weight in kilograms\" type=\"number\">\n    <template #suffix><span aria-hidden=\"true\">kg</span></template>\n  </BaseInput>\n</template>\n"
   },
   {
     "name": "BaseKbd",

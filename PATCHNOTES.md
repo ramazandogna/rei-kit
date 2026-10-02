@@ -67,6 +67,34 @@ without.
 
 ---
 
+## 3.1.0
+
+**Take this one freely.** It adds and changes nothing: a field with no addon
+renders exactly what it rendered in 3.0.0.
+
+**What you gain.** `BaseInput` takes two slots, `#prefix` and `#suffix` — a
+currency mark, a unit, a button attached to the field:
+
+```vue
+<BaseInput v-model="weight" label="Weight in kilograms" type="number">
+  <template #suffix><span aria-hidden="true">kg</span></template>
+</BaseInput>
+```
+
+Given either slot the border and the ground move to a wrapper and the input
+goes transparent inside it, so the edge encloses the addon at whatever width
+it is and the focus ring is drawn on the group. This is what to reach for
+instead of rebuilding the field by hand, which is how the generated id, the
+label's `for` and `aria-describedby` get lost.
+
+One thing the kit will not decide for you: whether the addon is read out. A
+`₺` beside a field already labelled "Amount" is decoration and belongs
+behind `aria-hidden`; a unit that is the only place "kilograms" appears
+belongs in the label instead.
+
+**What you have to do.** Nothing. `variant="unstyled"` has no surface to
+attach an addon to and does not grow one.
+
 ## 3.0.0
 
 **Take this one. It is a major because two values moved, not because the kit

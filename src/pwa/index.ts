@@ -15,9 +15,49 @@ export { useSnooze } from './use-snooze'
 /**
  * The card that offers to install the app, and remembers being turned
  * down.
+ *
+ * @example
+ * ```vue
+ * <InstallPrompt
+ *   storage-key="my-app-install"
+ *   title="Install My app"
+ *   body="Open it from your home screen, even offline."
+ *   action="Install"
+ *   later="Not now"
+ * />
+ * ```
  */
 export { default as InstallPrompt } from './InstallPrompt.vue'
-/** The way back to installing after the card has been dismissed. */
+/**
+ * The way back to installing after the card has been dismissed.
+ *
+ * @example
+ * ```vue
+ * <InstallSettings
+ *   title="App"
+ *   label="Install on this device"
+ *   installed-label="Installed"
+ *   body="Opens from your home screen, works offline."
+ *   ios-body="Tap Share, then Add to Home Screen."
+ *   action="Install"
+ * />
+ * ```
+ */
 export { default as InstallSettings } from './InstallSettings.vue'
-/** The card that says a new version is waiting. */
+/**
+ * The card that says a new version is waiting.
+ *
+ * @example
+ * ```vue
+ * <UpdatePrompt
+ *   :open="needRefresh"
+ *   title="A new version is ready"
+ *   body="Reload to get it."
+ *   action="Reload"
+ *   dismiss-label="Later"
+ *   @update="reload"
+ *   @dismiss="needRefresh = false"
+ * />
+ * ```
+ */
 export { default as UpdatePrompt } from './UpdatePrompt.vue'

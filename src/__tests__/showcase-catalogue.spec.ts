@@ -309,6 +309,54 @@ describe('the editor sees what the catalogue knows', () => {
     'src/motion/index.ts',
   ]
 
+  /**
+   * The sample in the editor is the sample that is type-checked.
+   *
+   * `showcase/examples/<Name>.vue` is a real file, compiled with the
+   * showcase and checked against the component's real props, so an
+   * `@example` copied from it is documentation proven to compile. Copied is
+   * the operative word: the copy goes stale the moment the sample changes,
+   * and a sample that no longer compiles is worse than none because the
+   * claim above it is still being made.
+   *
+   * `scripts/extract-doc-examples.mjs` writes them. This compares rather
+   * than regenerating, because the entry files are source rather than a
+   * generated artefact and a test should not rewrite them.
+   */
+  it.each(ENTRIES)('%s carries each sample as it is written', (entry) => {
+    const source = readFileSync(entry, 'utf8')
+    const stale: string[] = []
+
+    for (const [, name] of source.matchAll(/^export \{ default as (\w+) \}/gm)) {
+      const sample = readFileSync(`showcase/examples/${name}.vue`, 'utf8')
+      const template = /<template>\n([\s\S]*?)\n<\/template>/.exec(sample)
+      if (!template) continue
+
+      const lines = template[1]!.split('\n')
+      const strip = Math.min(
+        ...lines.filter((line) => line.trim()).map((line) => /^ */.exec(line)![0]!.length),
+      )
+      const expected = lines
+        .map((line) => line.slice(strip))
+        .join('\n')
+        .trimEnd()
+
+      /* Compared on the text itself rather than on the JSDoc framing, so a
+         change in how the comment is laid out does not read as drift. */
+      const inComment = source
+        .slice(0, source.indexOf(`export { default as ${name} }`))
+        .split('/**')
+        .pop()!
+        .split('\n')
+        .map((line) => line.replace(/^\s*\*\s?/, ''))
+        .join('\n')
+
+      if (!inComment.includes(expected)) stale.push(name)
+    }
+
+    expect(stale).toEqual([])
+  })
+
   it.each(ENTRIES)('%s documents every component it exports', (entry) => {
     const lines = readFileSync(entry, 'utf8').split('\n')
     const silent: string[] = []

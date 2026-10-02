@@ -5,6 +5,34 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased
+
+**`rei-kit/check` — the install's own wiring, asserted by your test suite.**
+
+```ts
+import { checkStyling } from 'rei-kit/check'
+
+expect(checkStyling({ css: appCss, tokens: kitTokens })).toEqual([])
+```
+
+Every line of this package's install can be left out and leave a build that
+is green. Without the `@source`, Tailwind emits no utility the components
+ask for. Without the component styles, they keep their markup and lose their
+layout. A colour role the app never defines makes `bg-primary` emit no
+declaration at all. None of it is visible to `vue-tsc`, to a component test
+or to a reader of the diff — one app in this family shipped a release with
+its tab bar invisible exactly that way.
+
+Both apps then wrote the same check, independently, three of the four
+assertions carrying the same names. That is this kit's own test for a
+missing part, so the check is the kit's now — and it knows something their
+copies could not: that the preset carries the `@source`, the component
+styles and the tokens together, so an app using one is not asked for them
+separately.
+
+It takes two strings and touches nothing else: no file reading, no DOM, no
+build. The entry exists so a test can import it without an app bundling it.
+
 ## 3.4.0 — 2026-10-03
 
 **A field can be focused by the screen that owns it.**

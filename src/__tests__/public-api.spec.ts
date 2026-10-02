@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import * as kit from '../index'
 import * as app from '../app/index'
 import * as motion from '../motion/index'
+import * as check from '../check/index'
 import * as pwa from '../pwa/index'
 import * as supabase from '../supabase/index'
 import * as web from '../web/index'
@@ -233,6 +234,9 @@ const MOTION_API = [
   'TypeWriter',
 ].sort()
 
+/** `rei-kit/check` — the install's own wiring, asserted by an app's test. */
+const CHECK_API = ['checkStyling'].sort()
+
 describe('public API', () => {
   const entries = [
     ['rei-kit', kit, PUBLIC_API],
@@ -241,6 +245,7 @@ describe('public API', () => {
     ['rei-kit/pwa', pwa, PWA_API],
     ['rei-kit/motion', motion, MOTION_API],
     ['rei-kit/supabase', supabase, SUPABASE_API],
+    ['rei-kit/check', check, CHECK_API],
   ] as const
 
   for (const [name, module, promised] of entries) {

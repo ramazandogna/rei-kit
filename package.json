@@ -75,6 +75,10 @@
       "types": "./dist/motion/index.d.ts",
       "import": "./dist/motion.js"
     },
+    "./check": {
+      "types": "./dist/check/index.d.ts",
+      "import": "./dist/check.js"
+    },
     "./supabase": {
       "types": "./dist/supabase/index.d.ts",
       "import": "./dist/supabase.js"

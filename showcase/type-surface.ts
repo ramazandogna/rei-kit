@@ -85,3 +85,10 @@ export type {
  * has none — so it has no alias for it. The types still have to be guarded.
  */
 export type { AuthErrorCode, AuthMessageKeyOptions } from '../src/supabase/index'
+
+/*
+ * Through a relative path for the same reason as the Supabase entry: the
+ * showcase never imports `rei-kit/check` — it is for an app's test suite,
+ * not for a page — and the types still have to be guarded.
+ */
+export type { StylingInput, StylingProblem } from '../src/check/index'

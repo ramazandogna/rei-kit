@@ -25,20 +25,30 @@ const ENTRIES = [
   'src/pwa/index.ts',
   'src/motion/index.ts',
   'src/supabase/index.ts',
+  'src/check/index.ts',
 ]
 
 const read = (path: string) => readFileSync(path, 'utf8')
 
-/** The names in every `export type { … }` of a file. */
+/**
+ * The names a file publishes as types, written either way.
+ *
+ * Most entries re-export — `export type { Column } from './…'` — but an
+ * entry that is one module of its own declares them in place, and reading
+ * only the re-export form would let those leave the surface unguarded
+ * without anything saying so.
+ */
 function exportedTypes(source: string): string[] {
-  return (
-    [...source.matchAll(/export type \{([^}]*)\}/g)]
-      .flatMap((match) => match[1]!.split(','))
-      .map((name) => name.trim())
-      .filter((name) => name.length > 0)
-      // `export type { X as Y }` publishes Y.
-      .map((name) => name.split(/\s+as\s+/).pop()!)
-  )
+  const reExported = [...source.matchAll(/export type \{([^}]*)\}/g)]
+    .flatMap((match) => match[1]!.split(','))
+    .map((name) => name.trim())
+    .filter((name) => name.length > 0)
+    // `export type { X as Y }` publishes Y.
+    .map((name) => name.split(/\s+as\s+/).pop()!)
+
+  const declared = [...source.matchAll(/^export type (\w+)/gm)].map(([, name]) => name!)
+
+  return [...reExported, ...declared]
 }
 
 describe('the type surface', () => {

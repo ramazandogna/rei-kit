@@ -74,6 +74,9 @@ export default defineConfig({
         // Counters, rotating words, reveals. An app that animates nothing
         // never downloads them.
         motion: fileURLToPath(new URL('./src/motion/index.ts', import.meta.url)),
+        // The install's own wiring, checked. Imported by an app's test rather
+        // than by its app, so it never reaches a browser.
+        check: fileURLToPath(new URL('./src/check/index.ts', import.meta.url)),
       },
       formats: ['es'],
       // Named so the import line reads as what it is — the compiled styles of

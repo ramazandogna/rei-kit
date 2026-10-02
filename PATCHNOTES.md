@@ -67,6 +67,23 @@ without.
 
 ---
 
+## 3.2.1
+
+**Take this one. A pulsing label was unreadable in three palettes.**
+
+**What you gain.** `animate-pulse-soft` dropped to 0.72 opacity, and opacity
+fades an element toward what is behind it — so at the trough, `ink` over
+`canvas` measured 3.28 in Tokyo Night, 3.50 in Rosé Pine and 3.63 in
+Catppuccin, all below AA. The trough is 0.88 now, which holds every shipped
+palette above 4.5 in both modes.
+
+**What you have to do.** Look at anywhere you put `animate-pulse-soft` on
+text and move it onto the indicator instead — a dot, a badge, something with
+its own ground. 0.88 keeps `ink` safe, but `ink-soft` sits near the contrast
+floor by design and any fade at all takes it under, so this is a rule rather
+than a number. The pulse itself is slightly shallower than it was; nothing
+else moves.
+
 ## 3.2.0
 
 **Take this one, especially if you build forms.** Everything here adds; a

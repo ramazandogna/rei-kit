@@ -5,7 +5,7 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
-## Unreleased
+## 3.2.1 — 2026-10-02
 
 **`animate-pulse-soft` was below AA in three palettes, and the check that
 knew it was flaky.**

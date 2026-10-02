@@ -6,9 +6,9 @@
       "label": "Button + Input + Modal",
       "rows": [
         {
-          "name": "rei-kit 3.2.0",
+          "name": "rei-kit 3.2.1",
           "js": 3713,
-          "css": 23679
+          "css": 23681
         },
         {
           "name": "element-plus 2.14.6",
@@ -42,9 +42,9 @@
       "label": "Ten components",
       "rows": [
         {
-          "name": "rei-kit 3.2.0",
+          "name": "rei-kit 3.2.1",
           "js": 8766,
-          "css": 23679
+          "css": 23681
         },
         {
           "name": "element-plus 2.14.6",

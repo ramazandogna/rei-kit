@@ -8,6 +8,7 @@ import {
   BaseInput,
   BaseRadioGroup,
   BaseSelect,
+  PasswordInput,
   BaseTextarea,
   FormField,
 } from '../index'
@@ -772,5 +773,57 @@ describe('a field can be linked to from a summary', () => {
 
     expect(id).toBeTruthy()
     expect(wrapper.get('label').attributes('for')).toBe(id)
+  })
+})
+
+/**
+ * A field can be focused by the screen that owns it.
+ *
+ * A `ref` on a component gives the component, not the element, so until this
+ * there was no way to focus one of these at all. A real consumer hit it and
+ * wrote the whole field by hand rather than lose the ability — with the
+ * reason in a comment above it: "the sheet focuses this input on open and
+ * again after an error, and `BaseInput` exposes no way to reach it". That is
+ * the gap test with its own explanation attached.
+ *
+ * `ErrorSummary` has exposed `focus` since it existed. This is the same need
+ * from the other end: the summary moves focus *to* itself, and a sheet moves
+ * focus *into* its first field.
+ */
+describe('focusing a field from outside it', () => {
+  const FIELDS = [
+    ['BaseInput', BaseInput, {}, 'input'],
+    ['BaseTextarea', BaseTextarea, {}, 'textarea'],
+    ['BaseSelect', BaseSelect, { options: [{ value: 'a', label: 'A' }] }, 'select'],
+    ['PasswordInput', PasswordInput, { toggleLabel: 'Show' }, 'input'],
+  ] as const
+
+  it.each(FIELDS)('%s focuses its control, not its wrapper', (_name, component, extra, tag) => {
+    const wrapper = mount(component, {
+      props: { label: 'Amount', ...extra },
+      attachTo: document.body,
+    })
+
+    ;(wrapper.vm as unknown as { focus: () => void }).focus()
+
+    /* The control itself: focusing the field's outer div would look like it
+       worked and leave the keyboard nowhere useful. */
+    expect(document.activeElement).toBe(wrapper.get(tag).element)
+    wrapper.unmount()
+  })
+
+  it('reaches the control inside a grouped field too', () => {
+    /* The addon shape renders a different branch, and a ref bound on only
+       one of them is the kind of miss that passes every other check. */
+    const wrapper = mount(BaseInput, {
+      props: { label: 'Weight' },
+      slots: { suffix: '<span aria-hidden="true">kg</span>' },
+      attachTo: document.body,
+    })
+
+    ;(wrapper.vm as unknown as { focus: () => void }).focus()
+
+    expect(document.activeElement).toBe(wrapper.get('input').element)
+    wrapper.unmount()
   })
 })

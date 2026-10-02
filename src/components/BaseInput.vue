@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends string | number | undefined = string">
-import { computed, useSlots } from 'vue'
+import { computed, useSlots, ref } from 'vue'
 import type { InputHTMLAttributes } from 'vue'
 
 import FormField from './FormField.vue'
@@ -148,6 +148,25 @@ const model = useBoundValue<T>(
   () => modelValue as T | undefined,
   (value) => emit('update:modelValue', value),
 )
+const control = ref<HTMLInputElement | null>(null)
+
+/**
+ * Focus the control, for a caller that owns when it happens.
+ *
+ * A `ref` on a component gives the component and not the element, so without
+ * this a field cannot be focused at all — which is why an app that focuses
+ * its amount field when a sheet opens, and again when the amount is
+ * rejected, wrote the whole field by hand instead and said so in a comment.
+ * That is the gap test, with the reason already written down.
+ *
+ * `ErrorSummary` has exposed `focus` since it existed, for the same need
+ * from the other end.
+ */
+function focus() {
+  control.value?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <template>
@@ -177,6 +196,7 @@ const model = useBoundValue<T>(
 
         <input
           :id="id"
+          ref="control"
           v-model="model"
           :type="type"
           :aria-invalid="invalid"
@@ -193,6 +213,7 @@ const model = useBoundValue<T>(
       <input
         v-else
         :id="id"
+        ref="control"
         v-model="model"
         :type="type"
         :aria-invalid="invalid"

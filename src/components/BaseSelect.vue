@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T extends string | number">
+import { ref } from 'vue'
 import { ChevronDown } from 'lucide-vue-next'
 
 import FormField from './FormField.vue'
@@ -83,6 +84,25 @@ const SIZE_CLASS = {
 } as const
 
 const model = defineModel<T | undefined>()
+const control = ref<HTMLSelectElement | null>(null)
+
+/**
+ * Focus the control, for a caller that owns when it happens.
+ *
+ * A `ref` on a component gives the component and not the element, so without
+ * this a field cannot be focused at all — which is why an app that focuses
+ * its amount field when a sheet opens, and again when the amount is
+ * rejected, wrote the whole field by hand instead and said so in a comment.
+ * That is the gap test, with the reason already written down.
+ *
+ * `ErrorSummary` has exposed `focus` since it existed, for the same need
+ * from the other end.
+ */
+function focus() {
+  control.value?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <template>
@@ -98,6 +118,7 @@ const model = defineModel<T | undefined>()
       <div class="relative">
         <select
           :id="id"
+          ref="control"
           v-model="model"
           :aria-invalid="invalid"
           :aria-describedby="describedBy"

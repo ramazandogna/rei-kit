@@ -89,6 +89,25 @@ function toggle() {
 /* The same 16px rule as `BaseInput`: iOS zooms the viewport for a focused
    field under it and never zooms back. */
 const CONTROL_CLASS = 'h-11 text-base'
+const control = ref<HTMLInputElement | null>(null)
+
+/**
+ * Focus the control, for a caller that owns when it happens.
+ *
+ * A `ref` on a component gives the component and not the element, so without
+ * this a field cannot be focused at all — which is why an app that focuses
+ * its amount field when a sheet opens, and again when the amount is
+ * rejected, wrote the whole field by hand instead and said so in a comment.
+ * That is the gap test, with the reason already written down.
+ *
+ * `ErrorSummary` has exposed `focus` since it existed, for the same need
+ * from the other end.
+ */
+function focus() {
+  control.value?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <template>
@@ -106,6 +125,7 @@ const CONTROL_CLASS = 'h-11 text-base'
       <div class="relative">
         <input
           :id="id"
+          ref="control"
           :type="visible ? 'text' : 'password'"
           :value="modelValue"
           :aria-invalid="invalid"

@@ -5,6 +5,25 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased
+
+**A field can be focused by the screen that owns it.**
+
+`BaseInput`, `BaseTextarea`, `BaseSelect` and `PasswordInput` expose
+`focus()`, so a `ref` on one is good for something. Until now it was not: a
+`ref` on a component gives the component rather than the element, and these
+offered no way through to the control.
+
+Found by running this kit's own test for gaps — a hand-written control in a
+file that already imports the kit's version of it — against the apps that
+use it. One had written an entire amount field by hand, with the reason in a
+comment above it: *"the sheet focuses this input on open and again after an
+error, and `BaseInput` exposes no way to reach it. If that changes, so can
+this."* It can now.
+
+`ErrorSummary` has exposed `focus` since it existed; this is the same need
+from the other end, and the grouped shape an addon produces is reached too.
+
 ## 3.3.0 — 2026-10-03
 
 **`CopyButton` can take its behaviour without its appearance.**

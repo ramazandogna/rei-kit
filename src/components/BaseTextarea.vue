@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useBoundValue } from '../composables/use-bound-value'
 import FormField from './FormField.vue'
 import { useFieldAttrs } from '../composables/use-field-attrs'
@@ -72,6 +73,25 @@ const model = useBoundValue(
   () => modelValue,
   (value) => emit('update:modelValue', value),
 )
+const control = ref<HTMLTextAreaElement | null>(null)
+
+/**
+ * Focus the control, for a caller that owns when it happens.
+ *
+ * A `ref` on a component gives the component and not the element, so without
+ * this a field cannot be focused at all — which is why an app that focuses
+ * its amount field when a sheet opens, and again when the amount is
+ * rejected, wrote the whole field by hand instead and said so in a comment.
+ * That is the gap test, with the reason already written down.
+ *
+ * `ErrorSummary` has exposed `focus` since it existed, for the same need
+ * from the other end.
+ */
+function focus() {
+  control.value?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <template>
@@ -88,6 +108,7 @@ const model = useBoundValue(
     <template #default="{ id, describedBy, invalid }">
       <textarea
         :id="id"
+        ref="control"
         v-model="model"
         :rows="rows"
         :aria-invalid="invalid"

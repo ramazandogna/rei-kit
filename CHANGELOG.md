@@ -5,7 +5,7 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
-## Unreleased
+## 3.4.0 — 2026-10-03
 
 **A field can be focused by the screen that owns it.**
 

@@ -67,6 +67,30 @@ without.
 
 ---
 
+## 3.4.0
+
+**Take this one if you have ever wanted to put the keyboard in a field.**
+
+**What you gain.** `BaseInput`, `BaseTextarea`, `BaseSelect` and
+`PasswordInput` expose `focus()`, so a `ref` on one is finally good for
+something:
+
+```vue
+<BaseInput ref="amount" v-model="value" label="Amount" />
+<!-- amount.value?.focus() -->
+```
+
+Until now a `ref` gave you the component and no way through to the control,
+which meant a screen that focuses its first field when a sheet opens — or
+the rejected one after a submission — had to write the whole field by hand
+and lose the label wiring with it. An app in this family had done exactly
+that, with the reason in a comment.
+
+Reach for `ErrorSummary` instead when the question is "did that submission
+work": that is answered by moving focus to the summary, not into a field.
+
+**What you have to do.** Nothing.
+
 ## 3.3.0
 
 **Take this one if you have ever written your own copy button.**

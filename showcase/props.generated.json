@@ -3548,7 +3548,7 @@
         "name": "tone",
         "required": true,
         "type": "Tone",
-        "description": "",
+        "description": "The colour classes for the dot and the label, as written-out class names. `Tone` is a pair rather than a role token because the categories here are the app's own, and Tailwind reads source as plain text: a class assembled at runtime never reaches the stylesheet.",
         "default": ""
       },
       {
@@ -3765,7 +3765,7 @@
         "name": "value",
         "required": true,
         "type": "string",
-        "description": "",
+        "description": "Already formatted — \"₺1.240\", \"68%\", \"12 days\". A number would make this component choose a currency, a locale and a number of decimals, which are three product decisions it has no way to be right about.",
         "default": ""
       },
       {
@@ -4128,7 +4128,7 @@
         "name": "total",
         "required": true,
         "type": "number",
-        "description": "",
+        "description": "How many slides there are, so the shell can say \"3 of 5\" and know when it is on the last one.",
         "default": ""
       },
       {

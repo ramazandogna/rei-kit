@@ -40,6 +40,8 @@ const {
 } = defineProps<{
   /** Which slide, zero-based. */
   index: number
+  /** How many slides there are, so the shell can say "3 of 5" and know when it
+   * is on the last one. */
   total: number
   /** The dialog's accessible name. */
   dialogLabel: string

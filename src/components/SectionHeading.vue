@@ -24,6 +24,12 @@ const {
   label,
   count = 0,
 } = defineProps<{
+  /**
+   * The colour classes for the dot and the label, as written-out class names.
+   * `Tone` is a pair rather than a role token because the categories here are
+   * the app's own, and Tailwind reads source as plain text: a class assembled
+   * at runtime never reaches the stylesheet.
+   */
   tone: Tone
   label: string
   /** Hidden when zero, so an empty group's heading stays quiet. */

@@ -15,6 +15,11 @@ const {
   label,
   trend = null,
 } = defineProps<{
+  /**
+   * Already formatted — "₺1.240", "68%", "12 days". A number would make this
+   * component choose a currency, a locale and a number of decimals, which are
+   * three product decisions it has no way to be right about.
+   */
   value: string
   label: string
   trend?: 'up' | 'down' | 'flat' | null | undefined

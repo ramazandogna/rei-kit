@@ -49,13 +49,13 @@ const signupEmail = ref('')
 const signupPassword = ref('')
 const signupErrors = ref<Record<string, string>>({})
 
-const SIGNUP_LABELS: Record<string, string> = { email: 'E-posta', password: 'Parola' }
+const SIGNUP_LABELS: Record<string, string> = { email: 'Email', password: 'Password' }
 const signupFieldId = (field: string) => `signup-${field}`
 
 function submitSignup() {
   const found: Record<string, string> = {}
-  if (!signupEmail.value.includes('@')) found['email'] = 'Geçerli bir e-posta girin'
-  if (signupPassword.value.length < 8) found['password'] = 'En az 8 karakter olmalı'
+  if (!signupEmail.value.includes('@')) found['email'] = 'Enter a valid email address'
+  if (signupPassword.value.length < 12) found['password'] = 'Use at least 12 characters'
 
   signupErrors.value = found
 }
@@ -203,19 +203,31 @@ const CODE: Record<FormPartId, string> = {
   'form-textarea': `<BaseTextarea v-model="note" label="Note" :rows="3" />`,
   'form-field': `<FormField label="Your own control" hint="The wiring, not the input.">
   <template #default="{ id, describedBy, invalid }">
-    <input :id="id" :aria-describedby="describedBy" :aria-invalid="invalid" />
+    <!-- \`control\` rather than its parts: a hand-painted border and ground
+         look right in the quiet material and ignore every other one. -->
+    <input
+      :id="id"
+      :aria-describedby="describedBy"
+      :aria-invalid="invalid"
+      class="control rounded-card focus-ring h-11 w-full px-3"
+    />
   </template>
 </FormField>`,
   'form-error-summary': `<ErrorSummary
   :errors="errors"
-  title="Düzeltilmesi gereken alanlar var"
+  title="There are fields to fix"
   :label-for="(field) => LABELS[field]"
   :field-id="(field) => \`signup-\${field}\`"
 />
 
-<FormField label="E-posta" :error="errors.email" field-id="signup-email">
-  <template #default="slot"><input v-bind="slot" /></template>
-</FormField>`,
+<!-- the same function on both sides, so the link lands on the field -->
+<BaseInput
+  v-model="email"
+  label="Email"
+  type="email"
+  :error="errors.email"
+  :field-id="fieldId('email')"
+/>`,
   'form-select': `<BaseSelect
   v-model="currency"
   label="Currency"
@@ -395,7 +407,7 @@ const CODE: Record<FormPartId, string> = {
                   :id="id"
                   :aria-describedby="describedBy"
                   :aria-invalid="invalid"
-                  class="border-hair bg-surface text-ink rounded-card h-11 w-full border px-3 text-base"
+                  class="control text-ink rounded-card focus-ring h-11 w-full px-3 text-base"
                 />
               </template>
             </FormField>
@@ -415,44 +427,28 @@ const CODE: Record<FormPartId, string> = {
             <form class="flex flex-col gap-3" novalidate @submit.prevent="submitSignup">
               <ErrorSummary
                 :errors="signupErrors"
-                title="Düzeltilmesi gereken alanlar var"
+                title="There are fields to fix"
                 :label-for="(field) => SIGNUP_LABELS[field] ?? field"
                 :field-id="signupFieldId"
                 :fields="['email', 'password']"
               />
-              <FormField
-                label="E-posta"
+              <BaseInput
+                v-model="signupEmail"
+                label="Email"
+                type="email"
+                autocomplete="email"
                 :error="signupErrors['email']"
                 :field-id="signupFieldId('email')"
-              >
-                <template #default="{ id, describedBy, invalid }">
-                  <input
-                    :id="id"
-                    v-model="signupEmail"
-                    type="email"
-                    :aria-describedby="describedBy"
-                    :aria-invalid="invalid"
-                    class="border-hair bg-surface text-ink rounded-card h-11 w-full border px-3 text-base"
-                  />
-                </template>
-              </FormField>
-              <FormField
-                label="Parola"
+              />
+              <PasswordInput
+                v-model="signupPassword"
+                label="Password"
+                toggle-label="Show password"
+                autocomplete="new-password"
                 :error="signupErrors['password']"
                 :field-id="signupFieldId('password')"
-              >
-                <template #default="{ id, describedBy, invalid }">
-                  <input
-                    :id="id"
-                    v-model="signupPassword"
-                    type="password"
-                    :aria-describedby="describedBy"
-                    :aria-invalid="invalid"
-                    class="border-hair bg-surface text-ink rounded-card h-11 w-full border px-3 text-base"
-                  />
-                </template>
-              </FormField>
-              <BaseButton type="submit" class="self-start">Kaydol</BaseButton>
+              />
+              <BaseButton type="submit" class="self-start">Sign up</BaseButton>
             </form>
           </BaseCard>
           <CodeBlock :code="CODE['form-error-summary']" lang="html" />

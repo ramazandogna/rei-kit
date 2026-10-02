@@ -24,19 +24,18 @@ process.emitWarning = (warning, ...rest) =>
 
 /** The script block without its types, laid out as if they had never been there. */
 export function toJavaScript(source) {
-  return source
-    .replace(/<script setup lang="ts">\n([\s\S]*?)<\/script>/, (_, script) => {
-      // A type-only import has no JavaScript at all, not even its line.
-      const stripped = stripTypeScriptTypes(script.replace(/^import type .*\n/gm, ''))
-        // Where an annotation was removed, the spaces it occupied remain.
-        .replace(/(?<=\S) {2,}(?=[)(,;])/g, '')
-        .replace(/(?<=\S) {2,}/g, ' ')
-        .replace(/[ \t]+$/gm, '')
-        .replace(/\n{3,}/g, '\n\n')
-        .replace(/^\n+/, '')
+  return source.replace(/<script setup lang="ts">\n([\s\S]*?)<\/script>/, (_, script) => {
+    // A type-only import has no JavaScript at all, not even its line.
+    const stripped = stripTypeScriptTypes(script.replace(/^import type .*\n/gm, ''))
+      // Where an annotation was removed, the spaces it occupied remain.
+      .replace(/(?<=\S) {2,}(?=[)(,;])/g, '')
+      .replace(/(?<=\S) {2,}/g, ' ')
+      .replace(/[ \t]+$/gm, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .replace(/^\n+/, '')
 
-      return `<script setup>\n${stripped}</script>`
-    })
+    return `<script setup>\n${stripped}</script>`
+  })
 }
 
 export function readExamples() {
@@ -50,8 +49,40 @@ export function readExamples() {
     })
 }
 
+/**
+ * The guide's samples, which are screens rather than single components.
+ *
+ * `showcase/guide/` holds real components too, for the same reason: the page
+ * used to carry its first-screen sample as a template string, which nothing
+ * compiled and nothing checked against the kit's real props. Writing the
+ * guide's screen as a component means the code shown beside it is the code
+ * running above it, and a renamed prop breaks the build rather than a
+ * reader's paste.
+ */
+export function readGuides() {
+  const dir = join(ROOT, 'showcase/guide')
+
+  return readdirSync(dir)
+    .filter((file) => file.endsWith('.vue'))
+    .sort()
+    .map((file) => {
+      const ts = readFileSync(join(dir, file), 'utf8')
+        /* The component's own reasoning is for whoever maintains the guide,
+           not for somebody copying a screen out of it. */
+        .replace(/\n\/\*\*[\s\S]*?\*\/\n/, '\n')
+
+      return { name: file.replace(/\.vue$/, ''), ts, js: toJavaScript(ts) }
+    })
+}
+
 if (process.argv[1] === new URL(import.meta.url).pathname) {
   const examples = readExamples()
   writeFileSync(join(ROOT, 'showcase/examples.generated.json'), JSON.stringify(examples, null, 2))
-  console.log(`extract-examples: ${examples.length} examples, in TypeScript and JavaScript`)
+
+  const guides = readGuides()
+  writeFileSync(join(ROOT, 'showcase/guide.generated.json'), JSON.stringify(guides, null, 2))
+
+  console.log(
+    `extract-examples: ${examples.length} examples and ${guides.length} guide screens, in TypeScript and JavaScript`,
+  )
 }

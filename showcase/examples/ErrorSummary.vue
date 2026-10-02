@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BaseButton, ErrorSummary, FormField } from 'rei-kit'
+import { BaseButton, BaseInput, ErrorSummary, PasswordInput } from 'rei-kit'
 import { ref } from 'vue'
 
 const email = ref('')
@@ -12,7 +12,7 @@ const fieldId = (field: string) => `signup-${field}`
 function submit() {
   const found: Record<string, string> = {}
   if (!email.value.includes('@')) found['email'] = 'Enter a valid email address'
-  if (password.value.length < 8) found['password'] = 'Use at least 8 characters'
+  if (password.value.length < 12) found['password'] = 'Use at least 12 characters'
 
   errors.value = found
 }
@@ -30,31 +30,25 @@ function submit() {
       :fields="['email', 'password']"
     />
 
-    <FormField label="Email" :error="errors['email']" :field-id="fieldId('email')">
-      <template #default="{ id, describedBy, invalid }">
-        <input
-          :id="id"
-          v-model="email"
-          type="email"
-          class="control rounded-card px-3 py-2"
-          :aria-describedby="describedBy"
-          :aria-invalid="invalid"
-        />
-      </template>
-    </FormField>
+    <!-- The same function on both sides: the summary builds the href from it
+         and each field takes its id from it, so the link lands on the field. -->
+    <BaseInput
+      v-model="email"
+      label="Email"
+      type="email"
+      autocomplete="email"
+      :error="errors['email']"
+      :field-id="fieldId('email')"
+    />
 
-    <FormField label="Password" :error="errors['password']" :field-id="fieldId('password')">
-      <template #default="{ id, describedBy, invalid }">
-        <input
-          :id="id"
-          v-model="password"
-          type="password"
-          class="control rounded-card px-3 py-2"
-          :aria-describedby="describedBy"
-          :aria-invalid="invalid"
-        />
-      </template>
-    </FormField>
+    <PasswordInput
+      v-model="password"
+      label="Password"
+      toggle-label="Show password"
+      autocomplete="new-password"
+      :error="errors['password']"
+      :field-id="fieldId('password')"
+    />
 
     <BaseButton type="submit" class="self-start">Sign up</BaseButton>
   </form>

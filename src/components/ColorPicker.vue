@@ -50,6 +50,7 @@ const {
   error = '',
   disabled = false,
   labelHidden = false,
+  fieldId = undefined,
 } = defineProps<{
   /** Names the control. Already translated. */
   label: string
@@ -63,6 +64,14 @@ const {
   error?: string | undefined
   disabled?: boolean | undefined
   labelHidden?: boolean | undefined
+  /**
+   * Ties the generated id to a name you choose, so `ErrorSummary` can link
+   * to this field. Its links point at nothing without it, and the kit's
+   * own `FormField` has taken one since 2.22.0 while the fields built on
+   * it did not — which left building a form out of these and summarising
+   * its errors impossible without hand-writing the control.
+   */
+  fieldId?: string | undefined
 }>()
 
 const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
@@ -117,6 +126,7 @@ const chosen = (value: string) => normalise(value) === current.value
 
 <template>
   <FormField
+    :field-id="fieldId"
     :label="label"
     :hint="hint"
     :error="error"

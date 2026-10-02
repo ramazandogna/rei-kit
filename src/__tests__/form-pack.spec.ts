@@ -733,3 +733,44 @@ describe('BaseCheckbox, neither on nor off', () => {
     expect(wrapper.get('span').classes()).not.toContain('sr-only')
   })
 })
+
+/**
+ * Every field built on `FormField` can be linked to from `ErrorSummary`.
+ *
+ * `FormField` has taken a `fieldId` since 2.22.0 and the summary needs one
+ * on both sides — "give each `FormField` a `fieldId` and hand the summary
+ * the same function, or its links point at nothing" is what `AGENTS.md`
+ * says. What it did not say is that only `FormField` and `PasswordInput`
+ * accepted one, so a form built from `BaseInput` and `BaseSelect` could not
+ * be summarised at all. The proof it was a gap rather than a preference is
+ * in this repository: `showcase/examples/ErrorSummary.vue` hand-wrote its
+ * `<input>` inside a bare `FormField`, in a file that imports the kit's
+ * own field.
+ */
+describe('a field can be linked to from a summary', () => {
+  const FIELDS = [
+    ['BaseInput', BaseInput, {}],
+    ['BaseTextarea', BaseTextarea, {}],
+    ['BaseSelect', BaseSelect, { options: [{ value: 'a', label: 'A' }] }],
+  ] as const
+
+  it.each(FIELDS)('%s hands the chosen id to the control', (_name, component, extra) => {
+    const wrapper = mount(component, {
+      props: { label: 'Email', fieldId: 'signup-email', ...extra },
+    })
+
+    /* The id has to be on the control and the label has to point at the same
+       one, or the summary's link lands on something that is not a field. */
+    const control = wrapper.get('input, select, textarea')
+    expect(control.attributes('id')).toBe('signup-email')
+    expect(wrapper.get('label').attributes('for')).toBe('signup-email')
+  })
+
+  it('still generates one when no name is given', () => {
+    const wrapper = mount(BaseInput, { props: { label: 'Email' } })
+    const id = wrapper.get('input').attributes('id')
+
+    expect(id).toBeTruthy()
+    expect(wrapper.get('label').attributes('for')).toBe(id)
+  })
+})

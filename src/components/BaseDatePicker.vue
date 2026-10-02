@@ -49,6 +49,7 @@ const {
   size = 'md',
   labelHidden = false,
   disabled = false,
+  fieldId = undefined,
 } = defineProps<{
   label: string
   /** One day, or a stretch from one day to another. */
@@ -76,6 +77,14 @@ const {
   size?: 'sm' | 'md' | undefined
   labelHidden?: boolean | undefined
   disabled?: boolean | undefined
+  /**
+   * Ties the generated id to a name you choose, so `ErrorSummary` can link
+   * to this field. Its links point at nothing without it, and the kit's
+   * own `FormField` has taken one since 2.22.0 while the fields built on
+   * it did not — which left building a form out of these and summarising
+   * its errors impossible without hand-writing the control.
+   */
+  fieldId?: string | undefined
 }>()
 
 /* `| undefined` outside the condition, not inside each branch: TypeScript
@@ -119,7 +128,14 @@ function clear() {
 </script>
 
 <template>
-  <FormField :label="label" :error="error" :hint="hint" :size="size" :label-hidden="labelHidden">
+  <FormField
+    :field-id="fieldId"
+    :label="label"
+    :error="error"
+    :hint="hint"
+    :size="size"
+    :label-hidden="labelHidden"
+  >
     <template #default="{ id, describedBy, invalid }">
       <BasePopover v-model="open" class="rk-date" :label="label">
         <!-- Two buttons side by side rather than one inside the other: a

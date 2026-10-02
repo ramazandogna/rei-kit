@@ -24,6 +24,7 @@ const {
   rows = 4,
   size = 'md',
   variant = 'default',
+  fieldId = undefined,
 } = defineProps<{
   /** The text, with `v-model`. */
   modelValue?: string | undefined
@@ -53,6 +54,14 @@ const {
    * paint.
    */
   variant?: 'default' | 'unstyled' | undefined
+  /**
+   * Ties the generated id to a name you choose, so `ErrorSummary` can link
+   * to this field. Its links point at nothing without it, and the kit's
+   * own `FormField` has taken one since 2.22.0 while the fields built on
+   * it did not — which left building a form out of these and summarising
+   * its errors impossible without hand-writing the control.
+   */
+  fieldId?: string | undefined
 }>()
 
 /* Declared by hand rather than with defineModel: it accepts `undefined` and
@@ -67,6 +76,7 @@ const model = useBoundValue(
 
 <template>
   <FormField
+    :field-id="fieldId"
     :class="fieldClass"
     :style="fieldStyle"
     :label="label"

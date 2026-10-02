@@ -876,6 +876,13 @@
         "type": "boolean",
         "description": "",
         "default": ""
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
+        "default": ""
       }
     ]
   },
@@ -1037,6 +1044,13 @@
         "type": "'default' | 'unstyled'",
         "description": "`unstyled` keeps the wiring and drops the surface. The label, the generated id, `aria-describedby` and the error are what a field is; the border and the height are what it looks like. A search box inside a bordered row, a url field in an editor popover — those places were hand-writing the whole thing to avoid the appearance, and losing the wiring with it. The same reasoning as `BaseButton`'s `unstyled`, and the same test: a primitive is finished when the app can take its behaviour without its paint.",
         "default": "'default'"
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
+        "default": "undefined"
       }
     ]
   },
@@ -1562,6 +1576,13 @@
         "type": "'default' | 'unstyled'",
         "description": "`unstyled` keeps the wiring and drops the surface. The label, the generated id, `aria-describedby` and the error are what a field is; the border and the height are what it looks like. A search box inside a bordered row, a url field in an editor popover — those places were hand-writing the whole thing to avoid the appearance, and losing the wiring with it. The same reasoning as `BaseButton`'s `unstyled`, and the same test: a primitive is finished when the app can take its behaviour without its paint.",
         "default": "'default'"
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
+        "default": "undefined"
       }
     ]
   },
@@ -1975,6 +1996,13 @@
         "type": "'default' | 'unstyled'",
         "description": "`unstyled` keeps the wiring and drops the surface. The label, the generated id, `aria-describedby` and the error are what a field is; the border and the height are what it looks like. A search box inside a bordered row, a url field in an editor popover — those places were hand-writing the whole thing to avoid the appearance, and losing the wiring with it. The same reasoning as `BaseButton`'s `unstyled`, and the same test: a primitive is finished when the app can take its behaviour without its paint.",
         "default": "'default'"
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
+        "default": "undefined"
       }
     ]
   },
@@ -2248,6 +2276,13 @@
         "type": "boolean",
         "description": "",
         "default": "false"
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
+        "default": "undefined"
       }
     ]
   },
@@ -3088,6 +3123,13 @@
         "type": "boolean",
         "description": "",
         "default": "false"
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
+        "default": "undefined"
       }
     ]
   },
@@ -3850,6 +3892,13 @@
         "type": "boolean",
         "description": "",
         "default": "false"
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
+        "default": "undefined"
       }
     ]
   },
@@ -3969,6 +4018,13 @@
         "type": "boolean",
         "description": "",
         "default": "false"
+      },
+      {
+        "name": "fieldId",
+        "required": false,
+        "type": "string",
+        "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
+        "default": "undefined"
       }
     ]
   },

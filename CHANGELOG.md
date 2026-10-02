@@ -5,6 +5,39 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased
+
+**Every field can be linked to from an error summary.**
+
+`ErrorSummary` needs a `fieldId` on both sides or its links point at
+nothing — `AGENTS.md` has said so since 2.22.0 — and until now only
+`FormField` and `PasswordInput` accepted one. So a form built the ordinary
+way, out of `BaseInput` and `BaseSelect`, could not be summarised at all.
+The proof it was a gap rather than a preference was in this repository: the
+kit's own `ErrorSummary` sample hand-wrote an `<input>` inside a bare
+`FormField`, which is the gap test exactly.
+
+`fieldId` is now a prop on `BaseInput`, `BaseTextarea`, `BaseSelect`,
+`BaseDatePicker`, `TimePicker`, `NumberInput`, `TagsInput` and
+`ColorPicker`. Left out, each still generates its own id as before.
+
+**Two things carried into the editor.**
+
+- **Every component's sample.** `showcase/examples/<Name>.vue` exists for
+  all 105 and is type-checked against the component's real props, so the
+  `@example` now above each export is documentation proven to compile.
+  Nothing is truncated: a shortened sample is one that does not compile.
+- **The near-neighbours.** 52 components carry `@see {@link …}` to the parts
+  they are mistaken for — `BaseTable` to `DataTable`, `BaseSheet` to
+  `BaseModal` and `BaseDrawer`. The pairing travels; the argument stays in
+  one place.
+
+**The samples are written in English.** They used to live only in the
+showcase; now they ship in the package and are what an editor shows, and
+seven of them had Turkish in them. Three of those were right to keep — a
+list of languages names each in its own, and a person or a country keeps its
+name.
+
 ## 3.1.0 — 2026-10-02
 
 **`BaseInput` takes something attached to it.**

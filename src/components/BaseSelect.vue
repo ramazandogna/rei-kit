@@ -28,6 +28,7 @@ const {
   placeholder = '',
   size = 'md',
   variant = 'default',
+  fieldId = undefined,
 } = defineProps<{
   label: string
   options: readonly { value: T; label: string; disabled?: boolean | undefined }[]
@@ -61,6 +62,14 @@ const {
    * paint.
    */
   variant?: 'default' | 'unstyled' | undefined
+  /**
+   * Ties the generated id to a name you choose, so `ErrorSummary` can link
+   * to this field. Its links point at nothing without it, and the kit's
+   * own `FormField` has taken one since 2.22.0 while the fields built on
+   * it did not — which left building a form out of these and summarising
+   * its errors impossible without hand-writing the control.
+   */
+  fieldId?: string | undefined
 }>()
 
 /* The scale is typographic, not dimensional. Both sizes keep the 44px touch
@@ -77,7 +86,14 @@ const model = defineModel<T | undefined>()
 </script>
 
 <template>
-  <FormField :label="label" :error="error" :hint="hint" :label-hidden="labelHidden" :size="size">
+  <FormField
+    :field-id="fieldId"
+    :label="label"
+    :error="error"
+    :hint="hint"
+    :label-hidden="labelHidden"
+    :size="size"
+  >
     <template #default="{ id, describedBy, invalid }">
       <div class="relative">
         <select

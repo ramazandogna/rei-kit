@@ -11,6 +11,8 @@ import {
 } from '../src/index'
 import pkg from '../package.json'
 import CodeBlock from './CodeBlock.vue'
+import FirstScreen from './guide/FirstScreen.vue'
+import guides from './guide.generated.json'
 import InstallCommand from './InstallCommand.vue'
 import { codeLanguage } from './preferences'
 import { readableRange } from './versions'
@@ -88,6 +90,12 @@ ${SCRIPT_END}
 </template>`
 
 const FIRST_JS = FIRST_TS.replace('<script setup lang="ts">', '<script setup>')
+
+/* The screen beside the code is the component the code is: written as a real
+   file in `showcase/guide/`, type-checked with the rest of this site, and read
+   back here rather than retyped. A guide sample that compiles only in prose is
+   the one kind of documentation worse than none. */
+const SCREEN = guides.find((guide) => guide.name === 'FirstScreen')!
 
 const palette = usePalette()
 const material = useMaterial()
@@ -245,6 +253,23 @@ const pie = (swatch: readonly string[]) =>
           </p>
         </div>
         <CodeBlock :code="FIRST_TS" :js="FIRST_JS" file="src/App.vue" />
+      </li>
+
+      <li class="gs-step">
+        <div class="gs-step-copy">
+          <h3 class="gs-h3">Build a screen, not a component</h3>
+          <p>
+            A form, because it is the most common screen and the one this kit saves the most work
+            on. The laborious part is not the inputs — it is the generated id, the label pointing at
+            it, the hint and the error sharing <code>aria-describedby</code>, and a summary that
+            takes focus when the submission is rejected so nobody is left on a button that appeared
+            to do nothing. All of that is already wired. Submit it empty.
+          </p>
+        </div>
+        <div class="gs-screen">
+          <div class="gs-screen-live"><FirstScreen /></div>
+          <CodeBlock :code="SCREEN.ts" :js="SCREEN.js" file="src/views/SignUp.vue" />
+        </div>
       </li>
     </ol>
 
@@ -416,6 +441,23 @@ const pie = (swatch: readonly string[]) =>
 
 .gs-row dd:last-child {
   grid-column: 2;
+}
+
+.gs-screen {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+/* The live screen is a page in its own right — it brings its own `canvas`
+   and full height — so it is scaled into a frame rather than allowed to set
+   the height of the step it sits in. */
+.gs-screen-live {
+  border: 1px solid var(--color-hair);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  max-height: 32rem;
+  overflow-y: auto;
 }
 
 .gs-steps {

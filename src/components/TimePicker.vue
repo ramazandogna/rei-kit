@@ -32,6 +32,7 @@ const {
   size = 'md',
   labelHidden = false,
   disabled = false,
+  fieldId = undefined,
 } = defineProps<{
   label: string
   /** The hour column's accessible name, e.g. "Hour". */
@@ -50,6 +51,14 @@ const {
   size?: 'sm' | 'md' | undefined
   labelHidden?: boolean | undefined
   disabled?: boolean | undefined
+  /**
+   * Ties the generated id to a name you choose, so `ErrorSummary` can link
+   * to this field. Its links point at nothing without it, and the kit's
+   * own `FormField` has taken one since 2.22.0 while the fields built on
+   * it did not — which left building a form out of these and summarising
+   * its errors impossible without hand-writing the control.
+   */
+  fieldId?: string | undefined
 }>()
 
 /** The time as `HH:mm`, with `v-model`. */
@@ -121,7 +130,14 @@ function pickMinute(next: string | undefined) {
 </script>
 
 <template>
-  <FormField :label="label" :error="error" :hint="hint" :size="size" :label-hidden="labelHidden">
+  <FormField
+    :field-id="fieldId"
+    :label="label"
+    :error="error"
+    :hint="hint"
+    :size="size"
+    :label-hidden="labelHidden"
+  >
     <template #default="{ id, describedBy, invalid }">
       <BasePopover v-model="open" class="rk-time" :label="label">
         <template #trigger="{ props }">

@@ -675,8 +675,8 @@ export { default as VirtualList } from './components/VirtualList.vue'
  *   <!-- Rendered once per app. Nothing here is ever visible. -->
  *   <AnnounceHost />
  *
- *   <BaseButton variant="secondary" @click="filter">Filtrele</BaseButton>
- *   <span class="text-ink-soft text-sm">{{ count }} sonuç</span>
+ *   <BaseButton variant="secondary" @click="filter">Filter</BaseButton>
+ *   <span class="text-ink-soft text-sm">{{ count }} results</span>
  * </div>
  * ```
  */
@@ -692,13 +692,13 @@ export { default as AnnounceHost } from './components/AnnounceHost.vue'
  *        reader is not left on a button that appeared to do nothing. -->
  *   <ErrorSummary
  *     :errors="errors"
- *     title="Düzeltilmesi gereken alanlar var"
+ *     title="There are fields to fix"
  *     :label-for="(field) => LABELS[field] ?? field"
  *     :field-id="fieldId"
  *     :fields="['email', 'password']"
  *   />
  *
- *   <FormField label="E-posta" :error="errors['email']" :field-id="fieldId('email')">
+ *   <FormField label="Email" :error="errors['email']" :field-id="fieldId('email')">
  *     <template #default="{ id, describedBy, invalid }">
  *       <input
  *         :id="id"
@@ -711,7 +711,7 @@ export { default as AnnounceHost } from './components/AnnounceHost.vue'
  *     </template>
  *   </FormField>
  *
- *   <FormField label="Parola" :error="errors['password']" :field-id="fieldId('password')">
+ *   <FormField label="Password" :error="errors['password']" :field-id="fieldId('password')">
  *     <template #default="{ id, describedBy, invalid }">
  *       <input
  *         :id="id"
@@ -724,7 +724,7 @@ export { default as AnnounceHost } from './components/AnnounceHost.vue'
  *     </template>
  *   </FormField>
  *
- *   <BaseButton type="submit" class="self-start">Kaydol</BaseButton>
+ *   <BaseButton type="submit" class="self-start">Sign up</BaseButton>
  * </form>
  * ```
  */

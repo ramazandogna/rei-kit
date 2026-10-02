@@ -8,7 +8,7 @@ const count = ref(0)
 function filter() {
   count.value = (count.value + 3) % 12
   // Nothing on screen changed enough to say this, so it is said.
-  announce(`${count.value} sonuç`)
+  announce(`${count.value} results`)
 }
 </script>
 
@@ -17,7 +17,7 @@ function filter() {
     <!-- Rendered once per app. Nothing here is ever visible. -->
     <AnnounceHost />
 
-    <BaseButton variant="secondary" @click="filter">Filtrele</BaseButton>
-    <span class="text-ink-soft text-sm">{{ count }} sonuç</span>
+    <BaseButton variant="secondary" @click="filter">Filter</BaseButton>
+    <span class="text-ink-soft text-sm">{{ count }} results</span>
   </div>
 </template>

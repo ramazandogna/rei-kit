@@ -413,7 +413,7 @@ export type { NavLinkItem } from './NavLinks.vue'
  * ```vue
  * <!-- First in the tab order, and invisible until it has focus. Press Tab. -->
  * <div>
- *   <SkipLink for="example-main" label="İçeriğe geç" />
+ *   <SkipLink for="example-main" label="Skip to content" />
  *
  *   <nav class="mb-3 flex gap-3" aria-label="Sections">
  *     <a href="#a" class="text-ink-soft text-sm">Products</a>

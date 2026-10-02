@@ -186,3 +186,35 @@ describe('usage examples', () => {
     expect(problems).toEqual([])
   })
 })
+
+/**
+ * The samples are written in one language, because they ship in the package.
+ *
+ * They used to live only in the showcase, where the author's own Turkish in
+ * a label was between the author and the page. Since 3.2.0 each sample is
+ * carried into the doc comment above its export and therefore into the
+ * `.d.ts`, so it is what a consumer's editor shows them — and a sample
+ * somebody cannot read is a sample that does not help. Seven files had
+ * Turkish in them when that shipped; three of those strings were right to
+ * keep.
+ *
+ * **What this catches is narrower than the rule.** It reads diacritics, so
+ * Turkish written without them — `Kaydol`, `E-posta` — walks straight past
+ * it, and two of those were in the first sweep. Treat a pass here as "no
+ * obvious slip", not as "the samples are in English".
+ */
+describe('the language of the samples', () => {
+  /* The cases where another language is the correct answer: a list of
+     languages names each one in its own, and a person or a country keeps
+     its name. */
+  const INTENDED = ['Türkçe', 'Türkiye', 'Ömer Seyfettin']
+
+  const files = readdirSync('showcase/examples').filter((file) => file.endsWith('.vue'))
+
+  it.each(files)('%s has no stray diacritics', (file) => {
+    let text = readFileSync(`showcase/examples/${file}`, 'utf8')
+    for (const allowed of INTENDED) text = text.split(allowed).join('')
+
+    expect(text.match(/[çğıöşüÇĞİÖŞÜ]/g) ?? []).toEqual([])
+  })
+})

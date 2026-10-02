@@ -5,6 +5,32 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased
+
+**`animate-pulse-soft` was below AA in three palettes, and the check that
+knew it was flaky.**
+
+The pulse dropped to 0.72 opacity. Opacity fades an element toward whatever
+is behind it, so a pulsing element has a contrast ratio per frame — and at
+the trough, `ink` over `canvas` measured 3.28 in tokyo-night, 3.50 in
+rose-pine and 3.63 in catppuccin. The trough is now 0.88, which holds every
+shipped palette above 4.5 in both modes.
+
+The more useful half is why it survived. The browser audit *did* catch it,
+but only when axe happened to sample a frame near the trough — about one run
+in thirty. A check that goes red at random teaches you to run it again
+rather than read it, and the green run after a flake looks like a fix. So
+the two questions were separated: the browser audit now stops animations and
+reads the page at rest, and `motion-pack.spec.ts` takes the opacity out of
+every repeating keyframe and checks it against all twenty palette-and-mode
+pairs exactly, with nothing sampled. Putting the old 0.72 back fails three
+named cases every time.
+
+**Opacity does not belong on text**, whatever the number. 0.88 keeps `ink`
+safe, but `ink-soft` is secondary text sitting near the floor by design and
+any fade takes it under. The showcase was doing this — the pulse was on the
+words — and now breathes the indicator beside them instead.
+
 ## 3.2.0 — 2026-10-02
 
 **Every field can be linked to from an error summary.**

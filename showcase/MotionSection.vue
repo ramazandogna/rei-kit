@@ -90,7 +90,8 @@ ${SCRIPT_END}
 >
   Every look.
 </h1>`,
-  'motion-attention': `<span class="animate-pulse-soft">● Live</span>
+  'motion-attention': `<!-- the dot breathes, not the words -->
+<span><span class="text-positive animate-pulse-soft" aria-hidden="true">●</span> Live</span>
 <Bell class="animate-wiggle" />
 <BaseBadge class="animate-pop">New</BaseBadge>
 <BaseButton class="animate-glow">Upgrade</BaseButton>
@@ -284,8 +285,9 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
           <ul class="effects">
             <li class="effect">
               <span class="effect-demo">
-                <span class="text-ink animate-pulse-soft text-sm font-semibold"
-                  ><span class="text-positive" aria-hidden="true">●</span> Live</span
+                <span class="text-ink text-sm font-semibold"
+                  ><span class="text-positive animate-pulse-soft" aria-hidden="true">●</span>
+                  Live</span
                 >
               </span>
               <code>animate-pulse-soft</code>

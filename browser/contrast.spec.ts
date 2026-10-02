@@ -54,6 +54,22 @@ async function dress(page: Page, material: string, palette: string, dark: boolea
      properties; both are painted on the next frame, and axe reads the frame
      it is given. */
   await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+
+  /* Animations are stopped first, and that is the whole reason this check
+     became trustworthy. An element that pulses has a contrast ratio per
+     frame, so axe sampling "the frame it is given" turned a real fault into
+     a result that came back red about once in thirty runs — which reads as
+     a flaky test and gets re-run rather than read. The fault itself did not
+     go away by being sampled less often: `animate-pulse-soft` sat below AA
+     in three palettes for as long as it existed.
+     
+     So the two questions are asked separately. This one reads the page at
+     rest. `motion-pack.spec.ts` takes the opacity out of every repeating
+     keyframe and checks it against all twenty palette-and-mode pairs
+     exactly, with nothing sampled at all. */
+  await page.addStyleTag({
+    content: '*, *::before, *::after { animation: none !important; transition: none !important }',
+  })
 }
 
 async function contrast(page: Page) {

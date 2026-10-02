@@ -1,4 +1,7 @@
+import { readFileSync } from 'node:fs'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+// @ts-expect-error -- a plain .mjs build script, imported for its measurements
+import { contrast, mix } from '../../scripts/build-palettes.mjs'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 
@@ -337,4 +340,71 @@ describe('BaseMarquee', () => {
     expect(wrapper.attributes('style')).toContain('--rk-marquee-duration: 12s')
     expect(wrapper.attributes('style')).toContain('--rk-marquee-gap: 3rem')
   })
+})
+
+/**
+ * An animation that fades text has a contrast ratio per frame, and the worst
+ * frame is the one that has to pass.
+ *
+ * `animate-pulse-soft` ran to 0.72 opacity, and at that trough `ink` over
+ * `canvas` measured 3.28 in tokyo-night, 3.50 in rose-pine and 3.63 in
+ * catppuccin — all below AA, in three of the ten palettes the kit ships.
+ *
+ * It was not invisible: the browser audit caught it, but only when axe
+ * happened to sample a frame near the trough, which was roughly one run in
+ * thirty. **That is the worst kind of failing check**, because a test that
+ * goes red at random teaches you to run it again rather than to read it, and
+ * the run after a flake looks like a fix. So the arithmetic moved here,
+ * where there is no sampling at all: every palette, both modes, the opacity
+ * read out of the stylesheet rather than written down a second time.
+ *
+ * Only an animation that repeats is checked. `rk-pop` passes through zero on
+ * its way in and settles at one in 340ms; a brief entrance is not a state a
+ * reader sits in front of, and holding it to a contrast floor would ban
+ * fading anything in.
+ */
+describe('an animation that repeats keeps its text readable', () => {
+  const css = readFileSync('src/styles/motion.css', 'utf8')
+  const palettes = JSON.parse(readFileSync('src/palettes/palettes.source.json', 'utf8')) as {
+    name: string
+    light: Record<string, string>
+    dark: Record<string, string>
+  }[]
+
+  /** The keyframes named by an `infinite` animation, and the opacities in them. */
+  const repeating = [...css.matchAll(/--animate-[\w-]+:\s*([\w-]+)[^;]*\binfinite\b/g)].map(
+    ([, name]) => name!,
+  )
+
+  const troughs = repeating.flatMap((name) => {
+    const block = new RegExp(`@keyframes ${name} \\{([\\s\\S]*?)\\n  \\}`).exec(css)
+    const found = [...(block?.[1] ?? '').matchAll(/opacity:\s*([\d.]+)/g)].map(([, v]) => Number(v))
+
+    return found.length ? [{ name, lowest: Math.min(...found) }] : []
+  })
+
+  it('finds the repeating animations rather than being told them', () => {
+    /* If the scan ever reads nothing — a renamed token, a reformatted file —
+       every case below would pass by having nothing to check. */
+    expect(troughs.length).toBeGreaterThan(0)
+    expect(troughs.every((t) => t.lowest > 0 && t.lowest <= 1)).toBe(true)
+  })
+
+  it.each(palettes.flatMap((p) => [`${p.name} light`, `${p.name} dark`]))(
+    '%s stays at AA through the whole cycle',
+    (combination) => {
+      const [name, mode] = combination.split(' ') as [string, 'light' | 'dark']
+      const colours = palettes.find((p) => p.name === name)![mode]
+
+      const failures = troughs
+        .map((t) => ({
+          ...t,
+          ratio: contrast(mix(colours['ink']!, colours['canvas']!, t.lowest), colours['canvas']!),
+        }))
+        .filter((t) => t.ratio < 4.5)
+        .map((t) => `${t.name} at ${t.lowest} — ${t.ratio.toFixed(2)}:1`)
+
+      expect(failures).toEqual([])
+    },
+  )
 })

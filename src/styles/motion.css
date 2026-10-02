@@ -31,6 +31,15 @@
     }
   }
 
+  /* The trough is 0.88 and not lower, because it is a contrast floor rather
+     than a taste. Opacity fades an element toward whatever is behind it, so
+     a pulsing element is a different contrast ratio every frame and the
+     worst frame is the one that has to pass. At 0.72 — where this started —
+     `ink` over `canvas` measured 3.28 in tokyo-night, 3.50 in rose-pine and
+     3.63 in catppuccin, all below AA, and the browser audit caught it about
+     once in thirty runs depending on which frame axe happened to sample.
+     `motion.spec.ts` now checks every palette at this number instead of
+     leaving it to chance. */
   @keyframes rk-pulse-soft {
     0%,
     100% {
@@ -38,7 +47,7 @@
       transform: scale(1);
     }
     50% {
-      opacity: 0.72;
+      opacity: 0.88;
       transform: scale(0.97);
     }
   }

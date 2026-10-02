@@ -151,7 +151,7 @@ export const PAIRINGS = [
 const TINTS = [0.16, 0.08]
 const TINTED_ON = ['primary', 'positive', 'negative', 'warning']
 
-function mix(hex, over, alpha) {
+export function mix(hex, over, alpha) {
   const parts = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
   const [r, g, b] = parts(hex)
   const ground = parts(over)

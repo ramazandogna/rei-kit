@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { copyToClipboard } from './clipboard'
-import { computed, ref } from 'vue'
+import { CopyButton } from '../src/index'
+import { computed } from 'vue'
 
 import { PACKAGE_MANAGERS, command, packageManager } from './preferences'
 
@@ -15,13 +15,6 @@ const { kind, args } = defineProps<{
 }>()
 
 const text = computed(() => command(kind, args, packageManager.value))
-const copied = ref(false)
-
-async function copy() {
-  if (!(await copyToClipboard(text.value))) return
-  copied.value = true
-  setTimeout(() => (copied.value = false), 1600)
-}
 </script>
 
 <template>
@@ -40,9 +33,18 @@ async function copy() {
     </div>
     <div class="ic-line">
       <code><span class="ic-prompt" aria-hidden="true">$ </span>{{ text }}</code>
-      <button type="button" class="ic-copy focus-ring" @click="copy">
+      <CopyButton
+        v-slot="{ copied }"
+        :text="text"
+        copy-label="Copy"
+        copied-label="Copied"
+        error-label="Could not copy"
+        with-text
+        variant="unstyled"
+        class="ic-copy focus-ring"
+      >
         {{ copied ? 'Copied ✓' : 'Copy' }}
-      </button>
+      </CopyButton>
     </div>
   </div>
 </template>

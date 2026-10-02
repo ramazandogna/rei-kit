@@ -63,7 +63,10 @@ test.describe('a focus ring is painted, not only declared', () => {
             )
           }
 
-          return painted(element) || (element.nextElementSibling !== null && painted(element.nextElementSibling))
+          return (
+            painted(element) ||
+            (element.nextElementSibling !== null && painted(element.nextElementSibling))
+          )
         })
 
         if (!drawn) unpainted.push(`${selector} — no outline and no ring`)

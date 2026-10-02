@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { copyToClipboard } from './clipboard'
 import { ref } from 'vue'
 
 import { NumberTicker } from '../src/motion/index'
@@ -11,6 +10,7 @@ import {
   BaseBadge,
   BaseButton,
   BaseSwitch,
+  CopyButton,
   MATERIALS,
   PALETTES,
   ProgressBar,
@@ -30,14 +30,6 @@ const material = useMaterial()
 const toast = useToast()
 
 const reminder = ref(true)
-const copied = ref(false)
-
-async function copyInstall() {
-  if (!(await copyToClipboard('pnpm add rei-kit'))) return
-  copied.value = true
-  setTimeout(() => (copied.value = false), 1600)
-}
-
 /* What a reader checks before anything else: will it run in my project. Read
    from the package's own peer ranges, so it cannot fall behind them. */
 const PLATFORM = [
@@ -87,11 +79,19 @@ const TAGLINE: Record<string, string> = {
       </p>
 
       <div class="hero-actions">
-        <button type="button" class="hero-install control" @click="copyInstall">
+        <CopyButton
+          v-slot="{ copied }"
+          text="pnpm add rei-kit"
+          copy-label="Copy the install command"
+          copied-label="Copied"
+          error-label="Could not copy"
+          variant="unstyled"
+          class="hero-install control focus-ring"
+        >
           <span class="hero-prompt" aria-hidden="true">$</span>
           pnpm add rei-kit
           <span class="hero-copy-mark" aria-hidden="true">{{ copied ? '✓' : '⧉' }}</span>
-        </button>
+        </CopyButton>
 
         <BaseButton as="a" href="#start" size="md">Get started</BaseButton>
         <BaseButton as="a" href="#api" size="md" variant="secondary">Browse components</BaseButton>

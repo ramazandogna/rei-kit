@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { copyToClipboard } from './clipboard'
-import { computed, ref } from 'vue'
+import { CopyButton } from '../src/index'
+import { computed } from 'vue'
 
 import { highlight } from './highlight'
 import type { CodeLang } from './highlight'
@@ -43,13 +43,6 @@ const shown = computed(() => (js !== undefined && codeLanguage.value === 'js' ? 
 const coloured = computed(() =>
   highlight(shown.value, (file?.split('.').pop() ?? lang) as CodeLang),
 )
-const copied = ref(false)
-
-async function copy() {
-  if (!(await copyToClipboard(shown.value))) return
-  copied.value = true
-  setTimeout(() => (copied.value = false), 1600)
-}
 </script>
 
 <template>
@@ -69,9 +62,18 @@ async function copy() {
             {{ option === 'ts' ? 'TS' : 'JS' }}
           </button>
         </div>
-        <button type="button" class="cb-copy focus-ring" @click="copy">
+        <CopyButton
+          v-slot="{ copied }"
+          :text="shown"
+          copy-label="Copy"
+          copied-label="Copied"
+          error-label="Could not copy"
+          with-text
+          variant="unstyled"
+          class="cb-copy focus-ring"
+        >
           {{ copied ? 'Copied ✓' : 'Copy' }}
-        </button>
+        </CopyButton>
       </div>
     </div>
     <!-- A focus stop, and named.

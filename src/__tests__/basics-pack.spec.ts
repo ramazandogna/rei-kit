@@ -166,6 +166,55 @@ describe('CopyButton', () => {
     vi.useRealTimers()
   })
 
+  it('keeps the announcement when it loses the paint', async () => {
+    /* The reason `unstyled` exists. Three places on this kit's own site
+       wrote their own copy button to get a different shape, and all three
+       dropped the live region on the way — so the tick appeared and a reader
+       who could not see it was told nothing. The paint is what the caller is
+       allowed to take away; the saying is not. */
+    vi.useFakeTimers()
+    clipboard(vi.fn<() => Promise<void>>().mockResolvedValue(undefined))
+
+    const wrapper = mount(CopyButton, {
+      props: {
+        text: 'pnpm add rei-kit',
+        copyLabel: 'Copy',
+        copiedLabel: 'Copied',
+        variant: 'unstyled',
+      },
+    })
+
+    expect(wrapper.classes()).not.toContain('control')
+    expect(wrapper.classes()).not.toContain('rk-copy')
+
+    await wrapper.trigger('click')
+    await nextTick()
+
+    expect(wrapper.find('[role="status"]').text()).toBe('Copied')
+    expect(wrapper.attributes('aria-label')).toBe('Copied')
+    vi.useRealTimers()
+  })
+
+  it('lets the caller supply the content, and hands back the state', async () => {
+    vi.useFakeTimers()
+    clipboard(vi.fn<() => Promise<void>>().mockResolvedValue(undefined))
+
+    const wrapper = mount(CopyButton, {
+      props: { text: 'x', copyLabel: 'Copy', copiedLabel: 'Copied', withText: true },
+      slots: { default: `<template #default="{ copied }">{{ copied ? 'Done' : 'Go' }}</template>` },
+    })
+
+    expect(wrapper.text()).toContain('Go')
+
+    await wrapper.trigger('click')
+    await nextTick()
+
+    expect(wrapper.text()).toContain('Done')
+    /* `withText` means the words name the button, so it is not named twice. */
+    expect(wrapper.attributes('aria-label')).toBeUndefined()
+    vi.useRealTimers()
+  })
+
   it('reports a refusal instead of failing silently', async () => {
     clipboard(vi.fn<() => Promise<void>>().mockRejectedValue(new Error('denied')))
     const wrapper = mount(CopyButton, {

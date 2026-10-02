@@ -2367,6 +2367,13 @@
         "type": "boolean",
         "description": "Show the label beside the icon, rather than only to assistive tech.",
         "default": "false"
+      },
+      {
+        "name": "variant",
+        "required": false,
+        "type": "'default' | 'unstyled'",
+        "description": "`unstyled` keeps the copying and drops the surface and the icon. The announcement is the part that is laborious and the part that is dropped: a copy button that says nothing leaves somebody who cannot see the tick pressing it twice. Three places on this kit's own site wrote their own copy button to get a different shape — a pill in a code block's bar, a whole install command — and all three lost the announcement on the way. That is the gap this closes: the behaviour without the paint, the same answer `BaseButton` and `BaseInput` give. Unstyled brings no focus ring either, so give it one.",
+        "default": "'default'"
       }
     ]
   },

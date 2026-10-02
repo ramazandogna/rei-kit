@@ -5,6 +5,28 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased
+
+**`CopyButton` can take its behaviour without its appearance.**
+
+`variant="unstyled"` and a default slot, the same answer `BaseButton` and
+`BaseInput` already give. The gap was found by running this kit's own test
+for gaps — a hand-written control in a file that already imports the kit's
+version of it — across the showcase: three copy buttons, written by hand to
+get a shape `CopyButton` could not make. A pill in a code block's bar, one
+in the install card, and the install command itself in the hero.
+
+**All three had dropped the announcement.** That is the part `CopyButton`
+exists for: a button that changes nothing but a tick leaves somebody who
+cannot see the tick pressing it twice. The paint is what a caller is allowed
+to take away; the live region comes with the behaviour and cannot be. The
+three are now the kit's own part and say so again, which
+`browser/copy.spec.ts` checks on the built page — it fails on the version
+before this change.
+
+Given a slot, set `withText` too: the `aria-label` is there to name a button
+whose only content is an icon, and words do not need naming twice.
+
 ## 3.2.1 — 2026-10-02
 
 **`animate-pulse-soft` was below AA in three palettes, and the check that

@@ -20,6 +20,7 @@ const {
   copiedLabel,
   errorLabel = undefined,
   withText = false,
+  variant = 'default',
 } = defineProps<{
   /** What lands on the clipboard. */
   text: string
@@ -31,7 +32,30 @@ const {
   errorLabel?: string | undefined
   /** Show the label beside the icon, rather than only to assistive tech. */
   withText?: boolean | undefined
+  /**
+   * `unstyled` keeps the copying and drops the surface and the icon.
+   *
+   * The announcement is the part that is laborious and the part that is
+   * dropped: a copy button that says nothing leaves somebody who cannot see
+   * the tick pressing it twice. Three places on this kit's own site wrote
+   * their own copy button to get a different shape — a pill in a code block's
+   * bar, a whole install command — and all three lost the announcement on the
+   * way. That is the gap this closes: the behaviour without the paint, the
+   * same answer `BaseButton` and `BaseInput` give.
+   *
+   * Unstyled brings no focus ring either, so give it one.
+   */
+  variant?: 'default' | 'unstyled' | undefined
 }>()
+
+/**
+ * The button's content, for a shape the icon-and-label pair does not cover.
+ *
+ * Given one, set `withText` as well: the `aria-label` exists to name a button
+ * whose only content is an icon, and a slot that renders words does not need
+ * naming twice.
+ */
+defineSlots<{ default?: (props: { copied: boolean; failed: boolean }) => unknown }>()
 
 const emit = defineEmits<{ copied: []; failed: [] }>()
 
@@ -61,14 +85,19 @@ onBeforeUnmount(() => {
 <template>
   <button
     type="button"
-    class="rk-copy control focus-ring"
-    :class="{ 'is-copied': state === 'copied', 'with-text': withText }"
+    :class="
+      variant === 'unstyled'
+        ? ''
+        : ['rk-copy control focus-ring', { 'is-copied': state === 'copied', 'with-text': withText }]
+    "
     :aria-label="withText ? undefined : state === 'copied' ? copiedLabel : copyLabel"
     @click="copy"
   >
-    <Check v-if="state === 'copied'" class="size-4 shrink-0" aria-hidden="true" />
-    <Copy v-else class="size-4 shrink-0" aria-hidden="true" />
-    <span v-if="withText">{{ state === 'copied' ? copiedLabel : copyLabel }}</span>
+    <slot :copied="state === 'copied'" :failed="state === 'failed'">
+      <Check v-if="state === 'copied'" class="size-4 shrink-0" aria-hidden="true" />
+      <Copy v-else class="size-4 shrink-0" aria-hidden="true" />
+      <span v-if="withText">{{ state === 'copied' ? copiedLabel : copyLabel }}</span>
+    </slot>
 
     <!-- Said once, when it changes: a live region the button itself owns. -->
     <span class="sr-only" role="status" aria-live="polite">

@@ -67,6 +67,36 @@ without.
 
 ---
 
+## 3.2.0
+
+**Take this one, especially if you build forms.** Everything here adds; a
+component you do not pass the new prop to renders exactly what it did.
+
+**What you gain.**
+
+- **Every field can be linked to from an `ErrorSummary`.** `fieldId` is now
+  a prop on `BaseInput`, `BaseTextarea`, `BaseSelect`, `BaseDatePicker`,
+  `TimePicker`, `NumberInput`, `TagsInput` and `ColorPicker`. Until now only
+  `FormField` and `PasswordInput` took one, which meant a form built the
+  ordinary way could not be summarised — the summary's links pointed at
+  nothing, and the only way out was to hand-write the control inside a bare
+  `FormField`. Pass the same function to the summary and to each field:
+
+  ```vue
+  <ErrorSummary :errors="errors" :field-id="fieldId" … />
+  <BaseInput v-model="email" label="Email" :field-id="fieldId('email')" />
+  ```
+
+- **Your editor now shows a sample for every component.** Hovering one gives
+  its summary and a usage example taken from the kit's own type-checked
+  sample files, so what you read is proven to compile.
+- **And which parts it is confused with.** 52 components carry a `@see` to
+  their near-neighbours, so hovering `BaseTable` tells you `DataTable`
+  exists before you pick the wrong one.
+
+**What you have to do.** Nothing. Left out, `fieldId` behaves as before and
+each field generates its own id.
+
 ## 3.1.0
 
 **Take this one freely.** It adds and changes nothing: a field with no addon

@@ -11,6 +11,8 @@
  * ```vue
  * <NumberTicker :value="balance" :format="{ style: 'currency', currency: 'TRY' }" />
  * ```
+ *
+ * @see {@link CountUp} — the near-neighbour this is mistaken for
  */
 export { default as NumberTicker } from './NumberTicker.vue'
 /**
@@ -20,6 +22,8 @@ export { default as NumberTicker } from './NumberTicker.vue'
  * ```vue
  * <CountUp :value="12480" />
  * ```
+ *
+ * @see {@link NumberTicker} — the near-neighbour this is mistaken for
  */
 export { default as CountUp } from './CountUp.vue'
 /**

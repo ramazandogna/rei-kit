@@ -112,6 +112,8 @@ export { default as BaseAlert } from './components/BaseAlert.vue'
  * ```vue
  * <BaseBadge tone="success">Paid</BaseBadge>
  * ```
+ *
+ * @see {@link BaseChip} — the near-neighbour this is mistaken for
  */
 export { default as BaseBadge } from './components/BaseBadge.vue'
 /**
@@ -126,6 +128,8 @@ export { default as BaseBadge } from './components/BaseBadge.vue'
  *   <BaseButton as="a" href="/docs" variant="ghost">Read the docs</BaseButton>
  * </div>
  * ```
+ *
+ * @see {@link BaseLink} — the near-neighbour this is mistaken for
  */
 export { default as BaseButton } from './components/BaseButton.vue'
 /**
@@ -142,6 +146,8 @@ export { default as BaseButton } from './components/BaseButton.vue'
  *   <template #suffix><span aria-hidden="true">kg</span></template>
  * </BaseInput>
  * ```
+ *
+ * @see {@link PasswordInput} — the near-neighbour this is mistaken for
  */
 export { default as BaseInput } from './components/BaseInput.vue'
 /**
@@ -158,6 +164,8 @@ export { default as BaseInput } from './components/BaseInput.vue'
  *   <button type="button" role="menuitem" @click="signOut">Sign out</button>
  * </BaseMenu>
  * ```
+ *
+ * @see {@link BaseModal}, {@link BasePopover}, {@link CommandMenu}, {@link MegaMenu}, {@link NavLinks} — the near-neighbours this is mistaken for
  */
 export { default as BaseMenu } from './components/BaseMenu.vue'
 /**
@@ -171,6 +179,8 @@ export { default as BaseMenu } from './components/BaseMenu.vue'
  *   <p>Anything that belongs to a thumb.</p>
  * </BaseSheet>
  * ```
+ *
+ * @see {@link BaseDrawer}, {@link BaseModal} — the near-neighbours this is mistaken for
  */
 export { default as BaseSheet } from './components/BaseSheet.vue'
 /**
@@ -220,6 +230,8 @@ export { default as BaseCard } from './components/BaseCard.vue'
  *   @search="search"
  * />
  * ```
+ *
+ * @see {@link BaseSelect}, {@link TagsInput}, {@link TransferList} — the near-neighbours this is mistaken for
  */
 export { default as BaseCombobox } from './components/BaseCombobox.vue'
 export type { ComboboxOption } from './components/BaseCombobox.vue'
@@ -230,6 +242,8 @@ export type { ComboboxOption } from './components/BaseCombobox.vue'
  * ```vue
  * <BaseCheckbox v-model="remember" label="Remember me" />
  * ```
+ *
+ * @see {@link BaseSwitch} — the near-neighbour this is mistaken for
  */
 export { default as BaseCheckbox } from './components/BaseCheckbox.vue'
 /**
@@ -239,6 +253,8 @@ export { default as BaseCheckbox } from './components/BaseCheckbox.vue'
  * ```vue
  * <BaseRadioGroup v-model="plan" legend="Plan" :options="plans" />
  * ```
+ *
+ * @see {@link BaseListbox}, {@link BaseSelect} — the near-neighbours this is mistaken for
  */
 export { default as BaseRadioGroup } from './components/BaseRadioGroup.vue'
 /**
@@ -248,6 +264,8 @@ export { default as BaseRadioGroup } from './components/BaseRadioGroup.vue'
  * ```vue
  * <BaseSelect v-model="currency" label="Currency" :options="options" placeholder="Choose one" />
  * ```
+ *
+ * @see {@link BaseCombobox}, {@link BaseListbox}, {@link BaseRadioGroup} — the near-neighbours this is mistaken for
  */
 export { default as BaseSelect } from './components/BaseSelect.vue'
 /**
@@ -257,6 +275,8 @@ export { default as BaseSelect } from './components/BaseSelect.vue'
  * ```vue
  * <BaseSlider v-model="goal" label="Daily goal" :min="5" :max="60" :step="5" show-value />
  * ```
+ *
+ * @see {@link NumberInput}, {@link SliderField} — the near-neighbours this is mistaken for
  */
 export { default as BaseSlider } from './components/BaseSlider.vue'
 
@@ -278,6 +298,8 @@ export { default as BaseSlider } from './components/BaseSlider.vue'
  *   hint="Drag for roughly right, type for exactly right."
  * />
  * ```
+ *
+ * @see {@link BaseSlider}, {@link NumberInput} — the near-neighbours this is mistaken for
  */
 export { default as SliderField } from './components/SliderField.vue'
 /**
@@ -287,6 +309,8 @@ export { default as SliderField } from './components/SliderField.vue'
  * ```vue
  * <BaseSpinner label="Loading entries" />
  * ```
+ *
+ * @see {@link ProgressBar} — the near-neighbour this is mistaken for
  */
 export { default as BaseSpinner } from './components/BaseSpinner.vue'
 /**
@@ -296,6 +320,8 @@ export { default as BaseSpinner } from './components/BaseSpinner.vue'
  * ```vue
  * <BaseSwitch v-model="reminders" label="Daily reminder" hint="Every evening at 21:00" />
  * ```
+ *
+ * @see {@link BaseCheckbox} — the near-neighbour this is mistaken for
  */
 export { default as BaseSwitch } from './components/BaseSwitch.vue'
 /**
@@ -307,6 +333,8 @@ export { default as BaseSwitch } from './components/BaseSwitch.vue'
  *   <template #amount="{ value }">{{ value }} ₺</template>
  * </BaseTable>
  * ```
+ *
+ * @see {@link DataTable} — the near-neighbour this is mistaken for
  */
 export { default as BaseTable } from './components/BaseTable.vue'
 export type { Column } from './components/BaseTable.vue'
@@ -399,6 +427,8 @@ export { default as PageHeader } from './components/PageHeader.vue'
  * ```vue
  * <ProgressBar :value="18" :max="28" label="Course progress" />
  * ```
+ *
+ * @see {@link BaseSpinner} — the near-neighbour this is mistaken for
  */
 export { default as ProgressBar } from './components/ProgressBar.vue'
 /**
@@ -437,6 +467,8 @@ export { default as SectionHeading } from './components/SectionHeading.vue'
  * ```vue
  * <SegmentedControl v-model="range" :options="ranges" />
  * ```
+ *
+ * @see {@link ToggleGroup} — the near-neighbour this is mistaken for
  */
 export { default as SegmentedControl } from './components/SegmentedControl.vue'
 /**
@@ -476,6 +508,8 @@ export { default as SettingsRow } from './components/SettingsRow.vue'
  * ```vue
  * <SkeletonList :rows="4" label="Loading entries" />
  * ```
+ *
+ * @see {@link BaseSkeleton} — the near-neighbour this is mistaken for
  */
 export { default as SkeletonList } from './components/SkeletonList.vue'
 /**
@@ -534,6 +568,8 @@ export { default as GoogleButton } from './components/GoogleButton.vue'
  * ```vue
  * <TabBar :items="tabs" :active="active" label="Main" />
  * ```
+ *
+ * @see {@link BaseTabs}, {@link NavLinks} — the near-neighbours this is mistaken for
  */
 export { default as TabBar } from './components/TabBar.vue'
 export type { TabItem } from './components/TabBar.vue'
@@ -552,6 +588,8 @@ export type { TabItem } from './components/TabBar.vue'
  *   @select="toast.info($event)"
  * />
  * ```
+ *
+ * @see {@link BaseCalendar} — the near-neighbour this is mistaken for
  */
 export { default as ActivityGrid } from './components/ActivityGrid.vue'
 /**
@@ -569,6 +607,8 @@ export { default as ActivityGrid } from './components/ActivityGrid.vue'
  *   :fill="(item) => (item.key === 'rei' ? 'bg-positive' : 'bg-muted')"
  * />
  * ```
+ *
+ * @see {@link DonutChart} — the near-neighbour this is mistaken for
  */
 export { default as BarChart } from './components/BarChart.vue'
 /**
@@ -583,6 +623,8 @@ export { default as BarChart } from './components/BarChart.vue'
  *   :fill="(_, index) => TONES[index % TONES.length]!"
  * />
  * ```
+ *
+ * @see {@link BarChart} — the near-neighbour this is mistaken for
  */
 export { default as DonutChart } from './components/DonutChart.vue'
 /**
@@ -726,6 +768,8 @@ export { default as AvatarStack } from './components/AvatarStack.vue'
  *   :min="todayKey()"
  * />
  * ```
+ *
+ * @see {@link ActivityGrid}, {@link BaseDatePicker} — the near-neighbours this is mistaken for
  */
 export { default as BaseCalendar } from './components/BaseCalendar.vue'
 /**
@@ -744,6 +788,8 @@ export { default as BaseCalendar } from './components/BaseCalendar.vue'
  *   />
  * </div>
  * ```
+ *
+ * @see {@link BaseBadge} — the near-neighbour this is mistaken for
  */
 export { default as BaseChip } from './components/BaseChip.vue'
 /**
@@ -762,6 +808,8 @@ export { default as BaseKbd } from './components/BaseKbd.vue'
  * ```vue
  * <BaseListbox v-model="chosen" mode="multiple" :options="people" label="People with access" />
  * ```
+ *
+ * @see {@link BaseRadioGroup}, {@link BaseSelect}, {@link TransferList} — the near-neighbours this is mistaken for
  */
 export { default as BaseListbox } from './components/BaseListbox.vue'
 export type { ListboxOption } from './components/BaseListbox.vue'
@@ -775,6 +823,8 @@ export type { ListboxOption } from './components/BaseListbox.vue'
  *   <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.
  * </p>
  * ```
+ *
+ * @see {@link BaseButton} — the near-neighbour this is mistaken for
  */
 export { default as BaseLink } from './components/BaseLink.vue'
 /**
@@ -814,6 +864,8 @@ export { default as BaseSeparator } from './components/BaseSeparator.vue'
  *   </div>
  * </div>
  * ```
+ *
+ * @see {@link SkeletonList} — the near-neighbour this is mistaken for
  */
 export { default as BaseSkeleton } from './components/BaseSkeleton.vue'
 /**
@@ -908,6 +960,8 @@ export { default as FileDrop } from './components/FileDrop.vue'
  *   :max="5"
  * />
  * ```
+ *
+ * @see {@link BaseCombobox}, {@link TransferList} — the near-neighbours this is mistaken for
  */
 export { default as TagsInput } from './components/TagsInput.vue'
 /**
@@ -927,6 +981,8 @@ export { default as TagsInput } from './components/TagsInput.vue'
  *   hint="Stored as HH:mm, shown in your own clock."
  * />
  * ```
+ *
+ * @see {@link BaseDatePicker} — the near-neighbour this is mistaken for
  */
 export { default as TimePicker } from './components/TimePicker.vue'
 /**
@@ -942,6 +998,8 @@ export { default as TimePicker } from './components/TimePicker.vue'
  *   </template>
  * </BaseTimeline>
  * ```
+ *
+ * @see {@link BaseStepper} — the near-neighbour this is mistaken for
  */
 export { default as BaseTimeline } from './components/BaseTimeline.vue'
 export type { TimelineEvent } from './components/BaseTimeline.vue'
@@ -962,6 +1020,8 @@ export type { DateRange } from './components/BaseCalendar.vue'
  *   next-label="Next month"
  * />
  * ```
+ *
+ * @see {@link BaseCalendar}, {@link TimePicker} — the near-neighbours this is mistaken for
  */
 export { default as BaseDatePicker } from './components/BaseDatePicker.vue'
 export type { DatePreset } from './components/BaseDatePicker.vue'
@@ -981,6 +1041,8 @@ export type { DatePreset } from './components/BaseDatePicker.vue'
  *   </template>
  * </BasePopconfirm>
  * ```
+ *
+ * @see {@link ResponsiveDialog} — the near-neighbour this is mistaken for
  */
 export { default as BasePopconfirm } from './components/BasePopconfirm.vue'
 /**
@@ -1000,6 +1062,8 @@ export { default as BasePopconfirm } from './components/BasePopconfirm.vue'
  *   </template>
  * </BasePopover>
  * ```
+ *
+ * @see {@link BaseMenu}, {@link BaseModal} — the near-neighbours this is mistaken for
  */
 export { default as BasePopover } from './components/BasePopover.vue'
 export type { PopoverTriggerProps } from './components/BasePopover.vue'
@@ -1010,6 +1074,8 @@ export type { PopoverTriggerProps } from './components/BasePopover.vue'
  * ```vue
  * <ToggleGroup v-model="marks" mode="multiple" :options="marksOptions" label="Text style" />
  * ```
+ *
+ * @see {@link SegmentedControl} — the near-neighbour this is mistaken for
  */
 export { default as ToggleGroup } from './components/ToggleGroup.vue'
 /**
@@ -1026,6 +1092,8 @@ export { default as ToggleGroup } from './components/ToggleGroup.vue'
  *   increment-label="More guests"
  * />
  * ```
+ *
+ * @see {@link BaseSlider}, {@link SliderField} — the near-neighbours this is mistaken for
  */
 export { default as NumberInput } from './components/NumberInput.vue'
 /**
@@ -1055,6 +1123,8 @@ export { default as PinInput } from './components/PinInput.vue'
  *   autocomplete="new-password"
  * />
  * ```
+ *
+ * @see {@link BaseInput} — the near-neighbour this is mistaken for
  */
 export { default as PasswordInput } from './components/PasswordInput.vue'
 /**
@@ -1084,6 +1154,8 @@ export { default as CircularProgress } from './components/CircularProgress.vue'
  * />
  * <BaseButton class="mt-4" @click="step = 'payment'">Next</BaseButton>
  * ```
+ *
+ * @see {@link BaseTimeline} — the near-neighbour this is mistaken for
  */
 export { default as BaseStepper } from './components/BaseStepper.vue'
 export type { StepperStep } from './components/BaseStepper.vue'

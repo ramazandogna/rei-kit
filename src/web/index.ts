@@ -22,6 +22,8 @@
  *   </template>
  * </BaseAccordion>
  * ```
+ *
+ * @see {@link BaseDisclosure}, {@link BaseTree} — the near-neighbours this is mistaken for
  */
 export { default as BaseAccordion } from './BaseAccordion.vue'
 export type { AccordionItem } from './BaseAccordion.vue'
@@ -91,6 +93,8 @@ export { default as BaseContextMenu } from './BaseContextMenu.vue'
  *   Everything that did not fit in the summary.
  * </BaseDisclosure>
  * ```
+ *
+ * @see {@link BaseAccordion} — the near-neighbour this is mistaken for
  */
 export { default as BaseDisclosure } from './BaseDisclosure.vue'
 /**
@@ -117,6 +121,8 @@ export { default as BaseDisclosure } from './BaseDisclosure.vue'
  *   </template>
  * </BaseHoverCard>
  * ```
+ *
+ * @see {@link BaseTooltip} — the near-neighbour this is mistaken for
  */
 export { default as BaseHoverCard } from './BaseHoverCard.vue'
 /**
@@ -139,6 +145,8 @@ export { default as BaseHoverCard } from './BaseHoverCard.vue'
  *   </template>
  * </BaseDrawer>
  * ```
+ *
+ * @see {@link BaseModal}, {@link BaseSheet} — the near-neighbours this is mistaken for
  */
 export { default as BaseDrawer } from './BaseDrawer.vue'
 
@@ -162,6 +170,8 @@ export { default as BaseDrawer } from './BaseDrawer.vue'
  *   </template>
  * </BaseModal>
  * ```
+ *
+ * @see {@link BaseDrawer}, {@link BaseMenu}, {@link BasePopover}, {@link BaseSheet} — the near-neighbours this is mistaken for
  */
 export { default as BaseModal } from './BaseModal.vue'
 
@@ -201,6 +211,8 @@ export { default as BasePagination } from './BasePagination.vue'
  *   @select="run"
  * />
  * ```
+ *
+ * @see {@link BaseMenu} — the near-neighbour this is mistaken for
  */
 export { default as CommandMenu } from './CommandMenu.vue'
 export type { CommandGroup, CommandItem } from './CommandMenu.vue'
@@ -224,6 +236,8 @@ export type { CommandGroup, CommandItem } from './CommandMenu.vue'
  *   <template #amount="{ value }">{{ value }} ₺</template>
  * </DataTable>
  * ```
+ *
+ * @see {@link BaseTable} — the near-neighbour this is mistaken for
  */
 export { default as DataTable } from './DataTable.vue'
 export type { DataColumn, TableSort } from './DataTable.vue'
@@ -268,6 +282,8 @@ export { default as BaseToolbar } from './BaseToolbar.vue'
  * ```vue
  * <BaseTree v-model="chosen" v-model:expanded="open" :nodes="nodes" label="Files" />
  * ```
+ *
+ * @see {@link BaseAccordion} — the near-neighbour this is mistaken for
  */
 export { default as BaseTree } from './BaseTree.vue'
 export type { TreeNode } from './BaseTree.vue'
@@ -286,6 +302,8 @@ export type { TreeNode } from './BaseTree.vue'
  *   remove-label="Take back the chosen permissions"
  * />
  * ```
+ *
+ * @see {@link BaseCombobox}, {@link BaseListbox}, {@link TagsInput} — the near-neighbours this is mistaken for
  */
 export { default as TransferList } from './TransferList.vue'
 
@@ -307,6 +325,8 @@ export { default as TransferList } from './TransferList.vue'
  *   </template>
  * </ResponsiveDialog>
  * ```
+ *
+ * @see {@link BasePopconfirm} — the near-neighbour this is mistaken for
  */
 export { default as ResponsiveDialog } from './ResponsiveDialog.vue'
 
@@ -322,6 +342,8 @@ export { default as ResponsiveDialog } from './ResponsiveDialog.vue'
  *   </template>
  * </BaseTabs>
  * ```
+ *
+ * @see {@link NavLinks}, {@link TabBar} — the near-neighbours this is mistaken for
  */
 export { default as BaseTabs } from './BaseTabs.vue'
 export type { TabPanel } from './BaseTabs.vue'
@@ -345,6 +367,8 @@ export type { TabPanel } from './BaseTabs.vue'
  *   <div class="bg-muted rounded-card grid h-24 w-full place-items-center">A calendar cell</div>
  * </BaseTooltip>
  * ```
+ *
+ * @see {@link BaseHoverCard} — the near-neighbour this is mistaken for
  */
 export { default as BaseTooltip } from './BaseTooltip.vue'
 
@@ -361,6 +385,8 @@ export { default as BaseTooltip } from './BaseTooltip.vue'
  *   </template>
  * </MegaMenu>
  * ```
+ *
+ * @see {@link BaseMenu}, {@link NavLinks} — the near-neighbours this is mistaken for
  */
 export { default as MegaMenu } from './MegaMenu.vue'
 export type { MegaMenuColumn, MegaMenuItem, MegaMenuLink } from './MegaMenu.vue'
@@ -372,6 +398,8 @@ export type { MegaMenuColumn, MegaMenuItem, MegaMenuLink } from './MegaMenu.vue'
  * ```vue
  * <NavLinks :items="links" :active="active" label="Main" />
  * ```
+ *
+ * @see {@link BaseMenu}, {@link BaseTabs}, {@link MegaMenu}, {@link TabBar} — the near-neighbours this is mistaken for
  */
 export { default as NavLinks } from './NavLinks.vue'
 export type { NavLinkItem } from './NavLinks.vue'

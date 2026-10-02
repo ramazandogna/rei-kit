@@ -357,6 +357,59 @@ describe('the editor sees what the catalogue knows', () => {
     expect(stale).toEqual([])
   })
 
+  /**
+   * Every near-neighbour `AGENTS.md` argues about is cross-linked.
+   *
+   * "Which one to reach for" is the most useful prose here and it is nowhere
+   * a consumer looks; the failure it describes — "picking the wrong one
+   * compiles and looks almost right" — starts with not knowing the other
+   * exists. So the pairing is carried to the export as a `@see` while the
+   * argument stays in one place.
+   *
+   * Skipped in a clone, where `AGENTS.md` is not present and there is
+   * nothing to compare the committed lines against.
+   */
+  it.skipIf(!agents).each(ENTRIES)('%s cross-links the parts it is confused with', (entry) => {
+    const section = agents!.slice(
+      agents!.indexOf('## Which one to reach for'),
+      agents!.indexOf('## Tokens'),
+    )
+    const known = new Set(catalogue.map((item) => item.name))
+
+    const expected = new Map<string, Set<string>>()
+    for (const [, head] of section.matchAll(/\n- \*\*(.+?)\*\*/gs)) {
+      const named = [
+        ...new Set([...head!.matchAll(/`(\w+)[^`]*`/g)].map(([, name]) => name!)),
+      ].filter((name) => known.has(name))
+      if (named.length < 2) continue
+
+      for (const name of named) {
+        const set = expected.get(name) ?? new Set<string>()
+        for (const other of named) if (other !== name) set.add(other)
+        expected.set(name, set)
+      }
+    }
+
+    const source = readFileSync(entry, 'utf8')
+    const wrong: string[] = []
+
+    for (const [, name] of source.matchAll(/^export \{ default as (\w+) \}/gm)) {
+      const want = expected.get(name!)
+      if (!want) continue
+
+      const comment = source
+        .slice(0, source.indexOf(`export { default as ${name} }`))
+        .split('/**')
+        .pop()!
+
+      for (const other of want) {
+        if (!comment.includes(`{@link ${other}}`)) wrong.push(`${name} → ${other}`)
+      }
+    }
+
+    expect(wrong).toEqual([])
+  })
+
   it.each(ENTRIES)('%s documents every component it exports', (entry) => {
     const lines = readFileSync(entry, 'utf8').split('\n')
     const silent: string[] = []

@@ -21,6 +21,57 @@ import { dirname, join } from 'node:path'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 
+/**
+ * The near-neighbours of each component, derived from the one place the
+ * distinctions are argued.
+ *
+ * `AGENTS.md`'s "which one to reach for" is the most useful prose in this
+ * project and it is nowhere a consumer looks. The prose itself is too long
+ * for a tooltip — 68 words to the bullet — and copying a shortened version
+ * into every export would put the same editorial claim in two places that
+ * can then disagree. What a reader is actually missing is smaller: that the
+ * neighbour exists at all. `AGENTS.md` says as much — "picking the wrong one
+ * compiles and looks almost right" — so this carries the pairing and leaves
+ * the argument where it is.
+ *
+ * Returns null when `AGENTS.md` is not in the working copy, which is the
+ * case in a fresh clone; the generated `@see` lines are committed, so they
+ * survive the file they came from being absent.
+ */
+function neighbours() {
+  let agents
+  try {
+    agents = readFileSync(join(ROOT, 'AGENTS.md'), 'utf8')
+  } catch {
+    return null
+  }
+
+  const section = agents.slice(
+    agents.indexOf('## Which one to reach for'),
+    agents.indexOf('## Tokens'),
+  )
+  const known = new Set(
+    JSON.parse(readFileSync(join(ROOT, 'showcase/props.generated.json'), 'utf8')).map((c) => c.name),
+  )
+
+  const map = new Map()
+  for (const [, head] of section.matchAll(/\n- \*\*(.+?)\*\*/gs)) {
+    /* The first word inside each backtick span, so a heading written as
+       `BaseCombobox mode="multiple"` still names its component. */
+    const named = [...new Set([...head.matchAll(/`(\w+)[^`]*`/g)].map(([, name]) => name))].filter(
+      (name) => known.has(name),
+    )
+    if (named.length < 2) continue
+
+    for (const name of named) {
+      const rest = named.filter((other) => other !== name)
+      map.set(name, [...new Set([...(map.get(name) ?? []), ...rest])].sort())
+    }
+  }
+
+  return map
+}
+
 const ENTRIES = [
   'src/index.ts',
   'src/web/index.ts',
@@ -49,7 +100,7 @@ function templateOf(name) {
 }
 
 /** The comment as it should read: the summary it already has, plus the sample. */
-function rewrite(comment, template) {
+function rewrite(comment, template, near) {
   const body = comment
     .replace(/^\/\*\*/, '')
     .replace(/\*\/$/, '')
@@ -74,10 +125,19 @@ function rewrite(comment, template) {
     ' * ```vue',
     sample,
     ' * ```',
+    ...(near?.length
+      ? [
+          ' *',
+          ` * @see ${near.map((name) => `{@link ${name}}`).join(', ')} — ${
+            near.length === 1 ? 'the near-neighbour' : 'the near-neighbours'
+          } this is mistaken for`,
+        ]
+      : []),
     ' */',
   ].join('\n')
 }
 
+const near = neighbours()
 let written = 0
 let missing = []
 
@@ -113,7 +173,7 @@ for (const entry of ENTRIES) {
 
     const comment = out.slice(start, out.length).join('\n')
     out.length = start
-    out.push(rewrite(comment, template), lines[i])
+    out.push(rewrite(comment, template, near?.get(name)), lines[i])
     written += 1
   }
 
@@ -121,4 +181,5 @@ for (const entry of ENTRIES) {
 }
 
 console.log(`extract-doc-examples: ${written} exports carry their sample`)
+if (!near) console.log('  AGENTS.md is absent, so no @see lines were written')
 if (missing.length) console.log(`  no sample found for: ${missing.join(', ')}`)

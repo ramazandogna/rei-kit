@@ -67,6 +67,35 @@ without.
 
 ---
 
+## 3.3.0
+
+**Take this one if you have ever written your own copy button.**
+
+**What you gain.** `CopyButton` now takes `variant="unstyled"` and a default
+slot, so a shape the icon-and-label pair does not cover can still be the
+kit's part:
+
+```vue
+<CopyButton :text="command" copy-label="Copy" copied-label="Copied" with-text
+            variant="unstyled" class="my-pill focus-ring" v-slot="{ copied }">
+  {{ copied ? 'Copied ✓' : 'Copy' }}
+</CopyButton>
+```
+
+The reason this matters is the part that gets dropped when the button is
+written by hand: the live region that says it copied. A button that changes
+nothing but a tick leaves somebody who cannot see the tick pressing it
+twice. Three copy buttons on this kit's own site had lost exactly that, which
+is how the gap was found. Unstyled keeps the copying, the labels and the
+announcement, and drops only the surface and the icon — so give it a focus
+ring of its own.
+
+Pair a slot with `withText`, or the button is named twice: the `aria-label`
+is there to name one whose only content is an icon.
+
+**What you have to do.** Nothing. Without the prop, `CopyButton` renders
+exactly what it did.
+
 ## 3.2.1
 
 **Take this one. A pulsing label was unreadable in three palettes.**

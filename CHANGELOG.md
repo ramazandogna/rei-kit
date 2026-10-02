@@ -27,6 +27,15 @@ before this change.
 Given a slot, set `withText` too: the `aria-label` is there to name a button
 whose only content is an icon, and words do not need naming twice.
 
+**The same sweep found the showcase's palette picker walking backwards under
+RTL.** It read `ArrowRight` as "next", which is true only where the writing
+runs left to right — the fault the kit fixed in ten of its own controls in
+2.23.0, reproduced in a file that imports the kit, on a page with a
+direction toggle at the top of it. It reads the key through `horizontalStep`
+now, like everything else. Nothing in the package changed; the site did, and
+`browser/direction.spec.ts` presses the key in both directions so it cannot
+come back.
+
 ## 3.2.1 — 2026-10-02
 
 **`animate-pulse-soft` was below AA in three palettes, and the check that

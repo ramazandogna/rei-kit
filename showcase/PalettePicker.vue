@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 
-import { PALETTES, usePalette } from '../src/index'
+import { PALETTES, horizontalStep, usePalette } from '../src/index'
 
 /**
  * Ten palettes, each a circle cut into its four defining colours.
@@ -39,11 +39,18 @@ function onKeydown(event: KeyboardEvent) {
     return
   }
 
-  const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp']
-  if (!keys.includes(event.key)) return
+  /* `horizontalStep` rather than "right means next", because right means
+     next only where the writing does. This page has a direction toggle, so
+     the row it moves through runs the other way under it — the same fault
+     the kit fixed in ten of its own controls in 2.23.0, and `AGENTS.md` asks
+     anything written beside them to read the key the same way. Up and down
+     are not mirrored: a column runs top to bottom in both directions. */
+  const sideways = horizontalStep(event.key, event.target as Element | null)
+  const vertical = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0
+  const step = sideways || vertical
+  if (step === 0) return
 
   event.preventDefault()
-  const step = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : -1
   const index = PALETTES.findIndex((p) => p.name === palette.value)
   const next = PALETTES[(index + step + PALETTES.length) % PALETTES.length]!
 

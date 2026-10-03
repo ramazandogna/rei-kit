@@ -881,3 +881,34 @@ describe('styling the control rather than the field', () => {
     expect(wrapper.get('input').classes()).not.toContain('mt-4')
   })
 })
+
+describe('the 16px floor and who owns it', () => {
+  /* iOS zooms the viewport when it focuses a field under 16px and never
+     zooms back, which is why every control here carries `text-base`. It is a
+     floor, but a utility cannot express one: `text-base` beats `text-3xl` in
+     either order, measured in a real build. So a caller who takes the
+     control's classes takes the floor too — and only then. */
+  it('is stated for a plain unstyled field', () => {
+    const wrapper = mount(BaseInput, { props: { label: 'Search', variant: 'unstyled' } })
+
+    expect(wrapper.get('input').classes()).toContain('text-base')
+  })
+
+  it('steps aside when the caller paints the control', () => {
+    const wrapper = mount(BaseInput, {
+      props: { label: 'Amount', variant: 'unstyled', controlClass: 'control h-16 text-3xl' },
+    })
+
+    const classes = wrapper.get('input').classes()
+    expect(classes).toContain('text-3xl')
+    expect(classes).not.toContain('text-base')
+  })
+
+  it('still states it for a styled field, whatever else is passed', () => {
+    /* The default variant keeps its own surface, so the floor is still the
+       kit's to hold. */
+    const wrapper = mount(BaseInput, { props: { label: 'Amount', controlClass: 'text-right' } })
+
+    expect(wrapper.get('input').classes()).toContain('text-base')
+  })
+})

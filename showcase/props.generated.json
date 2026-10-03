@@ -1056,7 +1056,7 @@
         "name": "controlClass",
         "required": false,
         "type": "string",
-        "description": "Classes for the control itself, rather than for the field around it. `class` lands on the field, because that is where Vue puts a component's class and because a layout class means \"space this field\". That leaves `variant=\"unstyled\"` with no way to paint the control it just stripped — the point of stripping it — which is why an app with a large amount field wrote the whole thing by hand instead. It appends, so with the default variant a conflict is settled by Tailwind's own order rather than by writing it here; reach for it with `unstyled`, where there is nothing to settle.",
+        "description": "Classes for the control itself, rather than for the field around it. `class` lands on the field, because that is where Vue puts a component's class and because a layout class means \"space this field\". That leaves `variant=\"unstyled\"` with no way to paint the control it just stripped — the point of stripping it — which is why an app with a large amount field wrote the whole thing by hand instead. It appends, so with the default variant a conflict is settled by Tailwind's own order rather than by writing it here; reach for it with `unstyled`, where there is nothing to settle. Under `unstyled` it also takes over the 16px floor that stops iOS zooming on focus: `text-base` cannot be beaten by a larger utility, so the kit stops asserting it rather than overrule a caller who asked to paint the control. Keep the control at 16px or more.",
         "default": "undefined"
       }
     ]

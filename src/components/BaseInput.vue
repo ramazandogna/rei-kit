@@ -96,6 +96,11 @@ const {
      * It appends, so with the default variant a conflict is settled by
      * Tailwind's own order rather than by writing it here; reach for it with
      * `unstyled`, where there is nothing to settle.
+     *
+     * Under `unstyled` it also takes over the 16px floor that stops iOS
+     * zooming on focus: `text-base` cannot be beaten by a larger utility, so
+     * the kit stops asserting it rather than overrule a caller who asked to
+     * paint the control. Keep the control at 16px or more.
      */
     controlClass?: string | undefined
   } & /* @vue-ignore */ Omit<InputHTMLAttributes, 'size' | 'type'>
@@ -239,7 +244,13 @@ defineExpose({ focus })
           variant === 'unstyled'
             ? ''
             : 'control text-ink rounded-card focus-visible:outline-primary px-3 focus-visible:outline-2 focus-visible:outline-offset-1',
-          variant === 'unstyled' ? 'text-base' : CONTROL_CLASS,
+          /* The 16px floor stops iOS zooming the viewport when a field is
+             focused, and it is a floor rather than a lock — but as a utility
+             it is neither: `text-base` beats `text-3xl` whichever order they
+             are written in, measured. So a caller who has taken both the
+             surface and the control's classes has taken the floor with them,
+             and the kit stops stating it twice. */
+          variant === 'unstyled' ? (controlClass ? '' : 'text-base') : CONTROL_CLASS,
           variant !== 'unstyled' && invalid ? 'border-negative' : '',
           controlClass,
         ]"

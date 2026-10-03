@@ -5,7 +5,7 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
-## Unreleased
+## 3.6.0 — 2026-10-03
 
 **`controlClass` on the four fields — paint the control, not the field.**
 
@@ -25,6 +25,14 @@ with it.
 `controlClass` appends to the control. With the default variant a conflict
 is still settled by Tailwind's order rather than by writing it there; reach
 for it with `unstyled`, where there is nothing to settle.
+
+Under `unstyled` it also takes over the 16px floor. That floor stops iOS
+zooming the viewport when it focuses a field and never zooming back, and the
+kit states it as `text-base` — which cannot be beaten: measured in a real
+build, `text-base` wins against `text-3xl` whichever order the two are
+written in. A caller who has taken the surface and the control's classes has
+taken the floor with them, so the kit stops asserting it rather than overrule
+them. Keep the control at 16px or more.
 
 ## 3.5.0 — 2026-10-03
 

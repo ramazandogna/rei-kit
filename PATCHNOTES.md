@@ -67,6 +67,39 @@ without.
 
 ---
 
+## 3.6.0
+
+**Take this one if you have ever given up on a field and written your own.**
+
+**What you gain.** `controlClass` on `BaseInput`, `BaseTextarea`,
+`BaseSelect` and `PasswordInput` — classes for the control itself rather
+than for the field around it:
+
+```vue
+<BaseInput
+  v-model="amount"
+  :label="t('transaction.amount')"
+  variant="unstyled"
+  control-class="control rounded-card focus-ring h-16 px-4 text-3xl font-semibold"
+/>
+```
+
+`class` lands on the field, which is right — it is where Vue puts a
+component's class, and a layout class means "space this field". But that
+left `variant="unstyled"` with no way to paint the control it had just
+stripped, which is the one thing somebody choosing it wants. An app in this
+family had written a 64px amount field by hand for exactly that, and lost
+the label wiring, `aria-describedby` and the material with it. It uses the
+kit's field now.
+
+Under `unstyled`, `controlClass` also takes over the 16px floor that stops
+iOS zooming on focus — `text-base` cannot be beaten by a larger utility, so
+the kit stops asserting it rather than overrule you. Keep the control at
+16px or more.
+
+**What you have to do.** Nothing. A field you pass no `controlClass` to
+renders exactly what it did.
+
 ## 3.5.0
 
 **Take this one and add four lines to your test suite.**

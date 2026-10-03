@@ -95,3 +95,68 @@ describe('what it reports', () => {
     for (const problem of problems) expect(problem.fix).toBeTruthy()
   })
 })
+
+describe('the roles that change after dark', () => {
+  /* `@theme` compiles to `:root` and Tailwind emits it early. A plain
+     `.dark { … }` has the same specificity and arrives after, so it wins: a
+     role restated for the day and not for the night keeps the kit's value
+     after dark, and the app comes up in somebody else's colours with every
+     check green. An app in this family found this; the kit did not.
+
+     `:where(.dark)` is the deliberate opposite — no specificity at all, so
+     an app's brand survives the night without restating anything. The kit
+     puts the filled roles there for exactly that reason. */
+  const brand = (theme: string, dark = '') =>
+    `@import 'tailwindcss';\n@import 'rei-kit/mobile.css';\n@theme {\n${theme}\n}\n${dark}`
+
+  it('reports a role the kit sets in a plain .dark', () => {
+    const reported = checkStyling({ css: brand('  --color-canvas: #fff;'), tokens })
+      .map((problem) => problem.message)
+      .join(' ')
+
+    expect(reported).toMatch(/at night/i)
+    expect(reported).toContain('canvas')
+  })
+
+  it('leaves alone a role the kit sets in :where(.dark)', () => {
+    /* The false alarm this check cried once, against a real app: nine roles
+       reported as broken that were already correct, because `:where` carries
+       no specificity and the app's `@theme` beats it. A check that cries
+       wolf is worse than no check. */
+    const reported = checkStyling({ css: brand('  --color-primary: #6b4de6;'), tokens })
+
+    expect(reported).toEqual([])
+  })
+
+  it('is satisfied once the night answers too', () => {
+    const css = brand('  --color-canvas: #fff;', '.dark {\n  --color-canvas: #000;\n}\n')
+
+    expect(checkStyling({ css, tokens })).toEqual([])
+  })
+
+  it('does not ask an app that redefines nothing', () => {
+    expect(
+      checkStyling({ css: "@import 'tailwindcss';\n@import 'rei-kit/mobile.css';\n", tokens }),
+    ).toEqual([])
+  })
+
+  it('reads the rule bodies rather than slicing from the word', () => {
+    /* A comment that mentions the selector must not start the slice. An
+       app's own first attempt did, and passed while the fault was live. */
+    const css = brand(
+      '  --color-canvas: #fff;',
+      '/* the .dark block below answers it */\n.dark {\n  --color-canvas: #000;\n}\n',
+    )
+
+    expect(checkStyling({ css, tokens })).toEqual([])
+  })
+
+  it('reads a body that holds nested rules', () => {
+    const css = brand(
+      '  --color-canvas: #fff;',
+      '.dark {\n  --color-canvas: #000;\n  @media (min-width: 40rem) {\n    --color-hair: #111;\n  }\n}\n',
+    )
+
+    expect(checkStyling({ css, tokens })).toEqual([])
+  })
+})

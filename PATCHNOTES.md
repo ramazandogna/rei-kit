@@ -67,6 +67,32 @@ without.
 
 ---
 
+## 3.7.0
+
+**Take this one if you rebrand a colour role.**
+
+**What you gain.** `checkStyling` now reports the trap that costs you your
+palette after dark. `@theme` compiles to `:root`, which Tailwind emits
+early, and the kit's own `.dark` block comes after it — so a role you restate
+for the day and not for the night keeps *the kit's* colour at night. The
+build is green, every other check passes, and the app simply comes up in
+somebody else's palette.
+
+It asks only about the roles the kit sets in a plain `.dark`: `canvas`,
+`surface`, `muted`, `ink`, `ink-soft`, `hair`. The filled roles — `primary`,
+`accent`, `negative`, `warning` and the `on-*` pair for each — live in a
+`:where(.dark)` block that carries no specificity on purpose, so your brand
+already survives the night and you do not have to restate them.
+
+**What you have to do.** Run the check. If it names a role, add it to your
+own `.dark` block with the value you meant:
+
+```css
+.dark {
+  --color-muted: #12303a;
+}
+```
+
 ## 3.6.0
 
 **Take this one if you have ever given up on a field and written your own.**

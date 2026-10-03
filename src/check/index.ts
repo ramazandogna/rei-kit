@@ -46,6 +46,49 @@ function imports(css: string, file: string): boolean {
 }
 
 /**
+ * The roles a rule in the dark sets, where that rule can beat `:root`.
+ *
+ * The kit writes two kinds, and the difference is the whole point. A plain
+ * `.dark { … }` has the same specificity as `:root` and is emitted after it,
+ * so it wins — an app that restates one of those roles in `@theme` and not
+ * under `.dark` keeps the kit's colour at night. A `:where(.dark) { … }`
+ * carries no specificity at all, which is exactly why the kit puts the
+ * filled roles there: an app's own brand has to survive after dark, and
+ * before that block existed the kit's lightening beat it.
+ *
+ * So only the first kind is something an app has to answer, and a reader
+ * that lumps them together reports nine roles that are already correct. It
+ * did, once, against a real app — which is how this comment came to be here
+ * rather than in the version that shipped.
+ *
+ * The body runs to its matching brace, not the next one: these blocks hold
+ * comments and nested rules. And it is found from a rule rather than from
+ * the word, or a comment mentioning `.dark` starts the slice and swallows
+ * the stylesheet.
+ */
+function darkRoles(css: string): Set<string> {
+  const bodies: string[] = []
+
+  /* Not preceded by `)` or a word character, so `:where(.dark)` and
+     `.dark [data-palette]` are both left out — the first for specificity,
+     the second because it answers a palette rather than the app. */
+  for (const match of css.matchAll(/(?<![\w):])\.dark\s*\{/g)) {
+    let depth = 1
+    let at = match.index! + match[0].length
+
+    while (at < css.length && depth > 0) {
+      if (css[at] === '{') depth += 1
+      else if (css[at] === '}') depth -= 1
+      at += 1
+    }
+
+    bodies.push(css.slice(match.index! + match[0].length, at - 1))
+  }
+
+  return colourRoles(bodies.join('\n'))
+}
+
+/**
  * What is missing from an app's stylesheet, as a list to assert is empty.
  *
  * ```ts
@@ -109,6 +152,23 @@ export function checkStyling({ css, tokens }: StylingInput): StylingProblem[] {
         fix: "@import 'rei-kit/tokens.css';",
       })
     }
+  }
+
+  /* The trap an app found before this check existed, and the sharpest one
+     here: `@theme` compiles to `:root`, which Tailwind emits near the top of
+     the stylesheet, while the kit's `.dark` block arrives after it. A role
+     the app restates in `@theme` but not under `.dark` therefore keeps the
+     kit's value at night — so the app comes up in somebody else's colours
+     after dark, with a green build and every other check passing. */
+  const kitDark = darkRoles(tokens)
+  const appDark = darkRoles(css)
+  const redefined = [...declared].filter((role) => kitDark.has(role) && !appDark.has(role))
+
+  if (redefined.length) {
+    problems.push({
+      message: `These roles are redefined for the day and left at the kit's own values at night, because \`@theme\` lands in \`:root\` and the kit's \`.dark\` comes after it: ${redefined.join(', ')}.`,
+      fix: '.dark { --color-primary: …; } — restate each one under `.dark` as well',
+    })
   }
 
   return problems

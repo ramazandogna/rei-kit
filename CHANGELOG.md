@@ -5,6 +5,26 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## 3.7.0 — 2026-10-03
+
+**`checkStyling` learned the one that only an app had found.**
+
+`@theme` compiles to `:root`, which Tailwind emits early, while the kit's
+own `.dark` block arrives after it. A role an app restates for the day and
+not for the night therefore keeps the kit's colour after dark — the app comes
+up in somebody else's palette, with a green build and every other check
+passing. One of the two apps had written that check for itself; the kit's
+version did not have it.
+
+Only the roles the kit sets in a plain `.dark` count. The filled roles live
+in `:where(.dark)`, which carries no specificity precisely so an app's brand
+survives the night without restating anything, and the first version of this
+reported all nine of them as broken against a real app. A check that cries
+wolf is worse than no check, so there is now a case for each half.
+
+It also reads both shapes, which the hand-written copy did not: the roles in
+the `:where` block were never compared there at all.
+
 ## 3.6.0 — 2026-10-03
 
 **`controlClass` on the four fields — paint the control, not the field.**

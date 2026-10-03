@@ -5,7 +5,7 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
-## Unreleased
+## 3.5.0 — 2026-10-03
 
 **`rei-kit/check` — the install's own wiring, asserted by your test suite.**
 

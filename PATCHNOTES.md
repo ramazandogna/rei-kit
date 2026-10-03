@@ -67,6 +67,38 @@ without.
 
 ---
 
+## 3.5.0
+
+**Take this one and add four lines to your test suite.**
+
+**What you gain.** A new entry, `rei-kit/check`, that asserts the install
+actually happened:
+
+```ts
+import { checkStyling } from 'rei-kit/check'
+
+it('is wired to the kit', () => {
+  expect(
+    checkStyling({
+      css: readFileSync('src/assets/main.css', 'utf8'),
+      tokens: readFileSync('node_modules/rei-kit/dist/tokens.css', 'utf8'),
+    }),
+  ).toEqual([])
+})
+```
+
+Every line of the install can be left out and leave a green build: without
+the `@source` Tailwind emits no utility the components ask for, without the
+component styles they keep their markup and lose their layout, and a colour
+role you never defined makes `bg-primary` emit nothing at all. Nothing else
+reports any of it — not the type-check, not a component test, not the diff.
+An app in this family shipped with its tab bar invisible that way.
+
+It takes two strings and touches nothing else, so it runs at unit-test speed
+with no build. Importing it from a test means your app never bundles it.
+
+**What you have to do.** Nothing, unless you want the check.
+
 ## 3.4.0
 
 **Take this one if you have ever wanted to put the keyboard in a field.**

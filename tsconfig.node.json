@@ -3,6 +3,12 @@
   "include": ["vite.config.ts", "vitest.config.ts", "eslint.config.ts"],
   "compilerOptions": {
     "noEmit": true,
+    // These files are run by Vite and Vitest, which resolve `.ts` directly, so
+    // the import can say what it means. Without the extension every Vitest run
+    // printed a forward-compatibility warning -- and `configLoader: 'native'`
+    // is to become the default, so the warning is about a break rather than a
+    // style.
+    "allowImportingTsExtensions": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "types": ["node"],

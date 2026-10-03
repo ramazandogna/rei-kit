@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
-import viteConfig from './vite.config'
+import viteConfig from './vite.config.ts'
 
 const entry = (name: string) => fileURLToPath(new URL(`./src/${name}/index.ts`, import.meta.url))
 

@@ -54,6 +54,7 @@ const {
   labelHidden = false,
   fieldId = undefined,
   size = 'md',
+  controlClass = undefined,
 } = defineProps<
   {
     /** The value, with `v-model`. */
@@ -74,6 +75,20 @@ const {
     /* The input's own attributes — `autocomplete`, `placeholder`, `required` —
      typed for strictTemplates. Not `type`, which is this component's whole
      subject, and not `size`. */
+    /**
+     * Classes for the control itself, rather than for the field around it.
+     *
+     * `class` lands on the field, because that is where Vue puts a
+     * component's class and because a layout class means "space this field".
+     * That leaves `variant="unstyled"` with no way to paint the control it
+     * just stripped — the point of stripping it — which is why an app with a
+     * large amount field wrote the whole thing by hand instead.
+     *
+     * It appends, so with the default variant a conflict is settled by
+     * Tailwind's own order rather than by writing it here; reach for it with
+     * `unstyled`, where there is nothing to settle.
+     */
+    controlClass?: string | undefined
   } & /* @vue-ignore */ Omit<InputHTMLAttributes, 'size' | 'type'>
 >()
 
@@ -134,7 +149,7 @@ defineExpose({ focus })
           :spellcheck="false"
           v-bind="controlAttrs"
           class="control text-ink rounded-card focus-visible:outline-primary w-full ps-3 pe-11 focus-visible:outline-2 focus-visible:outline-offset-1"
-          :class="[CONTROL_CLASS, invalid ? 'border-negative' : '']"
+          :class="[CONTROL_CLASS, invalid ? 'border-negative' : '', controlClass]"
           @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         />
 

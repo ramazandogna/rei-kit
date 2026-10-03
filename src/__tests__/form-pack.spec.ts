@@ -827,3 +827,57 @@ describe('focusing a field from outside it', () => {
     wrapper.unmount()
   })
 })
+
+/**
+ * Painting the control you asked to have stripped.
+ *
+ * `class` lands on the field, which is right — it is where Vue puts a
+ * component's class, and a layout class means "space this field". But it
+ * left `variant="unstyled"` unable to reach the control it had just
+ * stripped, which is the one thing somebody choosing `unstyled` is trying to
+ * do. An app with a large amount field — 64px tall, because that field is
+ * why its sheet exists — wrote the whole thing by hand for want of this, and
+ * lost the label wiring and the material with it.
+ */
+describe('styling the control rather than the field', () => {
+  const FIELDS = [
+    ['BaseInput', BaseInput, {}, 'input'],
+    ['BaseTextarea', BaseTextarea, {}, 'textarea'],
+    ['BaseSelect', BaseSelect, { options: [{ value: 'a', label: 'A' }] }, 'select'],
+    ['PasswordInput', PasswordInput, { toggleLabel: 'Show' }, 'input'],
+  ] as const
+
+  it.each(FIELDS)('%s puts controlClass on the control', (_name, component, extra, tag) => {
+    const wrapper = mount(component, {
+      props: { label: 'Amount', controlClass: 'h-16 text-3xl', ...extra },
+    })
+
+    expect(wrapper.get(tag).classes()).toContain('h-16')
+    /* And not on the field, or it would resize the label's column instead of
+       the thing being typed into. */
+    expect(wrapper.classes()).not.toContain('h-16')
+  })
+
+  it('reaches the control that an addon moved into a wrapper', () => {
+    const wrapper = mount(BaseInput, {
+      props: { label: 'Weight', controlClass: 'text-right' },
+      slots: { suffix: '<span aria-hidden="true">kg</span>' },
+    })
+
+    expect(wrapper.get('input').classes()).toContain('text-right')
+  })
+
+  it('is separate from the class that spaces the field', () => {
+    /* Both at once, because the two answers are to two different questions
+       and an app that needs one usually needs the other. */
+    const wrapper = mount(BaseInput, {
+      props: { label: 'Amount', controlClass: 'h-16' },
+      attrs: { class: 'mt-4' },
+    })
+
+    expect(wrapper.classes()).toContain('mt-4')
+    expect(wrapper.classes()).not.toContain('h-16')
+    expect(wrapper.get('input').classes()).toContain('h-16')
+    expect(wrapper.get('input').classes()).not.toContain('mt-4')
+  })
+})

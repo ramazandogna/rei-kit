@@ -1051,6 +1051,13 @@
         "type": "string",
         "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
         "default": "undefined"
+      },
+      {
+        "name": "controlClass",
+        "required": false,
+        "type": "string",
+        "description": "Classes for the control itself, rather than for the field around it. `class` lands on the field, because that is where Vue puts a component's class and because a layout class means \"space this field\". That leaves `variant=\"unstyled\"` with no way to paint the control it just stripped — the point of stripping it — which is why an app with a large amount field wrote the whole thing by hand instead. It appends, so with the default variant a conflict is settled by Tailwind's own order rather than by writing it here; reach for it with `unstyled`, where there is nothing to settle.",
+        "default": "undefined"
       }
     ]
   },
@@ -1583,6 +1590,13 @@
         "type": "string",
         "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
         "default": "undefined"
+      },
+      {
+        "name": "controlClass",
+        "required": false,
+        "type": "string",
+        "description": "Classes for the control itself, rather than for the field around it. `class` lands on the field, because that is where Vue puts a component's class and because a layout class means \"space this field\". That leaves `variant=\"unstyled\"` with no way to paint the control it just stripped — the point of stripping it — which is why an app with a large amount field wrote the whole thing by hand instead. It appends, so with the default variant a conflict is settled by Tailwind's own order rather than by writing it here; reach for it with `unstyled`, where there is nothing to settle.",
+        "default": "undefined"
       }
     ]
   },
@@ -2002,6 +2016,13 @@
         "required": false,
         "type": "string",
         "description": "Ties the generated id to a name you choose, so `ErrorSummary` can link to this field. Its links point at nothing without it, and the kit's own `FormField` has taken one since 2.22.0 while the fields built on it did not — which left building a form out of these and summarising its errors impossible without hand-writing the control.",
+        "default": "undefined"
+      },
+      {
+        "name": "controlClass",
+        "required": false,
+        "type": "string",
+        "description": "Classes for the control itself, rather than for the field around it. `class` lands on the field, because that is where Vue puts a component's class and because a layout class means \"space this field\". That leaves `variant=\"unstyled\"` with no way to paint the control it just stripped — the point of stripping it — which is why an app with a large amount field wrote the whole thing by hand instead. It appends, so with the default variant a conflict is settled by Tailwind's own order rather than by writing it here; reach for it with `unstyled`, where there is nothing to settle.",
         "default": "undefined"
       }
     ]
@@ -3284,6 +3305,13 @@
         "type": "'sm' | 'md'",
         "description": "",
         "default": "'md'"
+      },
+      {
+        "name": "controlClass",
+        "required": false,
+        "type": "string",
+        "description": "Classes for the control itself, rather than for the field around it. `class` lands on the field, because that is where Vue puts a component's class and because a layout class means \"space this field\". That leaves `variant=\"unstyled\"` with no way to paint the control it just stripped — the point of stripping it — which is why an app with a large amount field wrote the whole thing by hand instead. It appends, so with the default variant a conflict is settled by Tailwind's own order rather than by writing it here; reach for it with `unstyled`, where there is nothing to settle.",
+        "default": "undefined"
       }
     ]
   },

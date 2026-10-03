@@ -5,6 +5,27 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased
+
+**`controlClass` on the four fields — paint the control, not the field.**
+
+3.0.0 moved `class` onto the field, which is right: it is where Vue puts a
+component's class everywhere else, and a layout class means "space this
+field". What it took away was the only route to the control, and that
+mattered most to the one variant built for it — `variant="unstyled"` strips
+the surface and then offers no way to paint what was stripped.
+
+Found by trying to adopt the kit in an app that had written a 64px amount
+field by hand. Its comment gave two reasons; the kit answered one of them in
+3.4.0 and this is the other. The field is its sheet's whole purpose, and it
+had to be large enough to hit without looking — so the app painted it
+itself, and lost the label wiring, `aria-describedby` and the material along
+with it.
+
+`controlClass` appends to the control. With the default variant a conflict
+is still settled by Tailwind's order rather than by writing it there; reach
+for it with `unstyled`, where there is nothing to settle.
+
 ## 3.5.0 — 2026-10-03
 
 **`rei-kit/check` — the install's own wiring, asserted by your test suite.**

@@ -26,6 +26,7 @@ const {
   size = 'md',
   variant = 'default',
   fieldId = undefined,
+  controlClass = undefined,
 } = defineProps<
   {
     /** The value, with `v-model`. Its type is whatever you bind. */
@@ -83,6 +84,20 @@ const {
      * its errors impossible without hand-writing the control.
      */
     fieldId?: string | undefined
+    /**
+     * Classes for the control itself, rather than for the field around it.
+     *
+     * `class` lands on the field, because that is where Vue puts a
+     * component's class and because a layout class means "space this field".
+     * That leaves `variant="unstyled"` with no way to paint the control it
+     * just stripped — the point of stripping it — which is why an app with a
+     * large amount field wrote the whole thing by hand instead.
+     *
+     * It appends, so with the default variant a conflict is settled by
+     * Tailwind's own order rather than by writing it here; reach for it with
+     * `unstyled`, where there is nothing to settle.
+     */
+    controlClass?: string | undefined
   } & /* @vue-ignore */ Omit<InputHTMLAttributes, 'size' | 'type'>
 >()
 
@@ -203,6 +218,7 @@ defineExpose({ focus })
           :aria-describedby="describedBy"
           v-bind="controlAttrs"
           class="text-ink min-w-0 flex-1 bg-transparent px-3 text-base focus-visible:outline-none"
+          :class="controlClass"
         />
 
         <span v-if="$slots.suffix" class="text-ink-soft flex shrink-0 items-center pe-3">
@@ -225,6 +241,7 @@ defineExpose({ focus })
             : 'control text-ink rounded-card focus-visible:outline-primary px-3 focus-visible:outline-2 focus-visible:outline-offset-1',
           variant === 'unstyled' ? 'text-base' : CONTROL_CLASS,
           variant !== 'unstyled' && invalid ? 'border-negative' : '',
+          controlClass,
         ]"
       />
     </template>

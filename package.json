@@ -1,6 +1,6 @@
 {
   "name": "rei-kit",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "One kit, every look. 105 accessible Vue 3 + Tailwind 4 components, four materials (quiet, glass, brutal, soft) and ten WCAG-checked palettes, each switched with one attribute.",
   "keywords": [
     "vue",

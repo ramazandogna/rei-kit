@@ -67,6 +67,13 @@ without.
 
 ---
 
+## 4.1.1
+
+**Take this one if 4.1.0 told you to move `motion.css`.** It was wrong:
+that file shares no property with `tokens.css`, so where you import it
+cannot matter. Only `materials.css` and `palettes.css` are asked about, and
+only when you import the parts yourself rather than a preset.
+
 ## 4.1.0
 
 **Take this one if you import the kit's parts yourself rather than the

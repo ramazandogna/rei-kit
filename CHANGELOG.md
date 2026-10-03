@@ -5,6 +5,21 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## 4.1.1 — 2026-10-03
+
+**The order rule asked about a file whose order cannot matter.**
+
+4.1.0 reported `motion.css` imported before `tokens.css`. It shares no
+custom property with `tokens.css` — nothing it sets can be overwritten by
+anything tokens sets — so its position is free and the report was a false
+alarm. Materials and palettes are the two that reset what `tokens.css`
+declares, seventeen properties in the palettes' case, under a selector of
+the same specificity; those are the two the rule is for.
+
+Shipped in 4.1.0 and found by checking the kit's own claim rather than
+rereading it. A check that reports a setup nothing is wrong with is the kind
+that gets switched off, which costs more than the rule was worth.
+
 ## 4.1.0 — 2026-10-03
 
 **`checkStyling` reads the order the parts are imported in.**

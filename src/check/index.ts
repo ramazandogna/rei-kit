@@ -185,7 +185,13 @@ export function checkStyling({ css, tokens }: StylingInput): StylingProblem[] {
     }
 
     const tokensAt = at('tokens.css')
-    const late = ['materials.css', 'palettes.css', 'motion.css']
+    /* Materials and palettes only. Both reset properties `tokens.css` also
+       sets — 17 of them for the palettes — under a selector of the same
+       specificity, so order settles it. `motion.css` shares no property with
+       `tokens.css` at all, so its position cannot matter, and 4.1.0 asked
+       about it anyway: a rule that reports a setup nothing is wrong with is
+       the kind that gets switched off. */
+    const late = ['materials.css', 'palettes.css']
       .map((file) => ({ file, at: at(file) }))
       .filter((entry) => entry.at !== -1 && tokensAt !== -1 && entry.at < tokensAt)
 

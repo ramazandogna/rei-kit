@@ -256,3 +256,25 @@ describe('the order the parts are imported in', () => {
     ).toEqual([])
   })
 })
+
+describe('what the order rule does not ask about', () => {
+  it('leaves motion.css wherever it is', () => {
+    /* It shares no custom property with `tokens.css`, so nothing it sets can
+       be overwritten by anything tokens sets and its position cannot matter.
+       4.1.0 asked about it regardless — a false alarm, and the fourth this
+       check has produced in the hands of the person writing it. */
+    const css = `@import 'tailwindcss';\n@import 'rei-kit/motion.css';\n@import 'rei-kit/tokens.css';\n@import 'rei-kit/styles.css';\n@source './node_modules/rei-kit/dist';\n`
+
+    expect(checkStyling({ css, tokens })).toEqual([])
+  })
+
+  it('still reports a palette that comes too early', () => {
+    const css = `@import 'tailwindcss';\n@import 'rei-kit/palettes.css';\n@import 'rei-kit/tokens.css';\n@import 'rei-kit/styles.css';\n@source './node_modules/rei-kit/dist';\n`
+
+    expect(
+      checkStyling({ css, tokens })
+        .map((p) => p.message)
+        .join(' '),
+    ).toContain('palettes.css')
+  })
+})

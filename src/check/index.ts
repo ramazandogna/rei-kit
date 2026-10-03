@@ -41,8 +41,22 @@ function colourRoles(css: string): Set<string> {
   return new Set([...css.matchAll(/--color-([a-z0-9-]+)\s*:/g)].map(([, name]) => name!))
 }
 
+/**
+ * Whether the app imports one of the kit's stylesheets, however it resolves it.
+ *
+ * Matched on the file rather than on `rei-kit/…`, because a workspace that
+ * builds the kit alongside the app reaches it by path — the kit's own
+ * showcase does, and the first version of this told it three times that it
+ * had not imported what it plainly had. A check that cries wolf is one
+ * nobody reads.
+ */
 function imports(css: string, file: string): boolean {
-  return new RegExp(`@import\\s+['"]rei-kit/${file}['"]`).test(css)
+  return new RegExp(`@import\\s+['"][^'"]*${file.replace('.', '\\.')}['"]`).test(css)
+}
+
+/** Whether it is the published package rather than a path into a workspace. */
+function byPackage(css: string): boolean {
+  return /@import\s+['"]rei-kit\//.test(css)
 }
 
 /**
@@ -130,7 +144,10 @@ export function checkStyling({ css, tokens }: StylingInput): StylingProblem[] {
       })
     }
 
-    if (!/@source\s+['"][^'"]*node_modules\/rei-kit[^'"]*['"]/.test(css)) {
+    /* Only asked of an app that installed the package. A workspace reaching
+       the kit by path points Tailwind at wherever it keeps the source, and
+       guessing that path is not this check's business. */
+    if (byPackage(css) && !/@source\s+['"][^'"]*node_modules\/rei-kit[^'"]*['"]/.test(css)) {
       problems.push({
         message:
           'Tailwind is not told to scan the kit, so it emits no utility the components ask for. It does not walk node_modules unless pointed at it.',

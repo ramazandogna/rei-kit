@@ -160,3 +160,54 @@ describe('the roles that change after dark', () => {
     expect(checkStyling({ css, tokens })).toEqual([])
   })
 })
+
+describe('a kit reached by path rather than by package', () => {
+  /* The kit's own showcase, and any workspace that builds the two together.
+     The first version of this check read `@import 'rei-kit/…'` literally and
+     told the showcase three times that it had imported none of what it had
+     plainly imported. */
+  const WORKSPACE = `@import 'tailwindcss';
+@import '../src/styles/tokens.css';
+@import '../src/styles/shell/mobile.css';
+@source '../src';
+`
+
+  it('recognises the stylesheets by their file', () => {
+    const reported = checkStyling({ css: WORKSPACE, tokens })
+      .map((p) => p.message)
+      .join(' ')
+
+    expect(reported).not.toMatch(/never defined/i)
+  })
+
+  it('does not ask it for an @source into node_modules', () => {
+    /* It has no node_modules copy to point at, and where it keeps the source
+       is its own business. */
+    const reported = checkStyling({ css: WORKSPACE, tokens })
+      .map((p) => p.message)
+      .join(' ')
+
+    expect(reported).not.toMatch(/scan the kit/i)
+  })
+
+  it('still asks an installed app for it', () => {
+    const installed = `@import 'tailwindcss';\n@import 'rei-kit/tokens.css';\n@import 'rei-kit/styles.css';\n`
+    const reported = checkStyling({ css: installed, tokens })
+      .map((p) => p.message)
+      .join(' ')
+
+    expect(reported).toMatch(/scan the kit/i)
+  })
+})
+
+describe('the showcase is a consumer too', () => {
+  /* The nearest real app to hand, and the one that exercises the path-import
+     shape. Running the check against it keeps the two in step: a rule that
+     starts reporting the kit's own site is a rule that would report somebody
+     else's workspace the same way, and this says so before they find out. */
+  it('passes its own check', () => {
+    const problems = checkStyling({ css: readFileSync('showcase/main.css', 'utf8'), tokens })
+
+    expect(problems.map((problem) => problem.message)).toEqual([])
+  })
+})

@@ -5,6 +5,23 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased
+
+**`checkStyling` stops reporting a kit reached by path.**
+
+It read `@import 'rei-kit/…'` literally, so a workspace that builds the kit
+alongside the app — the kit's own showcase does — was told three times that
+it had imported none of what it had plainly imported. The stylesheets are
+matched by their file now, and the `@source` into `node_modules` is asked
+only of an app that installed the package: a workspace points Tailwind at
+wherever it keeps the source, and guessing that path is not this check's
+business.
+
+Second false alarm this check has cried and the second one caught before it
+shipped to anybody. The showcase now runs it in the kit's own suite, so a
+rule that would report somebody else's workspace reports the kit's site
+first.
+
 ## 3.7.0 — 2026-10-03
 
 **`checkStyling` learned the one that only an app had found.**

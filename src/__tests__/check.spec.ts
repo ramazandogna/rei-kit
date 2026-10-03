@@ -211,3 +211,48 @@ describe('the showcase is a consumer too', () => {
     expect(problems.map((problem) => problem.message)).toEqual([])
   })
 })
+
+describe('the order the parts are imported in', () => {
+  /* `tokens.css` sets `--surface-opacity` under `:root`; a material resets it
+     under `[data-material='glass']`. The two selectors carry the same
+     specificity, so source order settles it — and with the material first it
+     computes to 100% rather than 56%, measured in a real build. The build is
+     green, the attribute is on the element, and the material is inert.
+
+     Written in `AGENTS.md` and in `materials.css`'s own header since they
+     existed, and enforced by nothing until now. */
+  const parts = (order: string[]) =>
+    `@import 'tailwindcss';\n${order.map((f) => `@import 'rei-kit/${f}';`).join('\n')}\n@source './node_modules/rei-kit/dist';\n`
+
+  it('accepts the material after the tokens', () => {
+    const css = parts(['tokens.css', 'materials.css', 'styles.css'])
+
+    expect(checkStyling({ css, tokens })).toEqual([])
+  })
+
+  it('reports the material before the tokens', () => {
+    const css = parts(['materials.css', 'tokens.css', 'styles.css'])
+    const reported = checkStyling({ css, tokens })
+      .map((p) => p.message)
+      .join(' ')
+
+    expect(reported).toMatch(/after tokens\.css/i)
+    expect(reported).toContain('materials.css')
+  })
+
+  it('names every part that is too early, not just the first', () => {
+    const css = parts(['materials.css', 'palettes.css', 'tokens.css', 'styles.css'])
+    const reported = checkStyling({ css, tokens })
+      .map((p) => p.message)
+      .join(' ')
+
+    expect(reported).toContain('materials.css')
+    expect(reported).toContain('palettes.css')
+  })
+
+  it('does not ask it of a preset, which orders its own parts', () => {
+    expect(
+      checkStyling({ css: "@import 'tailwindcss';\n@import 'rei-kit/mobile.css';\n", tokens }),
+    ).toEqual([])
+  })
+})

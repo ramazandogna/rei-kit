@@ -171,6 +171,32 @@ export function checkStyling({ css, tokens }: StylingInput): StylingProblem[] {
     }
   }
 
+  /* Measured, because the instruction had been written down and never
+     enforced: with the material imported first, `--surface-opacity` computes
+     to 100% under `data-material="glass"` instead of 56% — the material is
+     simply inert. Both files set the same custom properties, `:root` and
+     `[data-material]` carry the same specificity, and equal specificity is
+     settled by source order. The build is green, the attribute is on the
+     element, and nothing happens. */
+  if (!preset) {
+    const at = (file: string) => {
+      const found = new RegExp(`@import\\s+['"][^'"]*${file.replace('.', '\\.')}['"]`).exec(css)
+      return found ? found.index : -1
+    }
+
+    const tokensAt = at('tokens.css')
+    const late = ['materials.css', 'palettes.css', 'motion.css']
+      .map((file) => ({ file, at: at(file) }))
+      .filter((entry) => entry.at !== -1 && tokensAt !== -1 && entry.at < tokensAt)
+
+    if (late.length) {
+      problems.push({
+        message: `${late.map((entry) => entry.file).join(' and ')} must be imported after tokens.css, or the values they set are overwritten and the attribute they answer to does nothing.`,
+        fix: "@import 'rei-kit/tokens.css'; then the rest",
+      })
+    }
+  }
+
   /* The trap an app found before this check existed, and the sharpest one
      here: `@theme` compiles to `:root`, which Tailwind emits near the top of
      the stylesheet, while the kit's `.dark` block arrives after it. A role

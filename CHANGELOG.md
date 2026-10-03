@@ -5,6 +5,27 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## 4.1.0 — 2026-10-03
+
+**`checkStyling` reads the order the parts are imported in.**
+
+`tokens.css` sets `--surface-opacity` under `:root`; a material resets it
+under `[data-material='glass']`. The two selectors carry the same
+specificity, so source order settles it — and with the material imported
+first it computes to **100% rather than 56%**, measured in a real build. The
+material is inert: the build is green, the attribute is on the element, and
+nothing happens.
+
+The instruction has been in `AGENTS.md` and in `materials.css`'s own header
+since both existed, and nothing enforced it. Now `materials.css`,
+`palettes.css` and `motion.css` are reported when they come before
+`tokens.css`, and the preset is left alone because it orders its own parts.
+
+Worth saying how close this came to being missed: read as text, the compiled
+stylesheet has the material's rule *later* in both orders, so the first
+measurement said there was nothing wrong. Only the computed value tells the
+truth.
+
 ## 4.0.0 — 2026-10-03
 
 **Two components were painting a surface with its parts, and ignored the

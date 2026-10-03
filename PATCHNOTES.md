@@ -67,6 +67,28 @@ without.
 
 ---
 
+## 4.1.0
+
+**Take this one if you import the kit's parts yourself rather than the
+preset.**
+
+**What you gain.** `checkStyling` now reports a part imported too early.
+`tokens.css` sets `--surface-opacity` under `:root` and a material resets it
+under `[data-material='glass']`; both selectors carry the same specificity,
+so whichever comes last wins. With the material first it computes to 100%
+instead of 56% — the material is simply inert, with a green build, the
+attribute on the element and nothing happening.
+
+```css
+@import 'tailwindcss';
+@import 'rei-kit/tokens.css'; /* first */
+@import 'rei-kit/materials.css'; /* then these */
+@import 'rei-kit/palettes.css';
+```
+
+**What you have to do.** Nothing if you import `rei-kit/mobile.css` or
+`rei-kit/web.css` — a preset orders its own parts and is not asked.
+
 ## 4.0.0
 
 **Take this one. Two components will look slightly different, and both of

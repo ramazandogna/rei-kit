@@ -88,10 +88,11 @@ and quietly ignores `glass`, `brutal` and `soft`.
 you use, and at the tour shell if you have one. If you want either without
 the material's edge, set its own hook: `[--control-border-width:0px]`.
 
-And if you have ever written `bg-surface`, `bg-canvas` or `border-hair` in
-your own components, this is worth a search: three apps in this family were
-doing it, and every one of those elements is a surface that stopped
-following the page.
+And if you have ever written `bg-surface` or `bg-canvas` in your own
+components without `surface`, `control` or `canvas` beside it, this is worth
+a search: three apps in this family were doing it, and every one of those
+elements is a surface that stopped following the page. A bare `border-hair`
+is fine — that is the divider token doing its job.
 
 ## 3.7.0
 

@@ -29,7 +29,10 @@ gains the page's backdrop.
 
 **The rule is a test now.** "Paint a surface with a surface utility, not with
 its parts" was in `AGENTS.md` and enforced nowhere, and it was being broken
-in three consuming apps as well as here. `appearance.spec.ts` reads the
+in three consuming apps as well as here. The check reads a *ground* —
+`bg-surface`, `bg-canvas` — without a surface utility beside it. A bare
+`border-hair` is a divider, which is what that token is for; reading it as a
+fault would report every hairline in the kit. `appearance.spec.ts` reads the
 source for the spelling; `browser/material-segment.spec.ts` reads the paint,
 holding the segment against a real control in two materials. The segmented
 control also joins the stored pictures — a component changed how it looks

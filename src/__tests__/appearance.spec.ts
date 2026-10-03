@@ -93,41 +93,48 @@ describe('no component carries a colour of its own', () => {
   /*
    * A surface is painted with a surface utility, not with its parts.
    *
-   * `bg-surface` sets a colour and nothing else. The `surface` utility sets
-   * the colour, the border width, the depth and the backdrop — and those are
-   * exactly what a material redefines, so an element wearing the parts looks
-   * right in `quiet` and ignores the other three. There is no way to see it
-   * from the source: both spellings render, and both follow the palette.
+   * `bg-surface` sets a colour. The `surface` and `control` utilities set the
+   * colour, the border width, the depth and the backdrop — and those four are
+   * what a material redefines, so an element wearing the ground alone looks
+   * right in `quiet` and ignores the other three. Nothing can see it from the
+   * source: both spellings render and both follow the palette.
    *
-   * The rule was written in `AGENTS.md` and enforced nowhere. It was being
-   * broken in three consuming apps and in two components here — including
+   * The rule was written in `AGENTS.md` and enforced nowhere, and it was
+   * being broken in three consuming apps and in two components here —
    * `SegmentedControl`, whose selected segment never grew `brutal`'s edge
-   * while every control beside it did.
+   * while every control beside it did, and `TourShell`, whose frame took the
+   * page's colour and left its backdrop behind.
+   *
+   * Only a **ground** counts. `border-hair` on its own is a divider, which is
+   * what that token is for, and `bg-muted` is a tinted fill — reading those
+   * as faults would report every hairline in the kit, and a check that cries
+   * wolf is one nobody reads. The first draft of this did, and passed only
+   * because `BaseCard` spells its divider `border-hair/70`.
    */
-  it.each(files)('%s paints a surface with the utility, not its parts', (file) => {
-    const PARTS = new Set(['bg-surface', 'bg-canvas', 'border-hair'])
-    const SURFACES = new Set(['surface', 'surface-raised', 'surface-overlay', 'control', 'canvas'])
+  it.each(files)('%s paints a surface with the utility, not its ground', (file) => {
+    const GROUNDS = ['bg-surface', 'bg-canvas']
+    const SURFACES = ['surface', 'surface-raised', 'surface-overlay', 'control', 'canvas']
 
     const source = read(file)
     const markup = source.includes('<style') ? source.slice(0, source.indexOf('<style')) : source
     const bare: string[] = []
 
     for (const tag of markup.match(/<[a-zA-Z][^>]*>/g) ?? []) {
-      /* A decorative element is exempt for the same reason it is exempt from
-         the contrast rule: it is not a surface anybody reads off. */
+      /* Decorative elements are exempt for the same reason they are exempt
+         from the contrast rule: nobody reads a surface off them. */
       if (tag.includes('aria-hidden')) continue
 
+      /* Tokenised rather than searched as text: `rounded-control` contains
+         the word `control`, and reading it as one is how the first version
+         of this scan cleared the very component it was written for. */
       const classes = new Set(
         [...tag.matchAll(/:?class="([^"]*)"/g)].flatMap(
           ([, value]) => value!.match(/[a-z0-9:/[\]().-]+/g) ?? [],
         ),
       )
 
-      /* Tokenised rather than searched as text: `rounded-control` contains
-         the word `control`, and reading it as one is how the first version
-         of this scan cleared the component it was written for. */
-      const used = [...PARTS].filter((part) => classes.has(part))
-      if (used.length && ![...SURFACES].some((name) => classes.has(name))) bare.push(used.join(' '))
+      const ground = GROUNDS.filter((name) => classes.has(name))
+      if (ground.length && !SURFACES.some((name) => classes.has(name))) bare.push(ground.join(' '))
     }
 
     expect(bare).toEqual([])

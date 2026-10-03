@@ -123,7 +123,7 @@ function onKeydown(event: KeyboardEvent) {
         tabindex="-1"
         @keydown="onKeydown"
       >
-        <div class="shell-frame md:rounded-shell bg-canvas relative flex flex-col overflow-hidden">
+        <div class="shell-frame md:rounded-shell canvas relative flex flex-col overflow-hidden">
           <!-- Behind everything: the app's mood for this slide. -->
           <slot name="wash" />
 

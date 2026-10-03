@@ -90,6 +90,49 @@ describe('no component carries a colour of its own', () => {
    * rather than a size, and it has to stay a pill at every radius an app
    * chooses.
    */
+  /*
+   * A surface is painted with a surface utility, not with its parts.
+   *
+   * `bg-surface` sets a colour and nothing else. The `surface` utility sets
+   * the colour, the border width, the depth and the backdrop — and those are
+   * exactly what a material redefines, so an element wearing the parts looks
+   * right in `quiet` and ignores the other three. There is no way to see it
+   * from the source: both spellings render, and both follow the palette.
+   *
+   * The rule was written in `AGENTS.md` and enforced nowhere. It was being
+   * broken in three consuming apps and in two components here — including
+   * `SegmentedControl`, whose selected segment never grew `brutal`'s edge
+   * while every control beside it did.
+   */
+  it.each(files)('%s paints a surface with the utility, not its parts', (file) => {
+    const PARTS = new Set(['bg-surface', 'bg-canvas', 'border-hair'])
+    const SURFACES = new Set(['surface', 'surface-raised', 'surface-overlay', 'control', 'canvas'])
+
+    const source = read(file)
+    const markup = source.includes('<style') ? source.slice(0, source.indexOf('<style')) : source
+    const bare: string[] = []
+
+    for (const tag of markup.match(/<[a-zA-Z][^>]*>/g) ?? []) {
+      /* A decorative element is exempt for the same reason it is exempt from
+         the contrast rule: it is not a surface anybody reads off. */
+      if (tag.includes('aria-hidden')) continue
+
+      const classes = new Set(
+        [...tag.matchAll(/:?class="([^"]*)"/g)].flatMap(
+          ([, value]) => value!.match(/[a-z0-9:/[\]().-]+/g) ?? [],
+        ),
+      )
+
+      /* Tokenised rather than searched as text: `rounded-control` contains
+         the word `control`, and reading it as one is how the first version
+         of this scan cleared the component it was written for. */
+      const used = [...PARTS].filter((part) => classes.has(part))
+      if (used.length && ![...SURFACES].some((name) => classes.has(name))) bare.push(used.join(' '))
+    }
+
+    expect(bare).toEqual([])
+  })
+
   it.each(files)('%s reaches for a radius role, not a raw size', (file) => {
     const code = read(file)
       .replace(/<!--[\s\S]*?-->/g, '')

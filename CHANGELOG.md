@@ -5,7 +5,36 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
-## Unreleased
+## 4.0.0 — 2026-10-03
+
+**Two components were painting a surface with its parts, and ignored the
+material because of it.**
+
+`bg-surface` sets a colour. The `surface` and `control` utilities set the
+colour, the border width, the depth *and* the backdrop — and those four are
+exactly what a material redefines. So an element wearing the parts looks
+right in `quiet` and ignores the other three, which nothing can see from the
+source: both spellings render, and both follow the palette.
+
+- **`SegmentedControl`'s selected segment** wore `bg-surface` and a shadow.
+  It never grew `brutal`'s hard edge while every control beside it did,
+  measured at 0px against the field's 2px. It wears `control` now.
+- **`TourShell`'s frame** wore `bg-canvas`, so it took the colour and left
+  behind `--canvas-backdrop` — the texture a material paints the page with.
+
+Both change what they render for the same input, which is why this is a
+major rather than a patch. Nothing is removed, nothing renamed: a segment
+gains the border and depth its material asks for, and the tour's ground
+gains the page's backdrop.
+
+**The rule is a test now.** "Paint a surface with a surface utility, not with
+its parts" was in `AGENTS.md` and enforced nowhere, and it was being broken
+in three consuming apps as well as here. `appearance.spec.ts` reads the
+source for the spelling; `browser/material-segment.spec.ts` reads the paint,
+holding the segment against a real control in two materials. The segmented
+control also joins the stored pictures — a component changed how it looks
+and was in none of them, which is how this went unseen.
+
 
 **`checkStyling` stops reporting a kit reached by path.**
 

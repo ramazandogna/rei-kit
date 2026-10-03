@@ -35,6 +35,11 @@ const SHOTS = [
   { id: 'form-password', what: 'a field with a control inside it' },
   { id: 'basics-chip', what: 'chips, which carry the tinted tones' },
   { id: 'basics-avatars', what: 'a stack, which overlaps by margin' },
+  /* Added when its selected segment turned out to be wearing `bg-surface`
+     rather than `control`, so it never grew brutal's edge — a component can
+     change how it looks and be in none of these, which is how that went
+     unseen. */
+  { id: 'form-segmented', what: 'a segmented control, whose choice is a surface' },
 ]
 
 /* Two materials, because a material redefines depth, edges and press — the

@@ -67,6 +67,32 @@ without.
 
 ---
 
+## 4.0.0
+
+**Take this one. Two components will look slightly different, and both of
+them were wrong.**
+
+**What you gain.** A surface painted with `bg-surface` takes a colour and
+nothing else — no border width, no depth, no backdrop. Those are what a
+material redefines, so an element spelled that way looks right in `quiet`
+and quietly ignores `glass`, `brutal` and `soft`.
+
+- **`SegmentedControl`'s selected segment** now wears `control`. Under
+  `brutal` it grows the same hard edge every other control has; before, it
+  measured 0px against the field's 2px and simply floated.
+- **`TourShell`'s frame** now wears `canvas`, so it carries
+  `--canvas-backdrop` — the texture a material paints the page with — rather
+  than only the colour.
+
+**What you have to do.** Look at a segmented control in whichever material
+you use, and at the tour shell if you have one. If you want either without
+the material's edge, set its own hook: `[--control-border-width:0px]`.
+
+And if you have ever written `bg-surface`, `bg-canvas` or `border-hair` in
+your own components, this is worth a search: three apps in this family were
+doing it, and every one of those elements is a surface that stopped
+following the page.
+
 ## 3.7.0
 
 **Take this one if you rebrand a colour role.**

@@ -132,6 +132,7 @@ const PUBLIC_API = [
   'BaseTable',
   'BaseCard',
   'BaseCheckbox',
+  'BaseCheckboxGroup',
   'BaseCombobox',
   'BaseRadioGroup',
   'BaseSelect',

@@ -75,6 +75,11 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseCheckbox } from 'rei-kit'\n\nconst remember = ref(false)\n</script>\n\n<template>\n  <BaseCheckbox v-model=\"remember\" label=\"Remember me\" />\n</template>\n"
   },
   {
+    "name": "BaseCheckboxGroup",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseCheckboxGroup } from 'rei-kit'\n\nconst days = ref(['mon', 'thu'])\nconst weekdays = [\n  { value: 'mon', label: 'Monday' },\n  { value: 'tue', label: 'Tuesday' },\n  { value: 'wed', label: 'Wednesday' },\n  { value: 'thu', label: 'Thursday' },\n  { value: 'fri', label: 'Friday', hint: 'Busiest day' },\n]\n</script>\n\n<template>\n  <BaseCheckboxGroup\n    v-model=\"days\"\n    legend=\"Remind me on\"\n    :options=\"weekdays\"\n    select-all-label=\"Every weekday\"\n    :columns=\"2\"\n  />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseCheckboxGroup } from 'rei-kit'\n\nconst days = ref(['mon', 'thu'])\nconst weekdays = [\n  { value: 'mon', label: 'Monday' },\n  { value: 'tue', label: 'Tuesday' },\n  { value: 'wed', label: 'Wednesday' },\n  { value: 'thu', label: 'Thursday' },\n  { value: 'fri', label: 'Friday', hint: 'Busiest day' },\n]\n</script>\n\n<template>\n  <BaseCheckboxGroup\n    v-model=\"days\"\n    legend=\"Remind me on\"\n    :options=\"weekdays\"\n    select-all-label=\"Every weekday\"\n    :columns=\"2\"\n  />\n</template>\n"
+  },
+  {
     "name": "BaseChip",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { BaseChip } from 'rei-kit'\n\nconst tags = ref(['design', 'vue'])\n\nfunction remove(tag: string) {\n  tags.value = tags.value.filter((one) => one !== tag)\n}\n</script>\n\n<template>\n  <div class=\"flex flex-wrap gap-2\">\n    <BaseChip\n      v-for=\"tag in tags\"\n      :key=\"tag\"\n      :label=\"tag\"\n      :remove-label=\"`Remove ${tag}`\"\n      @remove=\"remove(tag)\"\n    />\n  </div>\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseChip } from 'rei-kit'\n\nconst tags = ref(['design', 'vue'])\n\nfunction remove(tag) {\n  tags.value = tags.value.filter((one) => one !== tag)\n}\n</script>\n\n<template>\n  <div class=\"flex flex-wrap gap-2\">\n    <BaseChip\n      v-for=\"tag in tags\"\n      :key=\"tag\"\n      :label=\"tag\"\n      :remove-label=\"`Remove ${tag}`\"\n      @remove=\"remove(tag)\"\n    />\n  </div>\n</template>\n"
@@ -421,8 +426,8 @@
   },
   {
     "name": "SectionHeading",
-    "ts": "<script setup lang=\"ts\">\nimport { SectionHeading } from 'rei-kit'\n\n// Written out, so Tailwind sees the classes.\nconst income = {\n  fill: 'bg-positive',\n  card: 'bg-positive/5 border-positive/25',\n  text: 'text-positive',\n}\n</script>\n\n<template>\n  <SectionHeading :tone=\"income\" label=\"Income\" :count=\"3\" />\n</template>\n",
-    "js": "<script setup>\nimport { SectionHeading } from 'rei-kit'\n\n// Written out, so Tailwind sees the classes.\nconst income = {\n  fill: 'bg-positive',\n  card: 'bg-positive/5 border-positive/25',\n  text: 'text-positive',\n}\n</script>\n\n<template>\n  <SectionHeading :tone=\"income\" label=\"Income\" :count=\"3\" />\n</template>\n"
+    "ts": "<script setup lang=\"ts\">\nimport { SectionHeading } from 'rei-kit'\n\n/* Written out, so Tailwind sees the classes. The role carries the dot and the\n   edge; the words stay `text-ink`, because a role on a faint wash of itself\n   measures about 2:1 — the fault five components in this kit were fixed for. */\nconst income = {\n  fill: 'bg-positive',\n  card: 'bg-positive/5 border-positive/25',\n  text: 'text-ink',\n}\n</script>\n\n<template>\n  <SectionHeading :tone=\"income\" label=\"Income\" :count=\"3\" />\n</template>\n",
+    "js": "<script setup>\nimport { SectionHeading } from 'rei-kit'\n\n/* Written out, so Tailwind sees the classes. The role carries the dot and the\n   edge; the words stay `text-ink`, because a role on a faint wash of itself\n   measures about 2:1 — the fault five components in this kit were fixed for. */\nconst income = {\n  fill: 'bg-positive',\n  card: 'bg-positive/5 border-positive/25',\n  text: 'text-ink',\n}\n</script>\n\n<template>\n  <SectionHeading :tone=\"income\" label=\"Income\" :count=\"3\" />\n</template>\n"
   },
   {
     "name": "SegmentedControl",

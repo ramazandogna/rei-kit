@@ -7,7 +7,16 @@ export interface Tone {
   fill: string
   /** Tinted surface for the pill, e.g. `bg-positive/5 border-positive/25`. */
   card: string
-  /** Foreground that pairs with the surface, e.g. `text-positive`. */
+  /**
+   * Foreground for the label. `text-ink`, in almost every case.
+   *
+   * Not the role: `text-positive` on a `bg-positive/5` pill is a colour on a
+   * faint wash of itself, and it measures about 2:1 painted — the fault
+   * `BaseBadge`, `BaseChip`, `BaseAlert`, `BaseListbox` and `PriceCard` were
+   * all fixed for in 2.25.0. This one takes its classes from the app, so no
+   * source-reading test could see it; the contrast scan on the showcase
+   * caught it once the playground started rendering it.
+   */
   text: string
 }
 
@@ -25,10 +34,11 @@ const {
   count = 0,
 } = defineProps<{
   /**
-   * The colour classes for the dot and the label, as written-out class names.
-   * `Tone` is a pair rather than a role token because the categories here are
-   * the app's own, and Tailwind reads source as plain text: a class assembled
-   * at runtime never reaches the stylesheet.
+   * The colour classes for the dot, the pill and the label, as written-out
+   * class names. `Tone` is a set of classes rather than a role token because
+   * the categories here are the app's own, and Tailwind reads source as plain
+   * text: a class assembled at runtime never reaches the stylesheet. Put the
+   * role on `fill` and `card` and leave `text` as `text-ink`.
    */
   tone: Tone
   label: string

@@ -9,6 +9,7 @@ import {
   BaseInput,
   BaseButton,
   BaseListbox,
+  BaseCheckboxGroup,
   BaseRadioGroup,
   BaseSelect,
   BaseSlider,
@@ -72,6 +73,7 @@ const recipients = ref<string[]>(['aiko'])
 const remember = ref(false)
 const reminder = ref(true)
 const themeChoice = ref('system')
+const reminderDays = ref(['mon', 'thu'])
 const segment = ref('all')
 const marks = ref<string[]>(['bold'])
 const view = ref<string | undefined>('list')
@@ -109,6 +111,14 @@ const THEMES = [
   { value: 'system', label: 'System' },
   { value: 'light', label: 'Light' },
   { value: 'dark', label: 'Dark' },
+]
+
+const WEEKDAYS = [
+  { value: 'mon', label: 'Monday' },
+  { value: 'tue', label: 'Tuesday' },
+  { value: 'wed', label: 'Wednesday' },
+  { value: 'thu', label: 'Thursday' },
+  { value: 'fri', label: 'Friday', hint: 'Busiest day' },
 ]
 
 const SEGMENTS = [
@@ -267,6 +277,13 @@ const CODE: Record<FormPartId, string> = {
   hint="Every evening at 21:00"
 />`,
   'form-radio': `<BaseRadioGroup v-model="theme" legend="Theme" :options="themes" />`,
+  'form-checkbox-group': `<BaseCheckboxGroup
+  v-model="days"
+  legend="Remind me on"
+  :options="weekdays"
+  select-all-label="Every weekday"
+  :columns="2"
+/>`,
   'form-segmented': `<SegmentedControl v-model="segment" :options="segments" />`,
   'form-toggle-group': `<!-- Any number pressed at once -->
 <ToggleGroup v-model="marks" mode="multiple" label="Text style" :options="marks" />
@@ -600,6 +617,26 @@ const CODE: Record<FormPartId, string> = {
           <CodeBlock :code="CODE['form-radio']" lang="html" />
         </div>
         <PropTable name="BaseRadioGroup" />
+      </article>
+
+      <article :id="part('form-checkbox-group').id" class="sc-part">
+        <header class="sc-part-head">
+          <h3 class="sc-part-name">{{ part('form-checkbox-group').title }}</h3>
+          <p class="sc-part-pitch">{{ part('form-checkbox-group').pitch }}</p>
+        </header>
+        <div class="sc-part-row">
+          <BaseCard>
+            <BaseCheckboxGroup
+              v-model="reminderDays"
+              legend="Remind me on"
+              :options="WEEKDAYS"
+              select-all-label="Every weekday"
+              :columns="2"
+            />
+          </BaseCard>
+          <CodeBlock :code="CODE['form-checkbox-group']" lang="html" />
+        </div>
+        <PropTable name="BaseCheckboxGroup" />
       </article>
 
       <article :id="part('form-segmented').id" class="sc-part">

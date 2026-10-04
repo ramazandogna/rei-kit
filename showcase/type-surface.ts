@@ -21,6 +21,7 @@
  */
 export type {
   AppErrorKind,
+  CheckboxOption,
   ColorSwatch,
   Column,
   ComboboxOption,

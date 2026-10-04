@@ -558,6 +558,69 @@
     ]
   },
   {
+    "name": "BaseCheckboxGroup",
+    "entry": "rei-kit",
+    "summary": "Several answers from a set that is all on screen.",
+    "props": [
+      {
+        "name": "options",
+        "required": true,
+        "type": "readonly CheckboxOption<V>[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "legend",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "error",
+        "required": false,
+        "type": "string",
+        "description": "Shown under the group, and it marks every box invalid.",
+        "default": "''"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "''"
+      },
+      {
+        "name": "legendHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "Hides the question but keeps it as the group's accessible name — for a group whose surroundings already ask it. Dropping the legend instead leaves the set named nothing at all.",
+        "default": "false"
+      },
+      {
+        "name": "selectAllLabel",
+        "required": false,
+        "type": "string",
+        "description": "Adds a box above the others that chooses or clears all of them, named by this string. Empty means no such box: it earns its place on a list long enough that ticking each one is work, and gets in the way on three. It never chooses a disabled option, so pressing it twice is not a way to select something the form has ruled out.",
+        "default": "''"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "Disables every box, including the select-all.",
+        "default": "false"
+      },
+      {
+        "name": "columns",
+        "required": false,
+        "type": "1 | 2",
+        "description": "Lay the boxes out in two columns from the `sm` breakpoint. One column on a phone either way: a two-column list of checkboxes on a 390px screen is two columns of truncated labels.",
+        "default": "1"
+      }
+    ]
+  },
+  {
     "name": "BaseChip",
     "entry": "rei-kit",
     "summary": "A short label with, when it is one of a set someone assembled, a way to take it off: a filter, a recipient, a tag.",
@@ -3583,7 +3646,7 @@
         "name": "tone",
         "required": true,
         "type": "Tone",
-        "description": "The colour classes for the dot and the label, as written-out class names. `Tone` is a pair rather than a role token because the categories here are the app's own, and Tailwind reads source as plain text: a class assembled at runtime never reaches the stylesheet.",
+        "description": "The colour classes for the dot, the pill and the label, as written-out class names. `Tone` is a set of classes rather than a role token because the categories here are the app's own, and Tailwind reads source as plain text: a class assembled at runtime never reaches the stylesheet. Put the role on `fill` and `card` and leave `text` as `text-ink`.",
         "default": ""
       },
       {

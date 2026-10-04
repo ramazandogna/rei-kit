@@ -5,6 +5,43 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## 4.3.0 — 2026-10-04
+
+**`BaseCheckboxGroup`, and 34 more components you can actually try.**
+
+Two things, both about the page somebody lands on before they install.
+
+**The component.** Four or five boxes under one question is the commonest
+form control there is, and the kit had the single box and the set of radios
+but nothing between them — so an app wrote the `fieldset`, the `legend`, the
+array arithmetic and the select-all itself. The select-all is the half that
+was always wrong: `indeterminate` is a DOM property with no markup for it,
+and a box standing for a list has to be neither on nor off while some of the
+list is chosen. It also never reaches an option the form has disabled, in
+either direction.
+
+**The playground.** Every control on the docs site is derived from the prop
+catalogue, which is what keeps it from going stale — and it meant a component
+had no playground at all the moment one required prop was a list or a
+function. That was 39 of them, including a select, a table and a tab bar: the
+parts a reader reaches for first were the ones the page would not let them
+touch, and nothing failed. `playground-data.ts` now carries the shapes, taken
+from each component's own example, and 76 of 106 components can be driven.
+The rest are overlays, hosts and shells, each listed with its reason, and a
+test fails on a component that is neither.
+
+It is also **open by default** rather than folded into a `<details>` under a
+code sample. It had been there for a release and the person paying for the
+page had not found it, which is the only review that counts.
+
+**And a contrast fault it immediately found.** With the playground rendering
+`SectionHeading`, the axe scan on the showcase caught its label at **2.01:1**
+— `text-positive` on a `bg-positive/5` pill, the role-on-a-wash-of-itself
+fault that five components were fixed for in 2.25.0. This one takes its
+classes from the app, so no source-reading test could have seen it. The
+component's own example and its `Tone` documentation now put the role on the
+dot and the edge and leave the words in `text-ink`.
+
 ## 4.2.0 — 2026-10-04
 
 **`checkStyling` measures the text on a role it has been rebranded into.**

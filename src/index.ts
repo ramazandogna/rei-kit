@@ -247,6 +247,24 @@ export type { ComboboxOption } from './components/BaseCombobox.vue'
  */
 export { default as BaseCheckbox } from './components/BaseCheckbox.vue'
 /**
+ * Several answers from a set that is all on screen.
+ *
+ * @example
+ * ```vue
+ * <BaseCheckboxGroup
+ *   v-model="days"
+ *   legend="Remind me on"
+ *   :options="weekdays"
+ *   select-all-label="Every weekday"
+ *   :columns="2"
+ * />
+ * ```
+ *
+ * @see {@link BaseListbox}, {@link BaseRadioGroup} — the near-neighbours this is mistaken for
+ */
+export { default as BaseCheckboxGroup } from './components/BaseCheckboxGroup.vue'
+export type { CheckboxOption } from './components/BaseCheckboxGroup.vue'
+/**
  * A set of radios, and the reason there is no `BaseRadio`.
  *
  * @example
@@ -254,7 +272,7 @@ export { default as BaseCheckbox } from './components/BaseCheckbox.vue'
  * <BaseRadioGroup v-model="plan" legend="Plan" :options="plans" />
  * ```
  *
- * @see {@link BaseListbox}, {@link BaseSelect} — the near-neighbours this is mistaken for
+ * @see {@link BaseCheckboxGroup}, {@link BaseListbox}, {@link BaseSelect} — the near-neighbours this is mistaken for
  */
 export { default as BaseRadioGroup } from './components/BaseRadioGroup.vue'
 /**
@@ -803,7 +821,7 @@ export { default as BaseKbd } from './components/BaseKbd.vue'
  * <BaseListbox v-model="chosen" mode="multiple" :options="people" label="People with access" />
  * ```
  *
- * @see {@link BaseRadioGroup}, {@link BaseSelect}, {@link TransferList} — the near-neighbours this is mistaken for
+ * @see {@link BaseCheckboxGroup}, {@link BaseRadioGroup}, {@link BaseSelect}, {@link TransferList} — the near-neighbours this is mistaken for
  */
 export { default as BaseListbox } from './components/BaseListbox.vue'
 export type { ListboxOption } from './components/BaseListbox.vue'

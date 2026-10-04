@@ -25,18 +25,41 @@ test.describe('the prop playground', () => {
     expect(errors).toEqual([])
   })
 
-  test('offers a panel on the components it can drive', async ({ page }) => {
+  test('offers a panel on the components it can drive, already open', async ({ page }) => {
     const panels = page.locator('summary', { hasText: 'you can change' })
 
     /* Derived from the catalogue, so the exact number moves with the kit.
-       What matters is that the derivation produced a useful set rather than
-       one or none, which is how a broken type parser would present. */
-    expect(await panels.count()).toBeGreaterThan(20)
+       The floor is `playground-data.spec.ts`'s; what this adds is that they
+       are on the page rather than only in the derivation. */
+    expect(await panels.count()).toBeGreaterThan(60)
+
+    /* Open, not folded away. It was a closed `<details>` until the person
+       paying for the page said he could not change a button's props and
+       watch — which was true: the panel was there, under a summary, below a
+       code sample, and he never saw it. A control nobody finds is a control
+       that does not exist. */
+    const first = page.locator('details:has(summary:text-matches("you can change"))').first()
+    await expect(first).toHaveAttribute('open', '')
+  })
+
+  /* The half that had no playground at all: a component whose required prop
+     is a list. The seeds in `playground-data.ts` render it, and the props
+     beside the list still have to drive it. */
+  test('drives a component whose data comes from a seed', async ({ page }) => {
+    const article = page.locator('#api-BaseSelect')
+
+    await expect(article.locator('.canvas select')).toBeVisible()
+    await expect(article.locator('.canvas option').first()).toHaveText('Türkiye')
+  })
+
+  test('renders a seeded table rather than an empty box', async ({ page }) => {
+    const rows = page.locator('#api-BaseTable .canvas tbody tr')
+
+    await expect(rows).toHaveCount(2)
   })
 
   test('changing a prop changes the component and the snippet', async ({ page }) => {
     const article = page.locator('#api-BaseButton')
-    await article.locator('summary', { hasText: 'you can change' }).click()
 
     const rendered = article.locator('.canvas button').first()
     await expect(rendered).toBeVisible()
@@ -50,7 +73,6 @@ test.describe('the prop playground', () => {
 
   test('a prop left at its default stays out of the snippet', async ({ page }) => {
     const article = page.locator('#api-BaseButton')
-    await article.locator('summary', { hasText: 'you can change' }).click()
 
     const snippet = article.locator('pre').last()
 
@@ -65,7 +87,6 @@ test.describe('the prop playground', () => {
 
   test('reset puts every control back', async ({ page }) => {
     const article = page.locator('#api-BaseButton')
-    await article.locator('summary', { hasText: 'you can change' }).click()
 
     await article.getByRole('button', { name: 'ghost', exact: true }).click()
     await expect(article.locator('pre').last()).toContainText('variant="ghost"')

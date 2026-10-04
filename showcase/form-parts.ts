@@ -119,6 +119,14 @@ export const FORM_PARTS = [
       'Every option on screen and exactly one answer. It is a fieldset with a legend, so the question is read before the options rather than left to the layout.',
   },
   {
+    id: 'form-checkbox-group',
+    group: 'form-toggles',
+    label: 'BaseCheckboxGroup',
+    title: 'BaseCheckboxGroup — several answers, all visible',
+    pitch:
+      'The commonest form control there is, and the one that sat between a radio group and a scrolling listbox until now. One fieldset, one legend, and a select-all that is `indeterminate` while some of them are chosen — the part every hand-written copy gets wrong, because it is a DOM property with no markup for it.',
+  },
+  {
     id: 'form-segmented',
     group: 'form-toggles',
     label: 'SegmentedControl',

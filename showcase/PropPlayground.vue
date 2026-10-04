@@ -8,6 +8,7 @@ import * as web from 'rei-kit/web'
 
 import CodeBlock from './CodeBlock.vue'
 import { controlsFor, initialValue, snippetFor, type Control } from './playground-controls'
+import { PLAYGROUND_DATA } from './playground-data'
 import { NOT_PLAYABLE, SLOT_TEXT } from './playground-seeds'
 import catalogue from './props.generated.json'
 
@@ -46,12 +47,22 @@ const controls = computed<Control[]>(() => (entry.value ? controlsFor(entry.valu
    requires has a control, so one that needs a function or an array of rows
    drops out by itself. The deny list is the second half — the ones that
    qualify on their types and would still render an empty box. */
+const seeds = computed(() => PLAYGROUND_DATA[name] ?? {})
+
 const playable = computed(() => {
   const item = entry.value
   if (!item || NOT_PLAYABLE[item.name]) return false
   if (controls.value.length === 0) return false
 
-  const covered = new Set(controls.value.map((control) => control.prop.name))
+  /* A required prop is answered either by a control or by a seed in
+     `playground-data.ts`. Without the second half, every component whose
+     data is a list — a table, a select, a tab bar — had no playground at
+     all, which was most of the ones a reader opens this page to try. */
+  const covered = new Set([
+    ...controls.value.map((control) => control.prop.name),
+    ...Object.keys(seeds.value),
+  ])
+
   return item.props.every((prop) => !prop.required || covered.has(prop.name))
 })
 
@@ -75,6 +86,8 @@ const component = computed(() => {
   return (NAMESPACES[item.entry]?.[item.name] ?? null) as object | null
 })
 
+const bound = computed(() => ({ ...seeds.value, ...values.value }))
+
 const snippet = computed(() => snippetFor(name, controls.value, values.value, slot.value))
 
 const reset = () => {
@@ -89,8 +102,8 @@ const changed = computed(() =>
 </script>
 
 <template>
-  <details v-if="playable && component" class="border-hair/70 mt-4 border-t pt-3">
-    <summary class="text-ink-soft hover:text-ink cursor-pointer text-xs font-medium">
+  <details v-if="playable && component" open class="border-hair/70 mt-4 border-t pt-3">
+    <summary class="text-ink hover:text-primary cursor-pointer text-xs font-semibold">
       Try it — {{ controls.length }} {{ controls.length === 1 ? 'prop' : 'props' }} you can change
     </summary>
 
@@ -99,7 +112,7 @@ const changed = computed(() =>
         <div
           class="canvas rounded-card border-hair flex min-h-28 items-center justify-center border p-6"
         >
-          <component :is="component" v-bind="values">
+          <component :is="component" v-bind="bound">
             <template v-if="slot">{{ slot }}</template>
           </component>
         </div>

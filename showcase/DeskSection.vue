@@ -5,6 +5,7 @@ import { BaseButton, BaseCard, BaseSeparator, SectionHeading } from '../src/inde
 import { BaseSplitter, BaseToolbar, BaseTree, TransferList } from '../src/web/index'
 import { DESK_PARTS } from './desk-parts'
 import type { DeskPartId } from './desk-parts'
+import PartPitch from './PartPitch.vue'
 import PropTable from './PropTable.vue'
 import { NEUTRAL } from './tones'
 
@@ -59,7 +60,7 @@ const part = (id: DeskPartId) => DESK_PARTS.find((one) => one.id === id)!
     <article :id="part('desk-toolbar').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('desk-toolbar').title }}</h3>
-        <p class="sc-part-pitch">{{ part('desk-toolbar').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('desk-toolbar').pitch" />
       </header>
       <BaseCard class="mt-4">
         <BaseToolbar label="Files">
@@ -79,7 +80,7 @@ const part = (id: DeskPartId) => DESK_PARTS.find((one) => one.id === id)!
     <article :id="part('desk-splitter').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('desk-splitter').title }}</h3>
-        <p class="sc-part-pitch">{{ part('desk-splitter').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('desk-splitter').pitch" />
       </header>
       <BaseCard class="mt-4">
         <div class="border-hair/70 rounded-card h-56 overflow-hidden border">
@@ -111,7 +112,7 @@ const part = (id: DeskPartId) => DESK_PARTS.find((one) => one.id === id)!
     <article :id="part('desk-tree').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('desk-tree').title }}</h3>
-        <p class="sc-part-pitch">{{ part('desk-tree').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('desk-tree').pitch" />
       </header>
       <BaseCard class="mt-4">
         <BaseTree
@@ -131,7 +132,7 @@ const part = (id: DeskPartId) => DESK_PARTS.find((one) => one.id === id)!
     <article :id="part('desk-transfer').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('desk-transfer').title }}</h3>
-        <p class="sc-part-pitch">{{ part('desk-transfer').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('desk-transfer').pitch" />
       </header>
       <BaseCard class="mt-4">
         <TransferList

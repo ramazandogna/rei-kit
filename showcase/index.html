@@ -3,16 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>rei-kit — component showcase</title>
+
+    <!-- The words somebody actually types. "rei-kit" is a name nobody knows
+         yet and "showcase" is not something anybody searches for, so the
+         title names the category first and the brand second. -->
+    <title>rei-kit — accessible Vue 3 + Tailwind 4 component library</title>
     <meta
       name="description"
-      content="One kit, every look. 106 accessible Vue 3 + Tailwind 4 components, four materials and ten WCAG-checked palettes."
+      content="106 accessible Vue 3 components for Tailwind CSS 4. Four materials and ten WCAG-checked palettes, light and dark, each switched with one attribute. TypeScript, SSR-safe, no runtime dependencies, MIT."
     />
+    <link rel="canonical" href="https://ramazandogna.github.io/rei-kit/" />
     <meta name="theme-color" content="#26667f" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <!-- A link to a library whose whole argument is how it looks rendered as
+         a bare URL in every chat window it was pasted into. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="rei-kit" />
+    <meta property="og:url" content="https://ramazandogna.github.io/rei-kit/" />
+    <meta property="og:title" content="rei-kit — accessible Vue 3 + Tailwind 4 component library" />
+    <meta
+      property="og:description"
+      content="106 accessible components, four materials and ten WCAG-checked palettes — each switched with one attribute."
+    />
+    <meta property="og:image" content="https://ramazandogna.github.io/rei-kit/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The same screen in four materials: quiet, glass, brutal and soft."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="rei-kit — accessible Vue 3 + Tailwind 4 component library"
+    />
+    <meta
+      name="twitter:description"
+      content="106 accessible components, four materials and ten WCAG-checked palettes — each switched with one attribute."
+    />
+    <meta name="twitter:image" content="https://ramazandogna.github.io/rei-kit/og.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "rei-kit",
+            "description": "106 accessible Vue 3 and Tailwind 4 components; four materials and ten WCAG-checked palettes, each switched with one attribute.",
+            "codeRepository": "https://github.com/ramazandogna/rei-kit",
+            "programmingLanguage": ["TypeScript", "Vue"],
+            "license": "https://opensource.org/licenses/MIT",
+            "url": "https://ramazandogna.github.io/rei-kit/",
+            "author": { "@type": "Person", "name": "Ramazan Dogan" },
+            "keywords": "vue component library, vue 3, tailwind css 4, design system, accessible components, wcag, glassmorphism"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "rei-kit",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Web",
+            "url": "https://www.npmjs.com/package/rei-kit",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
-    <div id="app"></div>
+    <!-- Vue replaces this on mount. Until it does — and for every crawler
+         that does not run JavaScript, which is most of them outside Google —
+         this is the page. It was 716 bytes with no prose and no links. -->
+    <div id="app">
+      <main>
+        <h1>rei-kit — 106 accessible Vue 3 and Tailwind 4 components</h1>
+        <p>
+          One kit, every look. A Vue 3 component library for Tailwind CSS 4, themed by role rather
+          than by colour on three independent axes: ten WCAG-checked palettes, four materials
+          (quiet, glass, brutal, soft) and light or dark — each switched with one attribute, without
+          touching a component.
+        </p>
+        <p>
+          Typed, tested and SSR-safe, with no runtime dependencies. MIT licensed.
+          <code>pnpm add rei-kit</code>
+        </p>
+        <ul>
+          <li><a href="https://www.npmjs.com/package/rei-kit">rei-kit on npm</a></li>
+          <li><a href="https://github.com/ramazandogna/rei-kit">Source on GitHub</a></li>
+          <li>
+            <a href="https://github.com/ramazandogna/rei-kit/blob/main/CHANGELOG.md">Changelog</a>
+          </li>
+        </ul>
+        <!-- prerender:components -->
+      </main>
+    </div>
     <script type="module" src="./main.ts"></script>
   </body>
 </html>

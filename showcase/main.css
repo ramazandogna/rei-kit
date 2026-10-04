@@ -34,9 +34,14 @@ body {
   scroll-margin-top: 1.5rem;
 }
 
+/* 7.5rem, not 5.5: the header measures 103px at 768 and 111px at 1280, so
+   88px of margin left every jumped-to heading sitting behind it — and the
+   section's own kicker pill half-covered. It also matches the 120px line
+   `SideNav` measures its active section against, so where a jump lands and
+   which item lights up finally agree. */
 @media (min-width: 48rem) {
   [id] {
-    scroll-margin-top: 5.5rem;
+    scroll-margin-top: 7.5rem;
   }
 }
 
@@ -90,6 +95,33 @@ body {
   font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--color-ink);
+}
+
+/* One rhythm for the landing sections above the gallery.
+   They had five values — hero 80px, axes 64, override 0, evidence 96,
+   getting-started 72 — while the gallery below is 56px between all of its
+   twenty-five sections and 48px between all sixty parts. The careful half
+   made the careless half obvious. */
+.landing-section {
+  padding-top: 6rem;
+}
+
+/* And one size for a landing section's title. There were three (40/700,
+   30/700, 24/600) and an `h3` at 32/700 that outweighed the `h2` above it,
+   which is a hierarchy a reader has to work out rather than see. */
+.landing-title {
+  color: var(--color-ink);
+  font-size: 2.25rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 48rem) {
+  .landing-title {
+    font-size: 2.5rem;
+    line-height: 1.05;
+  }
 }
 
 .sc-part-pitch {

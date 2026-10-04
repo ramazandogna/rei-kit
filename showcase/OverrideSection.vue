@@ -35,10 +35,10 @@ const SAMPLE = `<!-- one square card, everything else untouched -->
 </script>
 
 <template>
-  <section id="override" class="override">
+  <section id="override" class="override landing-section">
     <div class="override-intro">
       <SectionHeading :tone="NEUTRAL" label="One component" />
-      <h2 class="override-title">Change one part without changing the rest.</h2>
+      <h2 class="landing-title">Change one part without changing the rest.</h2>
       <p class="override-lead">
         A palette or a material changes the page. To change a single component, set the token on
         that element. It is not a class override — a class loses to the kit's own about half the

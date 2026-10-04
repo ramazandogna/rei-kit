@@ -6,6 +6,8 @@ import * as motion from 'rei-kit/motion'
 import * as pwa from 'rei-kit/pwa'
 import * as web from 'rei-kit/web'
 
+import { BaseSwitch } from 'rei-kit'
+
 import CodeBlock from './CodeBlock.vue'
 import { controlsFor, initialValue, snippetFor, type Control } from './playground-controls'
 import { PLAYGROUND_DATA } from './playground-data'
@@ -71,8 +73,15 @@ const values = ref<Record<string, unknown>>({})
 watch(
   controls,
   (list) => {
+    /* A seed beats the derived default, so `playground-data.ts` can set where
+       a knob starts as well as fill a prop no knob can offer — which is how
+       `PageHeader` starts as an `h2` here rather than putting a second `h1`
+       on the page. */
     values.value = Object.fromEntries(
-      list.map((control) => [control.prop.name, initialValue(control)]),
+      list.map((control) => [
+        control.prop.name,
+        seeds.value[control.prop.name] ?? initialValue(control),
+      ]),
     )
   },
   { immediate: true },
@@ -92,12 +101,18 @@ const snippet = computed(() => snippetFor(name, controls.value, values.value, sl
 
 const reset = () => {
   values.value = Object.fromEntries(
-    controls.value.map((control) => [control.prop.name, initialValue(control)]),
+    controls.value.map((control) => [
+      control.prop.name,
+      seeds.value[control.prop.name] ?? initialValue(control),
+    ]),
   )
 }
 
 const changed = computed(() =>
-  controls.value.some((control) => values.value[control.prop.name] !== initialValue(control)),
+  controls.value.some(
+    (control) =>
+      values.value[control.prop.name] !== (seeds.value[control.prop.name] ?? initialValue(control)),
+  ),
 )
 </script>
 
@@ -107,10 +122,15 @@ const changed = computed(() =>
       Try it — {{ controls.length }} {{ controls.length === 1 ? 'prop' : 'props' }} you can change
     </summary>
 
-    <div class="mt-3 grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
+    <div class="mt-3 grid gap-4 lg:grid-cols-[minmax(0,1fr)_22rem]">
       <div class="flex flex-col gap-3">
+        <!-- `relative` is load-bearing: `FabButton` and `TabShell` pin
+             themselves with `position: absolute`, so without a positioned
+             ancestor they resolve against the page and land on the hero —
+             which is exactly what happened the day the playground started
+             rendering them. `overflow-hidden` keeps anything else inside. -->
         <div
-          class="canvas rounded-card border-hair flex min-h-28 items-center justify-center border p-6"
+          class="canvas rounded-card border-hair relative flex min-h-40 items-center justify-center overflow-hidden border p-6"
         >
           <component :is="component" v-bind="bound">
             <template v-if="slot">{{ slot }}</template>
@@ -135,7 +155,7 @@ const changed = computed(() =>
               v-for="option in control.options"
               :key="option"
               type="button"
-              class="focus-ring rounded-cell border px-2 py-1 font-mono text-[0.7rem]"
+              class="focus-ring rounded-cell min-h-11 border px-2.5 py-2 font-mono text-xs"
               :class="
                 values[control.prop.name] === option
                   ? 'border-primary bg-primary text-on-primary'
@@ -148,16 +168,15 @@ const changed = computed(() =>
             </button>
           </div>
 
-          <button
+          <!-- The kit ships a switch, and a boolean prop is what one is for.
+               A bordered box reading "false" was indistinguishable from the
+               text fields beside it. -->
+          <BaseSwitch
             v-else-if="control.kind === 'boolean'"
-            :id="`pg-${name}-${control.prop.name}`"
-            type="button"
-            class="focus-ring rounded-cell border-hair control text-ink-soft hover:text-ink border px-2 py-1 text-left font-mono text-[0.7rem]"
-            :aria-pressed="Boolean(values[control.prop.name])"
-            @click="values[control.prop.name] = !values[control.prop.name]"
-          >
-            {{ values[control.prop.name] ? 'true' : 'false' }}
-          </button>
+            :model-value="Boolean(values[control.prop.name])"
+            :label="values[control.prop.name] ? 'true' : 'false'"
+            @update:model-value="values[control.prop.name] = $event"
+          />
 
           <input
             v-else-if="control.kind === 'number'"

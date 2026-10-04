@@ -315,9 +315,12 @@ const linkProps = computed(() => {
     class="focus-visible:outline-primary focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50"
     :class="[shell, surface, sizing, radius, block ? 'w-full' : '']"
   >
+    <!-- Still moving under the preference, like `BaseSpinner`: a loading
+         indicator that stops says the app has hung — a slow fade rather than
+         a fast rotation. Tailwind's `animate-spin` has no guard of its own. -->
     <span
       v-if="loading"
-      class="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+      class="size-4 rounded-full border-2 border-current border-t-transparent motion-safe:animate-spin motion-reduce:animate-pulse"
       aria-hidden="true"
     />
     <slot />

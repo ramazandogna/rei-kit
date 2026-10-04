@@ -29,10 +29,14 @@ const isLength = computed(() => /^(?:[.\d]|calc\(|var\(|clamp\(|min\(|max\()/.te
   <div role="status" class="flex flex-col gap-1">
     <span class="sr-only">{{ label }}</span>
 
+    <!-- `motion-safe:`, because Tailwind's own `animate-pulse` carries no
+         reduced-motion guard. `BaseSkeleton` next door stops dead under the
+         preference and this kept pulsing — seven running animations on the
+         showcase with the preference set. -->
     <div
       v-for="row in rows"
       :key="row"
-      class="bg-muted rounded-card animate-pulse"
+      class="bg-muted rounded-card motion-safe:animate-pulse"
       :class="isLength ? undefined : rowHeight"
       :style="isLength ? { height: rowHeight } : undefined"
       aria-hidden="true"

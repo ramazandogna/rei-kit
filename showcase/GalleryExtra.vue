@@ -98,7 +98,7 @@ const resultCount = ref(0)
 
 function announceResults() {
   resultCount.value = (resultCount.value + 3) % 12
-  announce(`${resultCount.value} sonuç`)
+  announce(`${resultCount.value} results`)
 }
 
 /** Long enough that rendering all of it would be the reason to reach for it. */
@@ -335,7 +335,7 @@ function onCommand(id: string) {
         <AnnounceHost />
         <div class="flex items-center gap-3">
           <BaseButton variant="secondary" @click="announceResults">Filtrele</BaseButton>
-          <span class="text-ink-soft text-sm">{{ resultCount }} sonuç</span>
+          <span class="text-ink-soft text-sm">{{ resultCount }} results</span>
         </div>
         <PropTable name="AnnounceHost" />
       </BaseCard>

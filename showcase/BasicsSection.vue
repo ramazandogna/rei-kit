@@ -19,6 +19,7 @@ import {
 import { BASICS_PARTS } from './basics-parts'
 import type { BasicsPartId } from './basics-parts'
 import CodeBlock from './CodeBlock.vue'
+import PartPitch from './PartPitch.vue'
 import PropTable from './PropTable.vue'
 import { NEUTRAL } from './tones'
 
@@ -122,7 +123,7 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
     <article :id="part('basics-separator').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('basics-separator').title }}</h3>
-        <p class="sc-part-pitch">{{ part('basics-separator').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('basics-separator').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -141,7 +142,7 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
     <article :id="part('basics-skeleton').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('basics-skeleton').title }}</h3>
-        <p class="sc-part-pitch">{{ part('basics-skeleton').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('basics-skeleton').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -163,7 +164,7 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
     <article :id="part('basics-kbd').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('basics-kbd').title }}</h3>
-        <p class="sc-part-pitch">{{ part('basics-kbd').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('basics-kbd').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -184,7 +185,7 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
     <article :id="part('basics-chip').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('basics-chip').title }}</h3>
-        <p class="sc-part-pitch">{{ part('basics-chip').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('basics-chip').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -216,7 +217,7 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
     <article :id="part('basics-avatars').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('basics-avatars').title }}</h3>
-        <p class="sc-part-pitch">{{ part('basics-avatars').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('basics-avatars').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -232,7 +233,7 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
     <article :id="part('basics-rating').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('basics-rating').title }}</h3>
-        <p class="sc-part-pitch">{{ part('basics-rating').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('basics-rating').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -267,7 +268,7 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
     <article :id="part('basics-link').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('basics-link').title }}</h3>
-        <p class="sc-part-pitch">{{ part('basics-link').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('basics-link').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -285,7 +286,7 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
     <article :id="part('basics-copy').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('basics-copy').title }}</h3>
-        <p class="sc-part-pitch">{{ part('basics-copy').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('basics-copy').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -318,7 +319,7 @@ or the <BaseLink href="https://vuejs.org" external>Vue guide</BaseLink>.`,
     <article :id="part('basics-code').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('basics-code').title }}</h3>
-        <p class="sc-part-pitch">{{ part('basics-code').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('basics-code').pitch" />
       </header>
       <BaseCard class="mt-4">
         <KitCodeBlock

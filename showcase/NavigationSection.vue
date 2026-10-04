@@ -13,6 +13,7 @@ import {
 } from '../src/web/index'
 import { NAV_PARTS } from './nav-parts'
 import type { NavPartId } from './nav-parts'
+import PartPitch from './PartPitch.vue'
 import PropTable from './PropTable.vue'
 import { NEUTRAL } from './tones'
 
@@ -102,19 +103,27 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
     <article :id="part('nav-skip').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('nav-skip').title }}</h3>
-        <p class="sc-part-pitch">{{ part('nav-skip').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('nav-skip').pitch" />
       </header>
       <BaseCard class="mt-4">
         <!-- Press Tab with this card in view: the link appears at the top
              left, and Enter puts focus on the paragraph below. -->
         <div class="relative">
-          <SkipLink for="sc-skip-target" label="İçeriğe geç" />
+          <SkipLink for="sc-skip-target" label="Skip to content" />
           <nav class="mb-3 flex gap-3" aria-label="Example sections">
-            <a href="#sc-skip-a" class="text-ink-soft text-sm">Products</a>
-            <a href="#sc-skip-b" class="text-ink-soft text-sm">Pricing</a>
-            <a href="#sc-skip-c" class="text-ink-soft text-sm">Docs</a>
+            <a href="#sc-skip-products" class="text-ink-soft text-sm">Products</a>
+            <a href="#sc-skip-pricing" class="text-ink-soft text-sm">Pricing</a>
+            <a href="#sc-skip-docs" class="text-ink-soft text-sm">Docs</a>
           </nav>
           <p id="sc-skip-target" class="text-ink text-sm">The content the link skips to.</p>
+          <!-- Real targets, because three links to nothing in a demonstration
+               of the component that exists for links that go nowhere is the
+               one mistake this section cannot make. -->
+          <div class="text-ink-soft mt-2 flex gap-3 text-xs">
+            <span id="sc-skip-products">Products</span>
+            <span id="sc-skip-pricing">Pricing</span>
+            <span id="sc-skip-docs">Docs</span>
+          </div>
         </div>
       </BaseCard>
       <PropTable name="SkipLink" />
@@ -123,7 +132,7 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
     <article :id="part('nav-links').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('nav-links').title }}</h3>
-        <p class="sc-part-pitch">{{ part('nav-links').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('nav-links').pitch" />
       </header>
       <BaseCard class="mt-4">
         <NavLinks :items="NAV" active="blog" label="Primary navigation" />
@@ -134,7 +143,7 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
     <article :id="part('nav-mega').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('nav-mega').title }}</h3>
-        <p class="sc-part-pitch">{{ part('nav-mega').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('nav-mega').pitch" />
       </header>
       <BaseCard class="mt-4">
         <!-- The panel is absolutely positioned against the bar, so the bar
@@ -153,7 +162,7 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
     <article :id="part('nav-breadcrumb').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('nav-breadcrumb').title }}</h3>
-        <p class="sc-part-pitch">{{ part('nav-breadcrumb').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('nav-breadcrumb').pitch" />
       </header>
       <BaseCard class="mt-4">
         <BaseBreadcrumb
@@ -171,7 +180,7 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
     <article :id="part('nav-tabs').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('nav-tabs').title }}</h3>
-        <p class="sc-part-pitch">{{ part('nav-tabs').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('nav-tabs').pitch" />
       </header>
       <BaseCard class="mt-4">
         <BaseTabs v-model="tab" :items="TABS" label="Sections">
@@ -189,7 +198,7 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
     <article :id="part('nav-pagination').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('nav-pagination').title }}</h3>
-        <p class="sc-part-pitch">{{ part('nav-pagination').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('nav-pagination').pitch" />
       </header>
       <BaseCard class="mt-4">
         <BasePagination
@@ -207,7 +216,7 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
     <article :id="part('nav-tabbar').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('nav-tabbar').title }}</h3>
-        <p class="sc-part-pitch">{{ part('nav-tabbar').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('nav-tabbar').pitch" />
       </header>
       <!-- The bar is absolutely positioned -- it hangs inside the phone shell
            rather than in the flow -- so it needs a box of its own. The table
@@ -222,7 +231,7 @@ const part = (id: NavPartId) => NAV_PARTS.find((one) => one.id === id)!
     <article :id="part('nav-stepper').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('nav-stepper').title }}</h3>
-        <p class="sc-part-pitch">{{ part('nav-stepper').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('nav-stepper').pitch" />
       </header>
       <BaseCard class="mt-4">
         <BaseStepper

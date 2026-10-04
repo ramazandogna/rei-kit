@@ -12,6 +12,7 @@ import {
   TypeWriter,
 } from '../src/motion/index'
 import CodeBlock from './CodeBlock.vue'
+import PartPitch from './PartPitch.vue'
 import { MOTION_PARTS } from './motion-parts'
 import type { MotionPartId } from './motion-parts'
 import { NEUTRAL } from './tones'
@@ -129,7 +130,7 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     <article :id="part('motion-ticker').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('motion-ticker').title }}</h3>
-        <p class="sc-part-pitch">{{ part('motion-ticker').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('motion-ticker').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -154,7 +155,7 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     <article :id="part('motion-count').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('motion-count').title }}</h3>
-        <p class="sc-part-pitch">{{ part('motion-count').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('motion-count').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -181,7 +182,7 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     <article :id="part('motion-rotate').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('motion-rotate').title }}</h3>
-        <p class="sc-part-pitch">{{ part('motion-rotate').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('motion-rotate').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -200,7 +201,7 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     <article :id="part('motion-type').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('motion-type').title }}</h3>
-        <p class="sc-part-pitch">{{ part('motion-type').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('motion-type').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -216,7 +217,7 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     <article :id="part('motion-reveal').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('motion-reveal').title }}</h3>
-        <p class="sc-part-pitch">{{ part('motion-reveal').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('motion-reveal').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -240,7 +241,7 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     <article :id="part('motion-marquee').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('motion-marquee').title }}</h3>
-        <p class="sc-part-pitch">{{ part('motion-marquee').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('motion-marquee').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard class="min-w-0">
@@ -256,7 +257,7 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     <article :id="part('motion-shimmer').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('motion-shimmer').title }}</h3>
-        <p class="sc-part-pitch">{{ part('motion-shimmer').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('motion-shimmer').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>
@@ -278,7 +279,7 @@ const part = (id: MotionPartId) => MOTION_PARTS.find((p) => p.id === id)!
     <article :id="part('motion-attention').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('motion-attention').title }}</h3>
-        <p class="sc-part-pitch">{{ part('motion-attention').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('motion-attention').pitch" />
       </header>
       <div class="sc-part-row">
         <BaseCard>

@@ -1,14 +1,18 @@
 # rei-kit
 
-**One kit. Every look.** 106 accessible components for Vue 3 and Tailwind 4.
+**One kit. Every look.** An accessible **Vue 3 + Tailwind 4 component
+library**: 106 components for Vue 3 and Tailwind CSS 4.
 Change the **material** with one attribute and the **palette** with another —
 every component follows, and none of them knows your brand.
 
 [![npm](https://img.shields.io/npm/v/rei-kit?color=%23227c70&label=npm)](https://www.npmjs.com/package/rei-kit)
-[![license](https://img.shields.io/npm/l/rei-kit?color=%23227c70)](./LICENSE)
+[![license](https://img.shields.io/npm/l/rei-kit?color=%23227c70)](https://github.com/ramazandogna/rei-kit/blob/main/LICENSE)
+[![types](https://img.shields.io/npm/types/rei-kit?color=%23227c70)](https://www.npmjs.com/package/rei-kit)
 [![showcase](https://img.shields.io/badge/showcase-live-%23227c70)](https://ramazandogna.github.io/rei-kit/)
 
 **[Try every material and palette live →](https://ramazandogna.github.io/rei-kit/)**
+
+[![The same card in four materials and four palettes](https://raw.githubusercontent.com/ramazandogna/rei-kit/main/showcase/public/og.png)](https://ramazandogna.github.io/rei-kit/)
 
 ```sh
 pnpm add rei-kit
@@ -26,7 +30,36 @@ That line is the whole redesign. Three axes, each changed on its own:
 | **Palette**  | 10 built in — Nord, Dracula, Catppuccin, Solarized, Gruvbox, Tokyo Night, Rosé Pine, Rei, Sakura, Matcha |
 | **Mode**     | light and dark, every palette measured against WCAG AA in both                                           |
 
-零 — the layer everything else starts from.
+零 — *rei*, zero: the layer everything else starts from.
+
+**Stable.** 4.x is a published API: no export is removed, no prop renamed and
+no component's output changed for the same input outside a major version.
+Every release is packed as a real tarball, installed into three applications
+and run through each one's own test suite before it ships.
+[Changelog](https://github.com/ramazandogna/rei-kit/blob/main/CHANGELOG.md) ·
+[Roadmap](https://github.com/ramazandogna/rei-kit/blob/main/ROADMAP.md)
+
+### Is it for you?
+
+**Reach for this** when you are already on Tailwind 4 and want your own
+utilities and the kit to share one token layer; when the people using your app
+— not just you — should be able to change how it looks; when you want the
+accessible half of a control (the live region, the arrow keys, the focus
+management) without writing it; and when what you ship at ten-plus components
+matters.
+
+**Reach for something else** when you need a data grid with pivots and frozen
+columns, a charting library, a Nuxt module, or a Vue 2 / Tailwind 3 target.
+Those are not on the roadmap.
+
+**Unlike shadcn-vue**, components arrive as a dependency rather than copied
+into your repository, so a fix reaches you as a patch release. The escape
+hatch is a token set on one element, not a fork of the component.
+
+**In Nuxt**, it is a plain Vue dependency: import from `rei-kit` as usual and
+add the stylesheet to your CSS. There is no module, and the components are
+SSR-safe — `ssr.spec.ts` renders every one of them on a server, and one of the
+three apps that run on this kit prerenders every page it has.
 
 |                        |                                                                                |
 | ---------------------- | ------------------------------------------------------------------------------ |
@@ -92,7 +125,7 @@ go red, and several of them exist nowhere else:
 | **`consumer.yml`**               | Packs the real tarball, installs it into all three apps and runs each one's whole gate. The only check that imports the package the way an app does.                                                                                         |
 | **`pnpm size`**                  | Six budgets. The build fails when one grows past its line, and raising it has to say why in the commit.                                                                                                                                     |
 
-**1301 tests across 57 files**, and every guard added is verified by being
+**1,888 tests across 73 files**, and every guard added is verified by being
 broken first — the commit says what failed when it was removed. That habit
 is what found the two cases in `anchored-panel.spec.ts` that were passing
 with the feature deleted, and the comment in `BasePopover` that had
@@ -165,7 +198,7 @@ app, and the case *least* favourable to this kit:
 
 | Kit                  |         JS |         CSS |       Total |
 | -------------------- | ---------: | ----------: | ----------: |
-| **rei-kit 4.3.0**    | **3.7 KB** | **23.2 KB** | **26.8 KB** |
+| **rei-kit 4.4.0**    | **3.7 KB** | **23.2 KB** | **26.9 KB** |
 | element-plus 2.14.6  |    27.3 KB |      6.0 KB |     33.3 KB |
 | naive-ui 2.45.3      |    51.2 KB |           — |     51.2 KB |
 | primevue 5.0.1       |    53.6 KB |           — |     53.6 KB |
@@ -177,7 +210,7 @@ a data table, a tooltip and a card. A screen rather than a demo:
 
 | Kit                  |         JS |         CSS |        Total |
 | -------------------- | ---------: | ----------: | -----------: |
-| **rei-kit 4.3.0**    | **8.6 KB** | **23.2 KB** | **31.8 KB**  |
+| **rei-kit 4.4.0**    | **8.6 KB** | **23.2 KB** | **31.8 KB**  |
 | element-plus 2.14.6  |    90.1 KB |     14.0 KB |    104.1 KB  |
 | naive-ui 2.45.3      |   132.4 KB |           — |    132.4 KB  |
 | primevue 5.0.1       |   135.8 KB |           — |    135.8 KB  |
@@ -234,7 +267,7 @@ Each claim here is enforced by something that fails, not by a promise.
 
 ## Status
 
-**v4.1.1 — three consumers.**
+**Three apps run on it, and none of them resembles another.**
 
 |              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -606,64 +639,12 @@ package's exports in both directions. A table maintained by hand is wrong by
 the second release, and being wrong is worse than being absent — a reader
 trusts it.
 
-## Commands
+## Working on rei-kit itself
 
-| Command               | What it does                                          |
-| --------------------- | ----------------------------------------------------- |
-| `pnpm dev`            | Rebuild on change, for use with a linked app          |
-| `pnpm build`          | Type-check, then build                                |
-| `pnpm check`          | Everything CI runs: format, lint, types, tests, build |
-| `pnpm showcase`       | The showcase, in dev mode                             |
-| `pnpm showcase:build` | The showcase, built (`SHOWCASE_BASE` for a subpath)   |
-| `pnpm test:unit`      | Vitest, watch mode                                    |
-| `pnpm lint`           | oxlint + ESLint, with `--fix`                         |
-
-## Not breaking the apps that use it
-
-Four layers, cheapest first.
-
-**Pinned ranges.** A consumer depends on `^0.4.0`, which at 0.x means
-`>=0.4.0 <0.5.0` — publishing 0.5.0 upgrades nobody. Apps move on their own
-schedule, and a release can never reach an app that has not asked for it. The
-cost is the mirror image: an app that never asks never moves. Two of these
-three sat two minors behind, so `PATCHNOTES.md` exists to make taking one a
-short read.
-
-**The public API test.** `src/__tests__/public-api.spec.ts` lists every export
-by name. The kit compiles perfectly well without an export nothing here calls,
-so removing one is invisible to every other test; this one fails loudly and
-asks whether the version should be a major.
-
-**The SSR test.** `src/__tests__/ssr.spec.ts` renders in the **node**
-environment, not jsdom — jsdom supplies the very `document` a server lacks, and
-passed all four of the SSR bugs 0.2.2 fixed.
-
-**The consumer check.** `.github/workflows/consumer.yml` packs the tarball npm
-would serve and installs it into **all three** apps, running each one's full
-gate — format, lint, types, tests, production build. Kakehashi's build is
-`vite-ssg build`, so that job is also the real prerender.
-
-That last one is the important one: the kit's own tests never import it the way
-an app does.
-
-## Releasing
-
-Pushing a `v*` tag runs the full check and publishes to npm. Nothing publishes
-from a branch, so `main` can move without shipping.
-
-```sh
-cd bench && npm run bench && cd ..   # the site's comparison table reads this
-pnpm version minor
-git push --follow-tags
-```
-
-The benchmark step is not optional and not a courtesy: `showcase-catalogue.spec.ts`
-fails when `bench/results.json` names a version other than the one being
-published, because the evidence section on the site reads that file. A
-comparison table nobody re-ran is a claim about a build nobody ships.
-
-Then write the release into `PATCHNOTES.md` — what a consumer gains, and what
-they have to do to take it.
+The commands, the four checks that keep a release from breaking an app, and
+how a version is cut are in
+**[CONTRIBUTING.md](https://github.com/ramazandogna/rei-kit/blob/main/CONTRIBUTING.md)**
+— they are for somebody changing this package rather than using it.
 
 ## Taking part
 

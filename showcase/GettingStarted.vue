@@ -158,10 +158,10 @@ const pie = (swatch: readonly string[]) =>
 </script>
 
 <template>
-  <section id="start" class="gs">
+  <section id="start" class="gs landing-section">
     <div class="gs-intro">
       <SectionHeading :tone="NEUTRAL" label="Get started" />
-      <h2 class="gs-title">From an empty folder to your first screen.</h2>
+      <h2 class="landing-title">From an empty folder to your first screen.</h2>
       <p class="gs-lead">
         rei-kit sits on top of two things you install first: a Vue app and Tailwind CSS. Five steps,
         about three minutes. Every command follows the package manager you pick, and every sample
@@ -276,7 +276,7 @@ const pie = (swatch: readonly string[]) =>
     <!-- Make it yours -->
     <div id="make-it-yours" class="mk">
       <div class="gs-intro">
-        <h3 class="mk-title">Make it yours — without touching a component.</h3>
+        <h3 class="mk-title text-2xl">Make it yours — without touching a component.</h3>
         <p class="gs-lead">
           Two decisions, each a line of CSS or one attribute: the colours, and what the surfaces are
           made of. Try them here — this page follows.
@@ -372,7 +372,7 @@ const pie = (swatch: readonly string[]) =>
 
 <style scoped>
 .gs {
-  padding-top: 4.5rem;
+  /* `landing-section` carries the rhythm. */
 }
 
 .gs-intro {

@@ -222,6 +222,10 @@ export const PLAYGROUND_DATA: Record<string, Record<string, unknown>> = {
       { key: 'reports', to: '/reports', label: 'Reports' },
     ],
   },
+  /* An `h2`, not the default `h1`: this is a demo inside a page that already
+     has one, and three `h1` elements is three claims about what the page is
+     about. */
+  PageHeader: { as: 'h2' },
   PinInput: {
     cellLabel: (position: number, total: number) => `Digit ${position} of ${total}`,
   },

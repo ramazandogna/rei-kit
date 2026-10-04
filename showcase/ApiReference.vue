@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import CodeBlock from './CodeBlock.vue'
 import examples from './examples.generated.json'
@@ -37,11 +37,55 @@ const groups = computed(() => {
 /* Every component has one — a test fails otherwise — and it is a real file,
    type-checked with this page, so what a reader copies compiles. */
 const exampleFor = (name: string) => examples.find((example) => example.name === name)
+
+/* One hundred and six components in one document: the command palette finds
+   them, and somebody who arrived from a search for "vue combobox" never
+   learns it exists. A filter in the section itself needs no shortcut. */
+const query = ref('')
+
+const filtered = computed(() => {
+  const needle = query.value.trim().toLowerCase()
+  if (!needle) return groups.value
+
+  return groups.value
+    .map((group) => ({
+      entry: group.entry,
+      items: group.items.filter(
+        (item) =>
+          item.name.toLowerCase().includes(needle) || item.summary.toLowerCase().includes(needle),
+      ),
+    }))
+    .filter((group) => group.items.length > 0)
+})
+
+const found = computed(() => filtered.value.reduce((total, group) => total + group.items.length, 0))
 </script>
 
 <template>
   <div class="flex flex-col gap-10">
-    <section v-for="group in groups" :key="group.entry">
+    <div
+      class="surface rounded-card sticky top-24 z-10 flex flex-col gap-2 p-3 sm:flex-row sm:items-center sm:gap-3"
+    >
+      <label for="api-filter" class="text-ink shrink-0 text-sm font-medium">
+        Find a component
+      </label>
+      <input
+        id="api-filter"
+        v-model="query"
+        type="search"
+        placeholder="combobox, date, table…"
+        class="control rounded-control border-hair text-ink focus-visible:outline-primary min-h-11 w-full border px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2"
+      />
+      <p class="text-ink-soft shrink-0 text-xs tabular-nums" aria-live="polite">
+        {{ found }} of {{ catalogue.length }}
+      </p>
+    </div>
+
+    <p v-if="found === 0" class="text-ink-soft text-sm">
+      Nothing matches “{{ query }}”. Every component is listed under its entry point above.
+    </p>
+
+    <section v-for="group in filtered" :key="group.entry">
       <h3 class="text-ink font-mono text-sm font-semibold">{{ group.entry }}</h3>
       <p class="text-ink-soft mt-1 text-xs">{{ group.items.length }} components</p>
 
@@ -54,15 +98,24 @@ const exampleFor = (name: string) => examples.find((example) => example.name ===
         >
           <h4 class="text-ink font-mono text-sm">{{ item.name }}</h4>
           <p class="text-ink-soft mt-1 max-w-[68ch] text-sm leading-relaxed">{{ item.summary }}</p>
-          <CodeBlock
-            v-if="exampleFor(item.name)"
-            class="mt-4"
-            :code="exampleFor(item.name)!.ts"
-            :js="exampleFor(item.name)!.js"
-            :file="`${item.name}Example.vue`"
-          />
+          <!-- The playground first, the sample behind a fold: with both open
+               every component was about a thousand pixels tall and the
+               reference was a wall rather than something to scan. The thing a
+               reader wants here is the props; the sample is a click away. -->
           <PropPlayground :name="item.name" />
           <PropTable :name="item.name" />
+
+          <details v-if="exampleFor(item.name)" class="border-hair/70 mt-4 border-t pt-3">
+            <summary class="text-ink hover:text-primary cursor-pointer text-xs font-semibold">
+              Usage sample
+            </summary>
+            <CodeBlock
+              class="mt-3"
+              :code="exampleFor(item.name)!.ts"
+              :js="exampleFor(item.name)!.js"
+              :file="`${item.name}Example.vue`"
+            />
+          </details>
         </article>
       </div>
     </section>

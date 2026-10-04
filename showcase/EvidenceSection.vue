@@ -162,9 +162,9 @@ const GUARDS = [
 </script>
 
 <template>
-  <section id="evidence" class="mt-24">
+  <section id="evidence" class="landing-section">
     <SectionHeading :tone="NEUTRAL" label="Evidence" />
-    <h2 class="text-ink mt-4 text-3xl font-bold tracking-tight">Smaller as you use more of it.</h2>
+    <h2 class="landing-title mt-4">Smaller as you use more of it.</h2>
     <p class="text-ink-soft mt-3 max-w-[58ch] text-[0.9375rem] leading-relaxed">
       Every kit is small in a demo. This one is a flat stylesheet and per-component JavaScript, so
       the tenth component costs almost nothing — the opposite shape from a kit that ships its styles

@@ -56,14 +56,16 @@ const pie = (swatch: readonly string[]) =>
 </script>
 
 <template>
-  <section id="axes" class="axes">
+  <section id="axes" class="axes landing-section">
     <div class="axes-intro">
       <SectionHeading :tone="NEUTRAL" label="Three axes" />
-      <h2 class="axes-title">Change how it looks without touching a component.</h2>
+      <h2 class="landing-title">Change how it looks without touching a component.</h2>
       <p class="axes-lead">
-        Colour, material and motion are separate. A palette redefines the eleven colour roles; a
-        material redefines what a surface is made of; motion lives in tokens both of them can tune.
-        Components read the tokens and never ask which is active.
+        Three axes, each switched on its own: a <strong>palette</strong> redefines the eleven colour
+        roles, a <strong>material</strong> redefines what a surface is made of, and
+        <strong>mode</strong> is light or dark. Ten by four by two, from two attributes and a class.
+        Motion lives in tokens any of them can tune. Components read the tokens and never ask which
+        is active.
       </p>
     </div>
 
@@ -175,10 +177,6 @@ material.value = '<b>{{ material }}</b>'</code></pre>
 </template>
 
 <style scoped>
-.axes {
-  padding-top: 4rem;
-}
-
 .axes-intro {
   max-width: 44rem;
 }
@@ -224,8 +222,12 @@ material.value = '<b>{{ material }}</b>'</code></pre>
 
 /* Each tile is its own little page: the `canvas` utility gives glass its
    colour to blur, set by the tile's own material rather than the page's. */
+/* A grid rather than a block, so the card inside can be told to fill it:
+   the four tiles were all 252px tall while their cards were 184px (quiet,
+   brutal) and 212px (glass, soft), staggering the row that is this page's
+   argument for the material axis by 13px. */
 .tile {
-  display: block;
+  display: grid;
   border-radius: calc(var(--radius-card) + 10px);
   padding: 1.25rem;
   outline-offset: 3px;
@@ -247,6 +249,7 @@ material.value = '<b>{{ material }}</b>'</code></pre>
 
 .tile-card {
   display: flex;
+  height: 100%;
   min-height: 11.5rem;
   flex-direction: column;
   gap: 0.75rem;

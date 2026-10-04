@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ramazandogna.github.io/rei-kit/sitemap.xml

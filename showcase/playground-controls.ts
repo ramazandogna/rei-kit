@@ -65,15 +65,32 @@ export function initialValue(control: Control): string | number | boolean | unde
     const quoted = written?.match(/^'([^']*)'$/)
     return quoted ? quoted[1] : control.options[0]
   }
-  if (control.kind === 'number') return written === undefined ? 0 : Number(written)
+  if (control.kind === 'number') {
+    /* `undefined`, `-Infinity` and `Infinity` are all real defaults in here —
+       `NumberInput`'s bounds are the last two. None of them is a number an
+       `<input type="number">` can carry, and setting one put
+       `The specified value "NaN" cannot be parsed` in the console seven times
+       on every load. Absent is the honest control state for them. */
+    const parsed = written === undefined ? Number.NaN : Number(written)
+    return Number.isFinite(parsed) ? parsed : undefined
+  }
 
   const quoted = written?.match(/^'([^']*)'$/)
   if (quoted) return quoted[1]
+
   /* A required string with no default is almost always the visible words —
      this kit has no language of its own, so every label is a prop. Seeding it
      with the prop's own name keeps the control legible and obviously yours to
      change. */
-  return control.prop.required ? sentence(control.prop.name) : ''
+  if (control.prop.required) return sentence(control.prop.name)
+
+  /* And an optional one is left alone. It used to be seeded with `''`, which
+     is not the same thing as absent: `''` is a date key the calendar cannot
+     parse and a locale tag `Intl` throws on, so `BaseCalendar`,
+     `BaseDatePicker`, `TimePicker`, `CountUp` and `NumberTicker` all threw
+     while mounting and the page carried four console errors on every load.
+     `undefined` is what the component's own default expects. */
+  return undefined
 }
 
 function sentence(name: string): string {

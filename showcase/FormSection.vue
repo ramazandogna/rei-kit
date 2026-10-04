@@ -33,6 +33,7 @@ import {
 import CodeBlock from './CodeBlock.vue'
 import { FORM_GROUPS, FORM_PARTS } from './form-parts'
 import type { FormGroupId, FormPartId } from './form-parts'
+import PartPitch from './PartPitch.vue'
 import PropTable from './PropTable.vue'
 import { NEUTRAL } from './tones'
 
@@ -361,7 +362,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-input').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-input').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-input').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-input').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -378,7 +379,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-password').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-password').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-password').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-password').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -402,7 +403,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-textarea').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-textarea').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-textarea').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-textarea').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard><BaseTextarea v-model="note" label="Note" :rows="3" /></BaseCard>
@@ -414,7 +415,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-field').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-field').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-field').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-field').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -437,7 +438,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-error-summary').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-error-summary').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-error-summary').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-error-summary').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -476,7 +477,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-select').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-select').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-select').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-select').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -496,7 +497,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-combobox').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-combobox').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-combobox').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-combobox').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -552,7 +553,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-listbox').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-listbox').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-listbox').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-listbox').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -579,7 +580,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-checkbox').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-checkbox').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-checkbox').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-checkbox').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard><BaseCheckbox v-model="remember" label="Remember me" /></BaseCard>
@@ -591,7 +592,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-switch').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-switch').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-switch').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-switch').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -608,7 +609,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-radio').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-radio').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-radio').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-radio').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -622,7 +623,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-checkbox-group').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-checkbox-group').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-checkbox-group').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-checkbox-group').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -642,7 +643,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-segmented').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-segmented').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-segmented').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-segmented').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -661,7 +662,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-toggle-group').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-toggle-group').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-toggle-group').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-toggle-group').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -689,7 +690,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-number').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-number').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-number').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-number').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -711,7 +712,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-slider').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-slider').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-slider').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-slider').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -733,7 +734,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-slider-field').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-slider-field').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-slider-field').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-slider-field').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -757,7 +758,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-pin').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-pin').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-pin').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-pin').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -779,7 +780,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-tags').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-tags').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-tags').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-tags').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -800,7 +801,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-colour').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-colour').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-colour').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-colour').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>
@@ -820,7 +821,7 @@ const CODE: Record<FormPartId, string> = {
       <article :id="part('form-file').id" class="sc-part">
         <header class="sc-part-head">
           <h3 class="sc-part-name">{{ part('form-file').title }}</h3>
-          <p class="sc-part-pitch">{{ part('form-file').pitch }}</p>
+          <PartPitch class="sc-part-pitch" :text="part('form-file').pitch" />
         </header>
         <div class="sc-part-row">
           <BaseCard>

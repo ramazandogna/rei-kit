@@ -131,7 +131,11 @@ function go(id: string) {
   if (settle) clearTimeout(settle)
   settle = setTimeout(onScrollEnd, 1200)
 
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  /* The gallery column is about 127,000px tall, so a smooth scroll from the
+     hero to the last component is a multi-second animated flight — and under
+     `prefers-reduced-motion` it is a flight somebody asked not to take. */
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })
   // Focus follows the jump, or the next Tab starts from the menu again.
   el.setAttribute('tabindex', '-1')
   el.focus({ preventScroll: true })

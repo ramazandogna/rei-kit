@@ -5,6 +5,70 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## 4.4.0 — 2026-10-04
+
+**The documentation site, reviewed end to end — and what the review found in
+the kit.**
+
+Three reviews of the two public surfaces (the docs site and the npm page), as
+a product manager, an engineer and a designer, then everything they found,
+measured rather than taken on trust.
+
+**In the kit**
+
+- `PageHeader` takes `as`. It hard-coded `<h1>`, which is right for a screen
+  and wrong for a screen rendered inside another page — the showcase had three
+  `h1` elements because of it. The default is unchanged.
+- `SkeletonList` and `BaseButton`'s loading ring kept animating under
+  `prefers-reduced-motion`: both used a Tailwind animation, which carries no
+  guard of its own, while every sibling in the kit stops. Measured: seven
+  animations still running on a page that had asked for none. The skeleton now
+  stops, like `BaseSkeleton`; the button's ring fades instead of spinning,
+  like `BaseSpinner`, because an indicator that stops says the app has hung.
+
+**On the site, for being found at all**
+
+The page a crawler was served was **716 bytes with no prose, no links and no
+component names** — everything was behind hydration, and `createMemoryHistory`
+meant no section had a URL to rank. Now: a static first paint inside
+`#app` that names the kit, the category and all 106 components; canonical,
+Open Graph, Twitter and JSON-LD; `robots.txt`, a `404.html` and a
+`sitemap.xml` of 107 URLs; an `og.png` painted with the kit's own compiled
+stylesheet; and **one static page per component** at `/c/<Name>/`, with its
+summary, its real prop table and its sample — written after the build from the
+files the build already generates, so they cannot drift.
+
+**On the site, for the people who get there**
+
+- `BaseHoverCard` was used and never imported, so that demo **had not been on
+  the page at all**: it rendered as a comment and threw on every load. Found by
+  a new check that fails if the showcase logs anything, which also caught the
+  playground seeding `''` into a date key and a locale tag, and `NumberInput`'s
+  infinite bounds reaching a number input. The console is now empty.
+- **200px of horizontal scroll on a phone**, from code blocks sized by their
+  content: a missing `min-width: 0`. Measured 590px of document in a 390px
+  viewport; now 390.
+- Long samples were cut mid-word with nothing to say they continued. They now
+  carry the same fade `ScrollArea` exists for, and it flips under `dir="rtl"`.
+- The playground's demo frame had no `relative`, so `FabButton` and `TabShell`
+  pinned themselves to the top of the document and sat on the hero.
+- One heading scale and one 96px rhythm across the landing sections, which had
+  five spacings and three sizes for one rank; anchor jumps land clear of the
+  header; the four material tiles share a baseline.
+- The API reference leads with the props and folds the sample away, and has a
+  filter — 106 components were one wall with a palette as the only way in.
+- Backticks in the copy were printing as backticks in nine places, and two
+  strings were still in Turkish on an English page.
+
+**On npm**
+
+A screenshot at the top, a stability statement, when to reach for this and
+when not to, the Nuxt answer, nine more keywords, an absolute licence link,
+and the maintainer sections moved to `CONTRIBUTING.md`. Two numbers in the
+README were stale — it claimed 1301 tests across 57 files against 1888 across
+73 — and the file count is now asserted by a test, because a number a reader
+can check and that is wrong costs more than no number.
+
 ## 4.3.0 — 2026-10-04
 
 **`BaseCheckboxGroup`, and 34 more components you can actually try.**

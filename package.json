@@ -1,6 +1,6 @@
 {
   "name": "rei-kit",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "One kit, every look. 106 accessible Vue 3 + Tailwind 4 components, four materials (quiet, glass, brutal, soft) and ten WCAG-checked palettes, each switched with one attribute.",
   "keywords": [
     "vue",
@@ -23,7 +23,16 @@
     "neobrutalism",
     "claymorphism",
     "neumorphism",
-    "design-tokens"
+    "design-tokens",
+    "vue-components",
+    "vue3-components",
+    "vue-ui",
+    "vue-ui-library",
+    "tailwind-components",
+    "tailwind4",
+    "accessibility",
+    "wcag",
+    "vue-design-system"
   ],
   "license": "MIT",
   "author": "Ramazan Doğan",
@@ -82,7 +91,8 @@
     "./supabase": {
       "types": "./dist/supabase/index.d.ts",
       "import": "./dist/supabase.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "engines": {
     "node": "^22.18.0 || >=24.12.0"
@@ -94,7 +104,7 @@
     "build-only": "vite build && node scripts/verify-bundle.mjs",
     "showcase": "node scripts/extract-props.mjs && node scripts/extract-examples.mjs && vite --config vite.showcase.config.ts",
     "docs:examples": "node scripts/extract-doc-examples.mjs",
-    "showcase:build": "node scripts/extract-props.mjs && node scripts/extract-examples.mjs && vite build --config vite.showcase.config.ts",
+    "showcase:build": "node scripts/extract-props.mjs && node scripts/extract-examples.mjs && vite build --config vite.showcase.config.ts && node scripts/prerender-showcase.mjs",
     "type-check": "vue-tsc --build",
     "test:unit": "vitest",
     "test:ci": "vitest run",
@@ -113,7 +123,8 @@
     "palettes:check": "node scripts/build-palettes.mjs --check",
     "type-check:showcase": "vue-tsc -p tsconfig.showcase.json --noEmit",
     "type-check:strict": "vue-tsc -p tsconfig.strict.json --noEmit",
-    "test:browser": "pnpm showcase:build && playwright test"
+    "test:browser": "pnpm showcase:build && playwright test",
+    "og": "node scripts/og-image.mjs"
   },
   "peerDependencies": {
     "@supabase/supabase-js": "^2.0.0",

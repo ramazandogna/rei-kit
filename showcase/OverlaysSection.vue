@@ -17,12 +17,14 @@ import {
 import {
   BaseContextMenu,
   BaseDrawer,
+  BaseHoverCard,
   BaseModal,
   BaseTooltip,
   ResponsiveDialog,
 } from '../src/web/index'
 import { OVERLAY_PARTS } from './overlay-parts'
 import type { OverlayPartId } from './overlay-parts'
+import PartPitch from './PartPitch.vue'
 import PropTable from './PropTable.vue'
 import { NEUTRAL } from './tones'
 
@@ -66,7 +68,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-modal').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-modal').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-modal').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-modal').pitch" />
       </header>
 
       <BaseCard class="mt-4">
@@ -110,7 +112,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-sheet').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-sheet').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-sheet').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-sheet').pitch" />
       </header>
 
       <BaseCard class="mt-4">
@@ -141,7 +143,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-drawer').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-drawer').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-drawer').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-drawer').pitch" />
       </header>
 
       <BaseCard class="mt-4">
@@ -178,7 +180,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-menu').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-menu').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-menu').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-menu').pitch" />
       </header>
 
       <BaseCard class="mt-4">
@@ -197,7 +199,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-context').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-context').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-context').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-context').pitch" />
       </header>
 
       <BaseCard class="mt-4">
@@ -233,7 +235,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-tooltip').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-tooltip').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-tooltip').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-tooltip').pitch" />
       </header>
 
       <BaseCard class="mt-4">
@@ -269,7 +271,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-hovercard').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-hovercard').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-hovercard').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-hovercard').pitch" />
       </header>
 
       <BaseCard class="mt-4">
@@ -301,7 +303,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-popover').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-popover').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-popover').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-popover').pitch" />
       </header>
 
       <BaseCard class="mt-4">
@@ -325,7 +327,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-popconfirm').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-popconfirm').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-popconfirm').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-popconfirm').pitch" />
       </header>
 
       <BaseCard class="mt-4">
@@ -347,7 +349,7 @@ const part = (id: OverlayPartId) => OVERLAY_PARTS.find((one) => one.id === id)!
     <article :id="part('overlay-responsive').id" class="sc-part">
       <header class="sc-part-head">
         <h3 class="sc-part-name">{{ part('overlay-responsive').title }}</h3>
-        <p class="sc-part-pitch">{{ part('overlay-responsive').pitch }}</p>
+        <PartPitch class="sc-part-pitch" :text="part('overlay-responsive').pitch" />
       </header>
 
       <BaseCard class="mt-4">

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Locator } from '@playwright/test'
 
 /**
  * That the playground actually drives a component.
@@ -15,6 +15,13 @@ import { expect, test } from '@playwright/test'
  * not tell whether the class the change produced is on the element a reader
  * sees.
  */
+/* The panel's own snippet, not the last `<pre>` in the card: the usage sample
+   moved below the playground, into a fold, and `.last()` then pointed at the
+   sample — which does write every prop out and would have passed or failed
+   for the wrong reason. */
+const snippetOf = (article: Locator) =>
+  article.locator('details:has(summary:text-matches("you can change")) pre').last()
+
 test.describe('the prop playground', () => {
   test.beforeEach(async ({ page }) => {
     const errors: string[] = []
@@ -68,13 +75,13 @@ test.describe('the prop playground', () => {
     await article.getByRole('button', { name: 'ghost', exact: true }).click()
 
     await expect(rendered).not.toHaveClass(before ?? '')
-    await expect(article.locator('pre').last()).toContainText('variant="ghost"')
+    await expect(snippetOf(article)).toContainText('variant="ghost"')
   })
 
   test('a prop left at its default stays out of the snippet', async ({ page }) => {
     const article = page.locator('#api-BaseButton')
 
-    const snippet = article.locator('pre').last()
+    const snippet = snippetOf(article)
 
     /* The point of the snippet is that it is what you would write, not a
        dump of every prop the component has. */
@@ -89,9 +96,9 @@ test.describe('the prop playground', () => {
     const article = page.locator('#api-BaseButton')
 
     await article.getByRole('button', { name: 'ghost', exact: true }).click()
-    await expect(article.locator('pre').last()).toContainText('variant="ghost"')
+    await expect(snippetOf(article)).toContainText('variant="ghost"')
 
     await article.getByRole('button', { name: 'Reset to defaults' }).click()
-    await expect(article.locator('pre').last()).not.toContainText('variant=')
+    await expect(snippetOf(article)).not.toContainText('variant=')
   })
 })

@@ -94,9 +94,37 @@ const coloured = computed(() =>
 </template>
 
 <style scoped>
+/* `min-width: 0` is the whole reason a phone could scroll this page
+   sideways: a grid or flex track is sized by its content's max-content width
+   unless told otherwise, so a 541px sample in a 390px column widened the
+   document instead of scrolling the block. Measured at 390px: 590px of
+   document against a 390px viewport, which is the mobile-usability signal
+   Google reports. */
 .cb {
+  position: relative;
+  min-width: 0;
   overflow: hidden;
   border-radius: var(--radius-card);
+}
+
+/* The fade is the only sign on screen that a line continues past the edge —
+   the same rule `ScrollArea` exists for. Without it a sample is cut
+   mid-word and reads as broken rather than scrollable. It starts below the
+   bar and is inert to the pointer. */
+.cb::after {
+  content: '';
+  position: absolute;
+  inset-block: 2.25rem 0;
+  inset-inline-end: 0;
+  width: 2rem;
+  pointer-events: none;
+  background: linear-gradient(to left, var(--color-surface), transparent);
+}
+
+/* The edge is logical, so it is already on the correct side; the gradient
+   inside it is not, and a fade pointing the wrong way reads as a shadow. */
+[dir='rtl'] .cb::after {
+  background: linear-gradient(to right, var(--color-surface), transparent);
 }
 
 .cb-bar {
@@ -189,7 +217,9 @@ const coloured = computed(() =>
 }
 
 .cb-pre {
+  min-width: 0;
   overflow-x: auto;
+  scrollbar-width: thin;
   padding: 0.875rem 1rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.8125rem;

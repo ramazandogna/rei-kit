@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync, globSync, readFileSync, readdirSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 import * as kit from '../index'
@@ -274,6 +274,29 @@ describe('the benchmark the evidence section reads', () => {
         expect(printed, `${row.name} at ${total} is not in README.md`).toBe(true)
       }
     }
+  })
+
+  /* Two numbers in README.md that a reader can check in one command, and
+     that had both gone stale: it claimed 1301 tests across 57 files while
+     the suite had grown to 1884 across 72. A wrong number a skeptic can
+     verify costs more than no number, because it is the evidence section
+     that the rest of the page's claims lean on. The version used to be in
+     the Status heading too; it is gone rather than guarded, since npm
+     prints the real one beside the README anyway. */
+  it('counts the test files README.md says it has', () => {
+    const files = globSync('{src,showcase,browser}/**/*.spec.ts').length
+    const readme = readFileSync('README.md', 'utf8')
+    const claimed = /([\d,]+) tests across (\d+) files/.exec(readme)
+
+    expect(claimed, 'README.md no longer states a test count').not.toBeNull()
+    expect(Number(claimed![2])).toBe(files)
+  })
+
+  it('does not print a version number it has to be reminded to update', () => {
+    const readme = readFileSync('README.md', 'utf8')
+    const status = readme.slice(readme.indexOf('## Status'), readme.indexOf('## Status') + 400)
+
+    expect(status).not.toMatch(/v\d+\.\d+\.\d+/)
   })
 
   it('measured the version of this kit that is being published', () => {

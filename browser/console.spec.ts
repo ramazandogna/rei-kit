@@ -4,18 +4,14 @@ import { expect, test } from '@playwright/test'
  * The documentation site, loaded without complaining.
  *
  * Everything else here asks whether something looks right. This asks whether
- * the page thinks it worked — and it found four things no other check could
- * see, because Vue catches a render error, logs it, and leaves a comment node
- * where the component should be:
+ * the page thinks it worked — and the first thing it found was invisible to
+ * every other check, because Vue catches a render error, logs it, and leaves
+ * a comment node where the component should be:
  *
- * - `BaseHoverCard` was used in `OverlaysSection.vue` and never imported, so
- *   that demo had not been on the page at all. The template compiled, the
- *   type-check passed, the prop table beneath it was correct, and the
- *   component simply was not there.
- * - The playground seeded every optional string prop with `''`, which is a
- *   date key `BaseCalendar` cannot parse and a locale tag `Intl` throws on.
- * - And `NumberInput`'s `-Infinity`/`Infinity` bounds reached an
- *   `<input type="number">`, seven times per load.
+ * `BaseHoverCard` was used in `OverlaysSection.vue` and never imported, so
+ * that demo had not been on the page at all. The template compiled, the
+ * type-check passed, the prop table beneath it was correct, and the component
+ * simply was not there.
  *
  * A console error on a kit's own showcase is the first thing an evaluating
  * developer sees, and the last thing anybody notices while building it.

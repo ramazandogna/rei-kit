@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 
 import CodeBlock from './CodeBlock.vue'
 import examples from './examples.generated.json'
-import PropPlayground from './PropPlayground.vue'
+import PartPitch from './PartPitch.vue'
 import catalogue from './props.generated.json'
 import PropTable from './PropTable.vue'
 
@@ -97,25 +97,18 @@ const found = computed(() => filtered.value.reduce((total, group) => total + gro
           class="surface rounded-card p-4 sm:p-5"
         >
           <h4 class="text-ink font-mono text-sm">{{ item.name }}</h4>
-          <p class="text-ink-soft mt-1 max-w-[68ch] text-sm leading-relaxed">{{ item.summary }}</p>
-          <!-- The playground first, the sample behind a fold: with both open
-               every component was about a thousand pixels tall and the
-               reference was a wall rather than something to scan. The thing a
-               reader wants here is the props; the sample is a click away. -->
-          <PropPlayground :name="item.name" />
+          <PartPitch
+            class="text-ink-soft mt-1 max-w-[68ch] text-sm leading-relaxed"
+            :text="item.summary"
+          />
+          <CodeBlock
+            v-if="exampleFor(item.name)"
+            class="mt-4"
+            :code="exampleFor(item.name)!.ts"
+            :js="exampleFor(item.name)!.js"
+            :file="`${item.name}Example.vue`"
+          />
           <PropTable :name="item.name" />
-
-          <details v-if="exampleFor(item.name)" class="border-hair/70 mt-4 border-t pt-3">
-            <summary class="text-ink hover:text-primary cursor-pointer text-xs font-semibold">
-              Usage sample
-            </summary>
-            <CodeBlock
-              class="mt-3"
-              :code="exampleFor(item.name)!.ts"
-              :js="exampleFor(item.name)!.js"
-              :file="`${item.name}Example.vue`"
-            />
-          </details>
         </article>
       </div>
     </section>

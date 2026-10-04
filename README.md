@@ -125,7 +125,7 @@ go red, and several of them exist nowhere else:
 | **`consumer.yml`**               | Packs the real tarball, installs it into all three apps and runs each one's whole gate. The only check that imports the package the way an app does.                                                                                         |
 | **`pnpm size`**                  | Six budgets. The build fails when one grows past its line, and raising it has to say why in the commit.                                                                                                                                     |
 
-**1,888 tests across 73 files**, and every guard added is verified by being
+**1,882 tests across 71 files**, and every guard added is verified by being
 broken first — the commit says what failed when it was removed. That habit
 is what found the two cases in `anchored-panel.spec.ts` that were passing
 with the feature deleted, and the comment in `BasePopover` that had

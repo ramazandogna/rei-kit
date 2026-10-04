@@ -5,6 +5,32 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased — the prop playground is gone
+
+**It made every component look broken, which is the opposite of what a
+documentation page is for.**
+
+Driving a component from its prop table meant inventing the props a control
+cannot offer — the rows of a table, the options of a select, the items of a
+list. Two things followed, and both were on the page:
+
+- A component whose data was not seeded rendered as an **empty box**:
+  `VirtualList` with `rowHeight: 0` and a label reading "Label" is not a
+  demonstration of anything.
+- The snippet beside it printed `<BaseTable />` and `<VirtualList />`, which
+  are not usages of those components at all. The one piece of code on that
+  card was the one piece a reader could not copy.
+
+So the API card is what it was: the component's name, its summary, its real
+type-checked sample and its prop table. The sample is a file in
+`showcase/examples/`, compiled and checked against the component's own props,
+which is the honest version of the same promise — this is what it looks like
+to use, and it is proven to run.
+
+The package itself is unchanged; this is the documentation site only. Kept
+from the same work: the component filter in the API reference, and the
+summary line now renders its backticks as code instead of printing them.
+
 ## 4.4.0 — 2026-10-04
 
 **The documentation site, reviewed end to end — and what the review found in

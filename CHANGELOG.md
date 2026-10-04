@@ -5,6 +5,27 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## 4.2.0 — 2026-10-04
+
+**`checkStyling` measures the text on a role it has been rebranded into.**
+
+Every other rule in that check reads a line. This one reads a value, and it
+belongs beside them because it is just as quiet: a rebranded role is a colour
+chosen by eye, the text on it comes from a token or from the `oklch()` net in
+`tokens.css`, and the two are never seen together until they are on
+somebody's screen.
+
+It measures each of the five filled roles an app redefines, in the day and in
+the dark separately — the night is the pair nobody looks at, since a role
+lightened under `.dark` keeps the day's on-colour unless the app restates it —
+follows `var(--color-pigment)` aliases, and skips anything that is not a hex
+rather than guessing. Where the app declares no `on-` colour it measures what
+the net derives, with the net's threshold held to `tokens.css` by a test.
+
+Run against the three apps on this kit: two report nothing, and the third
+turned out to be painting white on a green that measures **3.96:1** — the
+documented worst case of the net, which is a safety net and not a guarantee.
+
 ## 4.1.1 — 2026-10-03
 
 **The order rule asked about a file whose order cannot matter.**

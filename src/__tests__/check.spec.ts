@@ -278,3 +278,83 @@ describe('what the order rule does not ask about', () => {
     ).toContain('palettes.css')
   })
 })
+
+describe('text on a filled role', () => {
+  const tokens = readFileSync('src/styles/tokens.css', 'utf8')
+  const wired = (theme: string) =>
+    `@import 'tailwindcss';\n@import 'rei-kit/mobile.css';\n@theme {\n${theme}\n}\n`
+
+  it('passes a role whose on-colour is measured against it', () => {
+    expect(
+      checkStyling({
+        css: wired('  --color-primary: #67c090;\n  --color-on-primary: #07141a;'),
+        tokens,
+      }),
+    ).toEqual([])
+  })
+
+  /* The exact pair this rule was written for: light green with the net's own
+     white on it, which is what an app gets by rebranding a role and leaving
+     `on-primary` alone. It is readable enough to look fine and measures
+     under the line. */
+  it('fails a role the net cannot rescue', () => {
+    const problems = checkStyling({ css: wired('  --color-positive: #3f8f5f;'), tokens })
+
+    expect(problems).toHaveLength(1)
+    expect(problems[0]!.message).toContain('3.96:1')
+  })
+
+  /* A role lightened for the dark is a second pair, and the one nobody looks
+     at: the day's on-colour stays unless the app restates it. */
+  it('measures the night separately', () => {
+    const css = `${wired('  --color-primary: #12544f;\n  --color-on-primary: #ffffff;')}\n.dark {\n  --color-primary: #8bbb92;\n}\n`
+    const problems = checkStyling({ css, tokens })
+
+    expect(problems.map((problem) => problem.message).join()).toContain('primary by night')
+  })
+
+  /* Hibi names its colours by pigment and reaches the roles through var().
+     A reader that only takes a literal measures nothing in the one
+     stylesheet in this family that most needs measuring — and this is the
+     pair that stylesheet describes in a comment: white on leaf, 2.21:1. */
+  it('follows an alias to the pigment it names', () => {
+    const problems = checkStyling({
+      css: wired(
+        '  --color-leaf: #67c090;\n  --color-positive: var(--color-leaf);\n  --color-on-positive: #ffffff;',
+      ),
+      tokens,
+    })
+
+    expect(problems[0]!.message).toContain('#67c090')
+  })
+
+  /* The rule carries its own copy of the `oklch()` net in `tokens.css`,
+     because evaluating a `calc()` out of a stylesheet is a CSS engine. These
+     two fills sit either side of its 0.6 lightness threshold, and each is
+     paired with the ink the net is supposed to pick: a copy that chose the
+     other way round would measure the other pair and report it. */
+  it.each([
+    ['dark enough for white', '#12544f', '#ffffff'],
+    ['light enough for black', '#8bbb92', '#000000'],
+  ])('picks the ink tokens.css would, %s', (_case, fill, ink) => {
+    expect(checkStyling({ css: wired(`  --color-primary: ${fill};`), tokens })).toEqual([])
+
+    const flipped = checkStyling({
+      css: wired(
+        `  --color-primary: ${fill};\n  --color-on-primary: ${ink === '#ffffff' ? '#000000' : '#ffffff'};`,
+      ),
+      tokens,
+    })
+
+    expect(flipped).toHaveLength(1)
+  })
+
+  it('skips a value it cannot resolve rather than guessing', () => {
+    expect(
+      checkStyling({
+        css: wired('  --color-primary: oklch(0.6 0.1 200);'),
+        tokens,
+      }),
+    ).toEqual([])
+  })
+})

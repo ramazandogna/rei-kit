@@ -1,12 +1,12 @@
 {
-  "measured": "2026-10-03",
+  "measured": "2026-10-04",
   "suites": [
     {
       "id": "three",
       "label": "Button + Input + Modal",
       "rows": [
         {
-          "name": "rei-kit 4.1.1",
+          "name": "rei-kit 4.2.0",
           "js": 3773,
           "css": 23667
         },
@@ -42,7 +42,7 @@
       "label": "Ten components",
       "rows": [
         {
-          "name": "rei-kit 4.1.1",
+          "name": "rei-kit 4.2.0",
           "js": 8839,
           "css": 23667
         },

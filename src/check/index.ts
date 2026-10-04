@@ -102,6 +102,99 @@ function darkRoles(css: string): Set<string> {
   return colourRoles(bodies.join('\n'))
 }
 
+/** The five roles a component fills and then writes on. */
+const FILLED_ROLES = ['primary', 'accent', 'positive', 'negative', 'warning'] as const
+
+/** Every `--color-<name>: <value>` of a block, as declared. */
+function colourValues(css: string): Map<string, string> {
+  return new Map(
+    [...css.matchAll(/--color-([a-z0-9-]+)\s*:\s*([^;]+);/g)].map(([, name, value]) => [
+      name!,
+      value!.trim(),
+    ]),
+  )
+}
+
+/** The body of a rule, from its opening brace to the matching one. */
+function bodies(css: string, opening: RegExp): string {
+  const found: string[] = []
+
+  for (const match of css.matchAll(opening)) {
+    let depth = 1
+    let at = match.index! + match[0].length
+
+    while (at < css.length && depth > 0) {
+      if (css[at] === '{') depth += 1
+      else if (css[at] === '}') depth -= 1
+      at += 1
+    }
+
+    found.push(css.slice(match.index! + match[0].length, at - 1))
+  }
+
+  return found.join('\n')
+}
+
+/**
+ * A role's value as six hex digits, following aliases.
+ *
+ * An app that names its colours by pigment reaches the roles through
+ * `var(--color-sea)`, so a reader that only accepts a literal sees nothing to
+ * measure in the one stylesheet in this family written that way. Anything
+ * else — `oklch()`, `color-mix()`, a value from outside this stylesheet —
+ * returns null and is skipped rather than guessed at.
+ */
+function hex(values: Map<string, string>, role: string, seen = new Set<string>()): string | null {
+  const value = values.get(role)
+  if (!value || seen.has(role)) return null
+  seen.add(role)
+
+  const alias = /^var\(--color-([a-z0-9-]+)\)$/.exec(value)
+  if (alias) return hex(values, alias[1]!, seen)
+
+  const literal = /^#([0-9a-f]{6})$/i.exec(value)
+  return literal ? `#${literal[1]!.toLowerCase()}` : null
+}
+
+function channels(colour: string): [number, number, number] {
+  const n = Number.parseInt(colour.slice(1), 16)
+
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((value) => {
+    const c = value / 255
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+  }) as [number, number, number]
+}
+
+/** WCAG contrast, the ratio the kit's own palettes are measured against. */
+function contrast(a: string, b: string): number {
+  const luminance = (colour: string) => {
+    const [r, g, b] = channels(colour)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+  }
+
+  const [x, y] = [luminance(a), luminance(b)]
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)
+}
+
+/**
+ * What `tokens.css` derives for an `on-` role the app leaves alone.
+ *
+ * The same arithmetic as the `oklch(from … clamp(0, (0.6 - l) * 1000, 1) 0 0)`
+ * net there: black or white, whichever is further from the fill's lightness.
+ * Repeated rather than read out of the stylesheet, because a check that
+ * evaluates a `calc()` is a CSS engine; this is one threshold, and
+ * `check.spec.ts` holds the two to the same answer.
+ */
+function derivedInk(fill: string): string {
+  const [r, g, b] = channels(fill)
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
+  const lightness = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s
+
+  return lightness < 0.6 ? '#ffffff' : '#000000'
+}
+
 /**
  * What is missing from an app's stylesheet, as a list to assert is empty.
  *
@@ -217,6 +310,47 @@ export function checkStyling({ css, tokens }: StylingInput): StylingProblem[] {
     problems.push({
       message: `These roles are redefined for the day and left at the kit's own values at night, because \`@theme\` lands in \`:root\` and the kit's \`.dark\` comes after it: ${redefined.join(', ')}.`,
       fix: '.dark { --color-primary: …; } — restate each one under `.dark` as well',
+    })
+  }
+
+  /* The one fault in here that is about a value rather than a line, and the
+     reason it belongs with the others: it is just as quiet. A rebranded role
+     is a colour chosen by eye, the text on it comes from a token or from the
+     net in `tokens.css`, and the pair is never seen together until it is on
+     somebody's screen. Two apps in this family declared the right
+     on-colours and then wrote `text-white` anyway; a third left the roles to
+     the net, which is documented as a safety net rather than a guarantee,
+     and its green landed at 3.96:1.
+
+     Only roles the app itself redefines are measured — the kit's own are
+     measured by the kit — and a value that is not a hex is skipped rather
+     than guessed at. */
+  const theme = colourValues(bodies(css, /@theme[^{]*\{/g))
+  const night = new Map([...theme, ...colourValues(bodies(css, /(?<![\w):])\.dark\s*\{/g))])
+
+  const unreadable = FILLED_ROLES.flatMap((role) =>
+    (
+      [
+        ['day', theme],
+        ['night', night],
+      ] as const
+    ).flatMap(([mode, values]) => {
+      const fill = hex(values, role)
+      if (!fill) return []
+
+      const ink = hex(values, `on-${role}`) ?? derivedInk(fill)
+      const ratio = contrast(fill, ink)
+
+      return ratio >= 4.5
+        ? []
+        : [`${role} by ${mode} (${fill} under ${ink}, ${ratio.toFixed(2)}:1)`]
+    }),
+  )
+
+  if (unreadable.length) {
+    problems.push({
+      message: `Text on these filled roles is below WCAG AA, so a label on one of them is unreadable at normal size: ${unreadable.join('; ')}.`,
+      fix: 'move the role, or declare its `--color-on-<role>` as a colour measured against it',
     })
   }
 

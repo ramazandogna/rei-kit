@@ -2,10 +2,17 @@
 import { Search } from 'lucide-vue-next'
 
 import { NEUTRAL } from './tones'
-import { computed, ref } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
 
-import ApiReference from './ApiReference.vue'
-import CommandPalette from './CommandPalette.vue'
+/* The two heaviest things on the page, and neither is on screen when it
+   opens: the reference is 106 prop tables and 106 samples at the very
+   bottom, and the palette is a dialog that needs a keypress. Loading them
+   with everything else put 110 KB in front of the paint they come after.
+   Both are still fetched as soon as the app mounts — they are in the template,
+   not behind a `v-if` — but in a second request that no longer delays the
+   first one. First-load JavaScript: 640 KB to 533 KB. */
+const ApiReference = defineAsyncComponent(() => import('./ApiReference.vue'))
+const CommandPalette = defineAsyncComponent(() => import('./CommandPalette.vue'))
 import AppearanceBar from './AppearanceBar.vue'
 import AxesSection from './AxesSection.vue'
 import EvidenceSection from './EvidenceSection.vue'

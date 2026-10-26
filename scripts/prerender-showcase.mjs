@@ -42,6 +42,10 @@ const examples = JSON.parse(
   readFileSync(fileURLToPath(new URL('./showcase/examples.generated.json', root)), 'utf8'),
 )
 
+/* The summaries are written for an editor, where a backtick is code. There is
+   no stylesheet in front of this one, so a backtick here is just a backtick. */
+const plain = (value) => String(value).replaceAll('`', '')
+
 const escape = (value) =>
   String(value)
     .replaceAll('&', '&amp;')
@@ -74,11 +78,11 @@ function page(component) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${escape(component.name)} — rei-kit Vue 3 component</title>
-    <meta name="description" content="${escape(component.summary)} ${escape(component.name)} is part of rei-kit, an accessible Vue 3 + Tailwind 4 component library. Imported from ${escape(component.entry)}." />
+    <meta name="description" content="${escape(plain(component.summary))} ${escape(component.name)} is part of rei-kit, an accessible Vue 3 + Tailwind 4 component library. Imported from ${escape(component.entry)}." />
     <link rel="canonical" href="${url}" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="${escape(component.name)} — rei-kit" />
-    <meta property="og:description" content="${escape(component.summary)}" />
+    <meta property="og:description" content="${escape(plain(component.summary))}" />
     <meta property="og:url" content="${url}" />
     <meta property="og:image" content="${site}og.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -114,7 +118,7 @@ ${JSON.stringify(
   <body>
     <nav><a href="${site}">rei-kit</a> › <a href="${site}#api">Components</a> › ${escape(component.name)}</nav>
     <h1>${escape(component.name)}</h1>
-    <p>${escape(component.summary)}</p>
+    <p>${escape(plain(component.summary))}</p>
     <p>
       Import it from <code>${escape(component.entry)}</code>:
       <code>import { ${escape(component.name)} } from '${escape(component.entry)}'</code>
@@ -155,7 +159,7 @@ const shell = `${out}index.html`
 const list = catalogue
   .map(
     (component) =>
-      `<li><a href="${base}c/${component.name}/">${escape(component.name)}</a> — ${escape(component.summary)}</li>`,
+      `<li><a href="${base}c/${component.name}/">${escape(component.name)}</a> — ${escape(plain(component.summary))}</li>`,
   )
   .join('\n          ')
 
@@ -163,7 +167,7 @@ writeFileSync(
   shell,
   readFileSync(shell, 'utf8').replace(
     '<!-- prerender:components -->',
-    `<h2>All 106 components</h2>\n        <ul>\n          ${list}\n        </ul>`,
+    `<section class="boot-index">\n        <h2>All ${catalogue.length} components</h2>\n        <ul>\n          ${list}\n        </ul>\n        </section>`,
   ),
 )
 

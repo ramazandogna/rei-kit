@@ -5,6 +5,40 @@ minor adds, a patch fixes, and neither changes what a component renders for
 the same input. A breaking change waits for a major and arrives with its
 reason here.
 
+## Unreleased — the first paint is a page, not raw text
+
+The showcase is a client-rendered app whose shell carries real text so a
+crawler has something to read. That text had no classes — the stylesheet is
+utilities and component classes — so between the first paint and the moment
+Vue mounted, a visitor read **black text on white**: the headline, three
+paragraphs and 106 component summaries, unstyled. Measured on a throttled
+connection: first paint 744ms, mounted 2257ms. A second and a half of it,
+every time the site was opened.
+
+Three things, all in the shell:
+
+- **Inline rules for the fallback**, so the first paint is a deliberate
+  screen — the kit's canvas and ink, one column, the component index quiet
+  under a rule. Inline because a stylesheet of its own would be one more
+  request in front of the paint it exists to fix.
+- **The theme, before the first pixel.** `useTheme`, `usePalette` and
+  `useMaterial` read their three keys when Vue mounts, so a reader who had
+  chosen dark, or Nord, got a white rei-coloured page first and their own a
+  moment later. A six-line script in the shell reads the same keys and sets
+  the class and the attributes up front. That one was there before the shell
+  had any text in it at all.
+- **110 KB out of the first load.** The API reference and the command
+  palette are now their own chunks: 106 prop tables at the bottom of the page
+  and a dialog that needs a keypress were both being downloaded in front of
+  the paint. First-load JavaScript 640 KB → 533 KB, and the gap measured
+  2257ms → 2073ms.
+
+`browser/first-paint.spec.ts` keeps all three: it loads the page with
+JavaScript disabled and with the bundle blocked, which is the only way to
+look at what a slow connection looks at. The first version of its theme check
+passed with the bootstrap deleted — the assertion retried until Vue mounted
+and set the class itself.
+
 ## Unreleased — the prop playground is gone
 
 **It made every component look broken, which is the opposite of what a

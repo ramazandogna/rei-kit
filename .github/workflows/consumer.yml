@@ -70,6 +70,8 @@ jobs:
           # failure looks like a missing consumer rather than a typo.
           - app: kakehashi
             repo: ramazandogna/kakehashi-nihongo
+            # The only private one, and so the only leg that needs the PAT.
+            private: true
 
     steps:
       - name: Download the tarball
@@ -80,14 +82,19 @@ jobs:
 
       # The default GITHUB_TOKEN is scoped to this repository alone, so it can
       # read the public consumers and not a private one. CONSUMER_REPO_TOKEN is
-      # a fine-grained PAT with read access to the private consumers; without
-      # it that leg of the matrix fails at checkout, loudly and on its own,
-      # while the public ones still report.
+      # a fine-grained PAT with read access to the private one.
+      #
+      # It is passed only to the leg that needs it. It used to be passed to
+      # all three, under a comment claiming the public ones would still
+      # report — and they did not: the day the PAT expired, every leg failed
+      # at checkout, including the two repositories anyone can clone without
+      # a token at all. A credential that is wrong is worse than absent, so
+      # it is now only where being absent is the problem.
       - name: Check out ${{ matrix.app }}
         uses: actions/checkout@v7
         with:
           repository: ${{ matrix.repo }}
-          token: ${{ secrets.CONSUMER_REPO_TOKEN || github.token }}
+          token: ${{ matrix.private && secrets.CONSUMER_REPO_TOKEN || github.token }}
           path: consumer
 
       - uses: pnpm/action-setup@v6

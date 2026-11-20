@@ -403,3 +403,39 @@ body {
     padding-block: 8rem;
   }
 }
+
+/* Prism hero registrations: registered so the seams interpolate and the
+   count-up can animate an integer. Without @property support the final
+   value simply shows. */
+@property --s1 {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 25%;
+}
+@property --s2 {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+@property --s3 {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 75%;
+}
+@property --k {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 48;
+}
+@property --h {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 200;
+}
+@counter-style pad3 {
+  system: extends decimal;
+  pad: 3 '0';
+}
+:root {
+  --site-text-display: clamp(48px, 7vw, 104px);
+}

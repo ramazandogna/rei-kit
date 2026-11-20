@@ -179,3 +179,24 @@ body {
     display: none;
   }
 }
+
+/* The real page arrives over the boot stage, which is the same colour as the
+   canvas, so the change is an opacity ramp and nothing moves. */
+@keyframes app-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#app > .canvas {
+  animation: app-in 250ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app > .canvas {
+    animation: none;
+  }
+}

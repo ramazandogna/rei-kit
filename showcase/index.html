@@ -199,6 +199,87 @@
           columns: 3;
         }
       }
+
+      /* With JavaScript the crawler copy stays in the DOM but is clipped away,
+         and a quiet stage stands in for it. The stage is a sibling of .boot
+         inside #app, so Vue's mount removes it with everything else. Without
+         JavaScript none of this applies and .boot is the page. */
+      .js .boot {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      html.js {
+        background: var(--boot-canvas);
+      }
+
+      .boot-stage {
+        display: none;
+      }
+
+      .js .boot-stage {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+        background: var(--boot-canvas);
+        color: var(--boot-ink);
+      }
+
+      .boot-mark {
+        font-size: 1.75rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+
+      .boot-mark span {
+        color: var(--boot-primary);
+      }
+
+      .boot-line {
+        position: relative;
+        width: 7rem;
+        height: 2px;
+        overflow: hidden;
+        border-radius: 2px;
+        background: var(--boot-hair);
+      }
+
+      .boot-line::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: 40%;
+        border-radius: 2px;
+        background: var(--boot-primary);
+        animation: boot-slide 1.2s ease-in-out infinite;
+      }
+
+      @keyframes boot-slide {
+        from {
+          transform: translateX(-100%);
+        }
+        to {
+          transform: translateX(250%);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .boot-line::after {
+          animation: none;
+          width: 100%;
+          opacity: 0.45;
+        }
+      }
     </style>
 
     <script>
@@ -206,6 +287,7 @@
          `useTheme`, `usePalette` and `useMaterial` read these same three keys,
          but they run when Vue mounts — so a reader who picked dark, or nord,
          got a white rei-coloured page first and their own a second later. */
+      document.documentElement.classList.add('js')
       try {
         var t = localStorage.getItem('rei-theme')
         if (
@@ -227,6 +309,10 @@
          that does not run JavaScript, which is most of them outside Google —
          this is the page. It was 716 bytes with no prose and no links. -->
     <div id="app">
+      <div class="boot-stage" aria-hidden="true">
+        <div class="boot-mark">rei<span>-</span>kit</div>
+        <div class="boot-line"></div>
+      </div>
       <main class="boot">
         <h1>rei-kit — 106 accessible Vue 3 and Tailwind 4 components</h1>
         <p>

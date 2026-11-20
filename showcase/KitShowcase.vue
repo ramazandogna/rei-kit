@@ -5,7 +5,7 @@ import { NEUTRAL } from './tones'
 import { computed, defineAsyncComponent, ref } from 'vue'
 
 /* The two heaviest things on the page, and neither is on screen when it
-   opens: the reference is 106 prop tables and 106 samples at the very
+   opens: the reference is 120 prop tables and 120 samples at the very
    bottom, and the palette is a dialog that needs a keypress. Loading them
    with everything else put 110 KB in front of the paint they come after.
    Both are still fetched as soon as the app mounts — they are in the template,

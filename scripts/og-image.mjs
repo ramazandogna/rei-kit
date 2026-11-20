@@ -43,7 +43,7 @@ const page = `<!doctype html>
     <div class="og">
       <header>
         <p class="og-kicker text-primary">Vue 3 · Tailwind 4</p>
-        <h1 class="og-title text-ink">106 accessible components.<br />Four materials. Ten palettes.</h1>
+        <h1 class="og-title text-ink">120 accessible components.<br />Four materials. Ten palettes.</h1>
         <p class="og-lead text-ink-soft">
           One kit, every look — each axis switched with a single attribute, without touching a
           component.

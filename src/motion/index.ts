@@ -105,3 +105,13 @@ export { default as BorderBeam } from './BorderBeam.vue'
  * ```
  */
 export { default as AnimatedBeam } from './AnimatedBeam.vue'
+/**
+ * A card that leans toward the pointer, with a sliding sheen; focus lifts it
+ * instead of tilting it.
+ *
+ * @example
+ * ```vue
+ * <TiltCard><h3>Pro</h3></TiltCard>
+ * ```
+ */
+export { default as TiltCard } from './TiltCard.vue'

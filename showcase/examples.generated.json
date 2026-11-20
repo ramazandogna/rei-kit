@@ -280,6 +280,16 @@
     "js": "<script setup>\nimport { BorderBeam } from 'rei-kit/motion'\n</script>\n\n<template>\n  <BorderBeam radius=\"card\">\n    <div class=\"surface rounded-card p-5\">\n      <p class=\"text-ink text-sm font-medium\">A highlight circles the edge, then rests.</p>\n    </div>\n  </BorderBeam>\n</template>\n"
   },
   {
+    "name": "ChatMessage",
+    "ts": "<script setup lang=\"ts\">\nimport { ChatMessage } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"grid gap-3\">\n    <ChatMessage from=\"system\">Today</ChatMessage>\n    <ChatMessage from=\"user\" name=\"You\" time=\"2026-01-01T10:00:00Z\"\n      >What changed in 5.0?</ChatMessage\n    >\n    <ChatMessage from=\"assistant\" name=\"Rei\" streaming>Four new materials, and</ChatMessage>\n  </div>\n</template>\n",
+    "js": "<script setup>\nimport { ChatMessage } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"grid gap-3\">\n    <ChatMessage from=\"system\">Today</ChatMessage>\n    <ChatMessage from=\"user\" name=\"You\" time=\"2026-01-01T10:00:00Z\"\n      >What changed in 5.0?</ChatMessage\n    >\n    <ChatMessage from=\"assistant\" name=\"Rei\" streaming>Four new materials, and</ChatMessage>\n  </div>\n</template>\n"
+  },
+  {
+    "name": "ChatThread",
+    "ts": "<script setup lang=\"ts\">\nimport { ChatMessage, ChatThread } from 'rei-kit'\n</script>\n\n<template>\n  <ChatThread label=\"Conversation\" busy class=\"h-64\">\n    <ChatMessage from=\"user\" name=\"You\">Hello</ChatMessage>\n    <ChatMessage from=\"assistant\" name=\"Rei\">Hi! How can I help?</ChatMessage>\n  </ChatThread>\n</template>\n",
+    "js": "<script setup>\nimport { ChatMessage, ChatThread } from 'rei-kit'\n</script>\n\n<template>\n  <ChatThread label=\"Conversation\" busy class=\"h-64\">\n    <ChatMessage from=\"user\" name=\"You\">Hello</ChatMessage>\n    <ChatMessage from=\"assistant\" name=\"Rei\">Hi! How can I help?</ChatMessage>\n  </ChatThread>\n</template>\n"
+  },
+  {
     "name": "CircularProgress",
     "ts": "<script setup lang=\"ts\">\nimport { CircularProgress } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <CircularProgress :value=\"72\" label=\"Upload\" show-value size=\"lg\" />\n    <CircularProgress label=\"Loading\" />\n  </div>\n</template>\n",
     "js": "<script setup>\nimport { CircularProgress } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <CircularProgress :value=\"72\" label=\"Upload\" show-value size=\"lg\" />\n    <CircularProgress label=\"Loading\" />\n  </div>\n</template>\n"
@@ -318,6 +328,11 @@
     "name": "DescriptionList",
     "ts": "<script setup lang=\"ts\">\nimport { BaseBadge, DescriptionList } from 'rei-kit'\n\nconst items = [\n  { key: 'status', term: 'Status' },\n  { term: 'Created', description: '12 September 2026' },\n  { term: 'Total', description: '₺1,240' },\n]\n</script>\n\n<template>\n  <DescriptionList :items=\"items\" layout=\"inline\">\n    <template #status><BaseBadge tone=\"success\">Paid</BaseBadge></template>\n  </DescriptionList>\n</template>\n",
     "js": "<script setup>\nimport { BaseBadge, DescriptionList } from 'rei-kit'\n\nconst items = [\n  { key: 'status', term: 'Status' },\n  { term: 'Created', description: '12 September 2026' },\n  { term: 'Total', description: '₺1,240' },\n]\n</script>\n\n<template>\n  <DescriptionList :items=\"items\" layout=\"inline\">\n    <template #status><BaseBadge tone=\"success\">Paid</BaseBadge></template>\n  </DescriptionList>\n</template>\n"
+  },
+  {
+    "name": "Dock",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { Home, Mail, Settings } from 'lucide-vue-next'\nimport { Dock } from 'rei-kit/web'\n\nconst active = ref('home')\nconst items = [\n  { id: 'home', label: 'Home', icon: Home },\n  { id: 'mail', label: 'Mail', icon: Mail, badge: 3 },\n  { id: 'settings', label: 'Settings', icon: Settings },\n]\n</script>\n\n<template>\n  <Dock label=\"Apps\" :items=\"items\" :active=\"active\" @select=\"active = $event\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { Home, Mail, Settings } from 'lucide-vue-next'\nimport { Dock } from 'rei-kit/web'\n\nconst active = ref('home')\nconst items = [\n  { id: 'home', label: 'Home', icon: Home },\n  { id: 'mail', label: 'Mail', icon: Mail, badge: 3 },\n  { id: 'settings', label: 'Settings', icon: Settings },\n]\n</script>\n\n<template>\n  <Dock label=\"Apps\" :items=\"items\" :active=\"active\" @select=\"active = $event\" />\n</template>\n"
   },
   {
     "name": "DonutChart",
@@ -373,6 +388,11 @@
     "name": "InstallSettings",
     "ts": "<script setup lang=\"ts\">\nimport { InstallSettings } from 'rei-kit/pwa'\n</script>\n\n<template>\n  <InstallSettings\n    title=\"App\"\n    label=\"Install on this device\"\n    installed-label=\"Installed\"\n    body=\"Opens from your home screen, works offline.\"\n    ios-body=\"Tap Share, then Add to Home Screen.\"\n    action=\"Install\"\n  />\n</template>\n",
     "js": "<script setup>\nimport { InstallSettings } from 'rei-kit/pwa'\n</script>\n\n<template>\n  <InstallSettings\n    title=\"App\"\n    label=\"Install on this device\"\n    installed-label=\"Installed\"\n    body=\"Opens from your home screen, works offline.\"\n    ios-body=\"Tap Share, then Add to Home Screen.\"\n    action=\"Install\"\n  />\n</template>\n"
+  },
+  {
+    "name": "LineChart",
+    "ts": "<script setup lang=\"ts\">\nimport { LineChart } from 'rei-kit'\n\nconst labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']\nconst series = [\n  { name: 'Web', values: [12, 18, 15, 24, 30, 28, 36] },\n  { name: 'Mobile', values: [8, 10, 14, 12, 18, 22, 25] },\n]\n</script>\n\n<template>\n  <LineChart label=\"Signups this week\" :labels=\"labels\" :series=\"series\" area />\n</template>\n",
+    "js": "<script setup>\nimport { LineChart } from 'rei-kit'\n\nconst labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']\nconst series = [\n  { name: 'Web', values: [12, 18, 15, 24, 30, 28, 36] },\n  { name: 'Mobile', values: [8, 10, 14, 12, 18, 22, 25] },\n]\n</script>\n\n<template>\n  <LineChart label=\"Signups this week\" :labels=\"labels\" :series=\"series\" area />\n</template>\n"
   },
   {
     "name": "LocaleLinks",
@@ -435,9 +455,19 @@
     "js": "<script setup>\nimport { BaseButton, PriceCard } from 'rei-kit'\n</script>\n\n<template>\n  <PriceCard\n    name=\"Pro\"\n    price=\"₺49\"\n    period=\"/ month\"\n    :features=\"['Unlimited entries', 'Export', 'Sync']\"\n    recommended\n    badge=\"Popular\"\n  >\n    <template #action>\n      <BaseButton block>Choose Pro</BaseButton>\n    </template>\n  </PriceCard>\n</template>\n"
   },
   {
+    "name": "PricingCard",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { PricingCard } from 'rei-kit'\n\nconst period = ref<'monthly' | 'yearly'>('monthly')\nconst plans = [\n  {\n    id: 'free',\n    name: 'Free',\n    lead: 'For trying it out',\n    monthly: 0,\n    yearly: 0,\n    features: ['1 project', 'Community support'],\n    cta: { label: 'Start free' },\n  },\n  {\n    id: 'pro',\n    name: 'Pro',\n    lead: 'For teams',\n    monthly: 12,\n    yearly: 115,\n    featured: true,\n    features: ['Unlimited projects', 'Priority support', 'Custom palettes'],\n    cta: { label: 'Go Pro' },\n  },\n  {\n    id: 'team',\n    name: 'Team',\n    monthly: 29,\n    yearly: 279,\n    features: ['Everything in Pro', 'SSO'],\n    cta: { label: 'Contact sales', href: '#contact' },\n  },\n]\n</script>\n\n<template>\n  <PricingCard v-model:period=\"period\" label=\"Pricing\" save-label=\"Save 20%\" :plans=\"plans\" />\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { PricingCard } from 'rei-kit'\n\nconst period = ref('monthly')\nconst plans = [\n  {\n    id: 'free',\n    name: 'Free',\n    lead: 'For trying it out',\n    monthly: 0,\n    yearly: 0,\n    features: ['1 project', 'Community support'],\n    cta: { label: 'Start free' },\n  },\n  {\n    id: 'pro',\n    name: 'Pro',\n    lead: 'For teams',\n    monthly: 12,\n    yearly: 115,\n    featured: true,\n    features: ['Unlimited projects', 'Priority support', 'Custom palettes'],\n    cta: { label: 'Go Pro' },\n  },\n  {\n    id: 'team',\n    name: 'Team',\n    monthly: 29,\n    yearly: 279,\n    features: ['Everything in Pro', 'SSO'],\n    cta: { label: 'Contact sales', href: '#contact' },\n  },\n]\n</script>\n\n<template>\n  <PricingCard v-model:period=\"period\" label=\"Pricing\" save-label=\"Save 20%\" :plans=\"plans\" />\n</template>\n"
+  },
+  {
     "name": "ProgressBar",
     "ts": "<script setup lang=\"ts\">\nimport { ProgressBar } from 'rei-kit'\n</script>\n\n<template>\n  <ProgressBar :value=\"18\" :max=\"28\" label=\"Course progress\" />\n</template>\n",
     "js": "<script setup>\nimport { ProgressBar } from 'rei-kit'\n</script>\n\n<template>\n  <ProgressBar :value=\"18\" :max=\"28\" label=\"Course progress\" />\n</template>\n"
+  },
+  {
+    "name": "PromptInput",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { PromptInput } from 'rei-kit'\n\nconst text = ref('')\nconst sent = ref<string[]>([])\n</script>\n\n<template>\n  <div class=\"grid gap-3\">\n    <PromptInput\n      v-model=\"text\"\n      label=\"Message\"\n      placeholder=\"Ask anything…\"\n      hint=\"Shift+Enter adds a line.\"\n      @submit=\"sent.push($event)\"\n    />\n    <p class=\"text-ink-soft text-sm\">Sent: {{ sent.length }}</p>\n  </div>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { PromptInput } from 'rei-kit'\n\nconst text = ref('')\nconst sent = ref([])\n</script>\n\n<template>\n  <div class=\"grid gap-3\">\n    <PromptInput\n      v-model=\"text\"\n      label=\"Message\"\n      placeholder=\"Ask anything…\"\n      hint=\"Shift+Enter adds a line.\"\n      @submit=\"sent.push($event)\"\n    />\n    <p class=\"text-ink-soft text-sm\">Sent: {{ sent.length }}</p>\n  </div>\n</template>\n"
   },
   {
     "name": "ResponsiveDialog",
@@ -485,6 +515,11 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { SliderField } from 'rei-kit'\n\nconst opacity = ref(40)\n</script>\n\n<template>\n  <SliderField\n    v-model=\"opacity\"\n    label=\"Opacity\"\n    :min=\"0\"\n    :max=\"100\"\n    :step=\"5\"\n    decrement-label=\"Less opaque\"\n    increment-label=\"More opaque\"\n    :format=\"(value) => `${value}%`\"\n    hint=\"Drag for roughly right, type for exactly right.\"\n  />\n</template>\n"
   },
   {
+    "name": "Sparkline",
+    "ts": "<script setup lang=\"ts\">\nimport { Sparkline } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <span class=\"text-ink text-2xl font-semibold\">48</span>\n    <div class=\"w-32\">\n      <Sparkline :values=\"[12, 18, 15, 24, 30, 28, 48]\" label=\"Signups\" area />\n    </div>\n  </div>\n</template>\n",
+    "js": "<script setup>\nimport { Sparkline } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <span class=\"text-ink text-2xl font-semibold\">48</span>\n    <div class=\"w-32\">\n      <Sparkline :values=\"[12, 18, 15, 24, 30, 28, 48]\" label=\"Signups\" area />\n    </div>\n  </div>\n</template>\n"
+  },
+  {
     "name": "SpotlightCard",
     "ts": "<script setup lang=\"ts\">\nimport { SpotlightCard } from 'rei-kit/motion'\n</script>\n\n<template>\n  <SpotlightCard>\n    <h3 class=\"text-ink font-semibold\">Move over me</h3>\n    <p class=\"text-ink-soft mt-1 text-sm\">A light follows the pointer and lights the edge.</p>\n  </SpotlightCard>\n</template>\n",
     "js": "<script setup>\nimport { SpotlightCard } from 'rei-kit/motion'\n</script>\n\n<template>\n  <SpotlightCard>\n    <h3 class=\"text-ink font-semibold\">Move over me</h3>\n    <p class=\"text-ink-soft mt-1 text-sm\">A light follows the pointer and lights the edge.</p>\n  </SpotlightCard>\n</template>\n"
@@ -513,6 +548,11 @@
     "name": "TextRotate",
     "ts": "<script setup lang=\"ts\">\nimport { TextRotate } from 'rei-kit/motion'\n</script>\n\n<template>\n  <h1>Build it <TextRotate :words=\"['glass', 'brutal', 'soft']\" /></h1>\n</template>\n",
     "js": "<script setup>\nimport { TextRotate } from 'rei-kit/motion'\n</script>\n\n<template>\n  <h1>Build it <TextRotate :words=\"['glass', 'brutal', 'soft']\" /></h1>\n</template>\n"
+  },
+  {
+    "name": "TiltCard",
+    "ts": "<script setup lang=\"ts\">\nimport { TiltCard } from 'rei-kit/motion'\n</script>\n\n<template>\n  <TiltCard>\n    <h3 class=\"text-ink font-semibold\">Lean in</h3>\n    <p class=\"text-ink-soft mt-1 text-sm\">Hover to tilt. Focus lifts it instead.</p>\n  </TiltCard>\n</template>\n",
+    "js": "<script setup>\nimport { TiltCard } from 'rei-kit/motion'\n</script>\n\n<template>\n  <TiltCard>\n    <h3 class=\"text-ink font-semibold\">Lean in</h3>\n    <p class=\"text-ink-soft mt-1 text-sm\">Hover to tilt. Focus lifts it instead.</p>\n  </TiltCard>\n</template>\n"
   },
   {
     "name": "TimePicker",

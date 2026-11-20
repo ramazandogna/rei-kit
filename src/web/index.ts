@@ -445,3 +445,13 @@ export { default as BentoGrid } from './BentoGrid.vue'
  * ```
  */
 export { default as BentoCell } from './BentoCell.vue'
+/**
+ * A floating toolbar of icon buttons that swell toward the pointer.
+ *
+ * @example
+ * ```vue
+ * <Dock label="Apps" :items="[{ id: 'home', label: 'Home' }]" active="home" />
+ * ```
+ */
+export { default as Dock } from './Dock.vue'
+export type { DockItem } from './Dock.vue'

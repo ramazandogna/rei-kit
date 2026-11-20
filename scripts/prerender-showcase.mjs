@@ -18,7 +18,7 @@ import { fileURLToPath, URL } from 'node:url'
  * - one static page per component at `c/<Name>/`, with its summary, its real
  *   prop table as a `<table>` and its usage sample as `<pre>` — no
  *   JavaScript, so it is instant and indexable as-is,
- * - the list of all 106 names into the placeholder in `index.html`, so the
+ * - the list of all 120 names into the placeholder in `index.html`, so the
  *   shell a crawler gets before hydration names every part,
  * - `sitemap.xml`.
  *
@@ -132,7 +132,7 @@ ${JSON.stringify(
     ${propRows(component.props)}
     <h2>About rei-kit</h2>
     <p>
-      rei-kit is an accessible Vue 3 and Tailwind CSS 4 component library: 106 components, themed by
+      rei-kit is an accessible Vue 3 and Tailwind CSS 4 component library: 120 components, themed by
       role rather than by colour on three independent axes — ten WCAG-checked palettes, four
       materials and light or dark, each switched with one attribute. Typed, tested, SSR-safe, no
       runtime dependencies, MIT.

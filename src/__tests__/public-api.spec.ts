@@ -31,6 +31,12 @@ import * as web from '../web/index'
  * samples, which are type-checked under `strictTemplates`.
  */
 const PUBLIC_API = [
+  'ChatMessage',
+  'ChatThread',
+  'LineChart',
+  'PricingCard',
+  'PromptInput',
+  'Sparkline',
   'VERSION',
   // appearance
   'MATERIALS',
@@ -164,6 +170,7 @@ const PUBLIC_API = [
 /** `rei-kit/web` — a wide site with a header and a mouse. */
 const WEB_API = [
   'BentoCell',
+  'Dock',
   'BentoGrid',
   'BaseAccordion',
   'BaseBreadcrumb',
@@ -232,6 +239,7 @@ const MOTION_API = [
   'AnimatedBeam',
   'BaseMarquee',
   'BorderBeam',
+  'TiltCard',
   'HeroBackdrop',
   'SpotlightCard',
   'BaseReveal',

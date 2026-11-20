@@ -1175,3 +1175,65 @@ export type { StepperStep } from './components/BaseStepper.vue'
 // ── i18n ───────────────────────────────────────────────────────────────────
 export { createI18nRuntime } from './i18n/runtime'
 export type { I18nRuntimeOptions, LocalePreference } from './i18n/runtime'
+
+// ── Charts, chat and pricing (UI overhaul) ─────────────────────────────────
+/**
+ * A tiny line for a margin: how a number has moved, with a sentence for its
+ * accessible name.
+ *
+ * @example
+ * ```vue
+ * <Sparkline :values="[3, 5, 4, 8, 12]" label="Signups" area />
+ * ```
+ */
+export { default as Sparkline } from './components/Sparkline.vue'
+/**
+ * Series over time as lines, keyboard-walkable, with the data as a hidden table
+ * and a non-colour cue per series.
+ *
+ * @example
+ * ```vue
+ * <LineChart label="Signups" :labels="['Mon', 'Tue']" :series="[{ name: 'Web', values: [3, 6] }]" />
+ * ```
+ */
+export { default as LineChart } from './components/LineChart.vue'
+/**
+ * One chat message: a bubble for the person, a surface for the assistant, a
+ * quiet note for the system. Streaming defers the screen-reader announcement.
+ *
+ * @example
+ * ```vue
+ * <ChatMessage from="assistant" name="Rei">Hello!</ChatMessage>
+ * ```
+ */
+export { default as ChatMessage } from './components/ChatMessage.vue'
+/**
+ * A scrolling conversation log that follows new messages only if you were at
+ * the bottom, and offers a jump button if you were not.
+ *
+ * @example
+ * ```vue
+ * <ChatThread label="Conversation"><ChatMessage from="user">Hi</ChatMessage></ChatThread>
+ * ```
+ */
+export { default as ChatThread } from './components/ChatThread.vue'
+/**
+ * An autosizing message box: Enter sends, Shift+Enter adds a line, and Send
+ * turns into Stop while a reply is in progress.
+ *
+ * @example
+ * ```vue
+ * <PromptInput v-model="text" label="Message" @submit="send" />
+ * ```
+ */
+export { default as PromptInput } from './components/PromptInput.vue'
+/**
+ * Several pricing tiers with a monthly / yearly switch, a featured plan marked
+ * in words, and prices that tween. Not `PriceCard`, which is one tier.
+ *
+ * @example
+ * ```vue
+ * <PricingCard v-model:period="period" label="Pricing" :plans="plans" />
+ * ```
+ */
+export { default as PricingCard } from './components/PricingCard.vue'

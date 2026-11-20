@@ -120,7 +120,7 @@
         "name": "duration",
         "required": false,
         "type": "number",
-        "description": "Seconds per pass.",
+        "description": "Seconds per pass. Without `loop` it is capped at 2.4 so two passes end within 5 s.",
         "default": "3"
       },
       {
@@ -2393,7 +2393,7 @@
         "name": "duration",
         "required": false,
         "type": "number",
-        "description": "Seconds per turn.",
+        "description": "Seconds per turn. Without `loop` it is capped at 2.4 so two turns end within 5 s.",
         "default": "6"
       },
       {
@@ -2451,6 +2451,104 @@
         "type": "string",
         "description": "",
         "default": "'div'"
+      }
+    ]
+  },
+  {
+    "name": "ChatMessage",
+    "entry": "rei-kit",
+    "summary": "One message in a conversation: the person's in a coloured bubble on the end side, the assistant's on a surface with its avatar, a system note as quiet centred text.",
+    "props": [
+      {
+        "name": "from",
+        "required": true,
+        "type": "'user' | 'assistant' | 'system'",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "name",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "avatar",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "time",
+        "required": false,
+        "type": "string | Date",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "status",
+        "required": false,
+        "type": "'sending' | 'sent' | 'error'",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "errorLabel",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'Not sent'"
+      },
+      {
+        "name": "streaming",
+        "required": false,
+        "type": "boolean",
+        "description": "The reply is still arriving.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "ChatThread",
+    "entry": "rei-kit",
+    "summary": "The scrolling list of messages in a conversation.",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "busy",
+        "required": false,
+        "type": "boolean",
+        "description": "The assistant is typing.",
+        "default": "false"
+      },
+      {
+        "name": "typingLabel",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'Assistant is typing'"
+      },
+      {
+        "name": "jumpLabel",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'Jump to latest'"
+      },
+      {
+        "name": "emptyLabel",
+        "required": false,
+        "type": "string",
+        "description": "Shown when there are no messages.",
+        "default": "undefined"
       }
     ]
   },
@@ -2857,6 +2955,55 @@
         "type": "'stacked' | 'inline'",
         "description": "`inline` puts the term beside its value; `stacked` puts it above.",
         "default": "'stacked'"
+      }
+    ]
+  },
+  {
+    "name": "Dock",
+    "entry": "rei-kit/web",
+    "summary": "",
+    "props": [
+      {
+        "name": "items",
+        "required": true,
+        "type": "readonly DockItem[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The toolbar's accessible name.",
+        "default": ""
+      },
+      {
+        "name": "active",
+        "required": false,
+        "type": "string",
+        "description": "Id of the current item; it gets `aria-current` and a dot.",
+        "default": "undefined"
+      },
+      {
+        "name": "magnify",
+        "required": false,
+        "type": "number",
+        "description": "Scale of the item under the pointer.",
+        "default": "1.6"
+      },
+      {
+        "name": "distance",
+        "required": false,
+        "type": "number",
+        "description": "Distance in px over which neighbours feel the pointer.",
+        "default": "120"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "'sm' | 'md'",
+        "description": "",
+        "default": "'md'"
       }
     ]
   },
@@ -3291,6 +3438,97 @@
         "type": "string",
         "description": "The install button. Absent on iOS, which has no API to call.",
         "default": ""
+      }
+    ]
+  },
+  {
+    "name": "LineChart",
+    "entry": "rei-kit",
+    "summary": "",
+    "props": [
+      {
+        "name": "series",
+        "required": true,
+        "type": "readonly Series[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "labels",
+        "required": true,
+        "type": "readonly string[]",
+        "description": "The x categories, one per value.",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "Names the chart. Already translated.",
+        "default": ""
+      },
+      {
+        "name": "valueLabel",
+        "required": false,
+        "type": "((n: number) => string)",
+        "description": "",
+        "default": "(n: number)"
+      },
+      {
+        "name": "area",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "curve",
+        "required": false,
+        "type": "'linear' | 'smooth'",
+        "description": "`smooth` is a monotone cubic, so it never overshoots a value. Defaults to `smooth`, `linear` in brutal.",
+        "default": "undefined"
+      },
+      {
+        "name": "height",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "240"
+      },
+      {
+        "name": "min",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "grid",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "true"
+      },
+      {
+        "name": "legend",
+        "required": false,
+        "type": "boolean",
+        "description": "Defaults to on for more than one series.",
+        "default": "undefined"
+      },
+      {
+        "name": "animate",
+        "required": false,
+        "type": "boolean",
+        "description": "Draw the lines in the first time the chart is seen.",
+        "default": "true"
       }
     ]
   },
@@ -3820,6 +4058,69 @@
     ]
   },
   {
+    "name": "PricingCard",
+    "entry": "rei-kit",
+    "summary": "",
+    "props": [
+      {
+        "name": "plans",
+        "required": true,
+        "type": "readonly Plan[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "The group heading, e.g. \"Pricing\".",
+        "default": ""
+      },
+      {
+        "name": "currency",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "locale",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "periodLabels",
+        "required": false,
+        "type": "Record<Period, string>",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "saveLabel",
+        "required": false,
+        "type": "string",
+        "description": "e.g. \"Save 20%\", shown beside the period switch.",
+        "default": ""
+      },
+      {
+        "name": "perLabels",
+        "required": false,
+        "type": "Record<Period, string>",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "headingLevel",
+        "required": false,
+        "type": "2 | 3 | 4 | 5",
+        "description": "",
+        "default": ""
+      }
+    ]
+  },
+  {
     "name": "ProgressBar",
     "entry": "rei-kit",
     "summary": "How far through something somebody is.",
@@ -3851,6 +4152,90 @@
         "type": "string",
         "description": "For screen readers. Without it this is a rectangle that means nothing.",
         "default": ""
+      }
+    ]
+  },
+  {
+    "name": "PromptInput",
+    "entry": "rei-kit",
+    "summary": "The box a message is typed into: a textarea that grows with its content up to `maxRows`, with Send (or Stop while the assistant is replying).",
+    "props": [
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "true"
+      },
+      {
+        "name": "placeholder",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "busy",
+        "required": false,
+        "type": "boolean",
+        "description": "A reply is in progress: Send becomes Stop.",
+        "default": "false"
+      },
+      {
+        "name": "disabled",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "maxRows",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "8"
+      },
+      {
+        "name": "maxLength",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "submitLabel",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'Send'"
+      },
+      {
+        "name": "stopLabel",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'Stop'"
+      },
+      {
+        "name": "hint",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "keyHint",
+        "required": false,
+        "type": "string",
+        "description": "Read to screen readers after the label.",
+        "default": "'Enter to send"
       }
     ]
   },
@@ -4163,6 +4548,83 @@
     ]
   },
   {
+    "name": "Sparkline",
+    "entry": "rei-kit",
+    "summary": "",
+    "props": [
+      {
+        "name": "values",
+        "required": true,
+        "type": "readonly number[]",
+        "description": "",
+        "default": ""
+      },
+      {
+        "name": "label",
+        "required": true,
+        "type": "string",
+        "description": "What is being drawn, e.g. \"Signups\". Already translated.",
+        "default": ""
+      },
+      {
+        "name": "tone",
+        "required": false,
+        "type": "Tone",
+        "description": "",
+        "default": "'primary'"
+      },
+      {
+        "name": "area",
+        "required": false,
+        "type": "boolean",
+        "description": "Fill under the line.",
+        "default": "false"
+      },
+      {
+        "name": "height",
+        "required": false,
+        "type": "number",
+        "description": "Height in px.",
+        "default": "32"
+      },
+      {
+        "name": "strokeWidth",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "1.5"
+      },
+      {
+        "name": "showLast",
+        "required": false,
+        "type": "boolean",
+        "description": "A dot on the last value.",
+        "default": "true"
+      },
+      {
+        "name": "min",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "valueLabel",
+        "required": false,
+        "type": "((n: number) => string)",
+        "description": "How a number reads in the accessible name.",
+        "default": "(n: number)"
+      }
+    ]
+  },
+  {
     "name": "SpotlightCard",
     "entry": "rei-kit/motion",
     "summary": "A card with a soft light that follows the pointer, and lights its own edge.",
@@ -4375,6 +4837,48 @@
         "type": "boolean",
         "description": "Holds the current word. For a pause button, or a section out of view.",
         "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "TiltCard",
+    "entry": "rei-kit/motion",
+    "summary": "A card that leans toward the pointer, with a sheen that slides across it.",
+    "props": [
+      {
+        "name": "max",
+        "required": false,
+        "type": "number",
+        "description": "Largest lean, in degrees.",
+        "default": "8"
+      },
+      {
+        "name": "scale",
+        "required": false,
+        "type": "number",
+        "description": "Size of the card while the pointer is on it.",
+        "default": "1.02"
+      },
+      {
+        "name": "perspective",
+        "required": false,
+        "type": "number",
+        "description": "Perspective distance in px; lower is more dramatic.",
+        "default": "900"
+      },
+      {
+        "name": "glare",
+        "required": false,
+        "type": "boolean",
+        "description": "The sheen that follows the pointer.",
+        "default": "true"
+      },
+      {
+        "name": "as",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'div'"
       }
     ]
   },

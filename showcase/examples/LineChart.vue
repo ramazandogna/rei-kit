@@ -9,5 +9,7 @@ const series = [
 </script>
 
 <template>
-  <LineChart label="Signups this week" :labels="labels" :series="series" area />
+  <div style="width: min(40rem, 100%)">
+    <LineChart label="Signups this week" :labels="labels" :series="series" area />
+  </div>
 </template>

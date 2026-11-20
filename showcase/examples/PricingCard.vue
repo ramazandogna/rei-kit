@@ -35,5 +35,7 @@ const plans = [
 </script>
 
 <template>
-  <PricingCard v-model:period="period" label="Pricing" save-label="Save 20%" :plans="plans" />
+  <div style="width: min(60rem, 100%)">
+    <PricingCard v-model:period="period" label="Pricing" save-label="Save 20%" :plans="plans" />
+  </div>
 </template>

@@ -163,8 +163,12 @@ function onKeydown(event: KeyboardEvent) {
   min-width: 0;
 }
 .stage-one {
-  max-width: 100%;
+  /* Definite width, centred content: a chart or table that sizes to its
+     container gets the stage's width instead of collapsing to nothing. */
+  display: flex;
+  width: 100%;
   min-width: 0;
+  justify-content: center;
 }
 @media (min-width: 40rem) {
   .stage-body {

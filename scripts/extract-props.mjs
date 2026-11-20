@@ -85,7 +85,10 @@ function entries(block) {
     if (line === '') continue
 
     if (buffer === '' && (line.startsWith('/*') || line.startsWith('*') || line.startsWith('//'))) {
-      const text = line.replace(/^\/\*\*?|^\*\/?|^\/\//, '').replace(/\*\/$/, '').trim()
+      const text = line
+        .replace(/^\/\*\*?|^\*\/?|^\/\//, '')
+        .replace(/\*\/$/, '')
+        .trim()
       if (text) comment.push(text)
       continue
     }
@@ -144,8 +147,92 @@ function summary(source) {
   return ''
 }
 
+/**
+ * The top-level members of a `defineSlots<{ … }>` or `defineEmits<{ … }>`
+ * literal: name, signature and the doc comment above it. Only the first
+ * object literal is read; the call-signature form of defineEmits is ignored.
+ */
+function members(source, call) {
+  const at = source.indexOf(`${call}<`)
+  if (at === -1) return []
+  const open = source.indexOf('{', at)
+  if (open === -1 || open - at > 12) return []
+
+  let depth = 0
+  let end = -1
+  for (let i = open; i < source.length; i++) {
+    const ch = source[i]
+    if ('({['.includes(ch)) depth++
+    else if (')}]'.includes(ch)) {
+      depth--
+      if (depth === 0) {
+        end = i
+        break
+      }
+    }
+  }
+  if (end === -1) return []
+
+  const body = source.slice(open + 1, end)
+  const out = []
+  let note = ''
+  let buf = ''
+  let d = 0
+  const flush = () => {
+    const text = buf.trim()
+    buf = ''
+    if (!text) return
+    const m = /^(?:'([^']+)'|"([^"]+)"|\[[^\]]*\]|([A-Za-z_$][\w$]*))\??\s*:\s*([\s\S]*)$/.exec(
+      text,
+    )
+    if (m)
+      out.push({
+        name: m[1] ?? m[2] ?? m[3] ?? '[key]',
+        payload: m[4].replace(/\s+/g, ' ').trim(),
+        description: note,
+      })
+    note = ''
+  }
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i]
+    if (d === 0 && body.startsWith('/**', i)) {
+      const close = body.indexOf('*/', i)
+      note = body
+        .slice(i + 3, close)
+        .split('\n')
+        .map((l) => l.replace(/^\s*\*\s?/, '').trim())
+        .join(' ')
+        .trim()
+      i = close + 1
+      continue
+    }
+    if (d === 0 && body.startsWith('//', i)) {
+      i = body.indexOf('\n', i) - 1
+      if (i < 0) break
+      continue
+    }
+    if ('({['.includes(ch)) d++
+    if (')}]'.includes(ch)) d--
+    if (d === 0 && (ch === ';' || ch === ',' || ch === '\n')) flush()
+    else buf += ch
+  }
+  flush()
+  return out
+}
+
+/** `defineModel` names, so v-model shows up in the slots and emits tables. */
+function models(source) {
+  return [...source.matchAll(/defineModel<([^>]*)>\(\s*(?:'([^']+)')?/g)].map((m) => ({
+    name: m[2] ? `update:${m[2]}` : 'update:modelValue',
+    payload: `[value: ${m[1].trim()}]`,
+    description: '',
+  }))
+}
+
 const components = []
-for (const file of ['src/components', 'src/app', 'src/web', 'src/pwa', 'src/motion'].flatMap(vueFiles)) {
+for (const file of ['src/components', 'src/app', 'src/web', 'src/pwa', 'src/motion'].flatMap(
+  vueFiles,
+)) {
   const source = readFileSync(join(ROOT, file), 'utf8')
   const block = propsBlock(source)
   const name = file.split('/').pop().replace('.vue', '')
@@ -155,10 +242,22 @@ for (const file of ['src/components', 'src/app', 'src/web', 'src/pwa', 'src/moti
     name,
     entry: entry === 'components' ? 'rei-kit' : `rei-kit/${entry}`,
     summary: summary(source),
-    props: block ? entries(block).map((p) => ({ ...p, default: defaults(source)[p.name] ?? '' })) : [],
+    slots: members(source, 'defineSlots'),
+    emits: (() => {
+      const declared = members(source, 'defineEmits')
+      return [
+        ...declared,
+        ...models(source).filter((m) => !declared.some((d) => d.name === m.name)),
+      ]
+    })(),
+    props: block
+      ? entries(block).map((p) => ({ ...p, default: defaults(source)[p.name] ?? '' }))
+      : [],
   })
 }
 
 components.sort((a, b) => a.name.localeCompare(b.name))
 writeFileSync(join(ROOT, 'showcase/props.generated.json'), JSON.stringify(components, null, 2))
-console.log(`extract-props: ${components.length} components, ${components.reduce((n, c) => n + c.props.length, 0)} props`)
+console.log(
+  `extract-props: ${components.length} components, ${components.reduce((n, c) => n + c.props.length, 0)} props`,
+)

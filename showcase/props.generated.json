@@ -3,6 +3,14 @@
     "name": "ActivityGrid",
     "entry": "rei-kit",
     "summary": "A year of days, as a grid you can read at a glance.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "select",
+        "payload": "[key: string]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "days",
@@ -59,6 +67,8 @@
     "name": "AnimatedBeam",
     "entry": "rei-kit/motion",
     "summary": "",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "container",
@@ -157,12 +167,48 @@
     "name": "AnnounceHost",
     "entry": "rei-kit",
     "summary": "The two live regions `announce()` speaks through. Render one per app, anywhere — nothing here is ever visible.",
+    "slots": [],
+    "emits": [],
     "props": []
   },
   {
     "name": "AuthForm",
     "entry": "rei-kit/app",
     "summary": "The sign-in and sign-up forms, which are one component.",
+    "slots": [
+      {
+        "name": "header",
+        "payload": "() => unknown",
+        "description": "Above everything — a heading and a line under it."
+      },
+      {
+        "name": "oauth",
+        "payload": "() => unknown",
+        "description": "Replaces the Google button entirely, for a different provider or several."
+      },
+      {
+        "name": "foot",
+        "payload": "() => unknown",
+        "description": "Under the form — the link to the other mode, terms, anything."
+      }
+    ],
+    "emits": [
+      {
+        "name": "submit",
+        "payload": "[values: AuthFormValues]",
+        "description": ""
+      },
+      {
+        "name": "google",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "update:remember",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "mode",
@@ -205,12 +251,32 @@
     "name": "AuthShell",
     "entry": "rei-kit/app",
     "summary": "The frame every sign-in screen sits in.",
+    "slots": [
+      {
+        "name": "brand",
+        "payload": "() => unknown",
+        "description": "The brand mark."
+      },
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "The form."
+      },
+      {
+        "name": "foot",
+        "payload": "() => unknown",
+        "description": "The language links, or anything else that belongs at the foot."
+      }
+    ],
+    "emits": [],
     "props": []
   },
   {
     "name": "AvatarStack",
     "entry": "rei-kit",
     "summary": "The people on a thing, overlapped: who is in a conversation, who shares a list.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "people",
@@ -246,6 +312,14 @@
     "name": "BarChart",
     "entry": "rei-kit",
     "summary": "A row of values, compared.",
+    "slots": [
+      {
+        "name": "value",
+        "payload": "(props: { item: T; index: number }) => unknown",
+        "description": "Overrides a row's printed value — a note beside the number, a link."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "series",
@@ -295,6 +369,19 @@
     "name": "BaseAccordion",
     "entry": "rei-kit/web",
     "summary": "A list that opens one section at a time.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "(props: { item: AccordionItem<K>; open: boolean }) => unknown",
+        "description": "The answer, per item."
+      },
+      {
+        "name": "title",
+        "payload": "(props: { item: AccordionItem<K>; open: boolean }) => unknown",
+        "description": "The question, when the item's `title` is not enough."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "items",
@@ -323,6 +410,8 @@
     "name": "BaseAlert",
     "entry": "rei-kit",
     "summary": "A message the reader has to take in before carrying on.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "tone",
@@ -344,6 +433,8 @@
     "name": "BaseAvatar",
     "entry": "rei-kit",
     "summary": "The person, in the corner where the account lives.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "name",
@@ -386,6 +477,8 @@
     "name": "BaseBadge",
     "entry": "rei-kit",
     "summary": "A small standing label: a level, a state, a count.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "tone",
@@ -400,6 +493,8 @@
     "name": "BaseBreadcrumb",
     "entry": "rei-kit/web",
     "summary": "Where this page sits, and the way back up.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "items",
@@ -421,6 +516,8 @@
     "name": "BaseButton",
     "entry": "rei-kit",
     "summary": "The kit's button, and — when asked — its link.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "as",
@@ -512,6 +609,14 @@
     "name": "BaseCalendar",
     "entry": "rei-kit",
     "summary": "A month of days, for choosing one or a stretch of them.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: Value]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "mode",
@@ -575,6 +680,8 @@
     "name": "BaseCard",
     "entry": "rei-kit",
     "summary": "A surface with a border, and optionally a head and a foot.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "interactive",
@@ -603,6 +710,14 @@
     "name": "BaseCheckbox",
     "entry": "rei-kit",
     "summary": "A single checkbox, with its label beside it.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -659,6 +774,14 @@
     "name": "BaseCheckboxGroup",
     "entry": "rei-kit",
     "summary": "Several answers from a set that is all on screen.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: V[]]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "options",
@@ -722,6 +845,19 @@
     "name": "BaseChip",
     "entry": "rei-kit",
     "summary": "A short label with, when it is one of a set someone assembled, a way to take it off: a filter, a recipient, a tag.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "remove",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "select",
+        "payload": "[]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -771,6 +907,19 @@
     "name": "BaseCombobox",
     "entry": "rei-kit",
     "summary": "A field you type into to narrow a list, then choose from it.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: Value]",
+        "description": ""
+      },
+      {
+        "name": "search",
+        "payload": "[query: string]",
+        "description": "The typed text, once it has settled. For a list that lives on a server."
+      }
+    ],
     "props": [
       {
         "name": "modelValue",
@@ -890,6 +1039,19 @@
     "name": "BaseContextMenu",
     "entry": "rei-kit/web",
     "summary": "The menu a right-click opens, on whatever it was opened over.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "(props: { props: { 'aria-haspopup'?: 'menu'; 'aria-expanded'?: boolean; 'aria-controls'?: string } }) => unknown",
+        "description": "What the menu belongs to: a row, a canvas, a card.  `props` carries the ARIA that says a menu is here. Spread it onto the element a reader actually lands on, the same way `BasePopover` hands a trigger its props.  That element has to be one whose role takes these attributes — a `button`, or a `row`, `gridcell`, `treeitem`, `tab`. It is not the wrapper, and `tabindex` on a `div` does not make it one: focusable and \"has a role that supports `aria-expanded`\" are different things, and the second is what a reader is told. Writing them anywhere else puts an attribute on the page that a browser is entitled to ignore, which is worse than leaving them off, because it looks done."
+      },
+      {
+        "name": "items",
+        "payload": "(props: { close: () => void }) => unknown",
+        "description": "The actions, each a `[role=\"menuitem\"]`."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "label",
@@ -911,6 +1073,14 @@
     "name": "BaseDatePicker",
     "entry": "rei-kit",
     "summary": "A date, or a stretch of dates, chosen from a calendar in a popover.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: Value]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -1051,6 +1221,25 @@
     "name": "BaseDisclosure",
     "entry": "rei-kit/web",
     "summary": "One section that opens and closes.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "The answer."
+      },
+      {
+        "name": "title",
+        "payload": "() => unknown",
+        "description": "The question, when the prop is not enough.  A slot as well as a prop because the size of a heading is a decision about the page it is on, not about disclosure: the first list to use this wanted the question a step larger on a wide screen, and a component that hard-codes one size makes that an override against its own stylesheet."
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "title",
@@ -1072,6 +1261,14 @@
     "name": "BaseDrawer",
     "entry": "rei-kit/web",
     "summary": "A panel that comes in from the edge of a wide screen.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "title",
@@ -1114,6 +1311,19 @@
     "name": "BaseHoverCard",
     "entry": "rei-kit/web",
     "summary": "A card that appears beside something when you rest on it.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "(props: { props: { 'aria-expanded': boolean; 'aria-controls': string | undefined } }) => unknown",
+        "description": "The thing being rested on. `props` says a popup is here."
+      },
+      {
+        "name": "card",
+        "payload": "() => unknown",
+        "description": "What appears: a profile, a preview, a definition."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "label",
@@ -1149,6 +1359,25 @@
     "name": "BaseInput",
     "entry": "rei-kit",
     "summary": "A text field with its label, hint and error already wired to it.",
+    "slots": [
+      {
+        "name": "prefix",
+        "payload": "() => unknown",
+        "description": ""
+      },
+      {
+        "name": "suffix",
+        "payload": "() => unknown",
+        "description": ""
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: T]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "modelValue",
@@ -1226,6 +1455,8 @@
     "name": "BaseKbd",
     "entry": "rei-kit",
     "summary": "A keyboard key, or a chord of them: `⌘ K`, `Ctrl Shift P`.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "keys",
@@ -1254,6 +1485,14 @@
     "name": "BaseLink",
     "entry": "rei-kit",
     "summary": "A link in a sentence — the one thing a button is not.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": ""
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "to",
@@ -1296,6 +1535,14 @@
     "name": "BaseListbox",
     "entry": "rei-kit",
     "summary": "A list you choose from, open on the page.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: Value]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "modelValue",
@@ -1338,6 +1585,14 @@
     "name": "BaseMarquee",
     "entry": "rei-kit/motion",
     "summary": "A row that scrolls sideways without end: logos, testimonials, a ticker.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "The items. Rendered twice, the second copy inert."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "duration",
@@ -1380,6 +1635,25 @@
     "name": "BaseMenu",
     "entry": "rei-kit",
     "summary": "A list of actions behind one control.",
+    "slots": [
+      {
+        "name": "trigger",
+        "payload": "(props: { open: boolean }) => unknown",
+        "description": "The control that opens it. Receives the open state for its own styling."
+      },
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "The items. Anything with `role=\"menuitem\"` joins the keyboard order."
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -1401,6 +1675,25 @@
     "name": "BaseModal",
     "entry": "rei-kit/web",
     "summary": "A dialog that arrives from nowhere.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "The body."
+      },
+      {
+        "name": "actions",
+        "payload": "() => unknown",
+        "description": "Buttons, at the foot."
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "title",
@@ -1436,6 +1729,14 @@
     "name": "BasePagination",
     "entry": "rei-kit/web",
     "summary": "Moving between pages of a list.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "change",
+        "payload": "[page: number]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "page",
@@ -1485,6 +1786,30 @@
     "name": "BasePopconfirm",
     "entry": "rei-kit",
     "summary": "\"Are you sure?\", asked beside the button that asked it.",
+    "slots": [
+      {
+        "name": "trigger",
+        "payload": "(props: { open: boolean; props: PopoverTriggerProps }) => unknown",
+        "description": "The control that asks. Bind `props` on it: `v-bind=\"props\"`."
+      }
+    ],
+    "emits": [
+      {
+        "name": "confirm",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "cancel",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "message",
@@ -1527,6 +1852,25 @@
     "name": "BasePopover",
     "entry": "rei-kit",
     "summary": "A panel of anything — a form, a picker, a few settings — anchored to the control that opened it.",
+    "slots": [
+      {
+        "name": "trigger",
+        "payload": "(props: { open: boolean; props: PopoverTriggerProps }) => unknown",
+        "description": "The control that opens it. Bind `props` on it: `v-bind=\"props\"`."
+      },
+      {
+        "name": "default",
+        "payload": "(props: { close: () => void }) => unknown",
+        "description": "The panel's content. `close` for a Done or Apply button inside it."
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -1555,6 +1899,14 @@
     "name": "BaseRadioGroup",
     "entry": "rei-kit",
     "summary": "A set of radios, and the reason there is no `BaseRadio`.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: string]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "modelValue",
@@ -1604,6 +1956,14 @@
     "name": "BaseRating",
     "entry": "rei-kit",
     "summary": "A score out of five, given or shown.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: number]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "max",
@@ -1653,6 +2013,14 @@
     "name": "BaseReveal",
     "entry": "rei-kit/motion",
     "summary": "Content that fades or rises into place as it scrolls into view.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "What is revealed."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "effect",
@@ -1688,6 +2056,14 @@
     "name": "BaseSelect",
     "entry": "rei-kit",
     "summary": "A native `<select>`, wearing the kit's field.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: T | undefined]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -1765,6 +2141,8 @@
     "name": "BaseSeparator",
     "entry": "rei-kit",
     "summary": "A line between things — with, when it helps, a word on it.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "orientation",
@@ -1793,6 +2171,14 @@
     "name": "BaseSheet",
     "entry": "rei-kit",
     "summary": "Pins the sheet to the area the keyboard has left visible.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "title",
@@ -1821,6 +2207,8 @@
     "name": "BaseSkeleton",
     "entry": "rei-kit",
     "summary": "One grey box standing in for content that has not arrived.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "width",
@@ -1849,6 +2237,14 @@
     "name": "BaseSlider",
     "entry": "rei-kit",
     "summary": "A value picked from a range, where roughly right is the point.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: number]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -1912,6 +2308,8 @@
     "name": "BaseSpinner",
     "entry": "rei-kit",
     "summary": "Work in progress, with no idea how much is left.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "label",
@@ -1933,6 +2331,25 @@
     "name": "BaseSplitter",
     "entry": "rei-kit/web",
     "summary": "Two panes and a handle between them — a list beside a preview, an editor beside its output.",
+    "slots": [
+      {
+        "name": "start",
+        "payload": "() => unknown",
+        "description": "The first pane: the list, the tree, the sidebar."
+      },
+      {
+        "name": "end",
+        "payload": "() => unknown",
+        "description": "The second pane."
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: number]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -1975,6 +2392,14 @@
     "name": "BaseStepper",
     "entry": "rei-kit",
     "summary": "Where someone is in a process of several steps — a sign-up, a checkout, a form split into pages.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: K]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "steps",
@@ -2017,6 +2442,14 @@
     "name": "BaseSwitch",
     "entry": "rei-kit",
     "summary": "A setting that takes effect the moment it is touched.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -2052,6 +2485,19 @@
     "name": "BaseTable",
     "entry": "rei-kit",
     "summary": "Rows of data, with the parts a hand-written `<table>` leaves out.",
+    "slots": [
+      {
+        "name": "[key]",
+        "payload": "(props: { row: Row; value: unknown }) => unknown",
+        "description": "Per-column cell override, named for the column key."
+      },
+      {
+        "name": "empty",
+        "payload": "() => unknown",
+        "description": "Shown instead of the body when there are no rows."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "columns",
@@ -2094,6 +2540,20 @@
     "name": "BaseTabs",
     "entry": "rei-kit/web",
     "summary": "Sections of one page, one visible at a time.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "(props: { item: TabPanel<K>; active: K }) => unknown",
+        "description": "The panel for the selected tab."
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: K]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "items",
@@ -2115,6 +2575,14 @@
     "name": "BaseTextarea",
     "entry": "rei-kit",
     "summary": "A multi-line field.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: string]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "modelValue",
@@ -2192,6 +2660,24 @@
     "name": "BaseTimeline",
     "entry": "rei-kit",
     "summary": "What happened, in order, on a rail.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "(props: { event: T }) => unknown",
+        "description": "The body of every event — a note, a card, a quote."
+      },
+      {
+        "name": "[key]",
+        "payload": "((props: { event: T }) => unknown) | undefined",
+        "description": "The body of one event, named for its key. Wins over `default`."
+      },
+      {
+        "name": "marker",
+        "payload": "(props: { event: T }) => unknown",
+        "description": "The marker for every event, when a dot is not enough."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "events",
@@ -2213,6 +2699,14 @@
     "name": "BaseToolbar",
     "entry": "rei-kit/web",
     "summary": "A row of controls that belong together: a formatting bar, a row of view switches, the actions over a table.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": ""
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "label",
@@ -2234,6 +2728,14 @@
     "name": "BaseTooltip",
     "entry": "rei-kit/web",
     "summary": "A short label that appears beside a control.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "(props: { describedBy: string }) => unknown",
+        "description": "The control being described."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "label",
@@ -2269,6 +2771,19 @@
     "name": "BaseTree",
     "entry": "rei-kit/web",
     "summary": "A tree of things that contain things: folders, a category list, a table of contents.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: Value]",
+        "description": ""
+      },
+      {
+        "name": "update:expanded",
+        "payload": "[value: K[]]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "modelValue",
@@ -2304,6 +2819,8 @@
     "name": "BentoCell",
     "entry": "rei-kit/web",
     "summary": "One cell of a `BentoGrid`: a card that can span columns and rows, with a title, a description, a visual that takes the room left, and a footer.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "col",
@@ -2353,6 +2870,8 @@
     "name": "BentoGrid",
     "entry": "rei-kit/web",
     "summary": "A grid of cells of different sizes, for a page that wants to show several things at once without making them all the same shape.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "columns",
@@ -2388,6 +2907,8 @@
     "name": "BorderBeam",
     "entry": "rei-kit/motion",
     "summary": "A highlight that travels once around the edge of whatever it wraps.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "duration",
@@ -2458,6 +2979,24 @@
     "name": "ChatMessage",
     "entry": "rei-kit",
     "summary": "One message in a conversation: the person's in a coloured bubble on the end side, the assistant's on a surface with its avatar, a system note as quiet centred text.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": ""
+      },
+      {
+        "name": "actions",
+        "payload": "() => unknown",
+        "description": "Buttons shown on hover and focus: copy, retry."
+      },
+      {
+        "name": "meta",
+        "payload": "() => unknown",
+        "description": ""
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "from",
@@ -2514,6 +3053,24 @@
     "name": "ChatThread",
     "entry": "rei-kit",
     "summary": "The scrolling list of messages in a conversation.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": ""
+      },
+      {
+        "name": "empty",
+        "payload": "() => unknown",
+        "description": ""
+      },
+      {
+        "name": "typing",
+        "payload": "() => unknown",
+        "description": "Replaces the dots."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "label",
@@ -2556,6 +3113,14 @@
     "name": "CircularProgress",
     "entry": "rei-kit",
     "summary": "Progress as a ring — for a small space, a card's corner, a goal.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "Inside the ring, instead of the percentage."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "value",
@@ -2605,6 +3170,14 @@
     "name": "CodeBlock",
     "entry": "rei-kit",
     "summary": "A sample of code, as written.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "The body, when the app has highlighted it itself. Plain text otherwise."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "code",
@@ -2654,6 +3227,14 @@
     "name": "ColorPicker",
     "entry": "rei-kit",
     "summary": "A colour, as a hex value.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: string]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -2724,6 +3305,19 @@
     "name": "CommandMenu",
     "entry": "rei-kit/web",
     "summary": "Everything the app can do, behind one shortcut.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "select",
+        "payload": "[id: Id]",
+        "description": ""
+      },
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "groups",
@@ -2766,6 +3360,25 @@
     "name": "CopyButton",
     "entry": "rei-kit",
     "summary": "Copies a piece of text, and says that it did.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "(props: { copied: boolean; failed: boolean }) => unknown",
+        "description": ""
+      }
+    ],
+    "emits": [
+      {
+        "name": "copied",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "failed",
+        "payload": "[]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "text",
@@ -2815,6 +3428,8 @@
     "name": "CountUp",
     "entry": "rei-kit/motion",
     "summary": "A number that counts up to its value once it scrolls into view.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "value",
@@ -2857,6 +3472,25 @@
     "name": "DataTable",
     "entry": "rei-kit/web",
     "summary": "`BaseTable` with the three things a table of real data grows: a sort, a selection, and something to show while it is loading.",
+    "slots": [
+      {
+        "name": "[key]",
+        "payload": "(props: { row: Row; value: unknown }) => unknown",
+        "description": "Per-column cell override, named for the column key."
+      },
+      {
+        "name": "empty",
+        "payload": "() => unknown",
+        "description": "Shown instead of the body when there are no rows."
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:selected",
+        "payload": "[value: string[]]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "columns",
@@ -2941,6 +3575,14 @@
     "name": "DescriptionList",
     "entry": "rei-kit",
     "summary": "Pairs of \"what it is\" and \"what it says\": the summary at the top of a detail page, the facts under an invoice.",
+    "slots": [
+      {
+        "name": "[key]",
+        "payload": "(props: { item: DescriptionItem }) => unknown",
+        "description": "A row's value, named for its `key`."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "items",
@@ -2962,6 +3604,20 @@
     "name": "Dock",
     "entry": "rei-kit/web",
     "summary": "",
+    "slots": [
+      {
+        "name": "item",
+        "payload": "(props: { item: DockItem; active: boolean; focused: boolean }) => unknown",
+        "description": "Replaces an item's icon."
+      }
+    ],
+    "emits": [
+      {
+        "name": "select",
+        "payload": "[id: string]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "items",
@@ -3011,6 +3667,8 @@
     "name": "DonutChart",
     "entry": "rei-kit",
     "summary": "Parts of a whole.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "slices",
@@ -3053,6 +3711,8 @@
     "name": "EmptyState",
     "entry": "rei-kit",
     "summary": "A list with nothing in it yet, said kindly.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "title",
@@ -3074,6 +3734,14 @@
     "name": "ErrorBoundary",
     "entry": "rei-kit",
     "summary": "Keeps one broken screen from taking the whole app down.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "error",
+        "payload": "[cause: unknown]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "resetKey",
@@ -3088,6 +3756,8 @@
     "name": "ErrorSummary",
     "entry": "rei-kit",
     "summary": "What a rejected form says at the top of itself.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "errors",
@@ -3130,6 +3800,20 @@
     "name": "FabButton",
     "entry": "rei-kit/app",
     "summary": "The one action the app is built around, reachable from every screen.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "The icon. A `lucide-vue-next` component, usually."
+      }
+    ],
+    "emits": [
+      {
+        "name": "click",
+        "payload": "[]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -3144,6 +3828,19 @@
     "name": "FileDrop",
     "entry": "rei-kit",
     "summary": "Files, dropped on or chosen from a real file input.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "rejected",
+        "payload": "[files: File[]]",
+        "description": "Files that were too large, so the app can say more than the kit can."
+      },
+      {
+        "name": "update:modelValue",
+        "payload": "[value: File[]]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -3214,6 +3911,8 @@
     "name": "FormField",
     "entry": "rei-kit",
     "summary": "A label, a hint, an error, and the wiring between them.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "label",
@@ -3263,6 +3962,14 @@
     "name": "GoogleButton",
     "entry": "rei-kit",
     "summary": "Sign in with Google, in Google's own clothes.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "click",
+        "payload": "[]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -3284,6 +3991,8 @@
     "name": "HeroBackdrop",
     "entry": "rei-kit/motion",
     "summary": "A decorative field behind a hero: dots, a grid, a soft aurora, blobs or grain, built only from the active palette so it follows the palette, dark mode and material without being told.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "variant",
@@ -3333,6 +4042,8 @@
     "name": "InstallPrompt",
     "entry": "rei-kit/pwa",
     "summary": "The card that offers to install the app, and remembers being turned down.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "storageKey",
@@ -3396,6 +4107,8 @@
     "name": "InstallSettings",
     "entry": "rei-kit/pwa",
     "summary": "The way back to installing after the card has been dismissed.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "title",
@@ -3445,6 +4158,20 @@
     "name": "LineChart",
     "entry": "rei-kit",
     "summary": "",
+    "slots": [
+      {
+        "name": "tooltip",
+        "payload": "(props: { index: number label: string values: { name: string; value: number; tone: Tone }[] }) => unknown",
+        "description": ""
+      }
+    ],
+    "emits": [
+      {
+        "name": "select",
+        "payload": "[index: number]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "series",
@@ -3536,6 +4263,14 @@
     "name": "LocaleLinks",
     "entry": "rei-kit",
     "summary": "A flat language switcher for screens with no Settings behind them.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: 'system' | L]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "locales",
@@ -3564,6 +4299,14 @@
     "name": "LocaleSheet",
     "entry": "rei-kit/app",
     "summary": "Choosing the interface language, from a settings row.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: string]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -3606,6 +4349,8 @@
     "name": "MegaMenu",
     "entry": "rei-kit/web",
     "summary": "A wide site's navigation, where a section has more in it than a row can hold: columns of links under a heading, opened from the bar.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "items",
@@ -3648,6 +4393,8 @@
     "name": "NavLinks",
     "entry": "rei-kit/web",
     "summary": "The primary navigation of a wide site.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "items",
@@ -3676,6 +4423,14 @@
     "name": "NumberInput",
     "entry": "rei-kit",
     "summary": "A number, typed or stepped — a quantity, a price, a count of minutes.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: number | undefined]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -3767,6 +4522,8 @@
     "name": "NumberTicker",
     "entry": "rei-kit/motion",
     "summary": "A number whose digits roll to their new value, like an odometer or a note counter.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "value",
@@ -3802,6 +4559,8 @@
     "name": "OfflineBanner",
     "entry": "rei-kit/app",
     "summary": "A floating note that the connection has gone.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "label",
@@ -3816,6 +4575,8 @@
     "name": "PageContainer",
     "entry": "rei-kit",
     "summary": "One measure, centred, with the page's gutters.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "width",
@@ -3837,6 +4598,8 @@
     "name": "PageHeader",
     "entry": "rei-kit",
     "summary": "The bar at the top of a screen: a title with room either side of it.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "title",
@@ -3858,6 +4621,19 @@
     "name": "PasswordInput",
     "entry": "rei-kit",
     "summary": "A password field you can look at.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: string]",
+        "description": ""
+      },
+      {
+        "name": "toggle",
+        "payload": "[visible: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "modelValue",
@@ -3928,6 +4704,19 @@
     "name": "PinInput",
     "entry": "rei-kit",
     "summary": "A short code typed one character per box — a sign-in code, a PIN.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "complete",
+        "payload": "[code: string]",
+        "description": ""
+      },
+      {
+        "name": "update:modelValue",
+        "payload": "[value: string]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "length",
@@ -3984,6 +4773,8 @@
     "name": "PriceCard",
     "entry": "rei-kit",
     "summary": "One plan in a pricing table.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "name",
@@ -4061,6 +4852,30 @@
     "name": "PricingCard",
     "entry": "rei-kit",
     "summary": "",
+    "slots": [
+      {
+        "name": "plan",
+        "payload": "(props: { plan: Plan; price: string; period: Period }) => unknown",
+        "description": ""
+      },
+      {
+        "name": "footer",
+        "payload": "() => unknown",
+        "description": ""
+      }
+    ],
+    "emits": [
+      {
+        "name": "select",
+        "payload": "[planId: string]",
+        "description": ""
+      },
+      {
+        "name": "update:period",
+        "payload": "[value: Period]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "plans",
@@ -4124,6 +4939,8 @@
     "name": "ProgressBar",
     "entry": "rei-kit",
     "summary": "How far through something somebody is.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "value",
@@ -4159,6 +4976,35 @@
     "name": "PromptInput",
     "entry": "rei-kit",
     "summary": "The box a message is typed into: a textarea that grows with its content up to `maxRows`, with Send (or Stop while the assistant is replying).",
+    "slots": [
+      {
+        "name": "leading",
+        "payload": "() => unknown",
+        "description": "Before the field: attach buttons."
+      },
+      {
+        "name": "actions",
+        "payload": "() => unknown",
+        "description": "Before Send."
+      }
+    ],
+    "emits": [
+      {
+        "name": "submit",
+        "payload": "[text: string]",
+        "description": ""
+      },
+      {
+        "name": "stop",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "update:modelValue",
+        "payload": "[value: string]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -4243,6 +5089,25 @@
     "name": "ResponsiveDialog",
     "entry": "rei-kit/web",
     "summary": "One question, asked the way the screen it lands on expects: a modal on a wide screen, a sheet from the bottom edge on a phone.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "The body."
+      },
+      {
+        "name": "actions",
+        "payload": "() => unknown",
+        "description": "Buttons, at the foot."
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "title",
@@ -4292,6 +5157,20 @@
     "name": "ScrollArea",
     "entry": "rei-kit",
     "summary": "A box that scrolls, with the two things a hand-written one leaves out.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": ""
+      }
+    ],
+    "emits": [
+      {
+        "name": "scroll",
+        "payload": "[event: Event]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -4334,6 +5213,8 @@
     "name": "SectionHeading",
     "entry": "rei-kit",
     "summary": "A pill heading for a group of things.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "tone",
@@ -4362,6 +5243,14 @@
     "name": "SegmentedControl",
     "entry": "rei-kit",
     "summary": "A row of mutually exclusive choices.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: T]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "options",
@@ -4376,6 +5265,8 @@
     "name": "SettingsGroup",
     "entry": "rei-kit",
     "summary": "A titled run of settings rows.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "title",
@@ -4390,6 +5281,14 @@
     "name": "SettingsRow",
     "entry": "rei-kit",
     "summary": "One line in a settings card.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "click",
+        "payload": "[]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -4432,6 +5331,8 @@
     "name": "SkeletonList",
     "entry": "rei-kit",
     "summary": "A length starts with a digit, a dot, or opens a CSS function.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "rows",
@@ -4460,6 +5361,8 @@
     "name": "SkipLink",
     "entry": "rei-kit/web",
     "summary": "\"Skip to content\" — the first thing in the tab order, hidden until it has focus.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "for",
@@ -4481,6 +5384,14 @@
     "name": "SliderField",
     "entry": "rei-kit",
     "summary": "One number, reached either way: dragged along a range or typed exactly.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: number]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -4551,6 +5462,8 @@
     "name": "Sparkline",
     "entry": "rei-kit",
     "summary": "",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "values",
@@ -4628,6 +5541,8 @@
     "name": "SpotlightCard",
     "entry": "rei-kit/motion",
     "summary": "A card with a soft light that follows the pointer, and lights its own edge.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "as",
@@ -4670,6 +5585,8 @@
     "name": "StatCard",
     "entry": "rei-kit",
     "summary": "One number, with what it means and which way it is going.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "value",
@@ -4698,6 +5615,8 @@
     "name": "TabBar",
     "entry": "rei-kit",
     "summary": "The floating bottom bar.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "items",
@@ -4726,12 +5645,38 @@
     "name": "TabShell",
     "entry": "rei-kit/app",
     "summary": "The phone frame the whole app sits inside.",
+    "slots": [
+      {
+        "name": "aside",
+        "payload": "() => unknown",
+        "description": "Beside the shell, on a desktop only. Credits, a build number, a link home.  Hidden below `md` rather than left out: on a phone the shell covers the whole viewport, so anything here would be behind it."
+      },
+      {
+        "name": "chrome",
+        "payload": "() => unknown",
+        "description": "Inside the shell and above everything in it — an update prompt, typically.  Above the tab bar on purpose, and outside the layout so it also appears on the sign-in screens, which is where somebody who has been away the longest arrives."
+      },
+      {
+        "name": "default",
+        "payload": "() => unknown",
+        "description": "The layout and the page."
+      }
+    ],
+    "emits": [],
     "props": []
   },
   {
     "name": "TagsInput",
     "entry": "rei-kit",
     "summary": "A field that holds several short values: recipients, labels, skills.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: string[]]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -4816,6 +5761,8 @@
     "name": "TextRotate",
     "entry": "rei-kit/motion",
     "summary": "One word in a sentence that changes on its own: \"Build it *glass*\", then *brutal*, then *soft*.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "words",
@@ -4844,6 +5791,8 @@
     "name": "TiltCard",
     "entry": "rei-kit/motion",
     "summary": "A card that leans toward the pointer, with a sheen that slides across it.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "max",
@@ -4886,6 +5835,14 @@
     "name": "TimePicker",
     "entry": "rei-kit",
     "summary": "A time of day, chosen from two columns.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: string | undefined]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "label",
@@ -4984,6 +5941,8 @@
     "name": "ToastHost",
     "entry": "rei-kit",
     "summary": "Where the toasts land. One of these, at the app root.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "closeLabel",
@@ -5005,6 +5964,14 @@
     "name": "ToggleGroup",
     "entry": "rei-kit",
     "summary": "A row of buttons that stay pressed — one at a time, or several at once.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: M extends 'multiple' ? V[] : V | undefined]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "options",
@@ -5047,6 +6014,8 @@
     "name": "ToneDot",
     "entry": "rei-kit",
     "summary": "A small coloured dot, optionally labelled.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "fill",
@@ -5068,6 +6037,34 @@
     "name": "TourShell",
     "entry": "rei-kit/app",
     "summary": "The frame an onboarding guide runs inside.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "next",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "back",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "dismiss",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "goTo",
+        "payload": "[position: number]",
+        "description": ""
+      },
+      {
+        "name": "update:modelValue",
+        "payload": "[value: boolean]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "index",
@@ -5138,6 +6135,14 @@
     "name": "TransferList",
     "entry": "rei-kit/web",
     "summary": "Two lists and the way between them: what is available, what is chosen.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "[value: V[]]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "options",
@@ -5187,6 +6192,8 @@
     "name": "TypeWriter",
     "entry": "rei-kit/motion",
     "summary": "Text that types itself out, and — given several lines — deletes each one and types the next.",
+    "slots": [],
+    "emits": [],
     "props": [
       {
         "name": "text",
@@ -5243,6 +6250,19 @@
     "name": "UpdatePrompt",
     "entry": "rei-kit/pwa",
     "summary": "The card that says a new version is waiting.",
+    "slots": [],
+    "emits": [
+      {
+        "name": "update",
+        "payload": "[]",
+        "description": ""
+      },
+      {
+        "name": "dismiss",
+        "payload": "[]",
+        "description": ""
+      }
+    ],
     "props": [
       {
         "name": "open",
@@ -5285,6 +6305,14 @@
     "name": "VirtualList",
     "entry": "rei-kit",
     "summary": "A long list where only the rows near the viewport are in the DOM.",
+    "slots": [
+      {
+        "name": "default",
+        "payload": "(props: { item: T; index: number }) => unknown",
+        "description": "One row. `index` is its place in the whole list, not in the window."
+      }
+    ],
+    "emits": [],
     "props": [
       {
         "name": "items",

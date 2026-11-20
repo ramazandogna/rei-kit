@@ -11,13 +11,13 @@ import catalogue from './props.generated.json'
  * it. `scripts/extract-props.mjs` regenerates this before every showcase build,
  * so the page and the compiler are reading the same text.
  */
-const { name } = defineProps<{ name: string }>()
+const { name, open = false } = defineProps<{ name: string; open?: boolean }>()
 
 const entry = computed(() => catalogue.find((c) => c.name === name))
 </script>
 
 <template>
-  <details v-if="entry" class="border-hair/70 mt-4 border-t pt-3">
+  <details v-if="entry" :open="open" class="border-hair/70 mt-4 border-t pt-3">
     <summary class="text-ink-soft hover:text-ink cursor-pointer text-xs font-medium">
       {{ entry.props.length }} {{ entry.props.length === 1 ? 'prop' : 'props' }} · {{ entry.entry }}
     </summary>

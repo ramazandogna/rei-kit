@@ -53,6 +53,28 @@ const escape = (value) =>
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
 
+/* The built shell's own module script and stylesheets, so a deep link to a
+   stub boots the app: `createApp().mount('#app')` replaces the stub. */
+const built = readFileSync(`${out}index.html`, 'utf8')
+const assetTags = [
+  ...built.matchAll(
+    /<(?:script\b[^>]*type="module"[^>]*><\/script>|link\b[^>]*rel="(?:stylesheet|modulepreload)"[^>]*>)/g,
+  ),
+]
+  .map((m) => m[0])
+  .join('\n    ')
+
+const themeScript = `<script>
+      try {
+        var t = localStorage.getItem('rei-theme')
+        if (t === 'dark' || ((!t || t === 'system') && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
+        var p = localStorage.getItem('rei-palette')
+        if (p && p !== 'rei') document.documentElement.dataset.palette = p
+        var m = localStorage.getItem('rei-material')
+        if (m && m !== 'quiet') document.documentElement.dataset.material = m
+      } catch (error) {}
+    </script>`
+
 function propRows(props) {
   if (props.length === 0) return '<p>This component takes no props.</p>'
 
@@ -101,22 +123,27 @@ ${JSON.stringify(
   2,
 )}
     </script>
+    ${themeScript}
+    ${assetTags}
     <style>
-      :root { color-scheme: light dark }
-      body { margin: 0 auto; max-width: 68rem; padding: 2rem 1.25rem 4rem; font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0f2229; background: #f4faf8 }
-      @media (prefers-color-scheme: dark) { body { color: #e6f0ee; background: #07141a } a { color: #5fb0c9 } code, pre { background: #102630 } th, td { border-color: #1c3945 } }
-      a { color: #26667f }
-      code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #ffffff; border-radius: 6px }
-      code { padding: 0.1em 0.35em; font-size: 0.9em }
-      pre { padding: 1rem; overflow-x: auto; font-size: 0.8125rem }
-      table { width: 100%; border-collapse: collapse; font-size: 0.875rem }
-      caption { text-align: start; font-weight: 600; padding-block: 0.75rem }
-      th, td { border-bottom: 1px solid #e1edea; padding: 0.5rem 0.6rem; text-align: start; vertical-align: top }
-      nav { font-size: 0.875rem; margin-bottom: 1.5rem }
+      /* Everything is scoped to .stub: the app mounts into #app and replaces
+         it, and none of this may outlive that. */
+      body:has(.stub) { margin: 0; color: #0f2229; background: #f4faf8 }
+      .stub { margin: 0 auto; max-width: 68rem; padding: 2rem 1.25rem 4rem; font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6 }
+      @media (prefers-color-scheme: dark) { body:has(.stub) { color: #e6f0ee; background: #07141a } .stub a { color: #5fb0c9 } .stub code, .stub pre { background: #102630 } .stub th, .stub td { border-color: #1c3945 } }
+      .stub a { color: #26667f }
+      .stub code, .stub pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #ffffff; border-radius: 6px }
+      .stub code { padding: 0.1em 0.35em; font-size: 0.9em }
+      .stub pre { padding: 1rem; overflow-x: auto; font-size: 0.8125rem }
+      .stub table { width: 100%; border-collapse: collapse; font-size: 0.875rem }
+      .stub caption { text-align: start; font-weight: 600; padding-block: 0.75rem }
+      .stub th, .stub td { border-bottom: 1px solid #e1edea; padding: 0.5rem 0.6rem; text-align: start; vertical-align: top }
+      .stub nav { font-size: 0.875rem; margin-bottom: 1.5rem }
     </style>
   </head>
   <body>
-    <nav><a href="${site}">rei-kit</a> › <a href="${site}#api">Components</a> › ${escape(component.name)}</nav>
+    <div id="app"><div class="stub">
+    <nav><a href="${site}">rei-kit</a> › <a href="${site}components">Components</a> › ${escape(component.name)}</nav>
     <h1>${escape(component.name)}</h1>
     <p>${escape(plain(component.summary))}</p>
     <p>
@@ -124,8 +151,8 @@ ${JSON.stringify(
       <code>import { ${escape(component.name)} } from '${escape(component.entry)}'</code>
     </p>
     <p>
-      <a href="${site}#api-${escape(component.name)}">Open ${escape(component.name)} in the live documentation</a>,
-      where every prop below is a control you can change, in four materials and ten palettes.
+      <a href="${site}components">Browse every component</a> in the live documentation, in four
+      materials and ten palettes.
     </p>
     ${example ? `<h2>Usage</h2>\n    <pre><code>${escape(example.ts)}</code></pre>` : ''}
     <h2>Props</h2>
@@ -142,6 +169,7 @@ ${JSON.stringify(
       <a href="https://www.npmjs.com/package/rei-kit">npm</a> ·
       <a href="https://github.com/ramazandogna/rei-kit">GitHub</a>
     </p>
+    </div></div>
   </body>
 </html>
 `
@@ -171,7 +199,18 @@ writeFileSync(
   ),
 )
 
-const urls = [site, ...catalogue.map((component) => `${site}c/${component.name}/`)]
+/* GitHub Pages serves 404.html for any path it has no file for, so a deep
+   link such as /themes boots the app from the shell and the router takes over. */
+writeFileSync(`${out}404.html`, readFileSync(shell, 'utf8'))
+
+const DOC_SLUGS = ['install', 'theming', 'motion', 'accessibility', 'performance', 'rtl', 'check']
+const urls = [
+  site,
+  `${site}components`,
+  `${site}themes`,
+  ...DOC_SLUGS.map((slug) => `${site}docs/${slug}`),
+  ...catalogue.map((component) => `${site}c/${component.name}/`),
+]
 writeFileSync(
   `${out}sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>

@@ -1,73 +1,166 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
+import {
+  MATERIALS,
+  PALETTES,
+  applyMaterial,
+  applyPalette,
+  applyTheme,
+  useMaterial,
+  usePalette,
+  useTheme,
+  useToast,
+} from '../src/index'
+import type { ThemePreference } from '../src/index'
 import { CommandMenu } from '../src/web/index'
-import catalogue from './props.generated.json'
-import { SECTIONS } from './sections'
-import { targetFor } from './targets'
+import { ENTRIES, ENTRY_LABEL, REPO, plain } from './catalog'
+import { DOC_PAGES } from './docs'
+import { seam } from './seam'
 
 /**
- * The page's own command menu, built from the kit's own component.
- *
- * The side menu is a list you read; this is a list you type at, and past
- * ninety components those are different problems. It is also the honest test
- * of `CommandMenu`: a demo that opens on a page of demos proves it renders,
- * while this one has to survive being the real way around a long document.
- *
- * Every entry goes to the same place the side menu sends it — both read
- * `targets.ts` — because two answers to "where is BaseModal" is one answer
- * too many.
- *
- * No row claims whether it has a demo. An earlier version labelled anything
- * outside a part list "props only", which was wrong for every component
- * demoed in a section that has not been split yet — `BaseDatePicker` has a
- * demo and was told it had none. A hint that is wrong is worse than no hint.
+ * ⌘K: pages, every component (jumping to /c/<Name>), the docs and their
+ * headings, and the three appearance axes as actions.
  */
-/** Open or closed. The header's button drives it; ⌘K does too. */
 const open = defineModel<boolean>({ default: false })
 
-const groups = computed(() => [
-  {
-    label: 'Sections',
-    items: SECTIONS.map((section) => ({
-      id: section.id,
-      label: section.label,
-      // A sub-entry's label is a component name, which the component groups
-      // below already carry. The section rows keep the page's own wording.
-      keywords: ['section'],
-    })),
-  },
-  ...['rei-kit', 'rei-kit/web', 'rei-kit/app', 'rei-kit/pwa', 'rei-kit/motion'].map((entry) => ({
-    label: entry,
-    items: catalogue
-      .filter((component) => component.entry === entry)
-      .map((component) => ({
-        id: targetFor(component.name),
-        label: component.name,
-        hint: component.summary,
-        // The one-line summary is searchable too, so "pick a date" finds the
-        // date picker without knowing it is called that.
-        keywords: [component.summary, entry],
+const router = useRouter()
+const material = useMaterial()
+const palette = usePalette()
+const theme = useTheme()
+const toast = useToast()
+
+const RECENT_KEY = 'rei-recent'
+function recent(): string[] {
+  try {
+    return JSON.parse(localStorage.getItem(RECENT_KEY) ?? '[]') as string[]
+  } catch {
+    return []
+  }
+}
+function remember(name: string) {
+  try {
+    const next = [name, ...recent().filter((n) => n !== name)].slice(0, 6)
+    localStorage.setItem(RECENT_KEY, JSON.stringify(next))
+  } catch {
+    // Storage refused: recents are a convenience.
+  }
+}
+
+const groups = computed(() => {
+  const recents = open.value
+    ? recent().flatMap((name) => {
+        const e = ENTRIES.find((x) => x.name === name)
+        return e ? [e] : []
+      })
+    : []
+
+  return [
+    {
+      label: 'Pages',
+      items: [
+        { id: 'go:/', label: 'Home', keywords: ['start', 'hero'] },
+        { id: 'go:/components', label: 'Components', keywords: ['catalog', 'all'] },
+        { id: 'go:/themes', label: 'Themes', keywords: ['materials', 'palettes'] },
+        { id: 'go:/docs', label: 'Docs', keywords: ['install', 'guide'] },
+      ],
+    },
+    {
+      label: 'Recent',
+      items: recents.map((e) => ({ id: `c:${e.name}`, label: e.name, hint: plain(e.summary) })),
+    },
+    {
+      label: 'Components',
+      items: ENTRIES.map((e) => ({
+        id: `c:${e.name}`,
+        label: e.name,
+        hint: plain(e.summary),
+        keywords: [e.summary, e.category, ENTRY_LABEL[e.entry] ?? e.entry],
       })),
-  })),
-])
+    },
+    {
+      label: 'Docs',
+      items: DOC_PAGES.flatMap((p) => [
+        { id: `doc:${p.slug}`, label: `Docs: ${p.title}`, keywords: [p.summary, 'install'] },
+        ...p.sections.map((s) => ({
+          id: `doc:${p.slug}#${s.id}`,
+          label: `${p.title}: ${s.label}`,
+        })),
+      ]),
+    },
+    {
+      label: 'Material',
+      items: MATERIALS.map((m) => ({ id: `mat:${m}`, label: `Use ${m}`, keywords: ['material'] })),
+    },
+    {
+      label: 'Palette',
+      items: PALETTES.map((p) => ({
+        id: `pal:${p.name}`,
+        label: `Use ${p.label}`,
+        keywords: ['palette', 'colour', 'color'],
+      })),
+    },
+    {
+      label: 'Mode',
+      items: [
+        { id: 'mode:light', label: 'Light', keywords: ['theme'] },
+        { id: 'mode:dark', label: 'Dark', keywords: ['theme', 'night'] },
+        { id: 'mode:system', label: 'System', keywords: ['theme', 'auto'] },
+      ],
+    },
+    {
+      label: 'Actions',
+      items: [
+        { id: 'act:rtl', label: 'Toggle right-to-left', keywords: ['rtl', 'direction'] },
+        { id: 'act:install', label: 'Copy install command', keywords: ['install', 'pnpm'] },
+        { id: 'act:github', label: 'Open GitHub', keywords: ['source', 'repo'] },
+        { id: 'act:npm', label: 'Open npm', keywords: ['package'] },
+      ],
+    },
+  ].filter((g) => g.items.length > 0)
+})
 
-function go(id: string) {
-  const el = document.getElementById(id)
-  if (!el) return
+async function onSelect(id: string) {
+  const at = id.indexOf(':')
+  const kind = id.slice(0, at)
+  const value = id.slice(at + 1)
 
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  el.setAttribute('tabindex', '-1')
-
-  /*
-   * After the dialog has put focus back, not before.
-   *
-   * A dialog returns focus to whatever opened it, which is correct and is
-   * also the last word — focusing the destination first simply loses. So
-   * this waits a frame, and the next Tab then starts from the section that
-   * was asked for rather than from the header button.
-   */
-  requestAnimationFrame(() => el.focus({ preventScroll: true }))
+  if (kind === 'go') void router.push(value)
+  else if (kind === 'c') {
+    remember(value)
+    void router.push(`/c/${value}`)
+  } else if (kind === 'doc') {
+    const [slug, hash] = value.split('#')
+    void router.push({ path: `/docs/${slug}`, hash: hash ? `#${hash}` : '' })
+  } else if (kind === 'mat') {
+    seam(() => {
+      material.value = value as (typeof MATERIALS)[number]
+      applyMaterial(value as (typeof MATERIALS)[number])
+    })
+  } else if (kind === 'pal') {
+    seam(() => {
+      palette.value = value
+      applyPalette(value)
+    })
+  } else if (kind === 'mode') {
+    seam(() => {
+      theme.value = value as ThemePreference
+      applyTheme(value as ThemePreference)
+    })
+  } else if (id === 'act:rtl') {
+    const root = document.documentElement
+    root.dir = root.dir === 'rtl' ? 'ltr' : 'rtl'
+  } else if (id === 'act:install') {
+    try {
+      await navigator.clipboard.writeText('pnpm add rei-kit')
+      toast.success('Copied')
+    } catch {
+      toast.danger('Could not copy')
+    }
+  } else if (id === 'act:github') window.open(REPO, '_blank', 'noopener')
+  else if (id === 'act:npm')
+    window.open('https://www.npmjs.com/package/rei-kit', '_blank', 'noopener')
 }
 </script>
 
@@ -76,9 +169,9 @@ function go(id: string) {
     v-model="open"
     :groups="groups"
     label="Find anything in the kit"
-    placeholder="Search components and sections…"
+    placeholder="Search components, docs and actions…"
     empty-label="Nothing matches that."
     hotkey="k"
-    @select="go"
+    @select="onSelect"
   />
 </template>

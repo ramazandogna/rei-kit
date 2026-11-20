@@ -147,8 +147,8 @@
   background:
     radial-gradient(circle at 18% 12%, var(--color-primary) 0 22%, transparent 22.3%),
     radial-gradient(circle at 88% 86%, var(--color-accent) 0 20%, transparent 20.3%),
-    radial-gradient(color-mix(in oklab, var(--color-ink) 22%, transparent) 1px, transparent 1.5px)
-      0 0 / 14px 14px,
+    radial-gradient(color-mix(in oklab, var(--color-ink) 22%, transparent) 1px, transparent 1.5px) 0
+      0 / 14px 14px,
     var(--color-canvas);
 }
 .prism-layer[data-material='soft'] {

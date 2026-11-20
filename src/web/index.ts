@@ -426,3 +426,22 @@ export type { NavLinkItem } from './NavLinks.vue'
  * ```
  */
 export { default as SkipLink } from './SkipLink.vue'
+/**
+ * A grid of differently sized cells, in reading order, one column on a phone.
+ *
+ * @example
+ * ```vue
+ * <BentoGrid><BentoCell :col="2" title="Fast" /><BentoCell title="Small" /></BentoGrid>
+ * ```
+ */
+export { default as BentoGrid } from './BentoGrid.vue'
+/**
+ * One cell of a `BentoGrid`: a card with a title, description, visual and
+ * footer that can span columns and rows.
+ *
+ * @example
+ * ```vue
+ * <BentoCell :col="2" title="Themes" description="Ten palettes." />
+ * ```
+ */
+export { default as BentoCell } from './BentoCell.vue'

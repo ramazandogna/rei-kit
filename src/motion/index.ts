@@ -68,3 +68,40 @@ export { default as BaseReveal } from './BaseReveal.vue'
  * ```
  */
 export { default as BaseMarquee } from './BaseMarquee.vue'
+/**
+ * A decorative backdrop for a hero: dots, grid, aurora, blobs or grain, from
+ * the palette, picked by the material when left on `auto`.
+ *
+ * @example
+ * ```vue
+ * <HeroBackdrop variant="aurora"><h1>Hello</h1></HeroBackdrop>
+ * ```
+ */
+export { default as HeroBackdrop } from './HeroBackdrop.vue'
+/**
+ * A card with a light that follows the pointer and lights its edge.
+ *
+ * @example
+ * ```vue
+ * <SpotlightCard><h3>Fast</h3></SpotlightCard>
+ * ```
+ */
+export { default as SpotlightCard } from './SpotlightCard.vue'
+/**
+ * A highlight that circles the border of whatever it wraps, then rests.
+ *
+ * @example
+ * ```vue
+ * <BorderBeam><BaseCard>Pro</BaseCard></BorderBeam>
+ * ```
+ */
+export { default as BorderBeam } from './BorderBeam.vue'
+/**
+ * A line between two elements with a pulse of light travelling along it.
+ *
+ * @example
+ * ```vue
+ * <AnimatedBeam :container="box" :from="a" :to="b" />
+ * ```
+ */
+export { default as AnimatedBeam } from './AnimatedBeam.vue'

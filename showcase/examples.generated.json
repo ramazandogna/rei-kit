@@ -5,6 +5,11 @@
     "js": "<script setup>\nimport { ActivityGrid, lastNDays, useToast } from 'rei-kit'\n\nconst toast = useToast()\nconst days = lastNDays(365)\n\n/** Four steps, so a busy day reads differently from a quiet one. */\nconst LEVELS = ['bg-muted', 'bg-primary/25', 'bg-primary/50', 'bg-primary/75', 'bg-primary']\n\nconst count = (key) => (key.charCodeAt(9) + key.charCodeAt(8)) % 5\n\nconst levelFor = (key) => LEVELS[count(key)]\nconst dayLabel = (key) => `${key}: ${count(key)} entries`\nconst isSelectable = (key) => count(key) > 0\n</script>\n\n<template>\n  <ActivityGrid\n    :days=\"days\"\n    label=\"Your year\"\n    :level-for=\"levelFor\"\n    :day-label=\"dayLabel\"\n    :is-selectable=\"isSelectable\"\n    @select=\"toast.info($event)\"\n  />\n</template>\n"
   },
   {
+    "name": "AnimatedBeam",
+    "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { AnimatedBeam } from 'rei-kit/motion'\n\nconst box = ref<HTMLElement | null>(null)\nconst a = ref<HTMLElement | null>(null)\nconst b = ref<HTMLElement | null>(null)\n</script>\n\n<template>\n  <div ref=\"box\" class=\"relative flex items-center justify-between px-6 py-10\">\n    <div ref=\"a\" class=\"surface rounded-control px-4 py-2 text-sm\">Source</div>\n    <div ref=\"b\" class=\"surface rounded-control px-4 py-2 text-sm\">Hub</div>\n    <AnimatedBeam :container=\"box\" :from=\"a\" :to=\"b\" :curvature=\"40\" />\n    <p class=\"sr-only\">Source sends data to Hub.</p>\n  </div>\n</template>\n",
+    "js": "<script setup>\nimport { ref } from 'vue'\nimport { AnimatedBeam } from 'rei-kit/motion'\n\nconst box = ref(null)\nconst a = ref(null)\nconst b = ref(null)\n</script>\n\n<template>\n  <div ref=\"box\" class=\"relative flex items-center justify-between px-6 py-10\">\n    <div ref=\"a\" class=\"surface rounded-control px-4 py-2 text-sm\">Source</div>\n    <div ref=\"b\" class=\"surface rounded-control px-4 py-2 text-sm\">Hub</div>\n    <AnimatedBeam :container=\"box\" :from=\"a\" :to=\"b\" :curvature=\"40\" />\n    <p class=\"sr-only\">Source sends data to Hub.</p>\n  </div>\n</template>\n"
+  },
+  {
     "name": "AnnounceHost",
     "ts": "<script setup lang=\"ts\">\nimport { AnnounceHost, BaseButton, useAnnounce } from 'rei-kit'\nimport { ref } from 'vue'\n\nconst { announce } = useAnnounce()\nconst count = ref(0)\n\nfunction filter() {\n  count.value = (count.value + 3) % 12\n  // Nothing on screen changed enough to say this, so it is said.\n  announce(`${count.value} results`)\n}\n</script>\n\n<template>\n  <div class=\"flex items-center gap-3\">\n    <!-- Rendered once per app. Nothing here is ever visible. -->\n    <AnnounceHost />\n\n    <BaseButton variant=\"secondary\" @click=\"filter\">Filter</BaseButton>\n    <span class=\"text-ink-soft text-sm\">{{ count }} results</span>\n  </div>\n</template>\n",
     "js": "<script setup>\nimport { AnnounceHost, BaseButton, useAnnounce } from 'rei-kit'\nimport { ref } from 'vue'\n\nconst { announce } = useAnnounce()\nconst count = ref(0)\n\nfunction filter() {\n  count.value = (count.value + 3) % 12\n  // Nothing on screen changed enough to say this, so it is said.\n  announce(`${count.value} results`)\n}\n</script>\n\n<template>\n  <div class=\"flex items-center gap-3\">\n    <!-- Rendered once per app. Nothing here is ever visible. -->\n    <AnnounceHost />\n\n    <BaseButton variant=\"secondary\" @click=\"filter\">Filter</BaseButton>\n    <span class=\"text-ink-soft text-sm\">{{ count }} results</span>\n  </div>\n</template>\n"
@@ -260,6 +265,21 @@
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { BaseTree } from 'rei-kit/web'\n\nconst nodes = [\n  {\n    key: 'src',\n    label: 'src',\n    children: [\n      { key: 'index', label: 'index.ts' },\n      {\n        key: 'components',\n        label: 'components',\n        children: [{ key: 'button', label: 'Button.vue' }],\n      },\n    ],\n  },\n  { key: 'readme', label: 'README.md' },\n]\n\nconst open = ref(['src'])\nconst chosen = ref('index')\n</script>\n\n<template>\n  <BaseTree v-model=\"chosen\" v-model:expanded=\"open\" :nodes=\"nodes\" label=\"Files\" />\n</template>\n"
   },
   {
+    "name": "BentoCell",
+    "ts": "<script setup lang=\"ts\">\nimport { BentoCell, BentoGrid } from 'rei-kit/web'\n</script>\n\n<template>\n  <BentoGrid :columns=\"2\" row-height=\"9rem\" as=\"ul\">\n    <BentoCell :row=\"2\" title=\"Tall cell\" description=\"Spans two rows.\">\n      <template #visual><div class=\"bg-muted rounded-control h-full\" /></template>\n    </BentoCell>\n    <BentoCell title=\"Plain\" description=\"One cell.\" />\n    <BentoCell title=\"With footer\">\n      <template #footer><span class=\"text-ink-soft text-xs\">Footer</span></template>\n    </BentoCell>\n  </BentoGrid>\n</template>\n",
+    "js": "<script setup>\nimport { BentoCell, BentoGrid } from 'rei-kit/web'\n</script>\n\n<template>\n  <BentoGrid :columns=\"2\" row-height=\"9rem\" as=\"ul\">\n    <BentoCell :row=\"2\" title=\"Tall cell\" description=\"Spans two rows.\">\n      <template #visual><div class=\"bg-muted rounded-control h-full\" /></template>\n    </BentoCell>\n    <BentoCell title=\"Plain\" description=\"One cell.\" />\n    <BentoCell title=\"With footer\">\n      <template #footer><span class=\"text-ink-soft text-xs\">Footer</span></template>\n    </BentoCell>\n  </BentoGrid>\n</template>\n"
+  },
+  {
+    "name": "BentoGrid",
+    "ts": "<script setup lang=\"ts\">\nimport { BentoCell, BentoGrid } from 'rei-kit/web'\n</script>\n\n<template>\n  <BentoGrid :columns=\"3\" row-height=\"8rem\">\n    <BentoCell :col=\"2\" title=\"Four materials\" description=\"Quiet, glass, brutal and soft.\" />\n    <BentoCell title=\"Ten palettes\" description=\"Light and dark.\" />\n    <BentoCell title=\"Accessible\" description=\"Keyboard and screen reader first.\" />\n    <BentoCell :col=\"2\" interactive title=\"No dependencies\" description=\"Vue and Tailwind only.\" />\n  </BentoGrid>\n</template>\n",
+    "js": "<script setup>\nimport { BentoCell, BentoGrid } from 'rei-kit/web'\n</script>\n\n<template>\n  <BentoGrid :columns=\"3\" row-height=\"8rem\">\n    <BentoCell :col=\"2\" title=\"Four materials\" description=\"Quiet, glass, brutal and soft.\" />\n    <BentoCell title=\"Ten palettes\" description=\"Light and dark.\" />\n    <BentoCell title=\"Accessible\" description=\"Keyboard and screen reader first.\" />\n    <BentoCell :col=\"2\" interactive title=\"No dependencies\" description=\"Vue and Tailwind only.\" />\n  </BentoGrid>\n</template>\n"
+  },
+  {
+    "name": "BorderBeam",
+    "ts": "<script setup lang=\"ts\">\nimport { BorderBeam } from 'rei-kit/motion'\n</script>\n\n<template>\n  <BorderBeam radius=\"card\">\n    <div class=\"surface rounded-card p-5\">\n      <p class=\"text-ink text-sm font-medium\">A highlight circles the edge, then rests.</p>\n    </div>\n  </BorderBeam>\n</template>\n",
+    "js": "<script setup>\nimport { BorderBeam } from 'rei-kit/motion'\n</script>\n\n<template>\n  <BorderBeam radius=\"card\">\n    <div class=\"surface rounded-card p-5\">\n      <p class=\"text-ink text-sm font-medium\">A highlight circles the edge, then rests.</p>\n    </div>\n  </BorderBeam>\n</template>\n"
+  },
+  {
     "name": "CircularProgress",
     "ts": "<script setup lang=\"ts\">\nimport { CircularProgress } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <CircularProgress :value=\"72\" label=\"Upload\" show-value size=\"lg\" />\n    <CircularProgress label=\"Loading\" />\n  </div>\n</template>\n",
     "js": "<script setup>\nimport { CircularProgress } from 'rei-kit'\n</script>\n\n<template>\n  <div class=\"flex items-center gap-4\">\n    <CircularProgress :value=\"72\" label=\"Upload\" show-value size=\"lg\" />\n    <CircularProgress label=\"Loading\" />\n  </div>\n</template>\n"
@@ -338,6 +358,11 @@
     "name": "GoogleButton",
     "ts": "<script setup lang=\"ts\">\nimport { GoogleButton } from 'rei-kit'\n\nfunction signInWithGoogle() {\n  // …\n}\n</script>\n\n<template>\n  <GoogleButton label=\"Continue with Google\" @click=\"signInWithGoogle\" />\n</template>\n",
     "js": "<script setup>\nimport { GoogleButton } from 'rei-kit'\n\nfunction signInWithGoogle() {\n  // …\n}\n</script>\n\n<template>\n  <GoogleButton label=\"Continue with Google\" @click=\"signInWithGoogle\" />\n</template>\n"
+  },
+  {
+    "name": "HeroBackdrop",
+    "ts": "<script setup lang=\"ts\">\nimport { HeroBackdrop } from 'rei-kit/motion'\n</script>\n\n<template>\n  <HeroBackdrop variant=\"auto\" class=\"rounded-card px-6 py-16 text-center\">\n    <h2 class=\"text-ink text-2xl font-semibold\">Change one attribute</h2>\n    <p class=\"text-ink-soft mt-2 text-sm\">The backdrop follows the material.</p>\n  </HeroBackdrop>\n</template>\n",
+    "js": "<script setup>\nimport { HeroBackdrop } from 'rei-kit/motion'\n</script>\n\n<template>\n  <HeroBackdrop variant=\"auto\" class=\"rounded-card px-6 py-16 text-center\">\n    <h2 class=\"text-ink text-2xl font-semibold\">Change one attribute</h2>\n    <p class=\"text-ink-soft mt-2 text-sm\">The backdrop follows the material.</p>\n  </HeroBackdrop>\n</template>\n"
   },
   {
     "name": "InstallPrompt",
@@ -458,6 +483,11 @@
     "name": "SliderField",
     "ts": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { SliderField } from 'rei-kit'\n\nconst opacity = ref(40)\n</script>\n\n<template>\n  <SliderField\n    v-model=\"opacity\"\n    label=\"Opacity\"\n    :min=\"0\"\n    :max=\"100\"\n    :step=\"5\"\n    decrement-label=\"Less opaque\"\n    increment-label=\"More opaque\"\n    :format=\"(value) => `${value}%`\"\n    hint=\"Drag for roughly right, type for exactly right.\"\n  />\n</template>\n",
     "js": "<script setup>\nimport { ref } from 'vue'\nimport { SliderField } from 'rei-kit'\n\nconst opacity = ref(40)\n</script>\n\n<template>\n  <SliderField\n    v-model=\"opacity\"\n    label=\"Opacity\"\n    :min=\"0\"\n    :max=\"100\"\n    :step=\"5\"\n    decrement-label=\"Less opaque\"\n    increment-label=\"More opaque\"\n    :format=\"(value) => `${value}%`\"\n    hint=\"Drag for roughly right, type for exactly right.\"\n  />\n</template>\n"
+  },
+  {
+    "name": "SpotlightCard",
+    "ts": "<script setup lang=\"ts\">\nimport { SpotlightCard } from 'rei-kit/motion'\n</script>\n\n<template>\n  <SpotlightCard>\n    <h3 class=\"text-ink font-semibold\">Move over me</h3>\n    <p class=\"text-ink-soft mt-1 text-sm\">A light follows the pointer and lights the edge.</p>\n  </SpotlightCard>\n</template>\n",
+    "js": "<script setup>\nimport { SpotlightCard } from 'rei-kit/motion'\n</script>\n\n<template>\n  <SpotlightCard>\n    <h3 class=\"text-ink font-semibold\">Move over me</h3>\n    <p class=\"text-ink-soft mt-1 text-sm\">A light follows the pointer and lights the edge.</p>\n  </SpotlightCard>\n</template>\n"
   },
   {
     "name": "StatCard",

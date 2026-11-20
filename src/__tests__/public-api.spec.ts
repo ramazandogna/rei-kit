@@ -163,6 +163,8 @@ const PUBLIC_API = [
 
 /** `rei-kit/web` — a wide site with a header and a mouse. */
 const WEB_API = [
+  'BentoCell',
+  'BentoGrid',
   'BaseAccordion',
   'BaseBreadcrumb',
   'BaseContextMenu',
@@ -227,7 +229,11 @@ const SUPABASE_API = [
 
 /** `rei-kit/motion` — numbers that count, words that change. */
 const MOTION_API = [
+  'AnimatedBeam',
   'BaseMarquee',
+  'BorderBeam',
+  'HeroBackdrop',
+  'SpotlightCard',
   'BaseReveal',
   'CountUp',
   'NumberTicker',

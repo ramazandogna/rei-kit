@@ -56,6 +56,104 @@
     ]
   },
   {
+    "name": "AnimatedBeam",
+    "entry": "rei-kit/motion",
+    "summary": "",
+    "props": [
+      {
+        "name": "container",
+        "required": false,
+        "type": "Target",
+        "description": "The positioned element the line is drawn over.",
+        "default": "null"
+      },
+      {
+        "name": "from",
+        "required": false,
+        "type": "Target",
+        "description": "Where the line starts.",
+        "default": "null"
+      },
+      {
+        "name": "to",
+        "required": false,
+        "type": "Target",
+        "description": "Where the line ends.",
+        "default": "null"
+      },
+      {
+        "name": "curvature",
+        "required": false,
+        "type": "number",
+        "description": "Sideways bend of the line in px; negative bends the other way.",
+        "default": "0"
+      },
+      {
+        "name": "fromOffset",
+        "required": false,
+        "type": "{ x: number; y: number }",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "toOffset",
+        "required": false,
+        "type": "{ x: number; y: number }",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "tone",
+        "required": false,
+        "type": "'primary' | 'accent' | 'positive' | 'warning' | 'negative' | 'ink'",
+        "description": "",
+        "default": "'primary'"
+      },
+      {
+        "name": "width",
+        "required": false,
+        "type": "number",
+        "description": "Line thickness in px.",
+        "default": "2"
+      },
+      {
+        "name": "duration",
+        "required": false,
+        "type": "number",
+        "description": "Seconds per pass.",
+        "default": "3"
+      },
+      {
+        "name": "delay",
+        "required": false,
+        "type": "number",
+        "description": "Seconds before the first pass.",
+        "default": "0"
+      },
+      {
+        "name": "reverse",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "loop",
+        "required": false,
+        "type": "boolean",
+        "description": "Keep going. Off, two passes and a resting pulse.",
+        "default": "false"
+      },
+      {
+        "name": "paused",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      }
+    ]
+  },
+  {
     "name": "AnnounceHost",
     "entry": "rei-kit",
     "summary": "The two live regions `announce()` speaks through. Render one per app, anywhere — nothing here is ever visible.",
@@ -2203,6 +2301,160 @@
     ]
   },
   {
+    "name": "BentoCell",
+    "entry": "rei-kit/web",
+    "summary": "One cell of a `BentoGrid`: a card that can span columns and rows, with a title, a description, a visual that takes the room left, and a footer.",
+    "props": [
+      {
+        "name": "col",
+        "required": false,
+        "type": "1 | 2 | 3 | 4",
+        "description": "Columns to span, 1 to 4. Clamped to the grid's.",
+        "default": "1"
+      },
+      {
+        "name": "row",
+        "required": false,
+        "type": "1 | 2 | 3",
+        "description": "Rows to span, 1 to 3.",
+        "default": "1"
+      },
+      {
+        "name": "title",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "description",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "undefined"
+      },
+      {
+        "name": "titleLevel",
+        "required": false,
+        "type": "2 | 3 | 4 | 5 | 6",
+        "description": "Heading level for the title, 2 to 6.",
+        "default": "3"
+      },
+      {
+        "name": "interactive",
+        "required": false,
+        "type": "boolean",
+        "description": "Lift on hover.",
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "BentoGrid",
+    "entry": "rei-kit/web",
+    "summary": "A grid of cells of different sizes, for a page that wants to show several things at once without making them all the same shape.",
+    "props": [
+      {
+        "name": "columns",
+        "required": false,
+        "type": "2 | 3 | 4",
+        "description": "Columns on a wide screen.",
+        "default": "4"
+      },
+      {
+        "name": "rowHeight",
+        "required": false,
+        "type": "string",
+        "description": "Height of one row; a cell with `row=\"2\"` is twice this plus a gap.",
+        "default": "'11rem'"
+      },
+      {
+        "name": "gap",
+        "required": false,
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "",
+        "default": "'md'"
+      },
+      {
+        "name": "as",
+        "required": false,
+        "type": "'div' | 'ul'",
+        "description": "`ul` makes the grid a list and each cell a list item.",
+        "default": "'div'"
+      }
+    ]
+  },
+  {
+    "name": "BorderBeam",
+    "entry": "rei-kit/motion",
+    "summary": "A highlight that travels once around the edge of whatever it wraps.",
+    "props": [
+      {
+        "name": "duration",
+        "required": false,
+        "type": "number",
+        "description": "Seconds per turn.",
+        "default": "6"
+      },
+      {
+        "name": "width",
+        "required": false,
+        "type": "number",
+        "description": "Ring thickness in px.",
+        "default": "1.5"
+      },
+      {
+        "name": "from",
+        "required": false,
+        "type": "'primary' | 'accent' | 'positive' | 'warning' | 'negative' | 'ink'",
+        "description": "",
+        "default": "'primary'"
+      },
+      {
+        "name": "to",
+        "required": false,
+        "type": "'primary' | 'accent' | 'positive' | 'warning' | 'negative' | 'ink'",
+        "description": "",
+        "default": "'accent'"
+      },
+      {
+        "name": "radius",
+        "required": false,
+        "type": "'control' | 'card' | 'shell'",
+        "description": "",
+        "default": "'card'"
+      },
+      {
+        "name": "loop",
+        "required": false,
+        "type": "boolean",
+        "description": "Keep circling. Off, two turns and a resting highlight.",
+        "default": "false"
+      },
+      {
+        "name": "paused",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "reverse",
+        "required": false,
+        "type": "boolean",
+        "description": "",
+        "default": "false"
+      },
+      {
+        "name": "as",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'div'"
+      }
+    ]
+  },
+  {
     "name": "CircularProgress",
     "entry": "rei-kit",
     "summary": "Progress as a ring — for a small space, a card's corner, a goal.",
@@ -2878,6 +3130,55 @@
         "type": "boolean",
         "description": "Greyed out and unclickable while a sign-in is already in flight. A real prop rather than a fallthrough attribute: the button needs to look disabled as well as be it, and a bare `disabled` landing on the element by itself gets the second half only.",
         "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "HeroBackdrop",
+    "entry": "rei-kit/motion",
+    "summary": "A decorative field behind a hero: dots, a grid, a soft aurora, blobs or grain, built only from the active palette so it follows the palette, dark mode and material without being told.",
+    "props": [
+      {
+        "name": "variant",
+        "required": false,
+        "type": "'auto' | 'dots' | 'grid' | 'aurora' | 'blobs' | 'noise'",
+        "description": "The pattern. `auto` follows the nearest `data-material`.",
+        "default": "'auto'"
+      },
+      {
+        "name": "intensity",
+        "required": false,
+        "type": "'subtle' | 'bold'",
+        "description": "",
+        "default": "'subtle'"
+      },
+      {
+        "name": "animate",
+        "required": false,
+        "type": "boolean",
+        "description": "Let aurora and blobs drift. Off, every variant is a still frame.",
+        "default": "true"
+      },
+      {
+        "name": "loop",
+        "required": false,
+        "type": "boolean",
+        "description": "Keep drifting. Off, the drift plays one cycle and rests.",
+        "default": "false"
+      },
+      {
+        "name": "fade",
+        "required": false,
+        "type": "'none' | 'bottom' | 'radial'",
+        "description": "How the edges dissolve into the page.",
+        "default": "'radial'"
+      },
+      {
+        "name": "as",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'div'"
       }
     ]
   },
@@ -3858,6 +4159,48 @@
         "type": "((value: number) => string)",
         "description": "Turns the number into something a person would say — \"45 minutes\", \"₺12\". The slider's readout is the number field here, so this is only what a screen reader hears for the slider: `aria-valuetext`, which without it is a bare number and a bare number is not an answer to anything.",
         "default": ""
+      }
+    ]
+  },
+  {
+    "name": "SpotlightCard",
+    "entry": "rei-kit/motion",
+    "summary": "A card with a soft light that follows the pointer, and lights its own edge.",
+    "props": [
+      {
+        "name": "as",
+        "required": false,
+        "type": "string",
+        "description": "",
+        "default": "'div'"
+      },
+      {
+        "name": "size",
+        "required": false,
+        "type": "number",
+        "description": "Radius of the light in px.",
+        "default": "320"
+      },
+      {
+        "name": "intensity",
+        "required": false,
+        "type": "number",
+        "description": "Strength of the glow, 0 to 1. The edge ring is three times this.",
+        "default": "0.14"
+      },
+      {
+        "name": "border",
+        "required": false,
+        "type": "boolean",
+        "description": "Light the card's border as well as its face.",
+        "default": "true"
+      },
+      {
+        "name": "padding",
+        "required": false,
+        "type": "'none' | 'sm' | 'md' | 'lg'",
+        "description": "Room around the contents, on `BaseCard`'s scale.",
+        "default": "'md'"
       }
     ]
   },

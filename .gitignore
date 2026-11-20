@@ -27,3 +27,6 @@ playwright-report
 # Kept out of the published repository, maintained in the working copy
 AGENTS.md
 ROADMAP.md
+
+# Team workspace (private: maps, reports, screenshots)
+.team/

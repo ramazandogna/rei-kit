@@ -218,7 +218,17 @@ const API_COLS = [col('name', 'Name'), col('payload', 'Payload'), col('descripti
 }
 .cpage-title {
   view-transition-name: page-title;
-  width: fit-content;
+  max-width: 100%;
+  /* Long names (BaseCheckboxGroup, ResponsiveDialog) must never push the
+     page sideways on a phone. */
+  font-size: clamp(1.75rem, 8vw, var(--site-text-h1));
+  overflow-wrap: anywhere;
+}
+.cpage-head :deep(nav) {
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
 }
 .cpage-meta {
   display: flex;
@@ -234,7 +244,33 @@ const API_COLS = [col('name', 'Name'), col('payload', 'Payload'), col('descripti
   border-radius: var(--radius-control);
   padding: 4px 4px 4px 12px;
   font-size: var(--site-text-sm);
+  white-space: nowrap;
   overflow-x: auto;
+  scrollbar-width: none;
+}
+@media (max-width: 39.99rem) {
+  .cpage {
+    gap: 32px;
+    padding-top: 16px;
+  }
+  .cpage-import {
+    display: flex;
+    width: 100%;
+    font-size: var(--site-text-xs);
+  }
+  .cpage-import > :first-child {
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .cpage-pn {
+    grid-template-columns: 1fr;
+  }
+  .cpage-keys th,
+  .cpage-keys td {
+    padding-right: 10px;
+  }
 }
 .cpage-source {
   font-size: var(--site-text-xs);

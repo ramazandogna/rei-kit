@@ -23,7 +23,7 @@ const entry = computed(() => catalogue.find((c) => c.name === name))
     </summary>
 
     <div class="mt-3 overflow-x-auto">
-      <table class="w-full text-left text-xs">
+      <table class="ptable w-full text-left text-xs">
         <thead class="text-ink-soft">
           <tr>
             <th class="py-1.5 pr-4 font-medium">Prop</th>
@@ -42,11 +42,11 @@ const entry = computed(() => catalogue.find((c) => c.name === name))
               {{ prop.name
               }}<span v-if="prop.required" class="text-negative" title="required">*</span>
             </td>
-            <td class="text-ink-soft py-1.5 pr-4 font-mono">{{ prop.type }}</td>
-            <td class="text-ink-soft py-1.5 pr-4 font-mono whitespace-nowrap">
+            <td class="text-ink-soft py-1.5 pr-4 font-mono" data-label="Type">{{ prop.type }}</td>
+            <td class="text-ink-soft py-1.5 pr-4 font-mono whitespace-nowrap" data-label="Default">
               {{ prop.default || '—' }}
             </td>
-            <td class="text-ink-soft max-w-[38ch] py-1.5 leading-relaxed">
+            <td class="text-ink-soft max-w-[38ch] py-1.5 leading-relaxed" data-label="Note">
               {{ prop.description || '—' }}
             </td>
           </tr>
@@ -58,3 +58,41 @@ const entry = computed(() => catalogue.find((c) => c.name === name))
     </div>
   </details>
 </template>
+
+<style scoped>
+/* A four-column table on a phone is four slivers of text. Under 40rem each
+   prop becomes a small card: the name as its heading, the rest labelled. */
+@media (max-width: 39.99rem) {
+  .ptable thead {
+    display: none;
+  }
+  .ptable,
+  .ptable tbody,
+  .ptable tr,
+  .ptable td {
+    display: block;
+    width: 100%;
+    max-width: none;
+  }
+  .ptable tr {
+    padding: 12px 0;
+  }
+  .ptable td {
+    padding: 2px 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .ptable td:first-child {
+    font-size: 0.875rem;
+    padding-bottom: 6px;
+  }
+  .ptable td[data-label]::before {
+    content: attr(data-label);
+    display: inline-block;
+    min-width: 4.5rem;
+    color: var(--color-ink-soft);
+    opacity: 0.7;
+    font-family: var(--font-sans, system-ui);
+  }
+}
+</style>

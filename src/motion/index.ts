@@ -11,8 +11,6 @@
  * ```vue
  * <NumberTicker :value="balance" :format="{ style: 'currency', currency: 'TRY' }" />
  * ```
- *
- * @see {@link CountUp} — the near-neighbour this is mistaken for
  */
 export { default as NumberTicker } from './NumberTicker.vue'
 /**
@@ -22,8 +20,6 @@ export { default as NumberTicker } from './NumberTicker.vue'
  * ```vue
  * <CountUp :value="12480" />
  * ```
- *
- * @see {@link NumberTicker} — the near-neighbour this is mistaken for
  */
 export { default as CountUp } from './CountUp.vue'
 /**
@@ -74,7 +70,10 @@ export { default as BaseMarquee } from './BaseMarquee.vue'
  *
  * @example
  * ```vue
- * <HeroBackdrop variant="aurora"><h1>Hello</h1></HeroBackdrop>
+ * <HeroBackdrop variant="auto" class="rounded-card px-6 py-16 text-center">
+ *   <h2 class="text-ink text-2xl font-semibold">Change one attribute</h2>
+ *   <p class="text-ink-soft mt-2 text-sm">The backdrop follows the material.</p>
+ * </HeroBackdrop>
  * ```
  */
 export { default as HeroBackdrop } from './HeroBackdrop.vue'
@@ -83,7 +82,10 @@ export { default as HeroBackdrop } from './HeroBackdrop.vue'
  *
  * @example
  * ```vue
- * <SpotlightCard><h3>Fast</h3></SpotlightCard>
+ * <SpotlightCard>
+ *   <h3 class="text-ink font-semibold">Move over me</h3>
+ *   <p class="text-ink-soft mt-1 text-sm">A light follows the pointer and lights the edge.</p>
+ * </SpotlightCard>
  * ```
  */
 export { default as SpotlightCard } from './SpotlightCard.vue'
@@ -92,7 +94,11 @@ export { default as SpotlightCard } from './SpotlightCard.vue'
  *
  * @example
  * ```vue
- * <BorderBeam><BaseCard>Pro</BaseCard></BorderBeam>
+ * <BorderBeam radius="card">
+ *   <div class="surface rounded-card p-5">
+ *     <p class="text-ink text-sm font-medium">A highlight circles the edge, then rests.</p>
+ *   </div>
+ * </BorderBeam>
  * ```
  */
 export { default as BorderBeam } from './BorderBeam.vue'
@@ -101,7 +107,12 @@ export { default as BorderBeam } from './BorderBeam.vue'
  *
  * @example
  * ```vue
- * <AnimatedBeam :container="box" :from="a" :to="b" />
+ * <div ref="box" class="relative flex items-center justify-between px-6 py-10">
+ *   <div ref="a" class="surface rounded-control px-4 py-2 text-sm">Source</div>
+ *   <div ref="b" class="surface rounded-control px-4 py-2 text-sm">Hub</div>
+ *   <AnimatedBeam :container="box" :from="a" :to="b" :curvature="40" />
+ *   <p class="sr-only">Source sends data to Hub.</p>
+ * </div>
  * ```
  */
 export { default as AnimatedBeam } from './AnimatedBeam.vue'
@@ -111,7 +122,10 @@ export { default as AnimatedBeam } from './AnimatedBeam.vue'
  *
  * @example
  * ```vue
- * <TiltCard><h3>Pro</h3></TiltCard>
+ * <TiltCard>
+ *   <h3 class="text-ink font-semibold">Lean in</h3>
+ *   <p class="text-ink-soft mt-1 text-sm">Hover to tilt. Focus lifts it instead.</p>
+ * </TiltCard>
  * ```
  */
 export { default as TiltCard } from './TiltCard.vue'

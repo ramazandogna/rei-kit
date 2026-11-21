@@ -109,11 +109,11 @@ onBeforeUnmount(() => stop?.())
     transparent
   );
   mask:
-    linear-gradient(#000 0 0) content-box exclude,
-    linear-gradient(#000 0 0);
+    linear-gradient(black 0 0) content-box exclude,
+    linear-gradient(black 0 0);
   -webkit-mask:
-    linear-gradient(#000 0 0) content-box xor,
-    linear-gradient(#000 0 0);
+    linear-gradient(black 0 0) content-box xor,
+    linear-gradient(black 0 0);
   animation: bb-spin var(--bb-dur) linear 2 forwards;
 }
 

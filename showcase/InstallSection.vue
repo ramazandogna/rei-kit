@@ -11,7 +11,7 @@ const CSS = `@import 'tailwindcss';
 
 const TS = `<script setup lang="ts">
 import { BaseButton, BaseCard } from 'rei-kit'
-<\/script>
+${'<'}/script>
 
 <template>
   <BaseCard>

@@ -60,6 +60,7 @@ export type {
   CommandItem,
   Crumb,
   DataColumn,
+  DockItem,
   MegaMenuColumn,
   MegaMenuItem,
   MegaMenuLink,

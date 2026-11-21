@@ -66,7 +66,7 @@
   {
     "name": "AnimatedBeam",
     "entry": "rei-kit/motion",
-    "summary": "",
+    "summary": "A line between two elements with a pulse of light travelling along it.",
     "slots": [],
     "emits": [],
     "props": [
@@ -3603,7 +3603,7 @@
   {
     "name": "Dock",
     "entry": "rei-kit/web",
-    "summary": "",
+    "summary": "A floating toolbar of icon buttons that swell toward the pointer.",
     "slots": [
       {
         "name": "item",
@@ -4157,7 +4157,7 @@
   {
     "name": "LineChart",
     "entry": "rei-kit",
-    "summary": "",
+    "summary": "A line or area chart for a few series over the same labels, with a table behind it for screen readers.",
     "slots": [
       {
         "name": "tooltip",
@@ -4851,7 +4851,7 @@
   {
     "name": "PricingCard",
     "entry": "rei-kit",
-    "summary": "",
+    "summary": "A row of pricing plans with a monthly and yearly toggle; one plan can be marked as the one to pick.",
     "slots": [
       {
         "name": "plan",
@@ -5461,7 +5461,7 @@
   {
     "name": "Sparkline",
     "entry": "rei-kit",
-    "summary": "",
+    "summary": "A tiny inline trend line that sits next to a number.",
     "slots": [],
     "emits": [],
     "props": [

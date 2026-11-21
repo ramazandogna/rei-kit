@@ -37,6 +37,7 @@ interface Series {
   tone?: Tone | undefined
 }
 
+/** A line or area chart for a few series over the same labels, with a table behind it for screen readers. */
 const {
   series,
   labels,
@@ -401,7 +402,7 @@ const tipFlip = computed(() => tipLeft.value > width.value / 2)
       </caption>
       <thead>
         <tr>
-          <th scope="col" />
+          <th scope="col"><span class="sr-only">Label</span></th>
           <th v-for="s in series" :key="s.name" scope="col">{{ s.name }}</th>
         </tr>
       </thead>

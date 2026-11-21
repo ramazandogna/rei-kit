@@ -22,6 +22,7 @@ import { formatNumber } from '../utils/format'
  */
 type Tone = 'primary' | 'accent' | 'positive' | 'warning' | 'negative' | 'ink'
 
+/** A tiny inline trend line that sits next to a number. */
 const {
   values,
   label,

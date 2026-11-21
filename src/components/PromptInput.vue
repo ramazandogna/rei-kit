@@ -151,7 +151,7 @@ function keydown(event: KeyboardEvent) {
   gap: 0.5rem;
   padding: 0.5rem;
 }
-.pi-box:focus-within {
+.pi-box:has(.pi-area:focus-visible) {
   outline: 2px solid var(--color-primary);
   outline-offset: 1px;
 }

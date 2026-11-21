@@ -35,6 +35,7 @@ import { nextFrame, prefersReducedMotion, watchVisibility } from './environment'
  */
 type Target = HTMLElement | ComponentPublicInstance | null
 
+/** A line between two elements with a pulse of light travelling along it. */
 const {
   container = null,
   from = null,

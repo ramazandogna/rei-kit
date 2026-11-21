@@ -38,6 +38,7 @@ interface Plan {
 }
 type Period = 'monthly' | 'yearly'
 
+/** A row of pricing plans with a monthly and yearly toggle; one plan can be marked as the one to pick. */
 const {
   plans,
   label,

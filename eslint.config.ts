@@ -16,7 +16,7 @@ export default defineConfigWithVueTs(
     files: ['**/*.{vue,ts,mts,tsx}'],
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/dist-showcase/**', '**/coverage/**']),
+  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/dist-showcase/**', '**/coverage/**', '.team/**']),
 
   ...pluginVue.configs['flat/recommended'],
   vueTsConfigs.recommended,
@@ -59,6 +59,9 @@ export default defineConfigWithVueTs(
       // compiler did not already know — it only pushes `= undefined` into every
       // destructure, which is noise.
       'vue/require-default-prop': 'off',
+      // Dock and Sparkline are the established names for these patterns;
+      // neither collides with an HTML element.
+      'vue/multi-word-component-names': ['error', { ignores: ['Dock', 'Sparkline'] }],
     },
   },
 

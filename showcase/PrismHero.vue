@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import {
@@ -80,7 +80,65 @@ function pct(event: PointerEvent | MouseEvent) {
     : ((event.clientX - r.left) / r.width) * 100
 }
 
+/* The tour: once the intro has played, the seams glide on their own so each
+   material takes the stage in turn — no dragging needed, which is what a
+   phone needs, since a vertical drag there is the page scrolling. It has a
+   pause button (WCAG 2.2.2), stops for good the moment the reader takes a
+   seam, and never starts under reduced motion. */
+const TOUR = [
+  [58, 72, 86],
+  [14, 72, 86],
+  [14, 28, 86],
+  [14, 28, 42],
+  [25, 50, 75],
+]
+const playing = ref(false)
+let tourStep = 0
+let tourTimer: ReturnType<typeof setInterval> | undefined
+let tourStart: ReturnType<typeof setTimeout> | undefined
+function tourTick() {
+  if (typeof document !== 'undefined' && document.hidden) return
+  const el = stage.value
+  if (!el) return
+  el.classList.add('is-auto')
+  pos.value = [...TOUR[tourStep % TOUR.length]!]
+  tourStep++
+  paint()
+}
+function play() {
+  if (tourTimer) return
+  playing.value = true
+  tourTick()
+  tourTimer = setInterval(tourTick, 2600)
+}
+function pause() {
+  playing.value = false
+  if (tourTimer) clearInterval(tourTimer)
+  tourTimer = undefined
+}
+function toggleTour() {
+  if (playing.value) pause()
+  else play()
+}
+function takeOver() {
+  if (tourStart) clearTimeout(tourStart)
+  pause()
+  stage.value?.classList.remove('is-auto')
+}
+onMounted(() => {
+  if (reduceMotion()) return
+  tourStart = setTimeout(play, rest.value ? 900 : 3200)
+})
+onBeforeUnmount(() => {
+  if (tourStart) clearTimeout(tourStart)
+  pause()
+})
+
 function down(i: number, event: PointerEvent) {
+  /* A finger on a phone is scrolling the page, not grabbing a seam. */
+  if (event.pointerType === 'touch') return
+  event.preventDefault()
+  takeOver()
   dragging.value = i + 1
   ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
 }
@@ -101,6 +159,7 @@ function key(i: number, event: KeyboardEvent) {
   else if (k === 'End') next = 200
   if (next === undefined) return
   event.preventDefault()
+  takeOver()
   setSeam(i, next)
 }
 function reset() {
@@ -193,7 +252,7 @@ const count = computed(() => ENTRIES.length)
         </div>
         <RouterLink to="/components" class="prism-link focus-ring">Browse components →</RouterLink>
       </div>
-      <p class="prism-hint">Drag a seam ↔ · ⌘K to search</p>
+      <p class="prism-hint">Tap a strip to wear it · ⌘K to search</p>
     </div>
 
     <div class="prism-wrap">
@@ -225,7 +284,7 @@ const count = computed(() => ENTRIES.length)
           aria-valuemin="8"
           aria-valuemax="92"
           :aria-valuenow="Math.round(pos[i]!)"
-          @pointerdown.prevent="down(i, $event)"
+          @pointerdown="down(i, $event)"
           @pointermove="move(i, $event)"
           @pointerup="up"
           @pointercancel="up"
@@ -233,6 +292,17 @@ const count = computed(() => ENTRIES.length)
           @dblclick="reset"
         />
       </figure>
+
+      <button
+        type="button"
+        class="prism-play focus-ring"
+        :aria-pressed="!playing"
+        :aria-label="playing ? 'Pause the tour' : 'Play the tour'"
+        @click="toggleTour"
+      >
+        <span aria-hidden="true">{{ playing ? '❚❚' : '▶' }}</span>
+        <span>{{ playing ? 'Pause' : 'Play' }}</span>
+      </button>
 
       <div class="prism-labels" role="group" aria-label="Use a material on this site">
         <button

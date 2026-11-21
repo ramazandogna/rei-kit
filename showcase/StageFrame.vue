@@ -175,6 +175,41 @@ function onKeydown(event: KeyboardEvent) {
     padding: 48px;
   }
 }
+/* Phones: the tools become a full-width bar, the preview gets the room it
+   needs instead of a fixed tall box, and the code opens under the preview
+   rather than on top of it. */
+@media (max-width: 39.99rem) {
+  .stage,
+  .stage.has-drawer {
+    min-height: 0;
+    margin-inline: -4px;
+  }
+  .stage-tools {
+    align-self: stretch;
+    margin: 8px 8px 0;
+  }
+  .stage-tool {
+    flex: 1;
+    justify-content: center;
+    height: 36px;
+  }
+  .stage-body {
+    min-height: 15rem;
+    padding: 24px 16px;
+  }
+  .stage-one {
+    flex-wrap: wrap;
+    overflow-x: auto;
+  }
+  .stage-cell {
+    min-height: 10rem;
+    padding: 36px 16px 16px;
+  }
+  .stage-drawer {
+    position: static;
+    max-height: 60vh;
+  }
+}
 .stage-body.is-quad {
   display: grid;
   grid-template-columns: 1fr;

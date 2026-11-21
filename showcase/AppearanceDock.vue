@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Check, ChevronDown, Monitor, Moon, Sun } from 'lucide-vue-next'
-import { computed, ref } from 'vue'
+import { Check, ChevronDown, Monitor, Moon, Palette, Sun, X } from 'lucide-vue-next'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
 import {
   BasePopover,
@@ -49,6 +49,32 @@ function setPalette(name: string) {
 
 const ORDER: ThemePreference[] = ['light', 'dark', 'system']
 const NEXT = computed(() => ORDER[(ORDER.indexOf(theme.value) + 1) % ORDER.length]!)
+
+/* Phones get one button and a bottom sheet instead of a floating toolbar
+   that sits on top of whatever the reader is looking at. */
+const sheetOpen = ref(false)
+const MODES: { value: ThemePreference; label: string }[] = [
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+  { value: 'system', label: 'Auto' },
+]
+function setMode(next: ThemePreference) {
+  seam(() => {
+    theme.value = next
+    applyTheme(next)
+  })
+}
+function onKey(event: KeyboardEvent) {
+  if (event.key === 'Escape') sheetOpen.value = false
+}
+watch(sheetOpen, (open) => {
+  if (typeof document === 'undefined') return
+  if (open) document.addEventListener('keydown', onKey)
+  else document.removeEventListener('keydown', onKey)
+})
+onBeforeUnmount(() => {
+  if (typeof document !== 'undefined') document.removeEventListener('keydown', onKey)
+})
 
 function cycle() {
   const next = NEXT.value
@@ -142,6 +168,95 @@ function cycle() {
         <Monitor v-else class="size-4" aria-hidden="true" />
       </button>
     </BaseToolbar>
+
+    <button
+      type="button"
+      class="dock-fab surface-overlay focus-ring"
+      :aria-expanded="sheetOpen"
+      aria-controls="appearance-sheet"
+      aria-label="Appearance"
+      @click="sheetOpen = !sheetOpen"
+    >
+      <span
+        class="dock-dot dock-fab-dot"
+        :style="{ background: pie(current.swatch) }"
+        aria-hidden="true"
+      />
+      <Palette class="size-4" aria-hidden="true" />
+    </button>
+
+    <Transition name="dock-sheet">
+      <div v-if="sheetOpen" class="dock-scrim" @click.self="sheetOpen = false">
+        <section
+          id="appearance-sheet"
+          class="dock-sheet surface-overlay"
+          role="dialog"
+          aria-label="Appearance"
+        >
+          <header class="dock-sheet-head">
+            <p class="dock-sheet-title">Appearance</p>
+            <button
+              type="button"
+              class="dock-btn focus-ring"
+              aria-label="Close"
+              @click="sheetOpen = false"
+            >
+              <X class="size-4" aria-hidden="true" />
+            </button>
+          </header>
+
+          <p class="dock-sheet-label">Material</p>
+          <div class="dock-seg" role="radiogroup" aria-label="Material">
+            <button
+              v-for="m in MATERIALS"
+              :key="m"
+              type="button"
+              role="radio"
+              class="dock-seg-btn site-mono focus-ring"
+              :aria-checked="m === material"
+              @click="setMaterial(m)"
+            >
+              {{ m }}
+            </button>
+          </div>
+
+          <p class="dock-sheet-label">Palette</p>
+          <div class="dock-grid dock-grid-sheet" role="radiogroup" aria-label="Palette">
+            <button
+              v-for="p in PALETTES"
+              :key="p.name"
+              type="button"
+              role="radio"
+              class="dock-opt focus-ring"
+              :aria-checked="p.name === palette"
+              @click="setPalette(p.name)"
+            >
+              <span
+                class="dock-dot dock-dot-lg"
+                :style="{ background: pie(p.swatch) }"
+                aria-hidden="true"
+              />
+              <span class="dock-opt-name">{{ p.label }}</span>
+            </button>
+          </div>
+
+          <p class="dock-sheet-label">Mode</p>
+          <div class="dock-seg" role="radiogroup" aria-label="Mode">
+            <button
+              v-for="m in MODES"
+              :key="m.value"
+              type="button"
+              role="radio"
+              class="dock-seg-btn focus-ring"
+              :aria-checked="m.value === theme"
+              @click="setMode(m.value)"
+            >
+              {{ m.label }}
+            </button>
+          </div>
+        </section>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -260,9 +375,113 @@ function cycle() {
   color: var(--color-ink);
   font-weight: 600;
 }
-@media (max-width: 30rem) {
-  .dock-palette-name {
+.dock-fab,
+.dock-scrim {
+  display: none;
+}
+@media (max-width: 39.99rem) {
+  .dock-wrap {
+    inset-inline-start: auto;
+    inset-inline-end: max(16px, env(safe-area-inset-right));
+    translate: none;
+  }
+  .dock {
     display: none;
+  }
+  .dock-fab {
+    display: inline-flex;
+    width: 52px;
+    height: 52px;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border-radius: 9999px;
+    box-shadow: var(--shadow-overlay);
+    color: var(--color-ink);
+  }
+  .dock-fab-dot {
+    position: absolute;
+    top: 6px;
+    inset-inline-end: 6px;
+    width: 12px;
+    height: 12px;
+  }
+  .dock-scrim {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    background: color-mix(in oklab, var(--color-ink) 28%, transparent);
+  }
+  .dock-sheet {
+    width: 100%;
+    max-height: 85dvh;
+    overflow: auto;
+    border-radius: var(--radius-shell, 24px) var(--radius-shell, 24px) 0 0;
+    padding: 12px 20px calc(20px + env(safe-area-inset-bottom));
+    box-shadow: var(--shadow-overlay);
+  }
+  .dock-grid-sheet {
+    width: 100%;
+  }
+}
+.dock-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.dock-sheet-title {
+  font-weight: 600;
+}
+.dock-sheet-label {
+  margin: 16px 0 8px;
+  font-size: var(--site-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+.dock-seg {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--color-ink) 6%, transparent);
+}
+.dock-seg-btn {
+  min-height: 40px;
+  border-radius: var(--radius-control);
+  font-size: var(--site-text-sm);
+  color: var(--color-ink-soft);
+}
+.dock-seg-btn[aria-checked='true'] {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-weight: 600;
+  box-shadow: var(--shadow-control);
+}
+.dock-sheet-enter-active,
+.dock-sheet-leave-active {
+  transition: opacity var(--site-dur-2) var(--site-ease-out);
+}
+.dock-sheet-enter-active .dock-sheet,
+.dock-sheet-leave-active .dock-sheet {
+  transition: translate var(--site-dur-3) var(--site-ease-emph);
+}
+.dock-sheet-enter-from,
+.dock-sheet-leave-to {
+  opacity: 0;
+}
+.dock-sheet-enter-from .dock-sheet,
+.dock-sheet-leave-to .dock-sheet {
+  translate: 0 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dock-sheet-enter-active .dock-sheet,
+  .dock-sheet-leave-active .dock-sheet {
+    transition: none;
   }
 }
 </style>

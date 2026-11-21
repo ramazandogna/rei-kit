@@ -99,11 +99,11 @@ onBeforeUnmount(() => stop?.())
 }
 
 .hb-fade--radial {
-  mask-image: radial-gradient(ellipse at 50% 40%, #000 40%, transparent 75%);
+  mask-image: radial-gradient(ellipse at 50% 40%, black 40%, transparent 75%);
 }
 
 .hb-fade--bottom {
-  mask-image: linear-gradient(#000 60%, transparent);
+  mask-image: linear-gradient(black 60%, transparent);
 }
 
 .hb-layer::before {

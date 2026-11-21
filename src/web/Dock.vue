@@ -35,6 +35,7 @@ export interface DockItem {
   disabled?: boolean | undefined
 }
 
+/** A floating toolbar of icon buttons that swell toward the pointer. */
 const {
   items,
   label,

@@ -129,11 +129,11 @@ onBeforeUnmount(() => cancel?.())
   padding: var(--surface-border-width, 1px);
   background: var(--sc-light);
   mask:
-    linear-gradient(#000 0 0) content-box exclude,
-    linear-gradient(#000 0 0);
+    linear-gradient(black 0 0) content-box exclude,
+    linear-gradient(black 0 0);
   -webkit-mask:
-    linear-gradient(#000 0 0) content-box xor,
-    linear-gradient(#000 0 0);
+    linear-gradient(black 0 0) content-box xor,
+    linear-gradient(black 0 0);
 }
 
 .sc:hover .sc-glow,

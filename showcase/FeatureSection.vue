@@ -43,7 +43,7 @@ const WEIGHTS = [
     <h2 id="fs-title" class="fs-title">Sharp as a razor.<span> Light as a feather.</span></h2>
     <p class="fs-lead">
       {{ COMPONENT_COUNT }} components. A BaseButton costs 1.3 KB of JavaScript; a button, input and
-      modal 3.7 KB; all components 59.4 KB (minified, gzipped, Vue excluded). The core CSS is 25.3
+      modal 3.7 KB; all components 59.4 KB (minified, gzipped, Vue excluded). The core CSS is 24.2
       KB, paid once.
     </p>
 

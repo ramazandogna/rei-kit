@@ -49,15 +49,33 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "WebSite",
+            "@id": "https://ramazandogna.github.io/rei-kit/#website",
+            "name": "rei-kit",
+            "alternateName": "rei-kit Vue 3 component library",
+            "url": "https://ramazandogna.github.io/rei-kit/",
+            "inLanguage": "en",
+            "publisher": { "@id": "https://ramazandogna.github.io/rei-kit/#author" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://ramazandogna.github.io/rei-kit/#author",
+            "name": "Ramazan Dogan",
+            "url": "https://github.com/ramazandogna"
+          },
+          {
             "@type": "SoftwareSourceCode",
+            "@id": "https://ramazandogna.github.io/rei-kit/#code",
             "name": "rei-kit",
             "description": "120 accessible Vue 3 and Tailwind 4 components; four materials and ten WCAG-checked palettes, each switched with one attribute.",
             "codeRepository": "https://github.com/ramazandogna/rei-kit",
             "programmingLanguage": ["TypeScript", "Vue"],
+            "runtimePlatform": "Vue 3",
             "license": "https://opensource.org/licenses/MIT",
             "url": "https://ramazandogna.github.io/rei-kit/",
-            "author": { "@type": "Person", "name": "Ramazan Dogan" },
-            "keywords": "vue component library, vue 3, tailwind css 4, design system, accessible components, wcag, glassmorphism"
+            "author": { "@id": "https://ramazandogna.github.io/rei-kit/#author" },
+            "isPartOf": { "@id": "https://ramazandogna.github.io/rei-kit/#website" },
+            "keywords": "vue component library, vue 3 tailwind components, tailwind 4 vue ui kit, accessible vue components, vue design system themes, vue glassmorphism components, neobrutalism vue, wcag"
           },
           {
             "@type": "SoftwareApplication",
@@ -65,6 +83,7 @@
             "applicationCategory": "DeveloperApplication",
             "operatingSystem": "Web",
             "url": "https://www.npmjs.com/package/rei-kit",
+            "author": { "@id": "https://ramazandogna.github.io/rei-kit/#author" },
             "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
           }
         ]
@@ -163,6 +182,12 @@
         margin-top: 3rem;
         border-top: 1px solid var(--boot-hair);
         padding-top: 1.5rem;
+      }
+
+      .boot-index h3 {
+        margin: 1.25rem 0 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
       }
 
       .boot-index h2 {
@@ -314,7 +339,7 @@
         <div class="boot-line"></div>
       </div>
       <main class="boot">
-        <h1>rei-kit — 120 accessible Vue 3 and Tailwind 4 components</h1>
+        <h1>Accessible Vue 3 component library for Tailwind CSS 4</h1>
         <p>
           One kit, every look. A Vue 3 component library for Tailwind CSS 4, themed by role rather
           than by colour on three independent axes: ten WCAG-checked palettes, four materials
@@ -332,6 +357,7 @@
             <a href="https://github.com/ramazandogna/rei-kit/blob/main/CHANGELOG.md">Changelog</a>
           </li>
         </ul>
+        <!-- prerender:home -->
         <!-- prerender:components -->
       </main>
     </div>

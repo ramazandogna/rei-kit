@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process'
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 
@@ -41,6 +42,10 @@ const site = process.env['SHOWCASE_SITE'] ?? 'https://ramazandogna.github.io/rei
 const { STATIC_META, NOT_FOUND_META, HOME_META } = await import(
   new URL('./showcase/head-meta.ts', root).href
 )
+
+/* The FAQ and h1 the app's home renders, so the static copy and the
+   FAQPage JSON-LD say exactly what the hydrated page says. */
+const { FAQ, HOME_H1 } = await import(new URL('./showcase/home-content.ts', root).href)
 
 const catalogue = JSON.parse(
   readFileSync(fileURLToPath(new URL('./showcase/props.generated.json', root)), 'utf8'),
@@ -219,20 +224,74 @@ for (const component of catalogue) {
 /* The shell every crawler gets before hydration names every component, each
    one linking to its own static page. */
 const shell = `${out}index.html`
-const list = catalogue
+/* Categories live in catalog.ts, which imports JSON and so cannot be loaded
+   by Node directly; its GROUPS table is plain literals, read as text. */
+const catalogSource = readFileSync(fileURLToPath(new URL('./showcase/catalog.ts', root)), 'utf8')
+const groupsBlock = catalogSource.slice(
+  catalogSource.indexOf('const GROUPS'),
+  catalogSource.indexOf('export const CATEGORIES'),
+)
+const byName = new Map(catalogue.map((c) => [c.name, c]))
+const groups = [...groupsBlock.matchAll(/\[\s*'([^']+)',\s*\[([^\]]*)\]/g)].map(
+  ([, name, list]) => ({
+    name,
+    items: [...list.matchAll(/'([^']+)'/g)].map((m) => byName.get(m[1])).filter(Boolean),
+  }),
+)
+const filed = new Set(groups.flatMap((g) => g.items.map((c) => c.name)))
+const unfiled = catalogue.filter((c) => !filed.has(c.name))
+if (unfiled.length) groups.push({ name: 'More', items: unfiled })
+const slug = (name) =>
+  name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+const item = (component) =>
+  `<li><a href="${base}c/${component.name}/">${escape(component.name)}</a> — ${escape(plain(component.summary))}</li>`
+const list = groups
   .map(
-    (component) =>
-      `<li><a href="${base}c/${component.name}/">${escape(component.name)}</a> — ${escape(plain(component.summary))}</li>`,
+    (g) =>
+      `<h3 id="cat-${slug(g.name)}">${escape(g.name)} components</h3>\n        <ul>\n          ${g.items.map(item).join('\n          ')}\n        </ul>`,
   )
-  .join('\n          ')
+  .join('\n        ')
 
 writeFileSync(
   shell,
   readFileSync(shell, 'utf8').replace(
     '<!-- prerender:components -->',
-    `<section class="boot-index">\n        <h2>All ${catalogue.length} components</h2>\n        <ul>\n          ${list}\n        </ul>\n        </section>`,
+    `<section class="boot-index" id="components">\n        <h2>Components by category: all ${catalogue.length}</h2>\n        <p><a href="${base}components/">Browse the component catalog</a> · ${groups
+      .map((g) => `<a href="#cat-${slug(g.name)}">${escape(g.name)}</a>`)
+      .join(' · ')}</p>\n        ${list}\n        </section>`,
   ),
 )
+
+/* Home-only crawlable copy: the same claims the app's sections make, as
+   headings a non-JS crawler can rank. Other routes drop the marker. */
+const homeBlock = `<section class="boot-index">
+        <h2>Why rei-kit</h2>
+        <p>A Vue 3 UI kit for Tailwind CSS 4 that themes by role, not by colour: one set of ${catalogue.length} typed components and three independent axes. It is an npm package you update, with no runtime dependencies, SSR-safe for Nuxt and Vite.</p>
+        <h2>Four materials: quiet, glassmorphism, neobrutalism and soft</h2>
+        <p>Set <code>data-material</code> on the root and every surface changes together: flat quiet cards, frosted glassmorphism, hard-edged neobrutalism or soft shadows. No component props change. <a href="${base}themes/">Preview the materials</a>.</p>
+        <h2>Ten WCAG-checked palettes, light and dark</h2>
+        <p>Set <code>data-palette</code> to pick one of ten palettes; each is checked for WCAG AA contrast in light and dark mode. <a href="${base}docs/theming/">Theming docs</a>.</p>
+        <h2>Accessible Vue components by default</h2>
+        <p>Keyboard support, focus management and ARIA labelling follow WAI-ARIA patterns; motion respects <code>prefers-reduced-motion</code>. <a href="${base}docs/accessibility/">Accessibility docs</a>.</p>
+        <h2>Install rei-kit in three steps</h2>
+        <p><code>pnpm add rei-kit</code>, import <code>tailwindcss</code> and the kit's <code>tokens.css</code>, <code>materials.css</code> and <code>palettes.css</code>, then use a component.</p>
+        <h2>Frequently asked questions</h2>
+        ${FAQ.map((f) => `<h3>${escape(f.q)}</h3>\n        <p>${escape(f.a)}</p>`).join('\n        ')}
+        </section>`
+
+const faqLd = {
+  '@type': 'FAQPage',
+  '@id': `${site}#faq`,
+  mainEntity: FAQ.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
 
 /* Each top-level route gets a real file, so Pages answers /components/,
    /themes/ and /docs/<slug>/ with a 200 and this route's own head, instead
@@ -296,6 +355,14 @@ function withHead(html, meta, { noindex = false } = {}) {
       .replace(/(<link rel="canonical" href=")[^"]*"/, `$1${url}"`)
       .replace(/(<meta property="og:url" content=")[^"]*"/, `$1${url}"`)
   }
+  next = meta.path
+    ? next.replace(/\s*<!-- prerender:home -->/, '')
+    : next
+        .replace('<!-- prerender:home -->', homeBlock)
+        .replace(
+          '</head>',
+          `  <script type="application/ld+json">\n${ldJson([faqLd])}\n    </script>\n  </head>`,
+        )
   if (meta.path && !noindex) {
     next = next
       .replace(
@@ -331,6 +398,14 @@ writeFileSync(
    404 status), so the router can draw its not-found page. Never indexed. */
 writeFileSync(`${out}404.html`, withHead(shellHtml, NOT_FOUND_META, { noindex: true }))
 
+/* lastmod: the date of the commit being built, not the wall clock. */
+let lastmod = new Date().toISOString().slice(0, 10)
+try {
+  lastmod = execSync('git log -1 --format=%cs', { encoding: 'utf8' }).trim() || lastmod
+} catch {
+  /* Not a checkout: today will do. */
+}
+
 const urls = [
   ...STATIC_META.map((meta) => absolute(meta.path)),
   ...catalogue.map((component) => `${site}c/${component.name}/`),
@@ -342,10 +417,59 @@ writeFileSync(
 ${urls
   .map(
     (url) =>
-      `  <url><loc>${url}</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod><changefreq>weekly</changefreq><priority>${url === site ? '1.0' : '0.7'}</priority></url>`,
+      `  <url><loc>${url}</loc><lastmod>${lastmod}</lastmod><changefreq>weekly</changefreq><priority>${url === site ? '1.0' : '0.7'}</priority></url>`,
   )
   .join('\n')}
 </urlset>
+`,
+)
+
+/* llms.txt (https://llmstxt.org): a short map for language models, and a
+   full list of every component with its one-line summary. */
+const llmsHead = `# rei-kit
+
+> ${HOME_META.description}
+
+rei-kit is an open-source (MIT) Vue 3 component library for Tailwind CSS 4. Install with \`pnpm add rei-kit\`, then import \`tailwindcss\`, \`rei-kit/tokens.css\`, \`rei-kit/materials.css\` and \`rei-kit/palettes.css\`. Theme with \`data-material\` (quiet, glass, brutal, soft), \`data-palette\` and a \`dark\` class on the root.
+`
+const docsLinks = STATIC_META.filter((m) => m.path.startsWith('docs/'))
+  .map(
+    (m) =>
+      `- [${m.title.replace(/ — rei-kit.*$/, '')}](${absolute(m.path)}): ${m.description.split('. ')[0]}.`,
+  )
+  .join('\n')
+writeFileSync(
+  `${out}llms.txt`,
+  `${llmsHead}
+## Docs
+
+${docsLinks}
+
+## Components
+
+- [All ${catalogue.length} components](${site}components/): the catalog, by category
+- [Full component list](${site}llms-full.txt): every component with a one-line summary
+- [Themes](${site}themes/): the four materials and ten palettes
+
+## Source
+
+- [GitHub](https://github.com/ramazandogna/rei-kit)
+- [npm](https://www.npmjs.com/package/rei-kit)
+`,
+)
+writeFileSync(
+  `${out}llms-full.txt`,
+  `${llmsHead}
+${groups
+  .map(
+    (g) =>
+      `## ${g.name}\n\n${g.items.map((c) => `- [${c.name}](${site}c/${c.name}/): ${plain(c.summary).replace(/\s+/g, ' ')}`).join('\n')}`,
+  )
+  .join('\n\n')}
+
+## FAQ
+
+${FAQ.map((f) => `### ${f.q}\n\n${f.a}`).join('\n\n')}
 `,
 )
 

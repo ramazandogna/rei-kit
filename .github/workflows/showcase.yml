@@ -70,7 +70,7 @@ jobs:
         run: |
           find beta/dist-showcase -name '*.html' -exec \
             sed -i 's|<head>|<head><meta name="robots" content="noindex">|' {} +
-          rm -f beta/dist-showcase/sitemap.xml beta/dist-showcase/robots.txt
+          rm -f beta/dist-showcase/sitemap.xml beta/dist-showcase/robots.txt beta/dist-showcase/llms*.txt
           mkdir -p live/dist-showcase/beta
           cp -r beta/dist-showcase/. live/dist-showcase/beta/
 

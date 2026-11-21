@@ -24,7 +24,7 @@ const JS = TS.replace(' lang="ts"', '')
 <template>
   <section id="install" class="site-page site-section" aria-labelledby="install-h">
     <p class="site-eyebrow">Install</p>
-    <h2 id="install-h" class="site-h2">Three steps.</h2>
+    <h2 id="install-h" class="site-h2">Install rei-kit in three steps.</h2>
 
     <ol class="is-steps">
       <li>

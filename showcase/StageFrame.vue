@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Code, LayoutGrid } from 'lucide-vue-next'
-import { nextTick, ref, useTemplateRef } from 'vue'
+import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import type { Component } from 'vue'
 
 import { MATERIALS } from '../src/index'
 import { BaseToolbar } from '../src/web/index'
+import AiPromptPanel from './AiPromptPanel.vue'
+import { entryByName } from './catalog'
 import CodeBlock from './CodeBlock.vue'
 
 /**
@@ -32,6 +34,18 @@ function readQuad() {
 const quad = ref(readQuad())
 const quadKey = ref(0)
 const drawer = ref(false)
+const tab = ref<'code' | 'ai'>('code')
+const entry = computed(() => entryByName(name))
+const tabIds = ['code', 'ai'] as const
+
+function onTabKey(event: KeyboardEvent) {
+  if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
+  event.preventDefault()
+  tab.value = tab.value === 'code' ? 'ai' : 'code'
+  if (event.key === 'Home') tab.value = 'code'
+  if (event.key === 'End') tab.value = 'ai'
+  void nextTick(() => document.getElementById(`tab-${tab.value}-${name}`)?.focus())
+}
 const codeButton = useTemplateRef<HTMLButtonElement>('codeButton')
 const heading = useTemplateRef<HTMLElement>('heading')
 
@@ -63,7 +77,7 @@ function onKeydown(event: KeyboardEvent) {
 <template>
   <section
     class="stage"
-    :class="{ 'has-drawer': drawer }"
+    :class="{ 'has-drawer': drawer, 'has-ai': drawer && tab === 'ai' }"
     :aria-label="`Preview of ${name}`"
     @keydown="onKeydown"
   >
@@ -97,9 +111,51 @@ function onKeydown(event: KeyboardEvent) {
       </template>
     </div>
 
-    <div v-if="drawer" :id="`code-${name}`" class="stage-drawer seam-up">
+    <div
+      v-if="drawer"
+      :id="`code-${name}`"
+      class="stage-drawer seam-up"
+      :class="{ 'is-ai': tab === 'ai' }"
+    >
       <h2 ref="heading" class="sr-only" tabindex="-1">Code for {{ name }}</h2>
-      <CodeBlock :code="code" :js="js" :file="`${name}Example.vue`" />
+      <div
+        v-if="entry"
+        role="tablist"
+        aria-label="Code or AI prompt"
+        class="drawer-tabs"
+        @keydown="onTabKey"
+      >
+        <button
+          v-for="t in tabIds"
+          :id="`tab-${t}-${name}`"
+          :key="t"
+          type="button"
+          role="tab"
+          class="drawer-tab focus-ring"
+          :aria-selected="tab === t"
+          :aria-controls="`panel-${t}-${name}`"
+          :tabindex="tab === t ? 0 : -1"
+          @click="tab = t"
+        >
+          {{ t === 'code' ? 'Code' : 'AI' }}
+        </button>
+      </div>
+      <div
+        v-show="tab === 'code' || !entry"
+        :id="`panel-code-${name}`"
+        role="tabpanel"
+        :aria-labelledby="`tab-code-${name}`"
+      >
+        <CodeBlock :code="code" :js="js" :file="`${name}Example.vue`" />
+      </div>
+      <div
+        v-if="entry && tab === 'ai'"
+        :id="`panel-ai-${name}`"
+        role="tabpanel"
+        :aria-labelledby="`tab-ai-${name}`"
+      >
+        <AiPromptPanel :entry="entry" :example="code" />
+      </div>
     </div>
   </section>
 </template>
@@ -123,6 +179,9 @@ function onKeydown(event: KeyboardEvent) {
 }
 .stage.has-drawer {
   min-height: 40rem;
+}
+.stage.has-ai {
+  min-height: 48rem;
 }
 .stage-tools {
   position: relative;
@@ -180,7 +239,8 @@ function onKeydown(event: KeyboardEvent) {
    rather than on top of it. */
 @media (max-width: 39.99rem) {
   .stage,
-  .stage.has-drawer {
+  .stage.has-drawer,
+  .stage.has-ai {
     min-height: 0;
     margin-inline: -4px;
   }
@@ -205,9 +265,10 @@ function onKeydown(event: KeyboardEvent) {
     min-height: 10rem;
     padding: 36px 16px 16px;
   }
-  .stage-drawer {
+  .stage-drawer,
+  .stage-drawer.is-ai {
     position: static;
-    max-height: 60vh;
+    max-height: none;
   }
 }
 .stage-body.is-quad {
@@ -240,6 +301,33 @@ function onKeydown(event: KeyboardEvent) {
   inset-inline-start: 12px;
   font-size: 12px;
   color: var(--color-ink-soft);
+}
+@media (min-width: 40rem) {
+  .stage-drawer.is-ai {
+    max-height: min(70%, 34rem);
+  }
+}
+.drawer-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 8px 12px 0;
+  border-bottom: 1px solid var(--color-hair);
+}
+.drawer-tab {
+  height: 32px;
+  padding: 0 12px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  font-size: var(--site-text-xs);
+  color: var(--color-ink-soft);
+}
+.drawer-tab:hover {
+  color: var(--color-ink);
+}
+.drawer-tab[aria-selected='true'] {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-primary);
+  font-weight: 600;
 }
 .stage-drawer {
   position: absolute;

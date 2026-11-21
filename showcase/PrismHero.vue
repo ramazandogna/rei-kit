@@ -13,6 +13,7 @@ import {
 } from '../src/index'
 import type { Material } from '../src/index'
 import { HeroBackdrop } from '../src/motion/index'
+import { HOME_H1 } from './home-content'
 import { COMPONENT_COUNT } from './site'
 import PrismCard from './PrismCard.vue'
 import { reduceMotion, seam } from './seam'
@@ -244,7 +245,9 @@ const count = computed(() => COMPONENT_COUNT)
     <div class="prism-copy">
       <p class="prism-eyebrow">data-material="{{ material }}"</p>
       <h1 id="hero-title" class="prism-title">
-        Change one attribute.<span>Every surface follows.</span>
+        <span class="sr-only">{{ HOME_H1 }}. </span>Change one attribute.<span
+          >Every surface follows.</span
+        >
       </h1>
       <p class="prism-sub">
         {{ count }} accessible Vue 3 components for Tailwind CSS 4. Four materials (quiet, glass,

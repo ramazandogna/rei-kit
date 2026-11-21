@@ -22,7 +22,7 @@ export const HOME_META: RouteMeta = {
   path: '',
   title: 'rei-kit — accessible Vue 3 + Tailwind 4 component library',
   description:
-    '120 accessible Vue 3 components for Tailwind CSS 4: a design system with four materials (quiet, glassmorphism, neobrutalism, soft) and ten WCAG-checked palettes, each switched with one attribute. TypeScript, SSR-safe, MIT.',
+    '120 accessible Vue 3 components for Tailwind CSS 4: a design system with glassmorphism, neobrutalism and two more materials, ten WCAG palettes. MIT.',
   crumbs: [],
 }
 

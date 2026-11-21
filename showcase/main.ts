@@ -1,5 +1,5 @@
 import { createApp, nextTick } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
 import App from './App.vue'
 import { reduceMotion, showSeamLine } from './seam'
@@ -15,7 +15,11 @@ import './main.css'
  * exist at all, and now the URL is real, so a component page is linkable.
  */
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  /* A preview build (VITE_HASH_ROUTER=1) is served from a path it cannot
+     know in advance, so it routes in the hash instead of the address. */
+  history: import.meta.env['VITE_HASH_ROUTER']
+    ? createWebHashHistory()
+    : createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', name: 'home', component: () => import('./pages/HomePage.vue') },
     { path: '/components', name: 'catalog', component: () => import('./pages/CatalogPage.vue') },

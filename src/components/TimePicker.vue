@@ -176,7 +176,7 @@ function pickMinute(next: string | undefined) {
   </FormField>
 </template>
 
-<style scoped>
+<style>
 .rk-time {
   display: block;
 }

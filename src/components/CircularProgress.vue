@@ -79,7 +79,7 @@ const offset = computed(() => CIRCUMFERENCE * (1 - (indeterminate.value ? 0.28 :
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-ring {
   position: relative;
   display: inline-grid;

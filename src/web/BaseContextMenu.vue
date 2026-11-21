@@ -229,7 +229,7 @@ defineExpose({ close })
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-ctx-area {
   /*
    * A real box, not `display: contents`.

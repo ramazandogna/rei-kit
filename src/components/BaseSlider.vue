@@ -78,7 +78,7 @@ const filled = computed(() => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-slider {
   display: flex;
   flex-direction: column;
@@ -121,7 +121,7 @@ const filled = computed(() => {
    invalidates the whole selector, so WebKit and Firefox are written twice. */
 .rk-slider-input::-webkit-slider-runnable-track {
   height: 0.375rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   background: linear-gradient(
     to right,
     var(--color-primary) var(--rk-slider-filled, 0%),
@@ -144,13 +144,13 @@ const filled = computed(() => {
 
 .rk-slider-input::-moz-range-track {
   height: 0.375rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   background: var(--color-hair);
 }
 
 .rk-slider-input::-moz-range-progress {
   height: 0.375rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   background: var(--color-primary);
 }
 
@@ -159,19 +159,19 @@ const filled = computed(() => {
   margin-top: -0.4375rem;
   width: 1.25rem;
   height: 1.25rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   background: var(--color-surface);
   border: 2px solid var(--color-primary);
-  box-shadow: var(--shadow-control);
+  box-shadow: var(--shadow-knob, var(--shadow-control));
 }
 
 .rk-slider-input::-moz-range-thumb {
   width: 1.25rem;
   height: 1.25rem;
   border: 2px solid var(--color-primary);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   background: var(--color-surface);
-  box-shadow: var(--shadow-control);
+  box-shadow: var(--shadow-knob, var(--shadow-control));
 }
 
 .rk-slider-input:focus-visible::-webkit-slider-thumb {

@@ -145,7 +145,7 @@ onBeforeUnmount(() => (dragging.value = false))
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-split {
   display: flex;
   width: 100%;

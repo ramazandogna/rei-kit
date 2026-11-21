@@ -283,7 +283,7 @@ onMounted(() => {
   </ScrollArea>
 </template>
 
-<style scoped>
+<style>
 .rk-activity-table {
   border-collapse: separate;
   border-spacing: 2px;

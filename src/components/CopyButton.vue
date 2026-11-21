@@ -106,7 +106,7 @@ onBeforeUnmount(() => {
   </button>
 </template>
 
-<style scoped>
+<style>
 .rk-copy {
   display: inline-flex;
   height: 2.25rem;

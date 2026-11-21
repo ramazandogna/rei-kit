@@ -105,7 +105,7 @@ function onKeydown(event: KeyboardEvent) {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-rating {
   display: inline-flex;
   align-items: center;

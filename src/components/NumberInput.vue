@@ -181,7 +181,7 @@ const atMax = computed(() => model.value !== undefined && model.value >= max)
   </FormField>
 </template>
 
-<style scoped>
+<style>
 /* The buttons are out of the Tab order: the keyboard already has the arrows,
    and three stops for one number is two too many. They stay reachable by
    pointer and by touch, which is who they are for. */

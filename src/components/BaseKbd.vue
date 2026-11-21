@@ -36,7 +36,7 @@ const list = computed(() => (typeof keys === 'string' ? [keys] : keys))
   </span>
 </template>
 
-<style scoped>
+<style>
 .rk-kbd {
   display: inline-flex;
   align-items: center;

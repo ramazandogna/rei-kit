@@ -116,7 +116,7 @@ function onKeydown(event: KeyboardEvent) {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-tabs {
   display: flex;
   align-items: center;

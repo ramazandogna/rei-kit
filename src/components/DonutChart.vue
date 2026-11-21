@@ -106,7 +106,7 @@ const arcs = computed(() => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-donut {
   display: flex;
   flex-wrap: wrap;

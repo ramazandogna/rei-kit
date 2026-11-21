@@ -12,6 +12,8 @@
   --control-border-width: 2px;
   --surface-border-color: var(--color-ink);
 
+  --radius-pill: 0px;
+  --radius-control: 0px;
   --radius-cell: 0px;
   --radius-card: 0px;
   --radius-shell: 0px;
@@ -20,6 +22,8 @@
   --shadow-raised: 6px 6px 0 var(--color-ink);
   --shadow-overlay: 10px 10px 0 var(--color-ink);
   --shadow-control: 3px 3px 0 var(--color-ink);
+  --shadow-knob: none;
+  --control-outline: 2px;
   --shadow-control-pressed: 0 0 0 var(--color-ink);
 
   --press-scale: 1;

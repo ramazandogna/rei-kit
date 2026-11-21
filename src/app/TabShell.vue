@@ -68,7 +68,7 @@ defineSlots<{
   </div>
 </template>
 
-<style scoped>
+<style>
 /* A barely-there diamond lattice, so the area around the shell is not a flat
    slab. Both layers are theme colours at very low alpha, so it reads as texture
    rather than decoration and inverts with the theme for free.

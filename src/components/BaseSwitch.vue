@@ -72,7 +72,7 @@ function toggle() {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-switch {
   position: relative;
   display: inline-flex;
@@ -80,8 +80,10 @@ function toggle() {
   align-items: center;
   width: 2.75rem;
   height: 1.625rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   background: var(--color-hair);
+  /* Drawn inset so the border never changes the knob's travel geometry. */
+  box-shadow: inset 0 0 0 var(--control-outline, 0) var(--color-ink);
   transition: background-color var(--duration-base) ease;
 }
 
@@ -104,11 +106,11 @@ function toggle() {
   inset-inline-start: 0.1875rem;
   width: 1.25rem;
   height: 1.25rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   /* The on-colour, because the knob sits on the primary track when it is on,
      and that is exactly the pairing `on-primary` is tuned for. */
   background: var(--color-on-primary);
-  box-shadow: var(--shadow-control);
+  box-shadow: var(--shadow-knob, var(--shadow-control));
   transition: transform var(--duration-base) var(--ease-sheet);
 }
 

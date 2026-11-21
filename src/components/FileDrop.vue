@@ -146,7 +146,7 @@ const count = computed(() => model.value.length)
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-drop-box {
   display: flex;
   cursor: pointer;

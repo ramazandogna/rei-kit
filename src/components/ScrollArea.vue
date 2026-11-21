@@ -161,7 +161,7 @@ defineExpose({
   </div>
 </template>
 
-<style scoped>
+<style>
 /*
  * A flex column, so a height written on this box reaches the box that
  * scrolls.

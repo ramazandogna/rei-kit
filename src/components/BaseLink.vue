@@ -56,7 +56,7 @@ const is = computed(() => (to !== undefined ? RouterLink : 'a'))
   </component>
 </template>
 
-<style scoped>
+<style>
 .rk-link {
   display: inline;
   border-radius: var(--radius-cell);

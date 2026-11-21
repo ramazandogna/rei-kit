@@ -68,7 +68,7 @@ watch([() => paused, held, () => words.length, () => interval], start)
   </span>
 </template>
 
-<style scoped>
+<style>
 .rk-rotate {
   display: inline-block;
   vertical-align: bottom;

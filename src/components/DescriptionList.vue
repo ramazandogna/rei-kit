@@ -43,7 +43,7 @@ defineSlots<{
   </dl>
 </template>
 
-<style scoped>
+<style>
 .rk-dl {
   display: grid;
   gap: 0.75rem;

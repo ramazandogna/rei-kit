@@ -103,7 +103,7 @@ onBeforeUnmount(() => cancel?.())
   </span>
 </template>
 
-<style scoped>
+<style>
 /* A line height of its own, so a column is exactly one digit tall without
    depending on `lh` units or on whatever line height the parent set. */
 .rk-ticker {

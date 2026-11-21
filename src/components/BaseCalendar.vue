@@ -357,7 +357,7 @@ watch(
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-cal {
   display: flex;
   width: 100%;

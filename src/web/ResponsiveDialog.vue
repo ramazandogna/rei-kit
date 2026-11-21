@@ -78,7 +78,7 @@ const asModal = computed(() => wide.value)
   </BaseSheet>
 </template>
 
-<style scoped>
+<style>
 /* The sheet has no actions slot of its own: on a phone the buttons belong in
    the flow, at the end of what they are about, within reach of a thumb. */
 .rk-responsive-actions {

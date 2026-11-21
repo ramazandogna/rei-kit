@@ -486,7 +486,7 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-combo {
   position: relative;
   display: flex;

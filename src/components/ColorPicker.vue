@@ -180,7 +180,7 @@ const chosen = (value: string) => normalise(value) === current.value
   </FormField>
 </template>
 
-<style scoped>
+<style>
 .rk-color-row {
   display: flex;
   flex-wrap: wrap;

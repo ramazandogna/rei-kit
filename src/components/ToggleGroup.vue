@@ -121,7 +121,7 @@ function onKeydown(event: KeyboardEvent, index: number) {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-toggles {
   display: inline-flex;
   flex-wrap: wrap;

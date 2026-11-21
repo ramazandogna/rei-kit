@@ -45,7 +45,7 @@ const { STATIC_META, NOT_FOUND_META, HOME_META } = await import(
 
 /* The FAQ and h1 the app's home renders, so the static copy and the
    FAQPage JSON-LD say exactly what the hydrated page says. */
-const { FAQ, HOME_H1 } = await import(new URL('./showcase/home-content.ts', root).href)
+const { FAQ } = await import(new URL('./showcase/home-content.ts', root).href)
 
 const catalogue = JSON.parse(
   readFileSync(fileURLToPath(new URL('./showcase/props.generated.json', root)), 'utf8'),

@@ -120,7 +120,7 @@ const { onKeydown } = useDialogShell(open, panel, {
   </Teleport>
 </template>
 
-<style scoped>
+<style>
 .rk-modal-scrim {
   position: fixed;
   inset: 0;

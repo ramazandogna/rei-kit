@@ -127,7 +127,7 @@ onBeforeUnmount(stop)
   </span>
 </template>
 
-<style scoped>
+<style>
 .rk-type {
   white-space: pre-wrap;
 }

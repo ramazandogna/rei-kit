@@ -21,6 +21,7 @@
   --surface-border-color: color-mix(in oklab, #ffffff 60%, transparent);
 
   --radius-cell: 10px;
+  --radius-control: 14px;
   --radius-card: 22px;
   --radius-shell: 36px;
 
@@ -69,7 +70,7 @@
 .dark[data-material='glass'],
 .dark [data-material='glass'] {
   --surface-opacity: 40%;
-  --control-opacity: 28%;
+  --control-opacity: 40%;
   --surface-border-color: color-mix(in oklab, #ffffff 14%, transparent);
 
   --shadow-card:

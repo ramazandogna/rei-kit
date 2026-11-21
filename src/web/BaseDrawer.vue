@@ -117,7 +117,7 @@ const extent = (horizontal: boolean) => (horizontal ? { width: size } : { height
   </Teleport>
 </template>
 
-<style scoped>
+<style>
 .rk-drawer-scrim {
   position: fixed;
   inset: 0;

@@ -15,6 +15,7 @@
   --surface-border-color: color-mix(in oklab, var(--color-hair) 55%, transparent);
 
   --radius-cell: 14px;
+  --radius-control: 18px;
   --radius-card: 26px;
   --radius-shell: 42px;
 
@@ -52,6 +53,8 @@
     inset 0 1px 1px rgb(255 255 255 / 0.08), inset 0 -4px 10px rgb(0 0 0 / 0.3),
     0 18px 36px -14px rgb(0 0 0 / 0.7);
   --shadow-overlay: inset 0 1px 1px rgb(255 255 255 / 0.08), 0 30px 60px -20px rgb(0 0 0 / 0.8);
-  --shadow-control: inset 0 1px 1px rgb(255 255 255 / 0.06), inset 0 -2px 4px rgb(0 0 0 / 0.3);
+  --shadow-control:
+    inset 0 1px 1px rgb(255 255 255 / 0.06), inset 0 -2px 4px rgb(0 0 0 / 0.3),
+    0 4px 10px -4px rgb(0 0 0 / 0.6);
   --shadow-control-pressed: inset 0 3px 6px rgb(0 0 0 / 0.45);
 }

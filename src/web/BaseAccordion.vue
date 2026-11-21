@@ -111,7 +111,7 @@ function toggle(key: K) {
   </ul>
 </template>
 
-<style scoped>
+<style>
 .rk-accordion {
   border-top: 1px solid color-mix(in srgb, var(--color-hair) 70%, transparent);
 }

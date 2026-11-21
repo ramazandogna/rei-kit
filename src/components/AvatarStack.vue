@@ -40,7 +40,7 @@ const rest = computed(() => Math.max(0, people.length - shown.value.length))
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-stack {
   display: inline-flex;
   align-items: center;
@@ -63,7 +63,7 @@ const rest = computed(() => Math.max(0, people.length - shown.value.length))
 .rk-stack-item {
   display: inline-flex;
   border-radius: 9999px;
-  box-shadow: 0 0 0 2px var(--color-surface);
+  box-shadow: 0 0 0 var(--surface-border-width, 2px) var(--color-surface);
 }
 
 .rk-stack-rest {

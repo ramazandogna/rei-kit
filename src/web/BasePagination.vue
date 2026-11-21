@@ -118,7 +118,7 @@ const go = (next: number) => {
   </nav>
 </template>
 
-<style scoped>
+<style>
 .rk-pager {
   display: flex;
   align-items: center;

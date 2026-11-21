@@ -44,7 +44,7 @@ const portion = computed(() => {
 
 <template>
   <div
-    class="bg-muted w-full overflow-hidden rounded-full"
+    class="bg-muted border-ink w-full overflow-hidden rounded-[var(--radius-pill,9999px)] border-[length:var(--control-outline,0px)]"
     :class="TRACK[size]"
     role="progressbar"
     :aria-valuenow="Math.round(portion)"
@@ -53,7 +53,7 @@ const portion = computed(() => {
     :aria-label="label"
   >
     <div
-      class="bg-primary h-full rounded-full transition-[width] duration-700 ease-out"
+      class="bg-primary h-full rounded-[var(--radius-pill,9999px)] transition-[width] duration-700 ease-out"
       :style="{ width: `${portion}%` }"
     />
   </div>

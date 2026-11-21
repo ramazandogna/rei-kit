@@ -24,7 +24,7 @@ const { polite, assertive } = useAnnounce()
   </div>
 </template>
 
-<style scoped>
+<style>
 /* Clipped rather than `display: none`: a hidden live region is not read at
    all, which is the quietest possible way for this to fail. */
 .rk-announcer {

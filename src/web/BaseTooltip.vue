@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
   </span>
 </template>
 
-<style scoped>
+<style>
 .rk-tip {
   position: relative;
   display: inline-flex;

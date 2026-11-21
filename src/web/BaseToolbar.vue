@@ -112,7 +112,7 @@ onMounted(applyRoving)
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-toolbar {
   display: flex;
   align-items: center;

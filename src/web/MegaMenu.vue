@@ -273,7 +273,7 @@ onBeforeUnmount(() => {
   </nav>
 </template>
 
-<style scoped>
+<style>
 .rk-mega {
   position: relative;
 }

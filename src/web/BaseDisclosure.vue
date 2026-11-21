@@ -96,7 +96,7 @@ const id = useId()
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-disclosure-control {
   display: flex;
   width: 100%;

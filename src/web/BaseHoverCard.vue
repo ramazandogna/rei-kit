@@ -168,7 +168,7 @@ onBeforeUnmount(clear)
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-hovercard {
   position: relative;
   display: inline-flex;

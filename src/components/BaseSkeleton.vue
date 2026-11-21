@@ -36,7 +36,7 @@ const {
   />
 </template>
 
-<style scoped>
+<style>
 .rk-skeleton {
   display: block;
   flex-shrink: 0;

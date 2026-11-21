@@ -253,7 +253,7 @@ const indexOf = (item: CommandItem<Id>) => flat.value.indexOf(item)
   </Teleport>
 </template>
 
-<style scoped>
+<style>
 .rk-command {
   position: fixed;
   inset: 0;

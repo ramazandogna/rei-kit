@@ -56,7 +56,7 @@ function skip(event: MouseEvent) {
   <a :href="`#${$props.for}`" class="rk-skip" @click="skip">{{ label }}</a>
 </template>
 
-<style scoped>
+<style>
 /* Clipped rather than hidden: `display: none` and `visibility: hidden` both
    take it out of the tab order, and then it is a link nobody can reach. */
 .rk-skip {

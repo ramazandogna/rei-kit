@@ -109,7 +109,7 @@ defineSlots<{
   </ol>
 </template>
 
-<style scoped>
+<style>
 .rk-timeline {
   position: relative;
   display: flex;

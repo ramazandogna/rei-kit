@@ -93,7 +93,7 @@ const scrolls = computed(() => !wrap)
   </figure>
 </template>
 
-<style scoped>
+<style>
 .rk-code {
   position: relative;
   overflow: hidden;

@@ -28,7 +28,7 @@ const SIZES = { sm: '1rem', md: '1.5rem', lg: '2.5rem' } as const
   </span>
 </template>
 
-<style scoped>
+<style>
 .rk-spin-wrap {
   display: inline-flex;
   align-items: center;

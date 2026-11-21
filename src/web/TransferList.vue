@@ -111,7 +111,7 @@ function remove() {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-transfer {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);

@@ -231,7 +231,7 @@ function onClick(index: number, row: Row) {
   </ul>
 </template>
 
-<style scoped>
+<style>
 .rk-tree {
   display: flex;
   flex-direction: column;

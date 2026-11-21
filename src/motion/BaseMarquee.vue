@@ -53,7 +53,7 @@ defineSlots<{
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-marquee {
   display: flex;
   overflow: hidden;

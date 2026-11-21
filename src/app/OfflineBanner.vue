@@ -29,7 +29,7 @@ const isOnline = useOnline()
   </Transition>
 </template>
 
-<style scoped>
+<style>
 .rk-offline-banner {
   position: absolute;
   top: 4.75rem;

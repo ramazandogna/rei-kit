@@ -158,7 +158,7 @@ defineExpose({ scrollToIndex })
   </ScrollArea>
 </template>
 
-<style scoped>
+<style>
 .rk-vlist-rows {
   margin: 0;
   padding: 0;

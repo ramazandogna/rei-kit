@@ -146,7 +146,7 @@ function onKeydown(event: KeyboardEvent, index: number) {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-pin-cells {
   display: flex;
   gap: 0.5rem;

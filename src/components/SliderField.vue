@@ -112,7 +112,7 @@ const typed = computed<number | undefined>({
   </div>
 </template>
 
-<style scoped>
+<style>
 /* The slider takes the room; the field is as wide as its digits need and no
    wider, so the pair does not read as two fields of equal weight. */
 .rk-slider-field {

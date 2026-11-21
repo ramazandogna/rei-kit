@@ -84,7 +84,7 @@ onBeforeUnmount(() => {
   </component>
 </template>
 
-<style scoped>
+<style>
 .rk-reveal {
   transition:
     opacity var(--duration-slower) var(--ease-standard),

@@ -80,7 +80,7 @@ function cancel(close: () => void) {
   </BasePopover>
 </template>
 
-<style scoped>
+<style>
 .rk-confirm {
   max-width: 17rem;
 }

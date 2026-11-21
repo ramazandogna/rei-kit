@@ -42,7 +42,7 @@ const { items, label = '' } = defineProps<{
   </nav>
 </template>
 
-<style scoped>
+<style>
 .rk-crumbs {
   display: flex;
   flex-wrap: wrap;

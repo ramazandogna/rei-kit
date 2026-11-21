@@ -54,7 +54,7 @@ const {
   </nav>
 </template>
 
-<style scoped>
+<style>
 /* The root carries no layout of its own, and that is the fix for a real bug
    rather than a style preference.
 

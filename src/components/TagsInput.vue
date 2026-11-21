@@ -158,7 +158,7 @@ function onKeydown(event: KeyboardEvent) {
   </FormField>
 </template>
 
-<style scoped>
+<style>
 .rk-tags {
   display: flex;
   min-height: 2.75rem;

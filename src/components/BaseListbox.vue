@@ -190,7 +190,7 @@ function onKeydown(event: KeyboardEvent) {
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-listbox {
   overflow-y: auto;
   border-radius: var(--radius-card);

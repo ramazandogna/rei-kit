@@ -122,7 +122,7 @@ onBeforeUnmount(() => {
   </span>
 </template>
 
-<style scoped>
+<style>
 /* Tabular figures, so the number does not shake sideways as it counts. */
 .rk-count {
   font-variant-numeric: tabular-nums;

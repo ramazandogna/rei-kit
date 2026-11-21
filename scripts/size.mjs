@@ -64,7 +64,7 @@ const CSS_CASES = [
     // Raised with the number that moved it: 12.1 KB at 2.2, 14.4 at 2.6
     // (the calendar), 16.6 at 2.8 (the data table and the command menu),
     // 18.0 at 2.14 (the mega menu's panel and columns).
-    budget: 25.5, // 23.0 KB with batch-1 component CSS. Was 21: // 20.0 KB at 2.22.0: the error summary, and logical properties
+    budget: 24.5, // 24.2 KB after dropping scoped hashes (R4). Was 25.5; 23.0 KB with batch-1 component CSS. Was 21: // 20.0 KB at 2.22.0: the error summary, and logical properties
     // are longer to spell than the physical ones they replaced.
     imports: ['tokens.css', 'shell/mobile.css', 'styles.css'],
     source: true,
@@ -73,13 +73,13 @@ const CSS_CASES = [
      at 2.16 (the colour picker's well, hex field and swatches). */
   {
     name: 'mobile.css preset',
-    budget: 28.2, // 23.1 KB at 2.23.1: the two charts.
+    budget: 27.2, // 23.1 KB at 2.23.1: the two charts.
     imports: ['mobile.css'],
     source: false,
   },
   {
     name: 'web.css preset',
-    budget: 27.9, // 22.8 KB at 2.23.1: the two charts.
+    budget: 26.9, // 22.8 KB at 2.23.1: the two charts.
     imports: ['web.css'],
     source: false,
   },

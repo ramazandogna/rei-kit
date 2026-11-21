@@ -133,7 +133,7 @@ const rows = computed(() =>
   </table>
 </template>
 
-<style scoped>
+<style>
 .rk-bars {
   width: 100%;
   border-collapse: collapse;

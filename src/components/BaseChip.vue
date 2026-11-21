@@ -70,13 +70,13 @@ const emit = defineEmits<{ remove: []; select: [] }>()
   </span>
 </template>
 
-<style scoped>
+<style>
 .rk-chip {
   display: inline-flex;
   max-width: 100%;
   align-items: center;
   gap: 0.375rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   border: 1px solid transparent;
   padding: 0.1875rem 0.5rem 0.1875rem 0.625rem;
   font-size: 0.8125rem;
@@ -90,7 +90,7 @@ const emit = defineEmits<{ remove: []; select: [] }>()
   min-width: 0;
   align-items: center;
   gap: 0.375rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   color: inherit;
 }
 
@@ -148,7 +148,7 @@ const emit = defineEmits<{ remove: []; select: [] }>()
   height: 1.125rem;
   flex-shrink: 0;
   place-items: center;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill, 9999px);
   color: currentColor;
   opacity: 0.7;
   transition: opacity var(--duration-fast) var(--ease-standard);

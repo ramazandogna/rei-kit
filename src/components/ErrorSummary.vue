@@ -121,7 +121,7 @@ defineExpose({ focus })
   </div>
 </template>
 
-<style scoped>
+<style>
 .rk-errsum {
   border: 2px solid var(--color-negative);
   border-radius: var(--radius-card);

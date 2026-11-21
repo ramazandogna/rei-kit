@@ -211,6 +211,10 @@ function state(index: number) {
   box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-primary) 18%, transparent);
 }
 
+:global(.dark) .is-clickable:hover .rk-step-mark {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-primary) 34%, transparent);
+}
+
 .rk-step-text {
   display: flex;
   min-width: 0;

@@ -11,6 +11,15 @@ import { CATEGORIES, ENTRIES, ENTRY_LABEL, plain } from '../catalog'
  * replaced, and the Stage on each component page is where they live.
  */
 const query = ref('')
+/* A category is a filter, not an anchor: on a phone, scrolling past seven
+   groups to reach the one you tapped is the problem, and a `#id` link is a
+   route change under hash routing. */
+const active = ref<string | null>(null)
+const top = ref<HTMLElement | null>(null)
+function choose(category: string | null) {
+  active.value = active.value === category ? null : category
+  top.value?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+}
 
 const found = computed(() => {
   const needle = query.value.trim().toLowerCase()
@@ -20,7 +29,7 @@ const found = computed(() => {
   )
 })
 
-const groups = computed(() =>
+const all = computed(() =>
   [...CATEGORIES, 'More']
     .map((category) => ({
       category,
@@ -29,6 +38,10 @@ const groups = computed(() =>
     }))
     .filter((g) => g.items.length > 0),
 )
+const groups = computed(() =>
+  active.value ? all.value.filter((g) => g.category === active.value) : all.value,
+)
+const shown = computed(() => groups.value.reduce((n, g) => n + g.items.length, 0))
 
 /* The clicked card's name takes the view-transition name the component page's
    heading carries, so the title morphs between the two. */
@@ -53,12 +66,31 @@ function morph(event: MouseEvent) {
           placeholder="combobox, date, table…"
         />
       </div>
-      <nav class="cat-chips" aria-label="Categories">
-        <a v-for="g in groups" :key="g.id" :href="`#${g.id}`" class="cat-chip focus-ring">{{
-          g.category
-        }}</a>
-      </nav>
     </header>
+
+    <div ref="top" class="cat-bar">
+      <div class="cat-chips" role="group" aria-label="Filter by category">
+        <button
+          type="button"
+          class="cat-chip focus-ring"
+          :aria-pressed="active === null"
+          @click="choose(null)"
+        >
+          All <span class="site-mono">{{ found.length }}</span>
+        </button>
+        <button
+          v-for="g in all"
+          :key="g.id"
+          type="button"
+          class="cat-chip focus-ring"
+          :aria-pressed="active === g.category"
+          @click="choose(g.category)"
+        >
+          {{ g.category }} <span class="site-mono">{{ g.items.length }}</span>
+        </button>
+      </div>
+      <p class="sr-only" aria-live="polite">{{ shown }} components shown</p>
+    </div>
 
     <EmptyState
       v-if="groups.length === 0"
@@ -66,7 +98,9 @@ function morph(event: MouseEvent) {
       :description="`Nothing is called or described as “${query}”.`"
     >
       <template #action>
-        <BaseButton variant="secondary" @click="query = ''">Clear filter</BaseButton>
+        <BaseButton variant="secondary" @click="((query = ''), (active = null))">
+          Clear filter
+        </BaseButton>
       </template>
     </EmptyState>
 
@@ -103,7 +137,7 @@ function morph(event: MouseEvent) {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 8px;
 }
 .cat-title {
   display: flex;
@@ -113,24 +147,64 @@ function morph(event: MouseEvent) {
 .cat-filter {
   max-width: 28rem;
 }
+.cat-bar {
+  position: sticky;
+  top: 56px;
+  z-index: 5;
+  margin: 0 -16px;
+  padding: 10px 16px;
+  scroll-margin-top: 56px;
+  background: color-mix(in oklab, var(--color-canvas) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
 .cat-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
+@media (max-width: 39.99rem) {
+  /* One swipeable row instead of four wrapped lines of chips. */
+  .cat-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+  .cat-chip {
+    flex: none;
+    scroll-snap-align: start;
+  }
+}
 .cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
   border: 1px solid var(--color-hair);
-  border-radius: var(--radius-control);
-  padding: 4px 12px;
+  border-radius: 9999px;
+  padding: 4px 14px;
   font-size: var(--site-text-xs);
   color: var(--color-ink-soft);
+  background: var(--color-surface);
+  transition:
+    background-color var(--site-dur-1) var(--site-ease-out),
+    color var(--site-dur-1) var(--site-ease-out);
+}
+.cat-chip .site-mono {
+  opacity: 0.6;
+}
+.cat-chip[aria-pressed='true'] {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
 }
 .cat-chip:hover {
   color: var(--color-ink);
   border-color: var(--color-primary);
 }
 .cat-group {
-  margin-top: 48px;
+  margin-top: 32px;
   scroll-margin-top: 72px;
 }
 .cat-count {

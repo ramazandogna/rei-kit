@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
+
 import { MATERIALS, PALETTES, PageContainer, VERSION } from '../src/index'
-import catalogue from './props.generated.json'
+import { COMPONENT_COUNT } from './site'
 import AuthorCredit from './AuthorCredit.vue'
 
 /**
@@ -54,14 +56,13 @@ const year = new Date().getFullYear()
     <PageContainer>
       <div class="sf-grid">
         <div class="sf-brand">
-          <a href="#top" class="flex items-center gap-2.5">
+          <RouterLink to="/" class="flex items-center gap-2.5">
             <span class="sf-logo" aria-hidden="true">零</span>
             <span class="text-ink text-base font-semibold tracking-tight">rei-kit</span>
-          </a>
+          </RouterLink>
           <p class="text-ink-soft mt-3 max-w-[30ch] text-sm leading-relaxed">
-            One kit, every look. {{ catalogue.length }} components,
-            {{ MATERIALS.length }} materials, {{ PALETTES.length }} palettes — for Vue 3 and
-            Tailwind CSS 4.
+            One kit, every look. {{ COMPONENT_COUNT }} components, {{ MATERIALS.length }} materials,
+            {{ PALETTES.length }} palettes — for Vue 3 and Tailwind CSS 4.
           </p>
           <AuthorCredit class="mt-6" />
         </div>

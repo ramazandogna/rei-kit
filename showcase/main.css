@@ -191,8 +191,35 @@ body {
   }
 }
 
+/* Once the app is up, the document behind it follows the palette too. The
+   boot rules in index.html (fixed colours) only cover the time before mount. */
+html.js,
+html.js body,
+html body {
+  background-color: var(--color-canvas);
+}
+
 #app > .canvas {
   animation: app-in 250ms ease-out both;
+}
+
+/* The palette reaches the page itself: two soft pools of its own primary and
+   accent over a canvas leaned toward the primary, under the material's own
+   backdrop (glass still has something to blur). */
+#app > .canvas {
+  background-color: color-mix(in oklab, var(--color-primary) 5%, var(--color-canvas));
+  background-image:
+    radial-gradient(
+      70rem 38rem at 92% -6%,
+      color-mix(in oklab, var(--color-primary) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      60rem 40rem at -8% 38%,
+      color-mix(in oklab, var(--color-accent) 12%, transparent),
+      transparent 70%
+    ),
+    var(--canvas-backdrop, none);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -418,6 +445,12 @@ body {
 .site-main {
   padding-bottom: 6rem;
   min-height: 70dvh;
+}
+/* Phones: the tab bar is fixed to the bottom edge, so nothing may end under it. */
+@media (max-width: 39.99rem) {
+  .site-main {
+    padding-bottom: calc(5rem + 56px + env(safe-area-inset-bottom));
+  }
 }
 .site-h1 {
   font-size: var(--site-text-h1);

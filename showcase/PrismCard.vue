@@ -1,6 +1,11 @@
-<script setup lang="ts">
+<script lang="ts">
 import { ref } from 'vue'
 
+/** The figure the hero counts up; shared by all four layers so they agree. */
+export const prismAmount = ref(48200)
+</script>
+
+<script setup lang="ts">
 import { BaseAvatar, BaseBadge, BaseButton, BaseCard, BaseSwitch, ProgressBar } from '../src/index'
 
 /**
@@ -26,7 +31,7 @@ const reminder = ref(true)
 
       <div class="pc-stat">
         <p class="pc-stat-label">Saved this month</p>
-        <p class="pc-stat-value prism-num"><span class="v">¥48,200</span></p>
+        <p class="pc-stat-value prism-num">¥{{ prismAmount.toLocaleString('en-US') }}</p>
       </div>
 
       <div class="pc-tiles">

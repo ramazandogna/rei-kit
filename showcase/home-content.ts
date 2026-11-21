@@ -36,7 +36,11 @@ export const FAQ: Faq[] = [
   },
   {
     q: 'How big is it, and is it tree-shakeable?',
-    a: 'Each component is its own tree-shakeable module with no runtime dependencies. In the repository’s bench (minified and gzipped, Vue excluded), a button, an input and a modal cost about 3.8 KB of JavaScript and ten components about 8.9 KB; the shared stylesheet is about 23 KB whatever you import.',
+    a: 'Each component is its own tree-shakeable module with no runtime dependencies. In the repository’s bench (minified and gzipped, Vue excluded), a button costs 1.3 KB of JavaScript, a button, an input and a modal 3.7 KB, and all components together 59.4 KB; the shared core CSS is 25.3 KB, paid once whatever you import.',
+  },
+  {
+    q: 'Is rei-kit AI-ready?',
+    a: 'Yes. Every component page has an AI prompt tab with a ready-to-paste prompt, and the site publishes llms.txt and llms-full.txt listing every component and its usage. Fully typed props give AI coding tools such as Copilot, Cursor and Claude an exact contract, so the code they write matches the real API.',
   },
   {
     q: 'What license is it under?',

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import {
@@ -31,6 +31,21 @@ const palette = usePalette()
 const theme = useTheme()
 const toast = useToast()
 
+/* The menu ranks by group order and cannot see the query, so the palette
+   listens to the field itself: when what is typed names a material, palette
+   or mode, that action goes first and Enter applies it. */
+const typed = ref('')
+function onInput(event: Event) {
+  const t = event.target as HTMLElement | null
+  if (t?.closest?.('.rk-command-input')) typed.value = (t as HTMLInputElement).value
+}
+/* Bubble, not capture: a capture listener runs before the field's own
+   v-model, and the re-render its write schedules lands between the two and
+   wipes what was just typed. */
+onMounted(() => document.addEventListener('input', onInput))
+onBeforeUnmount(() => document.removeEventListener('input', onInput))
+watch(open, () => (typed.value = ''))
+
 const RECENT_KEY = 'rei-recent'
 function recent(): string[] {
   try {
@@ -56,7 +71,20 @@ const groups = computed(() => {
       })
     : []
 
-  return [
+  const q = typed.value.trim().toLowerCase()
+  const rank = (items: { id: string; label: string }[]) => {
+    if (q.length < 2) return 0
+    const hit = items.filter((i) => {
+      const name = i.label
+        .toLowerCase()
+        .replace(/^use /, '')
+        .replace(/ mode$/, '')
+      return name === q || (q.length >= 3 && name.startsWith(q))
+    })
+    return hit.length
+  }
+
+  const all = [
     {
       label: 'Pages',
       items: [
@@ -104,9 +132,9 @@ const groups = computed(() => {
     {
       label: 'Mode',
       items: [
-        { id: 'mode:light', label: 'Light', keywords: ['theme'] },
-        { id: 'mode:dark', label: 'Dark', keywords: ['theme', 'night'] },
-        { id: 'mode:system', label: 'System', keywords: ['theme', 'auto'] },
+        { id: 'mode:light', label: 'Light mode', keywords: ['theme', 'light'] },
+        { id: 'mode:dark', label: 'Dark mode', keywords: ['theme', 'dark', 'night'] },
+        { id: 'mode:system', label: 'System mode', keywords: ['theme', 'auto', 'system'] },
       ],
     },
     {
@@ -119,6 +147,21 @@ const groups = computed(() => {
       ],
     },
   ].filter((g) => g.items.length > 0)
+
+  const appearance = new Set(['Material', 'Palette', 'Mode'])
+  const hit = all.filter((g) => appearance.has(g.label) && rank(g.items) > 0)
+  if (hit.length === 0) return all
+  const first = hit.map((g) => {
+    const exact = (i: { label: string }) => {
+      const name = i.label
+        .toLowerCase()
+        .replace(/^use /, '')
+        .replace(/ mode$/, '')
+      return name === q ? 0 : 1
+    }
+    return { ...g, items: [...g.items].sort((a, b) => exact(a) - exact(b)) }
+  })
+  return [...first, ...all.filter((g) => !hit.includes(g))]
 })
 
 async function onSelect(id: string) {

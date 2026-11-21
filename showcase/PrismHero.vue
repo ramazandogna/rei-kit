@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import {
@@ -15,7 +15,7 @@ import type { Material } from '../src/index'
 import { HeroBackdrop } from '../src/motion/index'
 import { HOME_H1 } from './home-content'
 import { COMPONENT_COUNT } from './site'
-import PrismCard from './PrismCard.vue'
+import PrismCard, { prismAmount } from './PrismCard.vue'
 import { reduceMotion, seam } from './seam'
 import './prism.css'
 
@@ -45,6 +45,8 @@ onMounted(() => {
 })
 
 const stage = useTemplateRef<HTMLElement>('stage')
+const hero = useTemplateRef<HTMLElement>('hero')
+const bands = useTemplateRef<HTMLElement>('bands')
 const pos = ref([25, 50, 75])
 const dragging = ref(0)
 const vertical = ref(false)
@@ -72,7 +74,36 @@ function paint() {
   pos.value.forEach((p, i) => el.style.setProperty(`--s${i + 1}`, `${p}%`))
   const labels = el.parentElement?.querySelector<HTMLElement>('.prism-labels')
   pos.value.forEach((p, i) => labels?.style.setProperty(`--s${i + 1}`, `${p}%`))
+  layoutBands()
 }
+
+/* The four materials are also four full-height diagonal bands behind the
+   card. Each band edge is the continuation of a card seam: same slant, so the
+   card reads as a window onto the bands. The edge x-positions are measured,
+   not guessed, which is why they are written in pixels. */
+const SLANT = 0.22
+function layoutBands() {
+  const el = stage.value
+  const b = bands.value
+  const h = hero.value
+  if (!el || !b || !h) return
+  if (vertical.value) {
+    ;['bt', 'bb'].forEach((k) => [1, 2, 3].forEach((n) => b.style.removeProperty(`--${k}${n}`)))
+    el.style.removeProperty('--skc')
+    return
+  }
+  const sr = el.getBoundingClientRect()
+  const br = b.getBoundingClientRect()
+  const yc = sr.top - br.top + sr.height / 2
+  const H = br.height
+  el.style.setProperty('--skc', `${(SLANT * sr.height) / 2}px`)
+  pos.value.forEach((p, i) => {
+    const cx = sr.left - br.left + (p / 100) * sr.width
+    b.style.setProperty(`--bt${i + 1}`, `${cx + SLANT * yc}px`)
+    b.style.setProperty(`--bb${i + 1}`, `${cx - SLANT * (H - yc)}px`)
+  })
+}
+let layoutObserver: ResizeObserver | undefined
 
 function pct(event: PointerEvent | MouseEvent) {
   const r = stage.value!.getBoundingClientRect()
@@ -105,6 +136,7 @@ function tourTick() {
   const el = stage.value
   if (!el) return
   el.classList.add('is-auto')
+  bands.value?.classList.add('is-auto')
   pos.value = [...TOUR[tourStep % TOUR.length]!]
   tourStep++
   paint()
@@ -128,9 +160,18 @@ function takeOver() {
   if (tourStart) clearTimeout(tourStart)
   pause()
   stage.value?.classList.remove('is-auto')
+  bands.value?.classList.remove('is-auto')
 }
 onMounted(() => {
   narrow?.addEventListener('change', syncOrientation)
+  narrow?.addEventListener('change', layoutBands)
+  if (typeof ResizeObserver === 'function' && hero.value) {
+    layoutObserver = new ResizeObserver(layoutBands)
+    layoutObserver.observe(hero.value)
+    if (stage.value) layoutObserver.observe(stage.value)
+  }
+  layoutBands()
+  countUp()
   if (reduceMotion()) return
   if (typeof IntersectionObserver === 'function' && stage.value) {
     seen = new IntersectionObserver(([entry]) => (onScreen = entry?.isIntersecting ?? true))
@@ -140,6 +181,10 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   narrow?.removeEventListener('change', syncOrientation)
+  narrow?.removeEventListener('change', layoutBands)
+  layoutObserver?.disconnect()
+  cancelAnimationFrame(countFrame)
+  if (typeTimer) clearTimeout(typeTimer)
   seen?.disconnect()
   if (tourStart) clearTimeout(tourStart)
   pause()
@@ -230,6 +275,41 @@ function ringKey(event: KeyboardEvent) {
   )
 }
 
+/* ¥0 → ¥48,200 as the page loads. The number is real text, so a reader under
+   reduced motion, or before this runs, gets the final figure. */
+let countFrame = 0
+function countUp() {
+  if (reduceMotion()) return
+  const total = 48200
+  const start = performance.now() + 250
+  const run = (now: number) => {
+    const t = Math.min(1, Math.max(0, (now - start) / 1400))
+    prismAmount.value = Math.round(total * (1 - Math.pow(1 - t, 4)))
+    if (t < 1) countFrame = requestAnimationFrame(run)
+  }
+  prismAmount.value = 0
+  countFrame = requestAnimationFrame(run)
+}
+
+/* The live code pill: when the material changes the new value is typed in. */
+const typed = ref(material.value as string)
+let typeTimer: ReturnType<typeof setTimeout> | undefined
+watch(material, (next) => {
+  if (typeTimer) clearTimeout(typeTimer)
+  if (reduceMotion()) {
+    typed.value = next
+    return
+  }
+  let n = 0
+  typed.value = ''
+  const step = () => {
+    n++
+    typed.value = next.slice(0, n)
+    if (n < next.length) typeTimer = setTimeout(step, 55)
+  }
+  step()
+})
+
 const SEAMS = [
   ['quiet', 'glass'],
   ['glass', 'brutal'],
@@ -239,19 +319,41 @@ const count = computed(() => COMPONENT_COUNT)
 </script>
 
 <template>
-  <section class="prism site-page" :class="{ 'prism--rest': rest }" aria-labelledby="hero-title">
+  <section
+    ref="hero"
+    class="prism site-page"
+    :class="{ 'prism--rest': rest }"
+    aria-labelledby="hero-title"
+  >
     <HeroBackdrop variant="aurora" fade="radial" :animate="false" class="prism-bg" />
+    <div ref="bands" class="prism-bands" aria-hidden="true">
+      <span
+        v-for="(m, i) in MATERIALS"
+        :key="m"
+        class="prism-band"
+        :data-material="m"
+        :data-i="i"
+      />
+    </div>
 
     <div class="prism-copy">
-      <p class="prism-eyebrow">data-material="{{ material }}"</p>
+      <p class="prism-pill site-mono">
+        <span class="prism-pill-dot" aria-hidden="true" />
+        <code
+          ><span class="prism-pill-key">data-material</span>=<span aria-hidden="true"
+            >"<span class="prism-pill-val">{{ typed }}</span
+            >"</span
+          ><span class="sr-only">"{{ material }}"</span></code
+        >
+      </p>
       <h1 id="hero-title" class="prism-title">
         <span class="sr-only">{{ HOME_H1 }}. </span>Change one attribute.<span
           >Every surface follows.</span
         >
       </h1>
       <p class="prism-sub">
-        {{ count }} accessible Vue 3 components for Tailwind CSS 4. Four materials (quiet, glass,
-        brutal, soft), ten WCAG-checked palettes, light and dark, all from the same markup.
+        {{ count }} accessible Vue 3 components for Tailwind CSS 4. Four materials, ten WCAG-checked
+        palettes and dark mode, from the same markup. A button costs 1.3 KB.
       </p>
       <div class="prism-actions">
         <div class="prism-install surface">

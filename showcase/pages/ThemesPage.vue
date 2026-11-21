@@ -10,7 +10,6 @@ import {
   applyMaterial,
   applyPalette,
   applyTheme,
-  BaseButton,
   useMaterial,
   usePalette,
   useTheme,
@@ -21,18 +20,39 @@ import SampleScreen from '../SampleScreen.vue'
 import { seam } from '../seam'
 
 /**
- * The three axes as an explorer. The choices here are local to the sample
- * until "Apply to site" — which goes through the Seam like every other
- * appearance change.
+ * The three axes as an explorer. Every choice applies to the whole site at
+ * once, through the Seam like every other appearance change, so the page you
+ * are looking at is the preview.
  */
 const siteMaterial = useMaterial()
 const sitePalette = usePalette()
 const siteTheme = useTheme()
-
-const material = ref<Material>(siteMaterial.value)
-const palette = ref(sitePalette.value)
-const mode = ref<ThemePreference>(siteTheme.value)
 const rtl = ref(false)
+
+const material = computed<Material>({
+  get: () => siteMaterial.value,
+  set: (next) =>
+    seam(() => {
+      siteMaterial.value = next
+      applyMaterial(next)
+    }),
+})
+const palette = computed<string>({
+  get: () => sitePalette.value,
+  set: (next) =>
+    seam(() => {
+      sitePalette.value = next
+      applyPalette(next)
+    }),
+})
+const mode = computed<ThemePreference>({
+  get: () => siteTheme.value,
+  set: (next) =>
+    seam(() => {
+      siteTheme.value = next
+      applyTheme(next)
+    }),
+})
 
 const dark = computed(() => mode.value === 'dark')
 
@@ -42,17 +62,6 @@ const modes: { value: ThemePreference; label: string }[] = [
   { value: 'dark', label: 'Dark' },
   { value: 'system', label: 'System' },
 ]
-
-function apply() {
-  seam(() => {
-    siteMaterial.value = material.value
-    sitePalette.value = palette.value
-    siteTheme.value = mode.value
-    applyMaterial(material.value)
-    applyPalette(palette.value)
-    applyTheme(mode.value)
-  })
-}
 
 const html = computed(
   () =>
@@ -130,16 +139,10 @@ const byKey = (key: string) => PALETTES.find((p) => p.name === key)!
           <SegmentedControl v-model="mode" :options="modes" aria-labelledby="th-mode" />
         </div>
         <BaseSwitch v-model="rtl" label="Right to left" />
-        <BaseButton @click="apply">Apply to site</BaseButton>
+        <p class="th-note" role="status">Applies to the whole site as you choose.</p>
       </div>
 
-      <div
-        class="th-sample canvas"
-        :class="{ dark }"
-        :data-material="material"
-        :data-palette="palette"
-        :dir="rtl ? 'rtl' : 'ltr'"
-      >
+      <div class="th-sample canvas" :dir="rtl ? 'rtl' : 'ltr'">
         <SampleScreen />
       </div>
     </div>
@@ -247,6 +250,10 @@ const byKey = (key: string) => PALETTES.find((p) => p.name === key)!
   width: 32px;
   height: 32px;
   border-radius: 9999px;
+}
+.th-note {
+  font-size: var(--site-text-sm);
+  color: var(--color-ink-soft);
 }
 .th-sample {
   display: flex;

@@ -6,9 +6,9 @@
   isolation: isolate;
   display: grid;
   align-items: center;
-  gap: 48px;
-  min-height: min(88svh, 52rem);
-  padding-block: 32px 64px;
+  gap: 40px;
+  min-height: min(92svh, 58rem);
+  padding-block: 40px 72px;
 }
 .prism-bg {
   position: absolute !important;
@@ -18,7 +18,80 @@
 }
 @media (min-width: 64rem) {
   .prism {
-    grid-template-columns: 5fr 7fr;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+
+/* ---- the bands: four materials as full-height diagonal slabs ---- */
+@property --bt1 {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 52%;
+}
+@property --bt2 {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 68%;
+}
+@property --bt3 {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 84%;
+}
+@property --bb1 {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 46%;
+}
+@property --bb2 {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 62%;
+}
+@property --bb3 {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 78%;
+}
+.prism-bands {
+  position: absolute;
+  inset: -56px calc(50% - 50vw) 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(#000 78%, transparent);
+  mask-image: linear-gradient(#000 78%, transparent);
+}
+.prism-bands.is-auto {
+  transition:
+    --bt1 1400ms cubic-bezier(0.65, 0, 0.35, 1),
+    --bt2 1400ms cubic-bezier(0.65, 0, 0.35, 1),
+    --bt3 1400ms cubic-bezier(0.65, 0, 0.35, 1),
+    --bb1 1400ms cubic-bezier(0.65, 0, 0.35, 1),
+    --bb2 1400ms cubic-bezier(0.65, 0, 0.35, 1),
+    --bb3 1400ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+.prism-band {
+  position: absolute;
+  inset: 0;
+  color: var(--color-ink);
+}
+.prism-band[data-i='0'] {
+  clip-path: polygon(-2% 0, var(--bt1) 0, var(--bb1) 100%, -2% 100%);
+}
+.prism-band[data-i='1'] {
+  clip-path: polygon(var(--bt1) 0, var(--bt2) 0, var(--bb2) 100%, var(--bb1) 100%);
+}
+.prism-band[data-i='2'] {
+  clip-path: polygon(var(--bt2) 0, var(--bt3) 0, var(--bb3) 100%, var(--bb2) 100%);
+}
+.prism-band[data-i='3'] {
+  clip-path: polygon(var(--bt3) 0, 102% 0, 102% 100%, var(--bb3) 100%);
+}
+@media (max-width: 63.99rem) {
+  .prism-bands {
+    display: none;
   }
 }
 
@@ -29,25 +102,52 @@
   align-items: flex-start;
   gap: 24px;
 }
-.prism-eyebrow {
-  font-family: var(--site-mono);
-  font-size: var(--site-text-xs);
+.prism-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-hair);
+  background: var(--color-surface);
+  font-size: var(--site-text-sm);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-control);
+}
+.prism-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--color-primary);
+}
+.prism-pill-key {
   color: var(--color-ink-soft);
 }
+.prism-pill-val {
+  display: inline-block;
+  min-width: 1ch;
+  color: var(--color-primary);
+  font-weight: 700;
+}
 .prism-title {
-  font-size: clamp(2.75rem, 5.4vw, 5.25rem);
-  line-height: 0.98;
-  font-weight: 600;
-  letter-spacing: -0.035em;
+  font-size: clamp(3rem, 7.4vw, 6rem);
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.045em;
   color: var(--color-ink);
   text-wrap: balance;
 }
 .prism-title span {
   display: block;
+  padding-bottom: 0.08em;
   color: var(--color-primary);
+  background: linear-gradient(100deg, var(--color-primary) 10%, var(--color-accent) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .prism-sub {
-  max-width: 34ch;
+  max-width: 36ch;
   font-size: var(--site-text-lg);
   line-height: 1.5;
   color: var(--color-ink-soft);
@@ -104,7 +204,9 @@
   border-radius: 28px;
   overflow: hidden;
   touch-action: pan-y;
-  box-shadow: 0 40px 80px -40px color-mix(in oklab, var(--color-ink) 45%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-ink) 10%, transparent),
+    0 50px 90px -30px color-mix(in oklab, var(--color-ink) 55%, transparent);
 }
 .prism-stage.is-auto {
   transition:
@@ -146,6 +248,15 @@
     --s2 var(--site-dur-3) var(--site-ease-emph),
     --s3 var(--site-dur-3) var(--site-ease-emph);
 }
+.prism-band[data-material='quiet'] {
+  background:
+    radial-gradient(
+      circle at 18% 12%,
+      color-mix(in oklab, var(--color-primary) 22%, transparent),
+      transparent 42%
+    ),
+    var(--color-canvas);
+}
 .prism-layer {
   grid-area: 1 / 1;
   padding: clamp(18px, 4vw, 36px);
@@ -166,7 +277,8 @@
     ),
     var(--color-canvas);
 }
-.prism-layer[data-material='glass'] {
+.prism-layer[data-material='glass'],
+.prism-band[data-material='glass'] {
   background:
     radial-gradient(circle at 18% 12%, var(--color-primary), transparent 40%),
     radial-gradient(circle at 88% 86%, var(--color-accent), transparent 44%),
@@ -177,7 +289,8 @@
     ),
     var(--color-canvas);
 }
-.prism-layer[data-material='brutal'] {
+.prism-layer[data-material='brutal'],
+.prism-band[data-material='brutal'] {
   background:
     radial-gradient(circle at 18% 12%, var(--color-primary) 0 22%, transparent 22.3%),
     radial-gradient(circle at 88% 86%, var(--color-accent) 0 20%, transparent 20.3%),
@@ -185,7 +298,8 @@
       0 / 14px 14px,
     var(--color-canvas);
 }
-.prism-layer[data-material='soft'] {
+.prism-layer[data-material='soft'],
+.prism-band[data-material='soft'] {
   background:
     radial-gradient(
       circle at 18% 12%,
@@ -200,27 +314,48 @@
     color-mix(in oklab, var(--color-primary) 6%, var(--color-canvas));
 }
 .prism-layer[data-i='0'] {
-  clip-path: inset(0 calc(100% - var(--s1)) 0 0);
+  clip-path: polygon(
+    0 0,
+    calc(var(--s1) + var(--skc, 60px)) 0,
+    calc(var(--s1) - var(--skc, 60px)) 100%,
+    0 100%
+  );
 }
 .prism-layer[data-i='1'] {
-  clip-path: inset(0 calc(100% - var(--s2)) 0 var(--s1));
+  clip-path: polygon(
+    calc(var(--s1) + var(--skc, 60px)) 0,
+    calc(var(--s2) + var(--skc, 60px)) 0,
+    calc(var(--s2) - var(--skc, 60px)) 100%,
+    calc(var(--s1) - var(--skc, 60px)) 100%
+  );
 }
 .prism-layer[data-i='2'] {
-  clip-path: inset(0 calc(100% - var(--s3)) 0 var(--s2));
+  clip-path: polygon(
+    calc(var(--s2) + var(--skc, 60px)) 0,
+    calc(var(--s3) + var(--skc, 60px)) 0,
+    calc(var(--s3) - var(--skc, 60px)) 100%,
+    calc(var(--s2) - var(--skc, 60px)) 100%
+  );
 }
 .prism-layer[data-i='3'] {
-  clip-path: inset(0 0 0 var(--s3));
+  clip-path: polygon(
+    calc(var(--s3) + var(--skc, 60px)) 0,
+    100% 0,
+    100% 100%,
+    calc(var(--s3) - var(--skc, 60px)) 100%
+  );
 }
 .prism-seam {
   position: absolute;
-  top: 0;
-  bottom: 0;
   left: var(--sn);
   width: 1px;
+  top: -12%;
+  bottom: -12%;
   translate: -50% 0;
+  rotate: 12.4deg;
   background: var(--color-primary);
   cursor: col-resize;
-  transform-origin: top;
+  transform-origin: 50% 50%;
   z-index: 2;
 }
 .prism-seam[data-n='1'] {
@@ -274,6 +409,8 @@
   border: 1px solid var(--color-hair);
   border-radius: 9999px;
   background: var(--color-surface);
+  box-shadow: var(--shadow-control);
+  opacity: 1;
   padding: 0 14px;
   font-family: var(--site-mono);
   font-size: var(--site-text-xs);
@@ -331,19 +468,9 @@
   outline-offset: 3px;
 }
 
-/* ---- count-up (pure CSS; the real text stays in the DOM) ---- */
 .prism-num {
-  position: relative;
   display: inline-block;
   font-variant-numeric: tabular-nums;
-}
-.prism-num > .v {
-  position: absolute;
-  opacity: 0;
-}
-.prism-num::after {
-  content: '¥' counter(k) ',' counter(h, pad3);
-  counter-reset: k var(--k) h var(--h);
 }
 
 /* ---- PrismCard ---- */
@@ -396,7 +523,7 @@
   color: var(--color-ink-soft);
 }
 .pc-stat-value {
-  font-size: 2.75rem;
+  font-size: 3rem;
   line-height: 1;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -446,25 +573,25 @@
   animation: prism-rise 250ms var(--site-ease-out) both;
 }
 .prism:not(.prism--rest) .prism-labels button:nth-child(1) {
-  animation-delay: 1150ms;
+  animation-delay: 350ms;
 }
 .prism:not(.prism--rest) .prism-labels button:nth-child(2) {
-  animation-delay: 1210ms;
+  animation-delay: 410ms;
 }
 .prism:not(.prism--rest) .prism-labels button:nth-child(3) {
-  animation-delay: 1270ms;
+  animation-delay: 470ms;
 }
 .prism:not(.prism--rest) .prism-labels button:nth-child(4) {
-  animation-delay: 1330ms;
-}
-.prism:not(.prism--rest) .prism-num::after {
-  animation: prism-count 800ms var(--site-ease-out) 1600ms both;
+  animation-delay: 530ms;
 }
 .prism:not(.prism--rest) .prism-hint {
   animation: prism-fadein 300ms var(--site-ease-out) 2400ms both;
 }
 .prism:not(.prism--rest) .prism-ring {
-  animation: prism-fadein 300ms var(--site-ease-out) 1500ms both;
+  animation: prism-fadein 300ms var(--site-ease-out) 700ms both;
+}
+.prism:not(.prism--rest) .prism-bands {
+  animation: prism-fadein 700ms var(--site-ease-out) 100ms both;
 }
 
 @keyframes prism-draw {
@@ -512,21 +639,46 @@
     opacity: 0;
   }
 }
-@keyframes prism-count {
-  from {
-    --k: 0;
-    --h: 0;
-  }
-}
 
-/* ================= Mobile: horizontal seams ================= */
+/* ================= Mobile: card above the copy, H1 over its edge ================= */
 @media (max-width: 39.99rem) {
   .prism {
-    gap: 32px;
-    padding-top: 16px;
+    gap: 16px;
+    padding-top: 12px;
+    min-height: 0;
+  }
+  .prism-wrap {
+    display: contents;
+  }
+  .prism-labels {
+    order: 0;
+    height: auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
   }
   .prism-stage {
+    order: 1;
     width: 100%;
+    max-height: 46svh;
+    -webkit-mask-image: linear-gradient(#000 72%, transparent);
+    mask-image: linear-gradient(#000 72%, transparent);
+    box-shadow: none;
+  }
+  .prism-copy {
+    order: 2;
+    position: relative;
+    z-index: 2;
+    margin-top: -48px;
+  }
+  .prism-ring {
+    order: 3;
+  }
+  .prism-play {
+    order: 1;
+    top: 64px;
+    right: 12px;
   }
   .prism-layer[data-i='0'] {
     clip-path: inset(0 0 calc(100% - var(--s1)) 0);
@@ -548,6 +700,7 @@
     width: auto;
     height: 1px;
     translate: 0 -50%;
+    rotate: none;
     cursor: row-resize;
     transform-origin: left;
   }
@@ -559,12 +712,6 @@
   }
   .prism:not(.prism--rest) .prism-seam {
     animation-name: prism-draw-h;
-  }
-  .prism-labels {
-    height: auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
   }
   .prism-labels button,
   .prism-labels button:nth-child(n) {

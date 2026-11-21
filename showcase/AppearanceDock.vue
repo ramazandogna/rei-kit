@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Check, ChevronDown, Monitor, Moon, Palette, Sun, X } from 'lucide-vue-next'
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { Check, ChevronDown, Moon, Sun, X } from 'lucide-vue-next'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import {
   BasePopover,
@@ -47,12 +47,36 @@ function setPalette(name: string) {
   })
 }
 
-const ORDER: ThemePreference[] = ['light', 'dark', 'system']
-const NEXT = computed(() => ORDER[(ORDER.indexOf(theme.value) + 1) % ORDER.length]!)
+/* What is on screen right now, read from <html>: `system` is resolved by the
+   kit, so the toggle flips what the reader actually sees. */
+const isDark = ref(false)
+const NEXT = computed<ThemePreference>(() => (isDark.value ? 'light' : 'dark'))
+function readDark() {
+  isDark.value = document.documentElement.classList.contains('dark')
+}
+let watcher: MutationObserver | undefined
+onMounted(() => {
+  readDark()
+  watcher = new MutationObserver(readDark)
+  watcher.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
 
-/* Phones get one button and a bottom sheet instead of a floating toolbar
-   that sits on top of whatever the reader is looking at. */
-const sheetOpen = ref(false)
+/* Phones get a bottom sheet (opened from the tab bar's Look tab) instead of
+   a floating toolbar that sits on top of whatever the reader is looking at. */
+const sheetOpen = defineModel<boolean>('sheet', { default: false })
+
+/* Desktop: the dock steps out of the way while reading down the page and
+   returns the moment the reader scrolls up. */
+const tucked = ref(false)
+let lastY = 0
+function onScroll() {
+  const y = window.scrollY
+  const dy = y - lastY
+  if (Math.abs(dy) < 6) return
+  tucked.value = dy > 0 && y > 160 && !menuOpen.value
+  lastY = y
+}
 const MODES: { value: ThemePreference; label: string }[] = [
   { value: 'light', label: 'Light' },
   { value: 'dark', label: 'Dark' },
@@ -73,20 +97,28 @@ watch(sheetOpen, (open) => {
   else document.removeEventListener('keydown', onKey)
 })
 onBeforeUnmount(() => {
+  watcher?.disconnect()
+  if (typeof window !== 'undefined') window.removeEventListener('scroll', onScroll)
   if (typeof document !== 'undefined') document.removeEventListener('keydown', onKey)
 })
 
-function cycle() {
+function toggleMode(event: MouseEvent) {
   const next = NEXT.value
+  const r = (event.currentTarget as HTMLElement).getBoundingClientRect()
+  const origin =
+    event.detail === 0
+      ? { x: r.left + r.width / 2, y: r.top + r.height / 2 }
+      : { x: event.clientX, y: event.clientY }
   seam(() => {
     theme.value = next
     applyTheme(next)
-  })
+    readDark()
+  }, origin)
 }
 </script>
 
 <template>
-  <div class="dock-wrap">
+  <div class="dock-wrap" :class="{ 'is-tucked': tucked }">
     <BaseToolbar label="Appearance" class="dock surface-overlay">
       <div class="dock-menu">
         <button
@@ -159,31 +191,15 @@ function cycle() {
       <button
         type="button"
         class="dock-btn dock-mode focus-ring"
-        :aria-label="`Switch to ${NEXT}`"
-        :title="`Mode: ${theme}`"
-        @click="cycle"
+        :aria-label="`Switch to ${NEXT} mode`"
+        :title="`Switch to ${NEXT} mode`"
+        @click="toggleMode"
       >
-        <Sun v-if="theme === 'light'" class="size-4" aria-hidden="true" />
-        <Moon v-else-if="theme === 'dark'" class="size-4" aria-hidden="true" />
-        <Monitor v-else class="size-4" aria-hidden="true" />
+        <Sun v-if="isDark" class="size-4" aria-hidden="true" />
+        <Moon v-else class="size-4" aria-hidden="true" />
+        <span class="dock-label">{{ isDark ? 'Dark' : 'Light' }}</span>
       </button>
     </BaseToolbar>
-
-    <button
-      type="button"
-      class="dock-fab surface-overlay focus-ring"
-      :aria-expanded="sheetOpen"
-      aria-controls="appearance-sheet"
-      aria-label="Appearance"
-      @click="sheetOpen = !sheetOpen"
-    >
-      <span
-        class="dock-dot dock-fab-dot"
-        :style="{ background: pie(current.swatch) }"
-        aria-hidden="true"
-      />
-      <Palette class="size-4" aria-hidden="true" />
-    </button>
 
     <Transition name="dock-sheet">
       <div v-if="sheetOpen" class="dock-scrim" @click.self="sheetOpen = false">
@@ -266,8 +282,23 @@ function cycle() {
   left: 50%;
   translate: -50% 0;
   bottom: max(16px, calc(env(safe-area-inset-bottom) + 12px));
-  z-index: 45;
+  z-index: 60;
   view-transition-name: site-dock;
+}
+.dock-wrap {
+  transition:
+    transform var(--site-dur-3) var(--site-ease-emph),
+    opacity var(--site-dur-2) var(--site-ease-out);
+}
+.dock-wrap.is-tucked {
+  transform: translateY(calc(100% + 32px));
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dock-wrap {
+    transition: none;
+  }
 }
 .dock {
   display: flex;
@@ -375,36 +406,21 @@ function cycle() {
   color: var(--color-ink);
   font-weight: 600;
 }
-.dock-fab,
 .dock-scrim {
   display: none;
 }
 @media (max-width: 39.99rem) {
   .dock-wrap {
-    inset-inline-start: auto;
-    inset-inline-end: max(16px, env(safe-area-inset-right));
+    inset: 0;
     translate: none;
+    pointer-events: none;
+    view-transition-name: none;
+  }
+  .dock-scrim {
+    pointer-events: auto;
   }
   .dock {
     display: none;
-  }
-  .dock-fab {
-    display: inline-flex;
-    width: 52px;
-    height: 52px;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    border-radius: 9999px;
-    box-shadow: var(--shadow-overlay);
-    color: var(--color-ink);
-  }
-  .dock-fab-dot {
-    position: absolute;
-    top: 6px;
-    inset-inline-end: 6px;
-    width: 12px;
-    height: 12px;
   }
   .dock-scrim {
     position: fixed;

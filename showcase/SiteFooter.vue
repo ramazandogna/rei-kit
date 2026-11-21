@@ -43,10 +43,6 @@ const COLUMNS = [
         label: 'Kakehashi — a course site',
         href: 'https://github.com/ramazandogna/kakehashi-nihongo',
       },
-      {
-        label: 'Around the Table — a study site',
-        href: 'https://ramazandogna.github.io/around-to-table_study/',
-      },
     ],
   },
 ]
@@ -87,6 +83,20 @@ const year = new Date().getFullYear()
           </ul>
         </nav>
       </div>
+
+      <a
+        class="sf-credit focus-ring"
+        href="https://ramazandogna.github.io/around-to-table_study/"
+        target="_blank"
+        rel="noopener"
+      >
+        <span class="sf-credit-mark" aria-hidden="true">卓</span>
+        <span class="sf-credit-text">
+          <b>Around the Table — a social study game</b>
+          <span>Built with rei-kit</span>
+        </span>
+        <span aria-hidden="true">↗</span>
+      </a>
 
       <div class="sf-bottom">
         <p>© {{ year }} Ramazan Doğan · MIT licence</p>
@@ -159,8 +169,51 @@ const year = new Date().getFullYear()
    last line of the page. */
 @media (max-width: 63.99rem) {
   .sf {
-    padding-bottom: 6rem;
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
   }
+}
+@media (max-width: 39.99rem) {
+  .sf {
+    padding-bottom: calc(6rem + 56px + env(safe-area-inset-bottom));
+  }
+}
+.sf-credit {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-top: 2.5rem;
+  max-width: 28rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--color-hair);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+.sf-credit:hover {
+  border-color: var(--color-primary);
+}
+.sf-credit-mark {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  place-items: center;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: var(--color-on-primary);
+  font-weight: 700;
+}
+.sf-credit-text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.8125rem;
+  color: var(--color-ink-soft);
+}
+.sf-credit-text b {
+  font-size: 0.875rem;
+  color: var(--color-ink);
 }
 
 .sf-bottom {

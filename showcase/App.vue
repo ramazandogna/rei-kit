@@ -3,6 +3,7 @@ import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 
 import { ToastHost } from '../src/index'
+import MobileTabBar from './MobileTabBar.vue'
 import SiteHeader from './SiteHeader.vue'
 import { seamKey } from './seam'
 
@@ -19,6 +20,7 @@ const loadPalette = () => import('./CommandPalette.vue')
 const CommandPalette = defineAsyncComponent(loadPalette)
 
 const findOpen = ref(false)
+const lookOpen = ref(false)
 const paletteMounted = ref(false)
 const route = useRoute()
 
@@ -71,7 +73,8 @@ onBeforeUnmount(() => {
     </main>
 
     <SiteFooter />
-    <AppearanceDock />
+    <MobileTabBar :look-open="lookOpen" @look="lookOpen = !lookOpen" />
+    <AppearanceDock v-model:sheet="lookOpen" />
     <ToastHost close-label="Close" />
     <CommandPalette v-if="paletteMounted" v-model="findOpen" />
     <span v-if="seamKey" :key="seamKey" class="seam-line" aria-hidden="true" />

@@ -2,6 +2,7 @@
 import { defineAsyncComponent } from 'vue'
 
 import FaqSection from '../FaqSection.vue'
+import FeatureSection from '../FeatureSection.vue'
 import InstallSection from '../InstallSection.vue'
 import LooksSection from '../LooksSection.vue'
 import PrismHero from '../PrismHero.vue'
@@ -16,6 +17,7 @@ const NewSection = defineAsyncComponent(() => import('../NewSection.vue'))
 
 <template>
   <PrismHero />
+  <FeatureSection class="home-defer" />
   <LooksSection class="home-defer" />
   <NewSection class="home-defer" />
   <InstallSection class="home-defer" />

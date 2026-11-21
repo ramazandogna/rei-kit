@@ -8,7 +8,7 @@ import { REPO } from './site'
 
 /**
  * One row, 56px. Logo and version, three links, the palette button and
- * GitHub. Under 768px the links move into a sheet.
+ * GitHub. Under 768px the links move into a sheet; under 640px the bottom tab bar carries them.
  */
 defineEmits<{ find: [] }>()
 
@@ -210,6 +210,11 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
 .sh-sheet a {
   padding: 12px 8px;
   font-size: var(--site-text-lg);
+}
+@media (max-width: 39.99rem) {
+  .sh-menu {
+    display: none;
+  }
 }
 @media (min-width: 48rem) {
   .sh-nav {

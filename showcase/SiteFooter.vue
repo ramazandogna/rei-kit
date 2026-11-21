@@ -43,6 +43,10 @@ const COLUMNS = [
         label: 'Kakehashi — a course site',
         href: 'https://github.com/ramazandogna/kakehashi-nihongo',
       },
+      {
+        label: 'Around the Table — a study site',
+        href: 'https://ramazandogna.github.io/around-to-table_study/',
+      },
     ],
   },
 ]

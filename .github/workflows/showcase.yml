@@ -8,9 +8,15 @@ name: Showcase
 # Published from main rather than from a tag: the showcase describes what the
 # package is, not what the last release was, and a gallery that lags the code
 # is how a reader ends up trusting something that is no longer true.
+#
+# The beta: the redesign branch is published beside it at /rei-kit/beta/, so
+# it can be reviewed on the real host without replacing the live site. Every
+# run builds main at the root and the beta branch under /beta/, whichever of
+# the two was pushed. The beta is noindex and its canonicals point at the
+# live site, so search engines never see two copies.
 on:
   push:
-    branches: [main]
+    branches: [main, claude/rei-kit-preview]
   workflow_dispatch:
 
 concurrency:
@@ -28,20 +34,45 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: main
+          path: live
+      - uses: actions/checkout@v7
+        with:
+          ref: claude/rei-kit-preview
+          path: beta
       - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: live/package.json
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+          cache-dependency-path: |
+            live/pnpm-lock.yaml
+            beta/pnpm-lock.yaml
 
       # The prop tables are generated from the source by `showcase:build`, so
       # the page cannot document a component the package no longer ships.
-      - name: Build the showcase
-        run: pnpm showcase:build
+      - name: Build the live showcase
+        working-directory: live
+        run: pnpm install --frozen-lockfile && pnpm showcase:build
         env:
           SHOWCASE_BASE: /rei-kit/
+
+      - name: Build the beta
+        working-directory: beta
+        run: pnpm install --frozen-lockfile && pnpm showcase:build
+        env:
+          SHOWCASE_BASE: /rei-kit/beta/
+
+      - name: Put the beta under /beta/, out of the index
+        run: |
+          find beta/dist-showcase -name '*.html' -exec \
+            sed -i 's|<head>|<head><meta name="robots" content="noindex">|' {} +
+          rm -f beta/dist-showcase/sitemap.xml beta/dist-showcase/robots.txt
+          mkdir -p live/dist-showcase/beta
+          cp -r beta/dist-showcase/. live/dist-showcase/beta/
 
       # Needs Pages switched on once, by hand:
       #   Settings -> Pages -> Build and deployment -> Source: GitHub Actions
@@ -54,7 +85,7 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: dist-showcase
+          path: live/dist-showcase
 
   deploy:
     needs: build

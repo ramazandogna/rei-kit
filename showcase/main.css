@@ -319,8 +319,19 @@ body {
 ::view-transition-new(root) {
   animation: none;
 }
+/* Route change: the new page is wiped in along the Seam while the old one
+   recedes a step under it. Both are snapshots, so this is clip-path and
+   opacity on two composited layers, nothing re-lays out. 320 ms. */
 :root[data-vt='seam']::view-transition-new(root) {
   animation: seam-in var(--site-dur-3) var(--site-ease-emph) both;
+}
+:root[data-vt='seam']::view-transition-old(root) {
+  animation: seam-recede var(--site-dur-3) var(--site-ease-out) both;
+}
+@keyframes seam-recede {
+  to {
+    opacity: 0.6;
+  }
 }
 :root[data-vt='seam'][dir='rtl']::view-transition-new(root) {
   animation-name: seam-in-rtl;
@@ -336,6 +347,60 @@ body {
 ::view-transition-group(stage) {
   animation-duration: var(--site-dur-3);
   animation-timing-function: var(--site-ease-emph);
+}
+
+/* Without the View Transitions API the route still arrives on the Seam's
+   timing: each page root (RouterView is keyed by path) fades up 8 px once.
+   Transform and opacity only; zero under reduced motion via the tokens. */
+@supports not (view-transition-name: none) {
+  .site-main > * {
+    animation: page-in var(--site-dur-2) var(--site-ease-out) both;
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+
+/* Below-the-fold home sections. `content-visibility: auto` skips their
+   layout and paint until they are near the viewport, which also stops the
+   repaint-driven loops inside them (BorderBeam's conic angle, AnimatedBeam's
+   dash offset) while they are off screen. The `auto` intrinsic size keeps
+   the last rendered height, so the scrollbar does not jump back. */
+.home-defer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+@media (min-width: 40rem) {
+  .home-defer {
+    contain-intrinsic-size: auto 780px;
+  }
+}
+
+/* Scroll reveal, driven by the compositor where scroll timelines exist: no
+   observer, no listener, nothing to clean up. Elsewhere it is simply shown. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .home-defer > * {
+      animation: section-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+@keyframes section-reveal {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+
+/* Every page's one h1 morphs into the next page's h1 during a route change,
+   the same shared element the component page already names. */
+.site-main h1.site-h1 {
+  view-transition-name: page-title;
 }
 
 /* ---- Page frame ---- */

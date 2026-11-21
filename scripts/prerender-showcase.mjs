@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 
 /**
@@ -34,6 +34,13 @@ const out = fileURLToPath(new URL('./dist-showcase/', root))
    fact about where this site lives and must not. */
 const base = process.env['SHOWCASE_BASE'] ?? '/'
 const site = process.env['SHOWCASE_SITE'] ?? 'https://ramazandogna.github.io/rei-kit/'
+
+/* The route table the app itself uses for its head tags (plain TypeScript,
+   which Node 22 imports natively), so the static file and the hydrated page
+   carry the same title and description. */
+const { STATIC_META, NOT_FOUND_META, HOME_META } = await import(
+  new URL('./showcase/head-meta.ts', root).href
+)
 
 const catalogue = JSON.parse(
   readFileSync(fileURLToPath(new URL('./showcase/props.generated.json', root)), 'utf8'),
@@ -75,6 +82,27 @@ const themeScript = `<script>
       } catch (error) {}
     </script>`
 
+const absolute = (path) => (path ? `${site}${path}/` : site)
+
+function breadcrumbs(crumbs) {
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ name: 'rei-kit', path: '' }, ...crumbs].map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: absolute(crumb.path),
+    })),
+  }
+}
+
+/* `<` escaped so a summary can never close the script element. */
+const ldJson = (graph) =>
+  JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }, null, 2).replaceAll(
+    '<',
+    '\\u003c',
+  )
+
 function propRows(props) {
   if (props.length === 0) return '<p>This component takes no props.</p>'
 
@@ -99,8 +127,8 @@ function page(component) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${escape(component.name)} — rei-kit Vue 3 component</title>
-    <meta name="description" content="${escape(plain(component.summary))} ${escape(component.name)} is part of rei-kit, an accessible Vue 3 + Tailwind 4 component library. Imported from ${escape(component.entry)}." />
+    <title>${escape(component.name)} — Vue 3 component — rei-kit</title>
+    <meta name="description" content="${escape(plain(component.summary))} Accessible, typed and themed for Tailwind CSS 4. Import from ${escape(component.entry)}." />
     <link rel="canonical" href="${url}" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="${escape(component.name)} — rei-kit" />
@@ -108,20 +136,27 @@ function page(component) {
     <meta property="og:url" content="${url}" />
     <meta property="og:image" content="${site}og.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${escape(component.name)} — rei-kit" />
+    <meta name="twitter:description" content="${escape(plain(component.summary))}" />
     <script type="application/ld+json">
-${JSON.stringify(
+${ldJson([
   {
-    '@context': 'https://schema.org',
-    '@type': 'TechArticle',
-    headline: `${component.name} — rei-kit`,
-    description: component.summary,
+    '@type': 'SoftwareSourceCode',
+    name: component.name,
+    description: plain(component.summary),
     url,
-    isPartOf: { '@type': 'WebSite', name: 'rei-kit', url: site },
+    codeRepository: 'https://github.com/ramazandogna/rei-kit',
+    programmingLanguage: ['TypeScript', 'Vue'],
+    runtimePlatform: 'Vue 3',
+    license: 'https://opensource.org/licenses/MIT',
+    isPartOf: { '@type': 'SoftwareSourceCode', name: 'rei-kit', url: site },
     author: { '@type': 'Person', name: 'Ramazan Dogan' },
   },
-  null,
-  2,
-)}
+  breadcrumbs([
+    { name: 'Components', path: 'components' },
+    { name: component.name, path: `c/${component.name}` },
+  ]),
+])}
     </script>
     ${themeScript}
     ${assetTags}
@@ -143,7 +178,7 @@ ${JSON.stringify(
   </head>
   <body>
     <div id="app"><div class="stub">
-    <nav><a href="${site}">rei-kit</a> › <a href="${site}components">Components</a> › ${escape(component.name)}</nav>
+    <nav aria-label="Breadcrumb"><a href="${site}">rei-kit</a> › <a href="${site}components/">Components</a> › ${escape(component.name)}</nav>
     <h1>${escape(component.name)}</h1>
     <p>${escape(plain(component.summary))}</p>
     <p>
@@ -151,7 +186,7 @@ ${JSON.stringify(
       <code>import { ${escape(component.name)} } from '${escape(component.entry)}'</code>
     </p>
     <p>
-      <a href="${site}components">Browse every component</a> in the live documentation, in four
+      <a href="${site}components/">Browse every component</a> in the live documentation, in four
       materials and ten palettes.
     </p>
     ${example ? `<h2>Usage</h2>\n    <pre><code>${escape(example.ts)}</code></pre>` : ''}
@@ -166,8 +201,8 @@ ${JSON.stringify(
     </p>
     <p>
       <code>pnpm add rei-kit</code> ·
-      <a href="https://www.npmjs.com/package/rei-kit">npm</a> ·
-      <a href="https://github.com/ramazandogna/rei-kit">GitHub</a>
+      <a href="https://www.npmjs.com/package/rei-kit">rei-kit on npm</a> ·
+      <a href="https://github.com/ramazandogna/rei-kit">Source on GitHub</a>
     </p>
     </div></div>
   </body>
@@ -199,16 +234,105 @@ writeFileSync(
   ),
 )
 
-/* GitHub Pages serves 404.html for any path it has no file for, so a deep
-   link such as /themes boots the app from the shell and the router takes over. */
-writeFileSync(`${out}404.html`, readFileSync(shell, 'utf8'))
+/* Each top-level route gets a real file, so Pages answers /components/,
+   /themes/ and /docs/<slug>/ with a 200 and this route's own head, instead
+   of the 404 fallback with the home page's title. The body is the same boot
+   shell (the app replaces it on mount); only the crawler-facing h1 and the
+   head tags change. */
+const shellHtml = readFileSync(shell, 'utf8')
 
-const DOC_SLUGS = ['install', 'theming', 'motion', 'accessibility', 'performance', 'rtl', 'check']
+/* The route chunk is only requested once the entry has run and the router
+   has resolved, a waterfall of two round trips on a slow link. Preloading it
+   (and its static imports, CSS included) from the HTML lets it download in
+   parallel with the entry. */
+const manifest = JSON.parse(readFileSync(`${out}.vite/manifest.json`, 'utf8'))
+function preloadsFor(page) {
+  const key = `pages/${page}.vue`
+  if (!manifest[key]) return ''
+  const seen = new Set()
+  const js = []
+  const css = new Set()
+  const walk = (id) => {
+    if (seen.has(id) || manifest[id]?.isEntry) return
+    seen.add(id)
+    const chunk = manifest[id]
+    js.push(chunk.file)
+    for (const file of chunk.css ?? []) css.add(file)
+    for (const dep of chunk.imports ?? []) walk(dep)
+  }
+  walk(key)
+  const already = (file) => shellHtml.includes(`${base}${file}`)
+  return [
+    ...[...css]
+      .filter((f) => !already(f))
+      .map((f) => `<link rel="preload" as="style" crossorigin href="${base}${f}">`),
+    ...js
+      .filter((f) => !already(f))
+      .map((f) => `<link rel="modulepreload" crossorigin href="${base}${f}">`),
+  ].join('\n    ')
+}
+const PAGE_FOR = { '': 'HomePage', components: 'CatalogPage', themes: 'ThemesPage' }
+const pageFor = (path) => PAGE_FOR[path] ?? (path.startsWith('docs') ? 'DocsPage' : undefined)
+
+function withHead(html, meta, { noindex = false } = {}) {
+  const url = absolute(meta.path)
+  const title = escape(meta.title)
+  const description = escape(meta.description)
+  const preload = pageFor(meta.path) ? preloadsFor(pageFor(meta.path)) : ''
+  let next = html
+    .replace('</head>', preload ? `  ${preload}\n  </head>` : '</head>')
+    .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
+    .replace(/(<meta\s+name="description"\s+content=")[^"]*"/, `$1${description}"`)
+    .replace(/(<meta property="og:title" content=")[^"]*"/, `$1${title}"`)
+    .replace(/(<meta\s+property="og:description"\s+content=")[^"]*"/, `$1${description}"`)
+    .replace(/(<meta name="twitter:title"\s+content=")[^"]*"/, `$1${title}"`)
+    .replace(/(<meta\s+name="twitter:description"\s+content=")[^"]*"/, `$1${description}"`)
+  if (noindex) {
+    next = next
+      .replace(/\s*<link rel="canonical"[^>]*>/, '\n    <meta name="robots" content="noindex" />')
+      .replace(/\s*<meta property="og:url"[^>]*>/, '')
+  } else {
+    next = next
+      .replace(/(<link rel="canonical" href=")[^"]*"/, `$1${url}"`)
+      .replace(/(<meta property="og:url" content=")[^"]*"/, `$1${url}"`)
+  }
+  if (meta.path && !noindex) {
+    next = next
+      .replace(
+        /(<main class="boot">\s*<h1>)[^<]*(<\/h1>)/,
+        `$1${escape(meta.title.replace(/ — rei-kit.*$/, ''))}$2`,
+      )
+      .replace(
+        '</head>',
+        `  <script type="application/ld+json">\n${ldJson([breadcrumbs(meta.crumbs)])}\n    </script>\n  </head>`,
+      )
+  }
+  return next
+}
+
+writeFileSync(shell, withHead(shellHtml, HOME_META))
+
+for (const meta of STATIC_META) {
+  if (!meta.path) continue
+  mkdirSync(`${out}${meta.path}/`, { recursive: true })
+  writeFileSync(`${out}${meta.path}/index.html`, withHead(shellHtml, meta))
+}
+/* /docs/ itself is the install page; same words, canonical to the slug. */
+mkdirSync(`${out}docs/`, { recursive: true })
+writeFileSync(
+  `${out}docs/index.html`,
+  withHead(
+    shellHtml,
+    STATIC_META.find((m) => m.path === 'docs/install'),
+  ),
+)
+
+/* Anything else still boots the app from 404.html (Pages serves it with a
+   404 status), so the router can draw its not-found page. Never indexed. */
+writeFileSync(`${out}404.html`, withHead(shellHtml, NOT_FOUND_META, { noindex: true }))
+
 const urls = [
-  site,
-  `${site}components`,
-  `${site}themes`,
-  ...DOC_SLUGS.map((slug) => `${site}docs/${slug}`),
+  ...STATIC_META.map((meta) => absolute(meta.path)),
   ...catalogue.map((component) => `${site}c/${component.name}/`),
 ]
 writeFileSync(
@@ -224,6 +348,9 @@ ${urls
 </urlset>
 `,
 )
+
+/* The manifest is a build input, not part of the site. */
+rmSync(`${out}.vite`, { recursive: true, force: true })
 
 console.log(
   `prerender-showcase: ${catalogue.length} component pages, a sitemap of ${urls.length} URLs, and the shell names them all`,

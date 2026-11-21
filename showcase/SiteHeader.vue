@@ -4,7 +4,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import { BaseKbd, BaseSheet, VERSION } from '../src/index'
-import { REPO } from './catalog'
+import { REPO } from './site'
 
 /**
  * One row, 56px. Logo and version, three links, the palette button and
@@ -115,6 +115,15 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
 }
 .sh.is-scrolled {
   border-bottom-color: var(--color-hair);
+}
+/* A sticky blur is re-sampled on every scroll frame. On a phone, where the
+   GPU is smallest and the header is over text, a smaller radius over a more
+   opaque fill reads the same at a fraction of the cost. */
+@media (max-width: 39.99rem) {
+  .sh {
+    background: color-mix(in oklab, var(--color-canvas) 90%, transparent);
+    backdrop-filter: blur(6px);
+  }
 }
 .sh-row {
   display: flex;

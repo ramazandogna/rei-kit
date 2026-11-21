@@ -2,6 +2,7 @@ import { createApp, nextTick } from 'vue'
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
 import App from './App.vue'
+import { applyRouteHead } from './head'
 import { reduceMotion, showSeamLine } from './seam'
 import './main.css'
 
@@ -59,7 +60,9 @@ router.beforeResolve((to, from) => {
       .finally(() => delete document.documentElement.dataset['vt'])
   })
 })
-router.afterEach(async () => {
+router.afterEach(async (to) => {
+  /* The component page sets its own head from its summary. */
+  if (to.name !== 'component') applyRouteHead(to.name === '404' ? '404' : to.path)
   await nextTick()
   done?.()
   done = undefined

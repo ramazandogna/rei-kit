@@ -20,8 +20,19 @@ const { version } = JSON.parse(
   readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
 ) as { version: string }
 
+/* The header, footer and hero only need the count; importing the 179 kB
+   props JSON for it put the whole catalogue in the entry chunk. */
+const componentCount = (
+  JSON.parse(
+    readFileSync(new URL('./showcase/props.generated.json', import.meta.url), 'utf8'),
+  ) as unknown[]
+).length
+
 export default defineConfig({
-  define: { __REI_KIT_VERSION__: JSON.stringify(version) },
+  define: {
+    __REI_KIT_VERSION__: JSON.stringify(version),
+    __REI_KIT_COUNT__: JSON.stringify(componentCount),
+  },
   root: fileURLToPath(new URL('./showcase', import.meta.url)),
   plugins: [vue(), tailwindcss()],
   /* The examples import from 'rei-kit' exactly as an app does, so what a
@@ -43,5 +54,7 @@ export default defineConfig({
   build: {
     outDir: fileURLToPath(new URL('./dist-showcase', import.meta.url)),
     emptyOutDir: true,
+    /* Read by the prerender script to modulepreload each route's own chunk. */
+    manifest: true,
   },
 })

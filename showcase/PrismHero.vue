@@ -13,7 +13,7 @@ import {
 } from '../src/index'
 import type { Material } from '../src/index'
 import { HeroBackdrop } from '../src/motion/index'
-import { ENTRIES } from './catalog'
+import { COMPONENT_COUNT } from './site'
 import PrismCard from './PrismCard.vue'
 import { reduceMotion, seam } from './seam'
 import './prism.css'
@@ -53,9 +53,9 @@ function syncOrientation() {
   vertical.value = typeof matchMedia === 'function' && matchMedia('(max-width: 39.99rem)').matches
 }
 syncOrientation()
-if (typeof matchMedia === 'function') {
-  matchMedia('(max-width: 39.99rem)').addEventListener('change', syncOrientation)
-}
+/* Registered in onMounted and removed on unmount: added at setup, every
+   visit to `/` left one more listener on the media query list. */
+const narrow = typeof matchMedia === 'function' ? matchMedia('(max-width: 39.99rem)') : undefined
 
 function setSeam(i: number, value: number) {
   const lo = i === 0 ? GAP : pos.value[i - 1]! + GAP
@@ -96,8 +96,11 @@ const playing = ref(false)
 let tourStep = 0
 let tourTimer: ReturnType<typeof setInterval> | undefined
 let tourStart: ReturnType<typeof setTimeout> | undefined
+/* Off screen, the tour would keep repainting four clipped layers nobody sees. */
+let onScreen = true
+let seen: IntersectionObserver | undefined
 function tourTick() {
-  if (typeof document !== 'undefined' && document.hidden) return
+  if (!onScreen || (typeof document !== 'undefined' && document.hidden)) return
   const el = stage.value
   if (!el) return
   el.classList.add('is-auto')
@@ -126,10 +129,17 @@ function takeOver() {
   stage.value?.classList.remove('is-auto')
 }
 onMounted(() => {
+  narrow?.addEventListener('change', syncOrientation)
   if (reduceMotion()) return
+  if (typeof IntersectionObserver === 'function' && stage.value) {
+    seen = new IntersectionObserver(([entry]) => (onScreen = entry?.isIntersecting ?? true))
+    seen.observe(stage.value)
+  }
   tourStart = setTimeout(play, rest.value ? 900 : 3200)
 })
 onBeforeUnmount(() => {
+  narrow?.removeEventListener('change', syncOrientation)
+  seen?.disconnect()
   if (tourStart) clearTimeout(tourStart)
   pause()
 })
@@ -224,7 +234,7 @@ const SEAMS = [
   ['glass', 'brutal'],
   ['brutal', 'soft'],
 ] as const
-const count = computed(() => ENTRIES.length)
+const count = computed(() => COMPONENT_COUNT)
 </script>
 
 <template>
@@ -237,8 +247,8 @@ const count = computed(() => ENTRIES.length)
         Change one attribute.<span>Every surface follows.</span>
       </h1>
       <p class="prism-sub">
-        {{ count }} accessible Vue 3 components. Four materials, ten palettes, light and dark, from
-        the same markup.
+        {{ count }} accessible Vue 3 components for Tailwind CSS 4. Four materials (quiet, glass,
+        brutal, soft), ten WCAG-checked palettes, light and dark, all from the same markup.
       </p>
       <div class="prism-actions">
         <div class="prism-install surface">

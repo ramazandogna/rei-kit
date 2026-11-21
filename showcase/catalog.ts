@@ -170,7 +170,7 @@ export const ENTRY_LABEL: Record<string, string> = {
   'rei-kit/pwa': '/pwa',
 }
 
-export const REPO = 'https://github.com/ramazandogna/rei-kit'
+export { REPO } from './site'
 
 export function sourcePath(entry: Entry): string {
   const dir = entry.entry === 'rei-kit' ? 'components' : entry.entry.replace('rei-kit/', '')

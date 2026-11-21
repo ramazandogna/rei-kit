@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { applyHead, applyRouteHead } from '../head'
 import { ArrowLeft, ArrowRight } from 'lucide-vue-next'
 import { computed, defineAsyncComponent, watch } from 'vue'
 import type { Component } from 'vue'
@@ -72,7 +73,12 @@ const crumbs = computed(() => [
 watch(
   entry,
   (e) => {
-    document.title = e ? `${e.name} — rei-kit` : 'Not found — rei-kit'
+    if (!e) return applyRouteHead('404')
+    applyHead({
+      title: `${e.name} — Vue 3 component — rei-kit`,
+      description: `${plain(e.summary)} Accessible, typed and themed for Tailwind CSS 4. Import from ${e.entry}.`,
+      path: `c/${e.name}`,
+    })
   },
   { immediate: true },
 )

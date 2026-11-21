@@ -176,3 +176,23 @@ export function sourcePath(entry: Entry): string {
   const dir = entry.entry === 'rei-kit' ? 'components' : entry.entry.replace('rei-kit/', '')
   return `src/${dir}/${entry.name}.vue`
 }
+
+export interface Neighbours {
+  prev: Entry | undefined
+  next: Entry | undefined
+  /** Next lies in another category (or wrapped round to the start). */
+  nextCategory: boolean
+  /** Next wrapped from the last component back to the first. */
+  wraps: boolean
+}
+
+/** Previous and next across the whole catalog, in catalog order; the last wraps to the first. */
+export function neighboursOf(name: string): Neighbours {
+  const i = ENTRIES.findIndex((e) => e.name === name)
+  const here = ENTRIES[i]
+  if (!here) return { prev: undefined, next: undefined, nextCategory: false, wraps: false }
+  const prev = i > 0 ? ENTRIES[i - 1] : undefined
+  const wraps = i === ENTRIES.length - 1
+  const next = wraps ? ENTRIES[0] : ENTRIES[i + 1]
+  return { prev, next, wraps, nextCategory: !!next && next.category !== here.category }
+}

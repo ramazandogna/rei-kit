@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 
 import { BaseBadge, BaseButton, BaseInput, EmptyState } from '../../src/index'
 import { CATEGORIES, ENTRIES, ENTRY_LABEL, plain } from '../catalog'
@@ -11,16 +11,59 @@ import { ART_SPRITE, NEW, artFor } from '../catalog-art'
  * live previews: a hundred and twenty demos at once is the page this route
  * replaced, and the Stage on each component page is where they live.
  */
-const query = ref('')
+const route = useRoute()
+const router = useRouter()
+const one = (v: unknown) => (typeof v === 'string' ? v : Array.isArray(v) ? String(v[0] ?? '') : '')
+const catFromUrl = () => {
+  const c = one(route.query['cat'])
+  return [...CATEGORIES, 'More'].includes(c) ? c : null
+}
+const query = ref(one(route.query['q']))
 /* A category is a filter, not an anchor: on a phone, scrolling past seven
    groups to reach the one you tapped is the problem, and a `#id` link is a
-   route change under hash routing. */
-const active = ref<string | null>(null)
+   route change under hash routing. Both filters live in the URL (?cat=&q=)
+   so a filtered view can be shared and survives Back. */
+const active = ref<string | null>(catFromUrl())
 const top = ref<HTMLElement | null>(null)
+const chips = ref<HTMLElement | null>(null)
+
+function syncUrl() {
+  const q = query.value.trim()
+  const next: Record<string, string> = {}
+  if (active.value) next['cat'] = active.value
+  if (q) next['q'] = q
+  if (
+    one(route.query['cat']) === (next['cat'] ?? '') &&
+    one(route.query['q']) === (next['q'] ?? '')
+  )
+    return
+  void router.replace({ query: next })
+}
+watch([query, active], syncUrl)
+watch(
+  () => route.query,
+  () => {
+    if (route.path !== '/components') return
+    const c = catFromUrl()
+    if (c !== active.value) active.value = c
+    const q = one(route.query['q'])
+    if (q.trim() !== query.value.trim()) query.value = q
+  },
+)
+
 function choose(category: string | null) {
   active.value = active.value === category ? null : category
   top.value?.scrollIntoView({ block: 'start', behavior: 'smooth' })
 }
+function revealChip() {
+  void nextTick(() =>
+    chips.value
+      ?.querySelector<HTMLElement>('[aria-pressed="true"]')
+      ?.scrollIntoView({ block: 'nearest', inline: 'center' }),
+  )
+}
+onMounted(revealChip)
+watch(active, revealChip)
 
 const found = computed(() => {
   const needle = query.value.trim().toLowerCase()
@@ -30,6 +73,7 @@ const found = computed(() => {
   )
 })
 
+const inAll = computed(() => found.value.length)
 const all = computed(() =>
   [...CATEGORIES, 'More']
     .map((category) => ({
@@ -76,7 +120,7 @@ function morph(event: MouseEvent) {
     </header>
 
     <div ref="top" class="cat-bar">
-      <div class="cat-chips" role="group" aria-label="Filter by category">
+      <div ref="chips" class="cat-chips" role="group" aria-label="Filter by category">
         <button
           type="button"
           class="cat-chip focus-ring"
@@ -100,7 +144,16 @@ function morph(event: MouseEvent) {
     </div>
 
     <EmptyState
-      v-if="groups.length === 0"
+      v-if="groups.length === 0 && active && inAll > 0"
+      :title="`No “${query.trim()}” in ${active}`"
+      :description="`${inAll} ${inAll === 1 ? 'match' : 'matches'} in other categories.`"
+    >
+      <template #action>
+        <BaseButton variant="secondary" @click="active = null"> Search all categories </BaseButton>
+      </template>
+    </EmptyState>
+    <EmptyState
+      v-else-if="groups.length === 0"
       title="No component matches"
       :description="`Nothing is called or described as “${query}”.`"
     >
@@ -178,23 +231,26 @@ function morph(event: MouseEvent) {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
+/* One scrolling row on every screen: twenty-one chips wrapped over three
+   lines push the cards below the fold. */
 .cat-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  padding-bottom: 2px;
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
 }
-@media (max-width: 39.99rem) {
-  /* One swipeable row instead of four wrapped lines of chips. */
+@media (min-width: 40rem) {
   .cat-chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
   }
-  .cat-chip {
-    flex: none;
-    scroll-snap-align: start;
-  }
+}
+.cat-chip {
+  flex: none;
+  scroll-snap-align: start;
 }
 .cat-chip {
   display: inline-flex;

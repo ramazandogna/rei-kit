@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Code, LayoutGrid } from 'lucide-vue-next'
-import { computed, nextTick, ref, useTemplateRef } from 'vue'
+import { Code, LayoutGrid, Sparkles, X } from 'lucide-vue-next'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import type { Component } from 'vue'
 
 import { MATERIALS } from '../src/index'
@@ -10,12 +10,10 @@ import { entryByName } from './catalog'
 import CodeBlock from './CodeBlock.vue'
 
 /**
- * The preview stage: one big live example, a Quad that shows it in all four
- * materials, and a code drawer that is closed on every visit.
- *
- * The example file is the realistic usage; there is no second block. Quad
- * mounts four independent instances only while it is on, so the default
- * page carries one.
+ * The preview stage: one live example with an in-stage material switcher
+ * (scoped to the stage, the site does not change), an optional side-by-side
+ * quad (desktop only, mounted on request), and a code / AI drawer that opens
+ * below the stage and never covers it.
  */
 const { name, example, code, js } = defineProps<{
   name: string
@@ -24,19 +22,49 @@ const { name, example, code, js } = defineProps<{
   js?: string | undefined
 }>()
 
-function readQuad() {
-  try {
-    return localStorage.getItem('rei-quad') === '1'
-  } catch {
-    return false
-  }
+const entry = computed(() => entryByName(name))
+
+/* The switcher starts on whatever the site is wearing. It only writes
+   data-material on the stage body once you choose one. */
+function siteMaterial() {
+  const m = typeof document === 'undefined' ? '' : document.documentElement.dataset['material']
+  return (MATERIALS as readonly string[]).includes(m ?? '') ? (m as string) : 'quiet'
 }
-const quad = ref(readQuad())
-const quadKey = ref(0)
+const picked = ref<string | null>(null)
+const shownMaterial = computed(() => picked.value ?? siteMaterial())
+
+const WIDE = '(min-width: 48rem)'
+const wide = ref(typeof matchMedia === 'function' ? matchMedia(WIDE).matches : true)
+let mql: MediaQueryList | undefined
+const onWide = (e: MediaQueryListEvent) => {
+  wide.value = e.matches
+}
+onMounted(() => {
+  mql = matchMedia(WIDE)
+  wide.value = mql.matches
+  mql.addEventListener('change', onWide)
+})
+onBeforeUnmount(() => mql?.removeEventListener('change', onWide))
+
+const quad = ref(false)
+const quadOn = computed(() => quad.value && wide.value)
 const drawer = ref(false)
 const tab = ref<'code' | 'ai'>('code')
-const entry = computed(() => entryByName(name))
+const opener = ref<'code' | 'ai'>('code')
 const tabIds = ['code', 'ai'] as const
+
+const codeButton = useTemplateRef<HTMLButtonElement>('codeButton')
+const aiButton = useTemplateRef<HTMLButtonElement>('aiButton')
+const heading = useTemplateRef<HTMLElement>('heading')
+const body = useTemplateRef<HTMLElement>('body')
+const drawerEl = useTemplateRef<HTMLElement>('drawerEl')
+
+/* The sticky header is handled by scroll-margin-top on the target. */
+function reveal(el: HTMLElement | null | undefined) {
+  if (!el) return
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+  el.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' })
+}
 
 function onTabKey(event: KeyboardEvent) {
   if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
@@ -46,121 +74,179 @@ function onTabKey(event: KeyboardEvent) {
   if (event.key === 'End') tab.value = 'ai'
   void nextTick(() => document.getElementById(`tab-${tab.value}-${name}`)?.focus())
 }
-const codeButton = useTemplateRef<HTMLButtonElement>('codeButton')
-const heading = useTemplateRef<HTMLElement>('heading')
 
-function toggleQuad() {
+async function toggleQuad() {
   quad.value = !quad.value
-  quadKey.value++
-  try {
-    localStorage.setItem('rei-quad', quad.value ? '1' : '0')
-  } catch {
-    // Remembering is a convenience.
-  }
+  await nextTick()
+  if (quad.value) reveal(body.value)
 }
 
-async function toggleCode() {
-  drawer.value = !drawer.value
+async function closeDrawer() {
+  drawer.value = false
   await nextTick()
-  if (drawer.value) heading.value?.focus()
-  else codeButton.value?.focus()
+  ;(opener.value === 'ai' ? aiButton.value : codeButton.value)?.focus()
+}
+
+async function openDrawer(which: 'code' | 'ai') {
+  if (drawer.value && tab.value === which) return closeDrawer()
+  opener.value = which
+  tab.value = which
+  drawer.value = true
+  await nextTick()
+  heading.value?.focus({ preventScroll: true })
+  reveal(drawerEl.value)
 }
 
 function onKeydown(event: KeyboardEvent) {
   if (event.key === 'Escape' && drawer.value) {
     event.stopPropagation()
-    void toggleCode()
+    void closeDrawer()
   }
 }
 </script>
 
 <template>
-  <section
-    class="stage"
-    :class="{ 'has-drawer': drawer, 'has-ai': drawer && tab === 'ai' }"
-    :aria-label="`Preview of ${name}`"
-    @keydown="onKeydown"
-  >
-    <BaseToolbar label="Preview tools" class="stage-tools">
-      <button type="button" class="stage-tool focus-ring" :aria-pressed="quad" @click="toggleQuad">
-        <LayoutGrid class="size-4" aria-hidden="true" />
-        <span>Compare materials</span>
-      </button>
-      <button
-        ref="codeButton"
-        type="button"
-        class="stage-tool focus-ring"
-        :aria-expanded="drawer"
-        :aria-controls="`code-${name}`"
-        @click="toggleCode"
-      >
-        <Code class="size-4" aria-hidden="true" />
-        <span>Code</span>
-      </button>
-    </BaseToolbar>
-
-    <div :key="quadKey" class="stage-body seam-local" :class="{ 'is-quad': quad }">
-      <template v-if="!quad">
-        <div class="stage-one"><component :is="example" /></div>
-      </template>
-      <template v-else>
-        <div v-for="m in MATERIALS" :key="m" class="stage-cell canvas" :data-material="m">
-          <span class="stage-chip site-mono">{{ m }}</span>
-          <component :is="example" />
+  <section class="stage-wrap" :aria-label="`Preview of ${name}`" @keydown="onKeydown">
+    <div class="stage" :class="{ 'is-quad-on': quadOn }">
+      <BaseToolbar label="Preview tools" class="stage-tools">
+        <div class="stage-mats" role="group" aria-label="Material for this preview">
+          <button
+            v-for="m in MATERIALS"
+            :key="m"
+            type="button"
+            class="stage-mat focus-ring"
+            :aria-pressed="!quadOn && shownMaterial === m"
+            :disabled="quadOn"
+            @click="picked = m"
+          >
+            {{ m }}
+          </button>
         </div>
-      </template>
+        <span class="stage-actions">
+          <button
+            v-if="wide"
+            type="button"
+            class="stage-tool focus-ring"
+            :aria-pressed="quad"
+            @click="toggleQuad"
+          >
+            <LayoutGrid class="size-4" aria-hidden="true" />
+            <span>Side by side</span>
+          </button>
+          <button
+            v-if="entry"
+            ref="aiButton"
+            type="button"
+            class="stage-tool focus-ring"
+            :aria-expanded="drawer && tab === 'ai'"
+            :aria-controls="`code-${name}`"
+            @click="openDrawer('ai')"
+          >
+            <Sparkles class="size-4" aria-hidden="true" />
+            <span>AI</span>
+          </button>
+          <button
+            ref="codeButton"
+            type="button"
+            class="stage-tool focus-ring"
+            :aria-expanded="drawer && tab === 'code'"
+            :aria-controls="`code-${name}`"
+            @click="openDrawer('code')"
+          >
+            <Code class="size-4" aria-hidden="true" />
+            <span>Code</span>
+          </button>
+        </span>
+      </BaseToolbar>
+
+      <div
+        ref="body"
+        class="stage-body seam-local"
+        :class="{ 'is-quad': quadOn, canvas: picked && !quadOn }"
+        :data-material="!quadOn && picked ? picked : undefined"
+      >
+        <template v-if="!quadOn">
+          <div class="stage-one"><component :is="example" /></div>
+        </template>
+        <template v-else>
+          <div v-for="m in MATERIALS" :key="m" class="stage-cell canvas" :data-material="m">
+            <span class="stage-chip site-mono">{{ m }}</span>
+            <component :is="example" />
+          </div>
+        </template>
+      </div>
     </div>
 
-    <div
-      v-if="drawer"
-      :id="`code-${name}`"
-      class="stage-drawer seam-up"
-      :class="{ 'is-ai': tab === 'ai' }"
-    >
-      <h2 ref="heading" class="sr-only" tabindex="-1">Code for {{ name }}</h2>
-      <div
-        v-if="entry"
-        role="tablist"
-        aria-label="Code or AI prompt"
-        class="drawer-tabs"
-        @keydown="onTabKey"
-      >
-        <button
-          v-for="t in tabIds"
-          :id="`tab-${t}-${name}`"
-          :key="t"
-          type="button"
-          role="tab"
-          class="drawer-tab focus-ring"
-          :aria-selected="tab === t"
-          :aria-controls="`panel-${t}-${name}`"
-          :tabindex="tab === t ? 0 : -1"
-          @click="tab = t"
+    <div v-if="drawer" :id="`code-${name}`" ref="drawerEl" class="stage-drawer">
+      <div class="drawer-bar">
+        <h2 ref="heading" class="sr-only" tabindex="-1">
+          {{ tab === 'ai' ? 'AI prompt' : 'Code' }} for {{ name }}
+        </h2>
+        <div
+          v-if="entry"
+          role="tablist"
+          aria-label="Code or AI prompt"
+          class="drawer-tabs"
+          @keydown="onTabKey"
         >
-          {{ t === 'code' ? 'Code' : 'AI' }}
+          <button
+            v-for="t in tabIds"
+            :id="`tab-${t}-${name}`"
+            :key="t"
+            type="button"
+            role="tab"
+            class="drawer-tab focus-ring"
+            :aria-selected="tab === t"
+            :aria-controls="`panel-${t}-${name}`"
+            :tabindex="tab === t ? 0 : -1"
+            @click="tab = t"
+          >
+            {{ t === 'code' ? 'Code' : 'AI' }}
+          </button>
+        </div>
+        <button
+          type="button"
+          class="drawer-close focus-ring"
+          :aria-label="`Close ${tab === 'ai' ? 'AI prompt' : 'code'}`"
+          @click="closeDrawer"
+        >
+          <X class="size-4" aria-hidden="true" />
         </button>
       </div>
-      <div
-        v-show="tab === 'code' || !entry"
-        :id="`panel-code-${name}`"
-        role="tabpanel"
-        :aria-labelledby="`tab-code-${name}`"
-      >
-        <CodeBlock :code="code" :js="js" :file="`${name}Example.vue`" />
-      </div>
-      <div
-        v-if="entry && tab === 'ai'"
-        :id="`panel-ai-${name}`"
-        role="tabpanel"
-        :aria-labelledby="`tab-ai-${name}`"
-      >
-        <AiPromptPanel :entry="entry" :example="code" />
+      <div class="drawer-scroll">
+        <div
+          v-show="tab === 'code' || !entry"
+          :id="`panel-code-${name}`"
+          role="tabpanel"
+          :aria-labelledby="`tab-code-${name}`"
+        >
+          <CodeBlock :code="code" :js="js" :file="`${name}Example.vue`" />
+        </div>
+        <div
+          v-if="entry && tab === 'ai'"
+          :id="`panel-ai-${name}`"
+          role="tabpanel"
+          :aria-labelledby="`tab-ai-${name}`"
+        >
+          <AiPromptPanel :entry="entry" :example="code" />
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
+.stage-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.stage,
+.stage-drawer {
+  scroll-margin-top: 72px;
+  scroll-margin-bottom: 16px;
+}
 .stage {
   position: relative;
   overflow: hidden;
@@ -177,24 +263,27 @@ function onKeydown(event: KeyboardEvent) {
   display: flex;
   flex-direction: column;
 }
-.stage.has-drawer {
-  min-height: 40rem;
-}
-.stage.has-ai {
-  min-height: 48rem;
-}
 .stage-tools {
   position: relative;
   z-index: 2;
-  align-self: flex-end;
   display: flex;
-  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   margin: 12px 12px 0;
   padding: 4px;
   border-radius: var(--radius-control);
   background: color-mix(in oklab, var(--color-surface) 90%, transparent);
   border: 1px solid var(--color-hair);
 }
+.stage-mats,
+.stage-actions {
+  display: flex;
+  gap: 2px;
+  min-width: 0;
+}
+.stage-mat,
 .stage-tool {
   display: inline-flex;
   height: 32px;
@@ -205,9 +294,17 @@ function onKeydown(event: KeyboardEvent) {
   font-size: var(--site-text-xs);
   color: var(--color-ink-soft);
 }
+.stage-mat {
+  text-transform: capitalize;
+}
+.stage-mat:hover:not(:disabled),
 .stage-tool:hover {
   color: var(--color-ink);
 }
+.stage-mat:disabled {
+  opacity: 0.45;
+}
+.stage-mat[aria-pressed='true'],
 .stage-tool[aria-pressed='true'],
 .stage-tool[aria-expanded='true'] {
   background: var(--color-primary);
@@ -220,6 +317,10 @@ function onKeydown(event: KeyboardEvent) {
   justify-content: center;
   padding: 24px;
   min-width: 0;
+  margin: 12px 0 0;
+}
+.stage-body.canvas {
+  background-color: var(--color-canvas);
 }
 .stage-one {
   /* Definite width, centred content: a chart or table that sizes to its
@@ -234,20 +335,21 @@ function onKeydown(event: KeyboardEvent) {
     padding: 48px;
   }
 }
-/* Phones: the tools become a full-width bar, the preview gets the room it
-   needs instead of a fixed tall box, and the code opens under the preview
-   rather than on top of it. */
+/* Phones: the switcher takes a row, the actions the next, the preview gets
+   the room it needs, and the code opens under the stage. */
 @media (max-width: 39.99rem) {
-  .stage,
-  .stage.has-drawer,
-  .stage.has-ai {
+  .stage {
     min-height: 0;
     margin-inline: -4px;
   }
   .stage-tools {
-    align-self: stretch;
     margin: 8px 8px 0;
   }
+  .stage-mats,
+  .stage-actions {
+    flex: 1 1 100%;
+  }
+  .stage-mat,
   .stage-tool {
     flex: 1;
     justify-content: center;
@@ -261,29 +363,17 @@ function onKeydown(event: KeyboardEvent) {
     flex-wrap: wrap;
     overflow-x: auto;
   }
-  .stage-cell {
-    min-height: 10rem;
-    padding: 36px 16px 16px;
-  }
-  .stage-drawer,
-  .stage-drawer.is-ai {
-    position: static;
-    max-height: none;
+  .stage-drawer {
+    margin-inline: -4px;
   }
 }
 .stage-body.is-quad {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 1px;
   padding: 0;
   background: var(--color-hair);
   align-items: stretch;
-  margin-top: 12px;
-}
-@media (min-width: 48rem) {
-  .stage-body.is-quad {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 .stage-cell {
   position: relative;
@@ -302,16 +392,32 @@ function onKeydown(event: KeyboardEvent) {
   font-size: 12px;
   color: var(--color-ink-soft);
 }
-@media (min-width: 40rem) {
-  .stage-drawer.is-ai {
-    max-height: min(70%, 34rem);
-  }
+.stage-drawer {
+  display: flex;
+  flex-direction: column;
+  max-height: 60vh;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: var(--surface-border-width, 1px) solid var(--color-hair);
+  border-radius: var(--radius-card);
+}
+.drawer-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 8px 0 12px;
+  border-bottom: 1px solid var(--color-hair);
+  flex: none;
+}
+.drawer-scroll {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
 }
 .drawer-tabs {
   display: flex;
   gap: 2px;
-  padding: 8px 12px 0;
-  border-bottom: 1px solid var(--color-hair);
 }
 .drawer-tab {
   height: 32px;
@@ -329,14 +435,19 @@ function onKeydown(event: KeyboardEvent) {
   border-bottom-color: var(--color-primary);
   font-weight: 600;
 }
-.stage-drawer {
-  position: absolute;
-  inset: auto 0 0 0;
-  z-index: 3;
-  max-height: min(60%, 30rem);
-  overflow: auto;
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-hair);
-  box-shadow: var(--shadow-overlay);
+.drawer-close {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 4px;
+  margin-inline-start: auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-control);
+  color: var(--color-ink-soft);
+}
+.drawer-close:hover {
+  color: var(--color-ink);
+  background: color-mix(in oklab, var(--color-ink) 8%, transparent);
 }
 </style>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { applyHead, applyRouteHead } from '../head'
 import { ArrowLeft, ArrowRight } from 'lucide-vue-next'
-import { computed, defineAsyncComponent, watch } from 'vue'
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, watch } from 'vue'
 import type { Component } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 
-import { BaseBadge, BaseCard, BaseKbd, BaseTable, CopyButton } from '../../src/index'
+import { BaseBadge, BaseCard, BaseKbd, CopyButton } from '../../src/index'
 import { BaseBreadcrumb } from '../../src/web/index'
 import { a11yFor } from '../a11y'
-import { ENTRIES, ENTRY_LABEL, REPO, entryByName, plain, sourcePath } from '../catalog'
+import { ENTRY_LABEL, REPO, entryByName, neighboursOf, plain, sourcePath } from '../catalog'
 import examples from '../examples.generated.json'
 import PartPitch from '../PartPitch.vue'
 import PropTable from '../PropTable.vue'
@@ -32,15 +32,32 @@ const loaders = import.meta.glob<{ default: Component }>('../examples/*.vue')
 
 const name = computed(() => String(route.params['name']))
 const entry = computed(() => entryByName(name.value))
-const index = computed(() => ENTRIES.findIndex((e) => e.name === name.value))
-const prev = computed(() => {
-  const e = ENTRIES[index.value - 1]
-  return e && e.category === entry.value?.category ? e : undefined
-})
-const next = computed(() => {
-  const e = ENTRIES[index.value + 1]
-  return e && e.category === entry.value?.category ? e : undefined
-})
+const nb = computed(() => neighboursOf(name.value))
+const prev = computed(() => nb.value.prev)
+const next = computed(() => nb.value.next)
+const nextLabel = computed(() =>
+  nb.value.wraps
+    ? 'Back to the start'
+    : nb.value.nextCategory
+      ? `Next category · ${next.value?.category ?? ''}`
+      : 'Next',
+)
+const router = useRouter()
+
+/* ← / → move through the catalog unless the arrows already mean something
+   where focus is (a field, a toolbar, a tablist, a slider, a menu…). */
+const OWN_ARROWS =
+  'input,textarea,select,[contenteditable],[role=toolbar],[role=tablist],[role=slider],[role=menu],[role=menubar],[role=listbox],[role=tree],[role=radiogroup],[role=grid],[role=spinbutton],dialog,[aria-modal=true]'
+function onKey(event: KeyboardEvent) {
+  if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
+    return
+  if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
+  if ((event.target as Element | null)?.closest?.(OWN_ARROWS)) return
+  const to = event.key === 'ArrowLeft' ? prev.value : next.value
+  if (to) void router.push(`/c/${to.name}`)
+}
+onMounted(() => window.addEventListener('keydown', onKey))
+onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
 const example = computed(() => {
   const load = loaders[`../examples/${name.value}.vue`]
@@ -82,12 +99,6 @@ watch(
   },
   { immediate: true },
 )
-
-const col = <K extends 'name' | 'payload' | 'description'>(key: K, label: string) => ({
-  key,
-  label,
-})
-const API_COLS = [col('name', 'Name'), col('payload', 'Payload'), col('description', 'Description')]
 </script>
 
 <template>
@@ -129,29 +140,39 @@ const API_COLS = [col('name', 'Name'), col('payload', 'Payload'), col('descripti
       :js="sample.js"
     />
 
+    <nav class="cpage-pair" aria-label="Previous and next component">
+      <RouterLink v-if="prev" :to="`/c/${prev.name}`" class="pair-link surface focus-ring">
+        <ArrowLeft class="size-4" aria-hidden="true" />
+        <span class="site-mono">{{ prev.name }}</span>
+        <kbd class="pair-key" aria-hidden="true">←</kbd>
+      </RouterLink>
+      <span v-else />
+      <RouterLink
+        v-if="next"
+        :to="`/c/${next.name}`"
+        class="pair-link surface focus-ring is-next"
+        :class="{ 'is-boundary': nb.nextCategory || nb.wraps }"
+      >
+        <kbd class="pair-key" aria-hidden="true">→</kbd>
+        <span class="pair-text">
+          <small v-if="nb.nextCategory || nb.wraps">{{ nextLabel }}</small>
+          <span class="site-mono">{{ next.name }}</span>
+        </span>
+        <ArrowRight class="size-4" aria-hidden="true" />
+      </RouterLink>
+    </nav>
+
     <section class="cpage-sec" aria-labelledby="h-api">
       <h2 id="h-api" class="site-h3">API</h2>
       <PropTable :name="entry.name" open />
 
       <template v-if="entry.slots.length">
         <h3 class="cpage-sub">Slots</h3>
-        <BaseTable
-          caption="Slots"
-          caption-hidden
-          row-key="name"
-          :columns="API_COLS"
-          :rows="entry.slots.map((s) => ({ ...s, description: s.description || '—' }))"
-        />
+        <PropTable :name="entry.name" section="slots" open />
       </template>
       <template v-if="entry.emits.length">
         <h3 class="cpage-sub">Emits</h3>
-        <BaseTable
-          caption="Emits"
-          caption-hidden
-          row-key="name"
-          :columns="API_COLS"
-          :rows="entry.emits.map((s) => ({ ...s, description: s.description || '—' }))"
-        />
+        <PropTable :name="entry.name" section="emits" open />
       </template>
     </section>
 
@@ -192,7 +213,7 @@ const API_COLS = [col('name', 'Name'), col('payload', 'Payload'), col('descripti
       </BaseCard>
     </section>
 
-    <nav class="cpage-pn" aria-label="More in this category">
+    <nav class="cpage-pn" aria-label="More components">
       <RouterLink v-if="prev" :to="`/c/${prev.name}`" class="cpage-pn-link surface">
         <ArrowLeft class="size-4" aria-hidden="true" />
         <span
@@ -200,9 +221,15 @@ const API_COLS = [col('name', 'Name'), col('payload', 'Payload'), col('descripti
         >
       </RouterLink>
       <span v-else />
-      <RouterLink v-if="next" :to="`/c/${next.name}`" class="cpage-pn-link surface is-next">
+      <RouterLink
+        v-if="next"
+        :to="`/c/${next.name}`"
+        class="cpage-pn-link surface is-next"
+        :class="{ 'is-boundary': nb.nextCategory || nb.wraps }"
+      >
         <span
-          ><small>Next</small><b class="site-mono">{{ next.name }}</b></span
+          ><small>{{ nextLabel }}</small
+          ><b class="site-mono">{{ next.name }}</b></span
         >
         <ArrowRight class="size-4" aria-hidden="true" />
       </RouterLink>
@@ -361,6 +388,66 @@ const API_COLS = [col('name', 'Name'), col('payload', 'Payload'), col('descripti
   display: block;
   font-size: var(--site-text-xs);
   color: var(--color-ink-soft);
+}
+.cpage-pn-link.is-boundary,
+.pair-link.is-boundary {
+  border: 2px solid var(--color-primary);
+}
+.cpage-pn-link.is-boundary small,
+.pair-link.is-boundary small {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.cpage-pair {
+  /* Pulled up under the stage; the page gap is 48px, a pair belongs to it. */
+  margin-top: -28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.pair-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 12px;
+  border-radius: var(--radius-control);
+  font-size: var(--site-text-sm);
+  color: var(--color-ink);
+}
+.pair-link:hover {
+  color: var(--color-primary);
+}
+.pair-link > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pair-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.25;
+}
+.pair-link small {
+  font-size: 11px;
+  color: var(--color-ink-soft);
+}
+.pair-key {
+  padding: 0 5px;
+  border: 1px solid var(--color-hair);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--color-ink-soft);
+}
+@media (max-width: 39.99rem) {
+  .pair-key {
+    display: none;
+  }
+  .cpage-pair {
+    margin-top: -16px;
+  }
 }
 .cpage-pn-link:hover b {
   color: var(--color-primary);
